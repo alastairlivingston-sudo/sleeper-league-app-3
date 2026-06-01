@@ -71,70 +71,518 @@
         }
       ],
       "games": [
-        {"week": 1, "playoff": false, "a": "dpol", "b": "allyl900", "pa": 69, "pb": 120.54},
-        {"week": 1, "playoff": false, "a": "benjlev", "b": "saulgoat", "pa": 116.34, "pb": 146.08},
-        {"week": 1, "playoff": false, "a": "joshjr11", "b": "sanfbe", "pa": 97.86, "pb": 92.34},
-        {"week": 1, "playoff": false, "a": "drjkay", "b": "GSac", "pa": 138.16, "pb": 103.54},
-        {"week": 2, "playoff": false, "a": "benjlev", "b": "sanfbe", "pa": 144.1, "pb": 110.76},
-        {"week": 2, "playoff": false, "a": "dpol", "b": "saulgoat", "pa": 111.02, "pb": 82.48},
-        {"week": 2, "playoff": false, "a": "allyl900", "b": "GSac", "pa": 105.66, "pb": 110.14},
-        {"week": 2, "playoff": false, "a": "joshjr11", "b": "drjkay", "pa": 179.48, "pb": 138},
-        {"week": 3, "playoff": false, "a": "dpol", "b": "sanfbe", "pa": 173.18, "pb": 151.32},
-        {"week": 3, "playoff": false, "a": "drjkay", "b": "allyl900", "pa": 136.46, "pb": 147.26},
-        {"week": 3, "playoff": false, "a": "saulgoat", "b": "GSac", "pa": 125.18, "pb": 111.26},
-        {"week": 3, "playoff": false, "a": "joshjr11", "b": "benjlev", "pa": 109.28, "pb": 130.88},
-        {"week": 4, "playoff": false, "a": "benjlev", "b": "drjkay", "pa": 105.6, "pb": 132.88},
-        {"week": 4, "playoff": false, "a": "joshjr11", "b": "allyl900", "pa": 141.94, "pb": 113.88},
-        {"week": 4, "playoff": false, "a": "dpol", "b": "GSac", "pa": 99.36, "pb": 123.6},
-        {"week": 4, "playoff": false, "a": "saulgoat", "b": "sanfbe", "pa": 97.56, "pb": 168.6},
-        {"week": 5, "playoff": false, "a": "joshjr11", "b": "dpol", "pa": 54.84, "pb": 159.32},
-        {"week": 5, "playoff": false, "a": "saulgoat", "b": "drjkay", "pa": 189.76, "pb": 76},
-        {"week": 5, "playoff": false, "a": "GSac", "b": "sanfbe", "pa": 101.78, "pb": 130.36},
-        {"week": 5, "playoff": false, "a": "benjlev", "b": "allyl900", "pa": 89.84, "pb": 113.32},
-        {"week": 6, "playoff": false, "a": "benjlev", "b": "GSac", "pa": 130.94, "pb": 102.12},
-        {"week": 6, "playoff": false, "a": "dpol", "b": "drjkay", "pa": 120.3, "pb": 128.18},
-        {"week": 6, "playoff": false, "a": "allyl900", "b": "sanfbe", "pa": 102.98, "pb": 114.96},
-        {"week": 6, "playoff": false, "a": "joshjr11", "b": "saulgoat", "pa": 101.02, "pb": 152.3},
-        {"week": 7, "playoff": false, "a": "saulgoat", "b": "allyl900", "pa": 121.44, "pb": 145.34},
-        {"week": 7, "playoff": false, "a": "benjlev", "b": "dpol", "pa": 86.46, "pb": 87.56},
-        {"week": 7, "playoff": false, "a": "joshjr11", "b": "GSac", "pa": 128.98, "pb": 94.18},
-        {"week": 7, "playoff": false, "a": "drjkay", "b": "sanfbe", "pa": 132.66, "pb": 94.3},
-        {"week": 8, "playoff": false, "a": "dpol", "b": "sanfbe", "pa": 121.16, "pb": 126.56},
-        {"week": 8, "playoff": false, "a": "benjlev", "b": "drjkay", "pa": 86.6, "pb": 122.92},
-        {"week": 8, "playoff": false, "a": "joshjr11", "b": "saulgoat", "pa": 110.1, "pb": 132.68},
-        {"week": 8, "playoff": false, "a": "allyl900", "b": "GSac", "pa": 127.96, "pb": 134.48},
-        {"week": 9, "playoff": false, "a": "benjlev", "b": "dpol", "pa": 117, "pb": 114.18},
-        {"week": 9, "playoff": false, "a": "saulgoat", "b": "GSac", "pa": 127.82, "pb": 123.48},
-        {"week": 9, "playoff": false, "a": "allyl900", "b": "sanfbe", "pa": 92.52, "pb": 100.12},
-        {"week": 9, "playoff": false, "a": "joshjr11", "b": "drjkay", "pa": 120.66, "pb": 89.54},
-        {"week": 10, "playoff": false, "a": "saulgoat", "b": "allyl900", "pa": 134.18, "pb": 142.86},
-        {"week": 10, "playoff": false, "a": "dpol", "b": "drjkay", "pa": 131.34, "pb": 146.02},
-        {"week": 10, "playoff": false, "a": "GSac", "b": "sanfbe", "pa": 135.02, "pb": 69.88},
-        {"week": 10, "playoff": false, "a": "joshjr11", "b": "benjlev", "pa": 138.46, "pb": 113.82},
-        {"week": 11, "playoff": false, "a": "benjlev", "b": "allyl900", "pa": 78.68, "pb": 130},
-        {"week": 11, "playoff": false, "a": "joshjr11", "b": "dpol", "pa": 105.56, "pb": 122.74},
-        {"week": 11, "playoff": false, "a": "saulgoat", "b": "sanfbe", "pa": 116.54, "pb": 126.7},
-        {"week": 11, "playoff": false, "a": "drjkay", "b": "GSac", "pa": 154.7, "pb": 109.56},
-        {"week": 12, "playoff": false, "a": "joshjr11", "b": "GSac", "pa": 150.74, "pb": 97.08},
-        {"week": 12, "playoff": false, "a": "saulgoat", "b": "drjkay", "pa": 132.28, "pb": 132.66},
-        {"week": 12, "playoff": false, "a": "dpol", "b": "allyl900", "pa": 144.3, "pb": 129.74},
-        {"week": 12, "playoff": false, "a": "benjlev", "b": "sanfbe", "pa": 124.52, "pb": 133.86},
-        {"week": 13, "playoff": false, "a": "benjlev", "b": "GSac", "pa": 87, "pb": 98.56},
-        {"week": 13, "playoff": false, "a": "dpol", "b": "saulgoat", "pa": 106.04, "pb": 137.18},
-        {"week": 13, "playoff": false, "a": "drjkay", "b": "sanfbe", "pa": 125.18, "pb": 118.36},
-        {"week": 13, "playoff": false, "a": "joshjr11", "b": "allyl900", "pa": 168.56, "pb": 151.4},
-        {"week": 14, "playoff": false, "a": "dpol", "b": "GSac", "pa": 109.08, "pb": 106.54},
-        {"week": 14, "playoff": false, "a": "benjlev", "b": "saulgoat", "pa": 124.64, "pb": 128.12},
-        {"week": 14, "playoff": false, "a": "joshjr11", "b": "sanfbe", "pa": 140.74, "pb": 125.42},
-        {"week": 14, "playoff": false, "a": "drjkay", "b": "allyl900", "pa": 114.94, "pb": 118.2},
-        {"week": 15, "playoff": true, "a": "allyl900", "b": "sanfbe", "pa": 130.26, "pb": 81.66},
-        {"week": 15, "playoff": true, "a": "dpol", "b": "saulgoat", "pa": 88.12, "pb": 113.32},
-        {"week": 15, "playoff": true, "a": "benjlev", "b": "GSac", "pa": 91.1, "pb": 107.24},
-        {"week": 16, "playoff": true, "a": "drjkay", "b": "allyl900", "pa": 119.24, "pb": 127.12},
-        {"week": 16, "playoff": true, "a": "joshjr11", "b": "saulgoat", "pa": 97.42, "pb": 118.3},
-        {"week": 16, "playoff": true, "a": "dpol", "b": "sanfbe", "pa": 91.44, "pb": 180.98},
-        {"week": 17, "playoff": true, "a": "saulgoat", "b": "allyl900", "pa": 163.68, "pb": 85.72},
-        {"week": 17, "playoff": true, "a": "joshjr11", "b": "drjkay", "pa": 106.5, "pb": 114.56}
+        {
+          "week": 1,
+          "playoff": false,
+          "a": "dpol",
+          "b": "allyl900",
+          "pa": 69,
+          "pb": 120.54
+        },
+        {
+          "week": 1,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "saulgoat",
+          "pa": 116.34,
+          "pb": 146.08
+        },
+        {
+          "week": 1,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "sanfbe",
+          "pa": 97.86,
+          "pb": 92.34
+        },
+        {
+          "week": 1,
+          "playoff": false,
+          "a": "drjkay",
+          "b": "GSac",
+          "pa": 138.16,
+          "pb": 103.54
+        },
+        {
+          "week": 2,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "sanfbe",
+          "pa": 144.1,
+          "pb": 110.76
+        },
+        {
+          "week": 2,
+          "playoff": false,
+          "a": "dpol",
+          "b": "saulgoat",
+          "pa": 111.02,
+          "pb": 82.48
+        },
+        {
+          "week": 2,
+          "playoff": false,
+          "a": "allyl900",
+          "b": "GSac",
+          "pa": 105.66,
+          "pb": 110.14
+        },
+        {
+          "week": 2,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "drjkay",
+          "pa": 179.48,
+          "pb": 138
+        },
+        {
+          "week": 3,
+          "playoff": false,
+          "a": "dpol",
+          "b": "sanfbe",
+          "pa": 173.18,
+          "pb": 151.32
+        },
+        {
+          "week": 3,
+          "playoff": false,
+          "a": "drjkay",
+          "b": "allyl900",
+          "pa": 136.46,
+          "pb": 147.26
+        },
+        {
+          "week": 3,
+          "playoff": false,
+          "a": "saulgoat",
+          "b": "GSac",
+          "pa": 125.18,
+          "pb": 111.26
+        },
+        {
+          "week": 3,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "benjlev",
+          "pa": 109.28,
+          "pb": 130.88
+        },
+        {
+          "week": 4,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "drjkay",
+          "pa": 105.6,
+          "pb": 132.88
+        },
+        {
+          "week": 4,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "allyl900",
+          "pa": 141.94,
+          "pb": 113.88
+        },
+        {
+          "week": 4,
+          "playoff": false,
+          "a": "dpol",
+          "b": "GSac",
+          "pa": 99.36,
+          "pb": 123.6
+        },
+        {
+          "week": 4,
+          "playoff": false,
+          "a": "saulgoat",
+          "b": "sanfbe",
+          "pa": 97.56,
+          "pb": 168.6
+        },
+        {
+          "week": 5,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "dpol",
+          "pa": 54.84,
+          "pb": 159.32
+        },
+        {
+          "week": 5,
+          "playoff": false,
+          "a": "saulgoat",
+          "b": "drjkay",
+          "pa": 189.76,
+          "pb": 76
+        },
+        {
+          "week": 5,
+          "playoff": false,
+          "a": "GSac",
+          "b": "sanfbe",
+          "pa": 101.78,
+          "pb": 130.36
+        },
+        {
+          "week": 5,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "allyl900",
+          "pa": 89.84,
+          "pb": 113.32
+        },
+        {
+          "week": 6,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "GSac",
+          "pa": 130.94,
+          "pb": 102.12
+        },
+        {
+          "week": 6,
+          "playoff": false,
+          "a": "dpol",
+          "b": "drjkay",
+          "pa": 120.3,
+          "pb": 128.18
+        },
+        {
+          "week": 6,
+          "playoff": false,
+          "a": "allyl900",
+          "b": "sanfbe",
+          "pa": 102.98,
+          "pb": 114.96
+        },
+        {
+          "week": 6,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "saulgoat",
+          "pa": 101.02,
+          "pb": 152.3
+        },
+        {
+          "week": 7,
+          "playoff": false,
+          "a": "saulgoat",
+          "b": "allyl900",
+          "pa": 121.44,
+          "pb": 145.34
+        },
+        {
+          "week": 7,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "dpol",
+          "pa": 86.46,
+          "pb": 87.56
+        },
+        {
+          "week": 7,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "GSac",
+          "pa": 128.98,
+          "pb": 94.18
+        },
+        {
+          "week": 7,
+          "playoff": false,
+          "a": "drjkay",
+          "b": "sanfbe",
+          "pa": 132.66,
+          "pb": 94.3
+        },
+        {
+          "week": 8,
+          "playoff": false,
+          "a": "dpol",
+          "b": "sanfbe",
+          "pa": 121.16,
+          "pb": 126.56
+        },
+        {
+          "week": 8,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "drjkay",
+          "pa": 86.6,
+          "pb": 122.92
+        },
+        {
+          "week": 8,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "saulgoat",
+          "pa": 110.1,
+          "pb": 132.68
+        },
+        {
+          "week": 8,
+          "playoff": false,
+          "a": "allyl900",
+          "b": "GSac",
+          "pa": 127.96,
+          "pb": 134.48
+        },
+        {
+          "week": 9,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "dpol",
+          "pa": 117,
+          "pb": 114.18
+        },
+        {
+          "week": 9,
+          "playoff": false,
+          "a": "saulgoat",
+          "b": "GSac",
+          "pa": 127.82,
+          "pb": 123.48
+        },
+        {
+          "week": 9,
+          "playoff": false,
+          "a": "allyl900",
+          "b": "sanfbe",
+          "pa": 92.52,
+          "pb": 100.12
+        },
+        {
+          "week": 9,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "drjkay",
+          "pa": 120.66,
+          "pb": 89.54
+        },
+        {
+          "week": 10,
+          "playoff": false,
+          "a": "saulgoat",
+          "b": "allyl900",
+          "pa": 134.18,
+          "pb": 142.86
+        },
+        {
+          "week": 10,
+          "playoff": false,
+          "a": "dpol",
+          "b": "drjkay",
+          "pa": 131.34,
+          "pb": 146.02
+        },
+        {
+          "week": 10,
+          "playoff": false,
+          "a": "GSac",
+          "b": "sanfbe",
+          "pa": 135.02,
+          "pb": 69.88
+        },
+        {
+          "week": 10,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "benjlev",
+          "pa": 138.46,
+          "pb": 113.82
+        },
+        {
+          "week": 11,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "allyl900",
+          "pa": 78.68,
+          "pb": 130
+        },
+        {
+          "week": 11,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "dpol",
+          "pa": 105.56,
+          "pb": 122.74
+        },
+        {
+          "week": 11,
+          "playoff": false,
+          "a": "saulgoat",
+          "b": "sanfbe",
+          "pa": 116.54,
+          "pb": 126.7
+        },
+        {
+          "week": 11,
+          "playoff": false,
+          "a": "drjkay",
+          "b": "GSac",
+          "pa": 154.7,
+          "pb": 109.56
+        },
+        {
+          "week": 12,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "GSac",
+          "pa": 150.74,
+          "pb": 97.08
+        },
+        {
+          "week": 12,
+          "playoff": false,
+          "a": "saulgoat",
+          "b": "drjkay",
+          "pa": 132.28,
+          "pb": 132.66
+        },
+        {
+          "week": 12,
+          "playoff": false,
+          "a": "dpol",
+          "b": "allyl900",
+          "pa": 144.3,
+          "pb": 129.74
+        },
+        {
+          "week": 12,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "sanfbe",
+          "pa": 124.52,
+          "pb": 133.86
+        },
+        {
+          "week": 13,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "GSac",
+          "pa": 87,
+          "pb": 98.56
+        },
+        {
+          "week": 13,
+          "playoff": false,
+          "a": "dpol",
+          "b": "saulgoat",
+          "pa": 106.04,
+          "pb": 137.18
+        },
+        {
+          "week": 13,
+          "playoff": false,
+          "a": "drjkay",
+          "b": "sanfbe",
+          "pa": 125.18,
+          "pb": 118.36
+        },
+        {
+          "week": 13,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "allyl900",
+          "pa": 168.56,
+          "pb": 151.4
+        },
+        {
+          "week": 14,
+          "playoff": false,
+          "a": "dpol",
+          "b": "GSac",
+          "pa": 109.08,
+          "pb": 106.54
+        },
+        {
+          "week": 14,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "saulgoat",
+          "pa": 124.64,
+          "pb": 128.12
+        },
+        {
+          "week": 14,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "sanfbe",
+          "pa": 140.74,
+          "pb": 125.42
+        },
+        {
+          "week": 14,
+          "playoff": false,
+          "a": "drjkay",
+          "b": "allyl900",
+          "pa": 114.94,
+          "pb": 118.2
+        },
+        {
+          "week": 15,
+          "playoff": true,
+          "a": "allyl900",
+          "b": "sanfbe",
+          "pa": 130.26,
+          "pb": 81.66
+        },
+        {
+          "week": 15,
+          "playoff": true,
+          "a": "dpol",
+          "b": "saulgoat",
+          "pa": 88.12,
+          "pb": 113.32
+        },
+        {
+          "week": 15,
+          "playoff": true,
+          "a": "benjlev",
+          "b": "GSac",
+          "pa": 91.1,
+          "pb": 107.24
+        },
+        {
+          "week": 16,
+          "playoff": true,
+          "a": "drjkay",
+          "b": "allyl900",
+          "pa": 119.24,
+          "pb": 127.12
+        },
+        {
+          "week": 16,
+          "playoff": true,
+          "a": "joshjr11",
+          "b": "saulgoat",
+          "pa": 97.42,
+          "pb": 118.3
+        },
+        {
+          "week": 16,
+          "playoff": true,
+          "a": "dpol",
+          "b": "sanfbe",
+          "pa": 91.44,
+          "pb": 180.98
+        },
+        {
+          "week": 17,
+          "playoff": true,
+          "a": "saulgoat",
+          "b": "allyl900",
+          "pa": 163.68,
+          "pb": 85.72
+        },
+        {
+          "week": 17,
+          "playoff": true,
+          "a": "joshjr11",
+          "b": "drjkay",
+          "pa": 106.5,
+          "pb": 114.56
+        }
       ]
     },
     {
@@ -142,80 +590,584 @@
       "name": "Borehamwood",
       "champion": "saulgoat",
       "standings": [
-        {"manager": "saulgoat", "team": "Chase waddle waddle ", "wins": 11, "losses": 3, "pf": 1903.3, "high": 196.9},
-        {"manager": "AlastairL", "team": "Fourth and Goalda Meir", "wins": 10, "losses": 4, "pf": 1968.96, "high": 178.94},
-        {"manager": "dpol", "team": "Plancey Neutral", "wins": 9, "losses": 5, "pf": 1732.22, "high": 189},
-        {"manager": "joshjr11", "team": "Denver Brochos", "wins": 8, "losses": 6, "pf": 1713.02, "high": 181.32},
-        {"manager": "GSac", "team": "War & Childbirth", "wins": 7, "losses": 7, "pf": 1758.44, "high": 159.22},
-        {"manager": "drjkay", "team": "To infinity and Bijan", "wins": 6, "losses": 8, "pf": 1767.8, "high": 213.46},
-        {"manager": "sanfbe", "team": "The Twinder Swindler", "wins": 5, "losses": 9, "pf": 1504.7, "high": 144.4},
-        {"manager": "benjlev", "team": "benjlev", "wins": 0, "losses": 14, "pf": 1522.48, "high": 142.9}
+        {
+          "manager": "saulgoat",
+          "team": "Chase waddle waddle ",
+          "wins": 11,
+          "losses": 3,
+          "pf": 1903.3,
+          "high": 196.9
+        },
+        {
+          "manager": "AlastairL",
+          "team": "Fourth and Goalda Meir",
+          "wins": 10,
+          "losses": 4,
+          "pf": 1968.96,
+          "high": 178.94
+        },
+        {
+          "manager": "dpol",
+          "team": "Plancey Neutral",
+          "wins": 9,
+          "losses": 5,
+          "pf": 1732.22,
+          "high": 189
+        },
+        {
+          "manager": "joshjr11",
+          "team": "Denver Brochos",
+          "wins": 8,
+          "losses": 6,
+          "pf": 1713.02,
+          "high": 181.32
+        },
+        {
+          "manager": "GSac",
+          "team": "War & Childbirth",
+          "wins": 7,
+          "losses": 7,
+          "pf": 1758.44,
+          "high": 159.22
+        },
+        {
+          "manager": "drjkay",
+          "team": "To infinity and Bijan",
+          "wins": 6,
+          "losses": 8,
+          "pf": 1767.8,
+          "high": 213.46
+        },
+        {
+          "manager": "sanfbe",
+          "team": "The Twinder Swindler",
+          "wins": 5,
+          "losses": 9,
+          "pf": 1504.7,
+          "high": 144.4
+        },
+        {
+          "manager": "benjlev",
+          "team": "benjlev",
+          "wins": 0,
+          "losses": 14,
+          "pf": 1522.48,
+          "high": 142.9
+        }
       ],
       "games": [
-        {"week": 1, "playoff": false, "a": "dpol", "b": "drjkay", "pa": 127.86, "pb": 119.98},
-        {"week": 1, "playoff": false, "a": "saulgoat", "b": "sanfbe", "pa": 115.76, "pb": 108.38},
-        {"week": 1, "playoff": false, "a": "benjlev", "b": "AlastairL", "pa": 108.34, "pb": 138.28},
-        {"week": 1, "playoff": false, "a": "joshjr11", "b": "GSac", "pa": 102.32, "pb": 99.52},
-        {"week": 2, "playoff": false, "a": "dpol", "b": "saulgoat", "pa": 146.7, "pb": 113.1},
-        {"week": 2, "playoff": false, "a": "drjkay", "b": "sanfbe", "pa": 153.24, "pb": 88.96},
-        {"week": 2, "playoff": false, "a": "joshjr11", "b": "AlastairL", "pa": 181.32, "pb": 104.26},
-        {"week": 2, "playoff": false, "a": "benjlev", "b": "GSac", "pa": 97.84, "pb": 115.88},
-        {"week": 3, "playoff": false, "a": "dpol", "b": "sanfbe", "pa": 92.36, "pb": 126.04},
-        {"week": 3, "playoff": false, "a": "saulgoat", "b": "drjkay", "pa": 121.02, "pb": 109.58},
-        {"week": 3, "playoff": false, "a": "AlastairL", "b": "GSac", "pa": 116.88, "pb": 108.68},
-        {"week": 3, "playoff": false, "a": "joshjr11", "b": "benjlev", "pa": 137.14, "pb": 106.28},
-        {"week": 4, "playoff": false, "a": "dpol", "b": "AlastairL", "pa": 142.08, "pb": 138.32},
-        {"week": 4, "playoff": false, "a": "benjlev", "b": "drjkay", "pa": 125, "pb": 129.48},
-        {"week": 4, "playoff": false, "a": "joshjr11", "b": "saulgoat", "pa": 109.32, "pb": 118.9},
-        {"week": 4, "playoff": false, "a": "GSac", "b": "sanfbe", "pa": 129.72, "pb": 84.1},
-        {"week": 5, "playoff": false, "a": "benjlev", "b": "dpol", "pa": 104.34, "pb": 144.96},
-        {"week": 5, "playoff": false, "a": "drjkay", "b": "AlastairL", "pa": 101.46, "pb": 159.62},
-        {"week": 5, "playoff": false, "a": "saulgoat", "b": "GSac", "pa": 137.24, "pb": 159.22},
-        {"week": 5, "playoff": false, "a": "joshjr11", "b": "sanfbe", "pa": 77.04, "pb": 97.24},
-        {"week": 6, "playoff": false, "a": "joshjr11", "b": "dpol", "pa": 109.86, "pb": 118.3},
-        {"week": 6, "playoff": false, "a": "drjkay", "b": "GSac", "pa": 160.76, "pb": 135.62},
-        {"week": 6, "playoff": false, "a": "saulgoat", "b": "AlastairL", "pa": 145.72, "pb": 120.06},
-        {"week": 6, "playoff": false, "a": "benjlev", "b": "sanfbe", "pa": 83.22, "pb": 112.7},
-        {"week": 7, "playoff": false, "a": "dpol", "b": "GSac", "pa": 98.66, "pb": 145.04},
-        {"week": 7, "playoff": false, "a": "joshjr11", "b": "drjkay", "pa": 119.66, "pb": 116.9},
-        {"week": 7, "playoff": false, "a": "benjlev", "b": "saulgoat", "pa": 109.06, "pb": 119.3},
-        {"week": 7, "playoff": false, "a": "AlastairL", "b": "sanfbe", "pa": 121.94, "pb": 110.12},
-        {"week": 8, "playoff": false, "a": "dpol", "b": "drjkay", "pa": 108.64, "pb": 124.9},
-        {"week": 8, "playoff": false, "a": "saulgoat", "b": "sanfbe", "pa": 135.44, "pb": 98.42},
-        {"week": 8, "playoff": false, "a": "benjlev", "b": "AlastairL", "pa": 104.38, "pb": 163.96},
-        {"week": 8, "playoff": false, "a": "joshjr11", "b": "GSac", "pa": 153.34, "pb": 115.86},
-        {"week": 9, "playoff": false, "a": "dpol", "b": "saulgoat", "pa": 128.4, "pb": 101.22},
-        {"week": 9, "playoff": false, "a": "drjkay", "b": "sanfbe", "pa": 142.5, "pb": 144.4},
-        {"week": 9, "playoff": false, "a": "joshjr11", "b": "AlastairL", "pa": 123, "pb": 150.76},
-        {"week": 9, "playoff": false, "a": "benjlev", "b": "GSac", "pa": 114.34, "pb": 141.68},
-        {"week": 10, "playoff": false, "a": "dpol", "b": "sanfbe", "pa": 107.4, "pb": 91.5},
-        {"week": 10, "playoff": false, "a": "saulgoat", "b": "drjkay", "pa": 134.44, "pb": 130.24},
-        {"week": 10, "playoff": false, "a": "AlastairL", "b": "GSac", "pa": 128.02, "pb": 127.42},
-        {"week": 10, "playoff": false, "a": "joshjr11", "b": "benjlev", "pa": 124.08, "pb": 123.44},
-        {"week": 11, "playoff": false, "a": "dpol", "b": "AlastairL", "pa": 86.38, "pb": 178.94},
-        {"week": 11, "playoff": false, "a": "benjlev", "b": "drjkay", "pa": 88.64, "pb": 104.8},
-        {"week": 11, "playoff": false, "a": "joshjr11", "b": "saulgoat", "pa": 150.34, "pb": 196.9},
-        {"week": 11, "playoff": false, "a": "GSac", "b": "sanfbe", "pa": 128.26, "pb": 93.18},
-        {"week": 12, "playoff": false, "a": "benjlev", "b": "dpol", "pa": 116.96, "pb": 133.08},
-        {"week": 12, "playoff": false, "a": "drjkay", "b": "AlastairL", "pa": 116.16, "pb": 175.4},
-        {"week": 12, "playoff": false, "a": "saulgoat", "b": "GSac", "pa": 162.92, "pb": 106.62},
-        {"week": 12, "playoff": false, "a": "joshjr11", "b": "sanfbe", "pa": 91.76, "pb": 85.06},
-        {"week": 13, "playoff": false, "a": "joshjr11", "b": "dpol", "pa": 112.52, "pb": 170.18},
-        {"week": 13, "playoff": false, "a": "drjkay", "b": "GSac", "pa": 152.2, "pb": 110.78},
-        {"week": 13, "playoff": false, "a": "saulgoat", "b": "AlastairL", "pa": 132.66, "pb": 111.96},
-        {"week": 13, "playoff": false, "a": "benjlev", "b": "sanfbe", "pa": 117.14, "pb": 122.32},
-        {"week": 14, "playoff": false, "a": "dpol", "b": "GSac", "pa": 127.22, "pb": 134.14},
-        {"week": 14, "playoff": false, "a": "joshjr11", "b": "drjkay", "pa": 121.32, "pb": 105.6},
-        {"week": 14, "playoff": false, "a": "benjlev", "b": "saulgoat", "pa": 123.5, "pb": 168.68},
-        {"week": 14, "playoff": false, "a": "AlastairL", "b": "sanfbe", "pa": 160.56, "pb": 142.28},
-        {"week": 15, "playoff": true, "a": "joshjr11", "b": "GSac", "pa": 130.3, "pb": 127.04},
-        {"week": 15, "playoff": true, "a": "dpol", "b": "drjkay", "pa": 189, "pb": 116.68},
-        {"week": 15, "playoff": true, "a": "benjlev", "b": "sanfbe", "pa": 119.76, "pb": 137.78},
-        {"week": 16, "playoff": true, "a": "joshjr11", "b": "saulgoat", "pa": 94.24, "pb": 124.94},
-        {"week": 16, "playoff": true, "a": "dpol", "b": "AlastairL", "pa": 141.88, "pb": 176.68},
-        {"week": 16, "playoff": true, "a": "drjkay", "b": "GSac", "pa": 192.72, "pb": 111.9},
-        {"week": 17, "playoff": true, "a": "saulgoat", "b": "AlastairL", "pa": 149.16, "pb": 143.08},
-        {"week": 17, "playoff": true, "a": "benjlev", "b": "sanfbe", "pa": 131.44, "pb": 108.78}
+        {
+          "week": 1,
+          "playoff": false,
+          "a": "dpol",
+          "b": "drjkay",
+          "pa": 127.86,
+          "pb": 119.98
+        },
+        {
+          "week": 1,
+          "playoff": false,
+          "a": "saulgoat",
+          "b": "sanfbe",
+          "pa": 115.76,
+          "pb": 108.38
+        },
+        {
+          "week": 1,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "AlastairL",
+          "pa": 108.34,
+          "pb": 138.28
+        },
+        {
+          "week": 1,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "GSac",
+          "pa": 102.32,
+          "pb": 99.52
+        },
+        {
+          "week": 2,
+          "playoff": false,
+          "a": "dpol",
+          "b": "saulgoat",
+          "pa": 146.7,
+          "pb": 113.1
+        },
+        {
+          "week": 2,
+          "playoff": false,
+          "a": "drjkay",
+          "b": "sanfbe",
+          "pa": 153.24,
+          "pb": 88.96
+        },
+        {
+          "week": 2,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "AlastairL",
+          "pa": 181.32,
+          "pb": 104.26
+        },
+        {
+          "week": 2,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "GSac",
+          "pa": 97.84,
+          "pb": 115.88
+        },
+        {
+          "week": 3,
+          "playoff": false,
+          "a": "dpol",
+          "b": "sanfbe",
+          "pa": 92.36,
+          "pb": 126.04
+        },
+        {
+          "week": 3,
+          "playoff": false,
+          "a": "saulgoat",
+          "b": "drjkay",
+          "pa": 121.02,
+          "pb": 109.58
+        },
+        {
+          "week": 3,
+          "playoff": false,
+          "a": "AlastairL",
+          "b": "GSac",
+          "pa": 116.88,
+          "pb": 108.68
+        },
+        {
+          "week": 3,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "benjlev",
+          "pa": 137.14,
+          "pb": 106.28
+        },
+        {
+          "week": 4,
+          "playoff": false,
+          "a": "dpol",
+          "b": "AlastairL",
+          "pa": 142.08,
+          "pb": 138.32
+        },
+        {
+          "week": 4,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "drjkay",
+          "pa": 125,
+          "pb": 129.48
+        },
+        {
+          "week": 4,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "saulgoat",
+          "pa": 109.32,
+          "pb": 118.9
+        },
+        {
+          "week": 4,
+          "playoff": false,
+          "a": "GSac",
+          "b": "sanfbe",
+          "pa": 129.72,
+          "pb": 84.1
+        },
+        {
+          "week": 5,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "dpol",
+          "pa": 104.34,
+          "pb": 144.96
+        },
+        {
+          "week": 5,
+          "playoff": false,
+          "a": "drjkay",
+          "b": "AlastairL",
+          "pa": 101.46,
+          "pb": 159.62
+        },
+        {
+          "week": 5,
+          "playoff": false,
+          "a": "saulgoat",
+          "b": "GSac",
+          "pa": 137.24,
+          "pb": 159.22
+        },
+        {
+          "week": 5,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "sanfbe",
+          "pa": 77.04,
+          "pb": 97.24
+        },
+        {
+          "week": 6,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "dpol",
+          "pa": 109.86,
+          "pb": 118.3
+        },
+        {
+          "week": 6,
+          "playoff": false,
+          "a": "drjkay",
+          "b": "GSac",
+          "pa": 160.76,
+          "pb": 135.62
+        },
+        {
+          "week": 6,
+          "playoff": false,
+          "a": "saulgoat",
+          "b": "AlastairL",
+          "pa": 145.72,
+          "pb": 120.06
+        },
+        {
+          "week": 6,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "sanfbe",
+          "pa": 83.22,
+          "pb": 112.7
+        },
+        {
+          "week": 7,
+          "playoff": false,
+          "a": "dpol",
+          "b": "GSac",
+          "pa": 98.66,
+          "pb": 145.04
+        },
+        {
+          "week": 7,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "drjkay",
+          "pa": 119.66,
+          "pb": 116.9
+        },
+        {
+          "week": 7,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "saulgoat",
+          "pa": 109.06,
+          "pb": 119.3
+        },
+        {
+          "week": 7,
+          "playoff": false,
+          "a": "AlastairL",
+          "b": "sanfbe",
+          "pa": 121.94,
+          "pb": 110.12
+        },
+        {
+          "week": 8,
+          "playoff": false,
+          "a": "dpol",
+          "b": "drjkay",
+          "pa": 108.64,
+          "pb": 124.9
+        },
+        {
+          "week": 8,
+          "playoff": false,
+          "a": "saulgoat",
+          "b": "sanfbe",
+          "pa": 135.44,
+          "pb": 98.42
+        },
+        {
+          "week": 8,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "AlastairL",
+          "pa": 104.38,
+          "pb": 163.96
+        },
+        {
+          "week": 8,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "GSac",
+          "pa": 153.34,
+          "pb": 115.86
+        },
+        {
+          "week": 9,
+          "playoff": false,
+          "a": "dpol",
+          "b": "saulgoat",
+          "pa": 128.4,
+          "pb": 101.22
+        },
+        {
+          "week": 9,
+          "playoff": false,
+          "a": "drjkay",
+          "b": "sanfbe",
+          "pa": 142.5,
+          "pb": 144.4
+        },
+        {
+          "week": 9,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "AlastairL",
+          "pa": 123,
+          "pb": 150.76
+        },
+        {
+          "week": 9,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "GSac",
+          "pa": 114.34,
+          "pb": 141.68
+        },
+        {
+          "week": 10,
+          "playoff": false,
+          "a": "dpol",
+          "b": "sanfbe",
+          "pa": 107.4,
+          "pb": 91.5
+        },
+        {
+          "week": 10,
+          "playoff": false,
+          "a": "saulgoat",
+          "b": "drjkay",
+          "pa": 134.44,
+          "pb": 130.24
+        },
+        {
+          "week": 10,
+          "playoff": false,
+          "a": "AlastairL",
+          "b": "GSac",
+          "pa": 128.02,
+          "pb": 127.42
+        },
+        {
+          "week": 10,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "benjlev",
+          "pa": 124.08,
+          "pb": 123.44
+        },
+        {
+          "week": 11,
+          "playoff": false,
+          "a": "dpol",
+          "b": "AlastairL",
+          "pa": 86.38,
+          "pb": 178.94
+        },
+        {
+          "week": 11,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "drjkay",
+          "pa": 88.64,
+          "pb": 104.8
+        },
+        {
+          "week": 11,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "saulgoat",
+          "pa": 150.34,
+          "pb": 196.9
+        },
+        {
+          "week": 11,
+          "playoff": false,
+          "a": "GSac",
+          "b": "sanfbe",
+          "pa": 128.26,
+          "pb": 93.18
+        },
+        {
+          "week": 12,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "dpol",
+          "pa": 116.96,
+          "pb": 133.08
+        },
+        {
+          "week": 12,
+          "playoff": false,
+          "a": "drjkay",
+          "b": "AlastairL",
+          "pa": 116.16,
+          "pb": 175.4
+        },
+        {
+          "week": 12,
+          "playoff": false,
+          "a": "saulgoat",
+          "b": "GSac",
+          "pa": 162.92,
+          "pb": 106.62
+        },
+        {
+          "week": 12,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "sanfbe",
+          "pa": 91.76,
+          "pb": 85.06
+        },
+        {
+          "week": 13,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "dpol",
+          "pa": 112.52,
+          "pb": 170.18
+        },
+        {
+          "week": 13,
+          "playoff": false,
+          "a": "drjkay",
+          "b": "GSac",
+          "pa": 152.2,
+          "pb": 110.78
+        },
+        {
+          "week": 13,
+          "playoff": false,
+          "a": "saulgoat",
+          "b": "AlastairL",
+          "pa": 132.66,
+          "pb": 111.96
+        },
+        {
+          "week": 13,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "sanfbe",
+          "pa": 117.14,
+          "pb": 122.32
+        },
+        {
+          "week": 14,
+          "playoff": false,
+          "a": "dpol",
+          "b": "GSac",
+          "pa": 127.22,
+          "pb": 134.14
+        },
+        {
+          "week": 14,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "drjkay",
+          "pa": 121.32,
+          "pb": 105.6
+        },
+        {
+          "week": 14,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "saulgoat",
+          "pa": 123.5,
+          "pb": 168.68
+        },
+        {
+          "week": 14,
+          "playoff": false,
+          "a": "AlastairL",
+          "b": "sanfbe",
+          "pa": 160.56,
+          "pb": 142.28
+        },
+        {
+          "week": 15,
+          "playoff": true,
+          "a": "joshjr11",
+          "b": "GSac",
+          "pa": 130.3,
+          "pb": 127.04
+        },
+        {
+          "week": 15,
+          "playoff": true,
+          "a": "dpol",
+          "b": "drjkay",
+          "pa": 189,
+          "pb": 116.68
+        },
+        {
+          "week": 15,
+          "playoff": true,
+          "a": "benjlev",
+          "b": "sanfbe",
+          "pa": 119.76,
+          "pb": 137.78
+        },
+        {
+          "week": 16,
+          "playoff": true,
+          "a": "joshjr11",
+          "b": "saulgoat",
+          "pa": 94.24,
+          "pb": 124.94
+        },
+        {
+          "week": 16,
+          "playoff": true,
+          "a": "dpol",
+          "b": "AlastairL",
+          "pa": 141.88,
+          "pb": 176.68
+        },
+        {
+          "week": 16,
+          "playoff": true,
+          "a": "drjkay",
+          "b": "GSac",
+          "pa": 192.72,
+          "pb": 111.9
+        },
+        {
+          "week": 17,
+          "playoff": true,
+          "a": "saulgoat",
+          "b": "AlastairL",
+          "pa": 149.16,
+          "pb": 143.08
+        },
+        {
+          "week": 17,
+          "playoff": true,
+          "a": "benjlev",
+          "b": "sanfbe",
+          "pa": 131.44,
+          "pb": 108.78
+        }
       ]
     },
     {
@@ -223,80 +1175,584 @@
       "name": "Borehamwood",
       "champion": "AlastairL",
       "standings": [
-        {"manager": "dpol", "team": "Plancey Neutral", "wins": 11, "losses": 3, "pf": 1878.92, "high": 186.44},
-        {"manager": "AlastairL", "team": "Fourth and Goalda Meir", "wins": 9, "losses": 5, "pf": 1828.36, "high": 156.58},
-        {"manager": "sanfbe", "team": "J'Allen Plancey z'l", "wins": 8, "losses": 6, "pf": 1778.06, "high": 163.6},
-        {"manager": "saulgoat", "team": "Love Thy Naber", "wins": 8, "losses": 6, "pf": 1689.66, "high": 172.42},
-        {"manager": "joshjr11", "team": "Denver Brochos", "wins": 6, "losses": 8, "pf": 1818.96, "high": 173.36},
-        {"manager": "drjkay", "team": "A rookie error", "wins": 6, "losses": 8, "pf": 1770.74, "high": 169.02},
-        {"manager": "GSac", "team": "This One Really Hurts", "wins": 5, "losses": 9, "pf": 1786.8, "high": 202.36},
-        {"manager": "benjlev", "team": "benjlev", "wins": 3, "losses": 11, "pf": 1562.56, "high": 163.26}
+        {
+          "manager": "dpol",
+          "team": "Plancey Neutral",
+          "wins": 11,
+          "losses": 3,
+          "pf": 1878.92,
+          "high": 186.44
+        },
+        {
+          "manager": "AlastairL",
+          "team": "Fourth and Goalda Meir",
+          "wins": 9,
+          "losses": 5,
+          "pf": 1828.36,
+          "high": 156.58
+        },
+        {
+          "manager": "sanfbe",
+          "team": "J’Allen Plancey z’l",
+          "wins": 8,
+          "losses": 6,
+          "pf": 1778.06,
+          "high": 163.6
+        },
+        {
+          "manager": "saulgoat",
+          "team": "Love Thy Naber",
+          "wins": 8,
+          "losses": 6,
+          "pf": 1689.66,
+          "high": 172.42
+        },
+        {
+          "manager": "joshjr11",
+          "team": "Denver Brochos",
+          "wins": 6,
+          "losses": 8,
+          "pf": 1818.96,
+          "high": 173.36
+        },
+        {
+          "manager": "drjkay",
+          "team": "A rookie error",
+          "wins": 6,
+          "losses": 8,
+          "pf": 1770.74,
+          "high": 169.02
+        },
+        {
+          "manager": "GSac",
+          "team": "This One Really Hurts",
+          "wins": 5,
+          "losses": 9,
+          "pf": 1786.8,
+          "high": 202.36
+        },
+        {
+          "manager": "benjlev",
+          "team": "benjlev",
+          "wins": 3,
+          "losses": 11,
+          "pf": 1562.56,
+          "high": 163.26
+        }
       ],
       "games": [
-        {"week": 1, "playoff": false, "a": "dpol", "b": "drjkay", "pa": 107.02, "pb": 99.74},
-        {"week": 1, "playoff": false, "a": "saulgoat", "b": "AlastairL", "pa": 88.72, "pb": 95.08},
-        {"week": 1, "playoff": false, "a": "joshjr11", "b": "benjlev", "pa": 91.32, "pb": 163.26},
-        {"week": 1, "playoff": false, "a": "GSac", "b": "sanfbe", "pa": 112.08, "pb": 155.26},
-        {"week": 2, "playoff": false, "a": "dpol", "b": "saulgoat", "pa": 138.08, "pb": 137.6},
-        {"week": 2, "playoff": false, "a": "drjkay", "b": "AlastairL", "pa": 126.08, "pb": 133.88},
-        {"week": 2, "playoff": false, "a": "joshjr11", "b": "GSac", "pa": 127.64, "pb": 101.44},
-        {"week": 2, "playoff": false, "a": "benjlev", "b": "sanfbe", "pa": 109.9, "pb": 111.72},
-        {"week": 3, "playoff": false, "a": "dpol", "b": "AlastairL", "pa": 131.86, "pb": 131.84},
-        {"week": 3, "playoff": false, "a": "saulgoat", "b": "drjkay", "pa": 137.62, "pb": 113.4},
-        {"week": 3, "playoff": false, "a": "joshjr11", "b": "sanfbe", "pa": 90.18, "pb": 135.02},
-        {"week": 3, "playoff": false, "a": "benjlev", "b": "GSac", "pa": 96.92, "pb": 115.04},
-        {"week": 4, "playoff": false, "a": "joshjr11", "b": "dpol", "pa": 141.88, "pb": 154.2},
-        {"week": 4, "playoff": false, "a": "benjlev", "b": "drjkay", "pa": 88.98, "pb": 169.02},
-        {"week": 4, "playoff": false, "a": "saulgoat", "b": "GSac", "pa": 131.28, "pb": 121.2},
-        {"week": 4, "playoff": false, "a": "AlastairL", "b": "sanfbe", "pa": 140.52, "pb": 151.26},
-        {"week": 5, "playoff": false, "a": "benjlev", "b": "dpol", "pa": 135.16, "pb": 136.42},
-        {"week": 5, "playoff": false, "a": "joshjr11", "b": "drjkay", "pa": 145.72, "pb": 102.04},
-        {"week": 5, "playoff": false, "a": "saulgoat", "b": "sanfbe", "pa": 140.54, "pb": 138.42},
-        {"week": 5, "playoff": false, "a": "AlastairL", "b": "GSac", "pa": 127.72, "pb": 121.5},
-        {"week": 6, "playoff": false, "a": "dpol", "b": "GSac", "pa": 128.38, "pb": 118.42},
-        {"week": 6, "playoff": false, "a": "drjkay", "b": "sanfbe", "pa": 108.74, "pb": 163.6},
-        {"week": 6, "playoff": false, "a": "joshjr11", "b": "saulgoat", "pa": 137.16, "pb": 106.96},
-        {"week": 6, "playoff": false, "a": "benjlev", "b": "AlastairL", "pa": 103.54, "pb": 115.04},
-        {"week": 7, "playoff": false, "a": "dpol", "b": "sanfbe", "pa": 186.44, "pb": 77.44},
-        {"week": 7, "playoff": false, "a": "drjkay", "b": "GSac", "pa": 118.16, "pb": 192.04},
-        {"week": 7, "playoff": false, "a": "benjlev", "b": "saulgoat", "pa": 79.32, "pb": 86.94},
-        {"week": 7, "playoff": false, "a": "joshjr11", "b": "AlastairL", "pa": 119.98, "pb": 156.58},
-        {"week": 8, "playoff": false, "a": "dpol", "b": "drjkay", "pa": 147.16, "pb": 118.52},
-        {"week": 8, "playoff": false, "a": "saulgoat", "b": "AlastairL", "pa": 108.88, "pb": 123.88},
-        {"week": 8, "playoff": false, "a": "joshjr11", "b": "benjlev", "pa": 146.48, "pb": 154.34},
-        {"week": 8, "playoff": false, "a": "GSac", "b": "sanfbe", "pa": 145.66, "pb": 116.62},
-        {"week": 9, "playoff": false, "a": "dpol", "b": "saulgoat", "pa": 79.9, "pb": 120.92},
-        {"week": 9, "playoff": false, "a": "drjkay", "b": "AlastairL", "pa": 119.1, "pb": 154.96},
-        {"week": 9, "playoff": false, "a": "joshjr11", "b": "GSac", "pa": 165.3, "pb": 123.54},
-        {"week": 9, "playoff": false, "a": "benjlev", "b": "sanfbe", "pa": 124.56, "pb": 125.42},
-        {"week": 10, "playoff": false, "a": "dpol", "b": "AlastairL", "pa": 127.7, "pb": 148.7},
-        {"week": 10, "playoff": false, "a": "saulgoat", "b": "drjkay", "pa": 145.5, "pb": 146.6},
-        {"week": 10, "playoff": false, "a": "joshjr11", "b": "sanfbe", "pa": 162.8, "pb": 103.44},
-        {"week": 10, "playoff": false, "a": "benjlev", "b": "GSac", "pa": 99.74, "pb": 157.52},
-        {"week": 11, "playoff": false, "a": "joshjr11", "b": "dpol", "pa": 114.54, "pb": 116.44},
-        {"week": 11, "playoff": false, "a": "benjlev", "b": "drjkay", "pa": 98.02, "pb": 131.72},
-        {"week": 11, "playoff": false, "a": "saulgoat", "b": "GSac", "pa": 128.96, "pb": 67.9},
-        {"week": 11, "playoff": false, "a": "AlastairL", "b": "sanfbe", "pa": 140.74, "pb": 160.48},
-        {"week": 12, "playoff": false, "a": "benjlev", "b": "dpol", "pa": 96.02, "pb": 121.48},
-        {"week": 12, "playoff": false, "a": "joshjr11", "b": "drjkay", "pa": 113.46, "pb": 130.08},
-        {"week": 12, "playoff": false, "a": "saulgoat", "b": "sanfbe", "pa": 105.12, "pb": 95.82},
-        {"week": 12, "playoff": false, "a": "AlastairL", "b": "GSac", "pa": 133.56, "pb": 202.36},
-        {"week": 13, "playoff": false, "a": "dpol", "b": "GSac", "pa": 157.44, "pb": 100.2},
-        {"week": 13, "playoff": false, "a": "drjkay", "b": "sanfbe", "pa": 141, "pb": 88.52},
-        {"week": 13, "playoff": false, "a": "joshjr11", "b": "saulgoat", "pa": 148.64, "pb": 114.16},
-        {"week": 13, "playoff": false, "a": "benjlev", "b": "AlastairL", "pa": 110.14, "pb": 95.02},
-        {"week": 14, "playoff": false, "a": "dpol", "b": "sanfbe", "pa": 146.4, "pb": 155.04},
-        {"week": 14, "playoff": false, "a": "drjkay", "b": "GSac", "pa": 146.54, "pb": 107.9},
-        {"week": 14, "playoff": false, "a": "benjlev", "b": "saulgoat", "pa": 102.66, "pb": 136.46},
-        {"week": 14, "playoff": false, "a": "joshjr11", "b": "AlastairL", "pa": 113.86, "pb": 130.84},
-        {"week": 15, "playoff": true, "a": "joshjr11", "b": "saulgoat", "pa": 143.2, "pb": 172.42},
-        {"week": 15, "playoff": true, "a": "drjkay", "b": "sanfbe", "pa": 94.94, "pb": 160.82},
-        {"week": 15, "playoff": true, "a": "benjlev", "b": "GSac", "pa": 98.9, "pb": 107.4},
-        {"week": 16, "playoff": true, "a": "dpol", "b": "sanfbe", "pa": 161.02, "pb": 108.9},
-        {"week": 16, "playoff": true, "a": "saulgoat", "b": "AlastairL", "pa": 113.46, "pb": 130.5},
-        {"week": 16, "playoff": true, "a": "joshjr11", "b": "drjkay", "pa": 173.36, "pb": 116.02},
-        {"week": 17, "playoff": true, "a": "dpol", "b": "AlastairL", "pa": 118.58, "pb": 143.96},
-        {"week": 17, "playoff": true, "a": "saulgoat", "b": "sanfbe", "pa": 76.78, "pb": 143.58}
+        {
+          "week": 1,
+          "playoff": false,
+          "a": "dpol",
+          "b": "drjkay",
+          "pa": 107.02,
+          "pb": 99.74
+        },
+        {
+          "week": 1,
+          "playoff": false,
+          "a": "saulgoat",
+          "b": "AlastairL",
+          "pa": 88.72,
+          "pb": 95.08
+        },
+        {
+          "week": 1,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "benjlev",
+          "pa": 91.32,
+          "pb": 163.26
+        },
+        {
+          "week": 1,
+          "playoff": false,
+          "a": "GSac",
+          "b": "sanfbe",
+          "pa": 112.08,
+          "pb": 155.26
+        },
+        {
+          "week": 2,
+          "playoff": false,
+          "a": "dpol",
+          "b": "saulgoat",
+          "pa": 138.08,
+          "pb": 137.6
+        },
+        {
+          "week": 2,
+          "playoff": false,
+          "a": "drjkay",
+          "b": "AlastairL",
+          "pa": 126.08,
+          "pb": 133.88
+        },
+        {
+          "week": 2,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "GSac",
+          "pa": 127.64,
+          "pb": 101.44
+        },
+        {
+          "week": 2,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "sanfbe",
+          "pa": 109.9,
+          "pb": 111.72
+        },
+        {
+          "week": 3,
+          "playoff": false,
+          "a": "dpol",
+          "b": "AlastairL",
+          "pa": 131.86,
+          "pb": 131.84
+        },
+        {
+          "week": 3,
+          "playoff": false,
+          "a": "saulgoat",
+          "b": "drjkay",
+          "pa": 137.62,
+          "pb": 113.4
+        },
+        {
+          "week": 3,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "sanfbe",
+          "pa": 90.18,
+          "pb": 135.02
+        },
+        {
+          "week": 3,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "GSac",
+          "pa": 96.92,
+          "pb": 115.04
+        },
+        {
+          "week": 4,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "dpol",
+          "pa": 141.88,
+          "pb": 154.2
+        },
+        {
+          "week": 4,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "drjkay",
+          "pa": 88.98,
+          "pb": 169.02
+        },
+        {
+          "week": 4,
+          "playoff": false,
+          "a": "saulgoat",
+          "b": "GSac",
+          "pa": 131.28,
+          "pb": 121.2
+        },
+        {
+          "week": 4,
+          "playoff": false,
+          "a": "AlastairL",
+          "b": "sanfbe",
+          "pa": 140.52,
+          "pb": 151.26
+        },
+        {
+          "week": 5,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "dpol",
+          "pa": 135.16,
+          "pb": 136.42
+        },
+        {
+          "week": 5,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "drjkay",
+          "pa": 145.72,
+          "pb": 102.04
+        },
+        {
+          "week": 5,
+          "playoff": false,
+          "a": "saulgoat",
+          "b": "sanfbe",
+          "pa": 140.54,
+          "pb": 138.42
+        },
+        {
+          "week": 5,
+          "playoff": false,
+          "a": "AlastairL",
+          "b": "GSac",
+          "pa": 127.72,
+          "pb": 121.5
+        },
+        {
+          "week": 6,
+          "playoff": false,
+          "a": "dpol",
+          "b": "GSac",
+          "pa": 128.38,
+          "pb": 118.42
+        },
+        {
+          "week": 6,
+          "playoff": false,
+          "a": "drjkay",
+          "b": "sanfbe",
+          "pa": 108.74,
+          "pb": 163.6
+        },
+        {
+          "week": 6,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "saulgoat",
+          "pa": 137.16,
+          "pb": 106.96
+        },
+        {
+          "week": 6,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "AlastairL",
+          "pa": 103.54,
+          "pb": 115.04
+        },
+        {
+          "week": 7,
+          "playoff": false,
+          "a": "dpol",
+          "b": "sanfbe",
+          "pa": 186.44,
+          "pb": 77.44
+        },
+        {
+          "week": 7,
+          "playoff": false,
+          "a": "drjkay",
+          "b": "GSac",
+          "pa": 118.16,
+          "pb": 192.04
+        },
+        {
+          "week": 7,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "saulgoat",
+          "pa": 79.32,
+          "pb": 86.94
+        },
+        {
+          "week": 7,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "AlastairL",
+          "pa": 119.98,
+          "pb": 156.58
+        },
+        {
+          "week": 8,
+          "playoff": false,
+          "a": "dpol",
+          "b": "drjkay",
+          "pa": 147.16,
+          "pb": 118.52
+        },
+        {
+          "week": 8,
+          "playoff": false,
+          "a": "saulgoat",
+          "b": "AlastairL",
+          "pa": 108.88,
+          "pb": 123.88
+        },
+        {
+          "week": 8,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "benjlev",
+          "pa": 146.48,
+          "pb": 154.34
+        },
+        {
+          "week": 8,
+          "playoff": false,
+          "a": "GSac",
+          "b": "sanfbe",
+          "pa": 145.66,
+          "pb": 116.62
+        },
+        {
+          "week": 9,
+          "playoff": false,
+          "a": "dpol",
+          "b": "saulgoat",
+          "pa": 79.9,
+          "pb": 120.92
+        },
+        {
+          "week": 9,
+          "playoff": false,
+          "a": "drjkay",
+          "b": "AlastairL",
+          "pa": 119.1,
+          "pb": 154.96
+        },
+        {
+          "week": 9,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "GSac",
+          "pa": 165.3,
+          "pb": 123.54
+        },
+        {
+          "week": 9,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "sanfbe",
+          "pa": 124.56,
+          "pb": 125.42
+        },
+        {
+          "week": 10,
+          "playoff": false,
+          "a": "dpol",
+          "b": "AlastairL",
+          "pa": 127.7,
+          "pb": 148.7
+        },
+        {
+          "week": 10,
+          "playoff": false,
+          "a": "saulgoat",
+          "b": "drjkay",
+          "pa": 145.5,
+          "pb": 146.6
+        },
+        {
+          "week": 10,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "sanfbe",
+          "pa": 162.8,
+          "pb": 103.44
+        },
+        {
+          "week": 10,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "GSac",
+          "pa": 99.74,
+          "pb": 157.52
+        },
+        {
+          "week": 11,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "dpol",
+          "pa": 114.54,
+          "pb": 116.44
+        },
+        {
+          "week": 11,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "drjkay",
+          "pa": 98.02,
+          "pb": 131.72
+        },
+        {
+          "week": 11,
+          "playoff": false,
+          "a": "saulgoat",
+          "b": "GSac",
+          "pa": 128.96,
+          "pb": 67.9
+        },
+        {
+          "week": 11,
+          "playoff": false,
+          "a": "AlastairL",
+          "b": "sanfbe",
+          "pa": 140.74,
+          "pb": 160.48
+        },
+        {
+          "week": 12,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "dpol",
+          "pa": 96.02,
+          "pb": 121.48
+        },
+        {
+          "week": 12,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "drjkay",
+          "pa": 113.46,
+          "pb": 130.08
+        },
+        {
+          "week": 12,
+          "playoff": false,
+          "a": "saulgoat",
+          "b": "sanfbe",
+          "pa": 105.12,
+          "pb": 95.82
+        },
+        {
+          "week": 12,
+          "playoff": false,
+          "a": "AlastairL",
+          "b": "GSac",
+          "pa": 133.56,
+          "pb": 202.36
+        },
+        {
+          "week": 13,
+          "playoff": false,
+          "a": "dpol",
+          "b": "GSac",
+          "pa": 157.44,
+          "pb": 100.2
+        },
+        {
+          "week": 13,
+          "playoff": false,
+          "a": "drjkay",
+          "b": "sanfbe",
+          "pa": 141,
+          "pb": 88.52
+        },
+        {
+          "week": 13,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "saulgoat",
+          "pa": 148.64,
+          "pb": 114.16
+        },
+        {
+          "week": 13,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "AlastairL",
+          "pa": 110.14,
+          "pb": 95.02
+        },
+        {
+          "week": 14,
+          "playoff": false,
+          "a": "dpol",
+          "b": "sanfbe",
+          "pa": 146.4,
+          "pb": 155.04
+        },
+        {
+          "week": 14,
+          "playoff": false,
+          "a": "drjkay",
+          "b": "GSac",
+          "pa": 146.54,
+          "pb": 107.9
+        },
+        {
+          "week": 14,
+          "playoff": false,
+          "a": "benjlev",
+          "b": "saulgoat",
+          "pa": 102.66,
+          "pb": 136.46
+        },
+        {
+          "week": 14,
+          "playoff": false,
+          "a": "joshjr11",
+          "b": "AlastairL",
+          "pa": 113.86,
+          "pb": 130.84
+        },
+        {
+          "week": 15,
+          "playoff": true,
+          "a": "joshjr11",
+          "b": "saulgoat",
+          "pa": 143.2,
+          "pb": 172.42
+        },
+        {
+          "week": 15,
+          "playoff": true,
+          "a": "drjkay",
+          "b": "sanfbe",
+          "pa": 94.94,
+          "pb": 160.82
+        },
+        {
+          "week": 15,
+          "playoff": true,
+          "a": "benjlev",
+          "b": "GSac",
+          "pa": 98.9,
+          "pb": 107.4
+        },
+        {
+          "week": 16,
+          "playoff": true,
+          "a": "dpol",
+          "b": "sanfbe",
+          "pa": 161.02,
+          "pb": 108.9
+        },
+        {
+          "week": 16,
+          "playoff": true,
+          "a": "saulgoat",
+          "b": "AlastairL",
+          "pa": 113.46,
+          "pb": 130.5
+        },
+        {
+          "week": 16,
+          "playoff": true,
+          "a": "joshjr11",
+          "b": "drjkay",
+          "pa": 173.36,
+          "pb": 116.02
+        },
+        {
+          "week": 17,
+          "playoff": true,
+          "a": "dpol",
+          "b": "AlastairL",
+          "pa": 118.58,
+          "pb": 143.96
+        },
+        {
+          "week": 17,
+          "playoff": true,
+          "a": "saulgoat",
+          "b": "sanfbe",
+          "pa": 76.78,
+          "pb": 143.58
+        }
       ]
     }
   ]
