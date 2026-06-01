@@ -226,10 +226,32 @@ ${JSON.stringify(historyData)}`;
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// TRADE GRADER
+// TRADE GRADER — module-level helpers (hoisted to prevent remount)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const TG_C = { bg:'#0f0f0f', text:'#f0f0f0', surface:'#1a1a1a', border:'#2a2a2a', gold:'#d4af37', red:'#e05252', muted:'#888' };
+
+function TradePanel({ label, team, setTeam, text, setText, teamOpts }) {
+  return (
+    <div style={{ background:TG_C.surface, borderRadius:12, padding:12, flex:1, minWidth:0 }}>
+      <div style={{ color:TG_C.gold, fontSize:12, fontWeight:'bold', textTransform:'uppercase', letterSpacing:'0.05em', marginBottom:8 }}>{label}</div>
+      <select value={team} onChange={e => setTeam(e.target.value)} style={{ background:TG_C.bg, color:TG_C.text, border:`1px solid ${TG_C.border}`, borderRadius:8, padding:8, width:'100%', marginBottom:8, fontSize:14 }}>
+        {teamOpts}
+      </select>
+      <textarea value={text} onChange={e => setText(e.target.value)} placeholder={"One player per line\ne.g. Ja'Marr Chase"} style={{ background:TG_C.bg, color:TG_C.text, border:`1px solid ${TG_C.border}`, borderRadius:8, padding:10, width:'100%', minHeight:100, fontSize:14, resize:'vertical', fontFamily:'inherit', boxSizing:'border-box' }} />
+    </div>
+  );
+}
+
+function PlayerRow({ p }) {
+  return (
+    <div style={{ display:'flex', justifyContent:'space-between', marginBottom:4, fontSize:14 }}>
+      <span style={{ color: p.found ? TG_C.text : TG_C.red }}>{p.found ? p.officialName : p.input}</span>
+      <span style={{ color: p.found ? TG_C.muted : TG_C.red, fontSize:13, marginLeft:8 }}>{p.found ? p.value : 'Unmatched (0)'}</span>
+    </div>
+  );
+}
+
 function TradeGrader({ rostersData, tradeValues }) {
-  const C = { bg:'#0f0f0f', text:'#f0f0f0', surface:'#1a1a1a', border:'#2a2a2a', gold:'#d4af37', red:'#e05252', muted:'#888' };
 
   const teamKeys = rostersData ? Object.keys(rostersData) : [];
   const [teamA, setTeamA] = useState('');
@@ -320,84 +342,67 @@ Give your verdict.`;
   }
 
   if (!tradeValues) return (
-    <div style={{ background:C.bg, display:'flex', alignItems:'center', justifyContent:'center', height:'100%', gap:10, color:C.gold, fontSize:14 }}>
-      <span style={{ width:16, height:16, border:`2px solid ${C.gold}`, borderTopColor:'transparent', borderRadius:'50%', display:'inline-block', animation:'tg-spin 0.8s linear infinite' }} />
+    <div style={{ background:TG_C.bg, display:'flex', alignItems:'center', justifyContent:'center', height:'100%', gap:10, color:TG_C.gold, fontSize:14 }}>
+      <span style={{ width:16, height:16, border:`2px solid ${TG_C.gold}`, borderTopColor:'transparent', borderRadius:'50%', display:'inline-block', animation:'tg-spin 0.8s linear infinite' }} />
       Loading trade values…
     </div>
   );
 
   const teamOpts = teamKeys.map(k => <option key={k} value={k}>{k}</option>);
 
-  const Panel = ({ label, team, setTeam, text, setText }) => (
-    <div style={{ background:C.surface, borderRadius:12, padding:12, flex:1, minWidth:0 }}>
-      <div style={{ color:C.gold, fontSize:12, fontWeight:'bold', textTransform:'uppercase', letterSpacing:'0.05em', marginBottom:8 }}>{label}</div>
-      <select value={team} onChange={e => setTeam(e.target.value)} style={{ background:C.bg, color:C.text, border:`1px solid ${C.border}`, borderRadius:8, padding:8, width:'100%', marginBottom:8, fontSize:14 }}>
-        {teamOpts}
-      </select>
-      <textarea value={text} onChange={e => setText(e.target.value)} placeholder={"One player per line\ne.g. Ja'Marr Chase"} style={{ background:C.bg, color:C.text, border:`1px solid ${C.border}`, borderRadius:8, padding:10, width:'100%', minHeight:100, fontSize:14, resize:'vertical', fontFamily:'inherit', boxSizing:'border-box' }} />
-    </div>
-  );
-
-  const PlayerRow = ({ p }) => (
-    <div style={{ display:'flex', justifyContent:'space-between', marginBottom:4, fontSize:14 }}>
-      <span style={{ color: p.found ? C.text : C.red }}>{p.found ? p.officialName : p.input}</span>
-      <span style={{ color: p.found ? C.muted : C.red, fontSize:13, marginLeft:8 }}>{p.found ? p.value : 'Unmatched (0)'}</span>
-    </div>
-  );
-
   return (
-    <div style={{ background:C.bg, color:C.text, padding:16, overflowY:'auto', height:'100%', boxSizing:'border-box' }}>
-      <div style={{ color:C.gold, fontSize:18, fontWeight:'bold', marginBottom:14 }}>Trade Grader</div>
+    <div style={{ background:TG_C.bg, color:TG_C.text, padding:16, overflowY:'auto', height:'100%', boxSizing:'border-box' }}>
+      <div style={{ color:TG_C.gold, fontSize:18, fontWeight:'bold', marginBottom:14 }}>Trade Grader</div>
 
       <div style={{ display:'flex', flexWrap:'wrap', gap:12 }}>
-        <Panel label="Side A gives up" team={teamA} setTeam={setTeamA} text={sideAText} setText={setSideAText} />
-        <Panel label="Side B gives up" team={teamB} setTeam={setTeamB} text={sideBText} setText={setSideBText} />
+        <TradePanel label="Side A gives up" team={teamA} setTeam={setTeamA} text={sideAText} setText={setSideAText} teamOpts={teamOpts} />
+        <TradePanel label="Side B gives up" team={teamB} setTeam={setTeamB} text={sideBText} setText={setSideBText} teamOpts={teamOpts} />
       </div>
 
       <button onClick={gradeTrade} disabled={!sideAText.trim() && !sideBText.trim()}
-        style={{ width:'100%', background:C.gold, color:C.bg, border:'none', borderRadius:10, padding:14, fontSize:16, fontWeight:'bold', cursor:'pointer', marginTop:12, opacity:(!sideAText.trim()&&!sideBText.trim()) ? 0.5 : 1 }}>
+        style={{ width:'100%', background:TG_C.gold, color:TG_C.bg, border:'none', borderRadius:10, padding:14, fontSize:16, fontWeight:'bold', cursor:'pointer', marginTop:12, opacity:(!sideAText.trim()&&!sideBText.trim()) ? 0.5 : 1 }}>
         Grade This Trade
       </button>
 
       {result && (
         <div style={{ marginTop:16 }}>
           {/* Score banner */}
-          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', background:C.surface, borderRadius:12, padding:'14px 16px', marginBottom:12, flexWrap:'wrap', gap:8 }}>
-            <div style={{ fontWeight:'bold', fontSize:15, color: result.winner==='A' ? C.gold : result.winner==='B' ? C.muted : C.text }}>Side A: {result.tA}</div>
-            <div style={{ color:C.gold, fontSize:18, fontWeight:'bold', textAlign:'center' }}>{result.tier}</div>
-            <div style={{ fontWeight:'bold', fontSize:15, color: result.winner==='B' ? C.gold : result.winner==='A' ? C.muted : C.text }}>Side B: {result.tB}</div>
+          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', background:TG_C.surface, borderRadius:12, padding:'14px 16px', marginBottom:12, flexWrap:'wrap', gap:8 }}>
+            <div style={{ fontWeight:'bold', fontSize:15, color: result.winner==='A' ? TG_C.gold : result.winner==='B' ? TG_C.muted : TG_C.text }}>Side A: {result.tA}</div>
+            <div style={{ color:TG_C.gold, fontSize:18, fontWeight:'bold', textAlign:'center' }}>{result.tier}</div>
+            <div style={{ fontWeight:'bold', fontSize:15, color: result.winner==='B' ? TG_C.gold : result.winner==='A' ? TG_C.muted : TG_C.text }}>Side B: {result.tB}</div>
           </div>
 
           {/* Player breakdown */}
           <div style={{ display:'flex', flexWrap:'wrap', gap:12, marginBottom:12 }}>
-            <div style={{ flex:1, minWidth:140, background:C.surface, borderRadius:10, padding:12 }}>
-              <div style={{ color:C.gold, fontSize:12, fontWeight:'bold', textTransform:'uppercase', marginBottom:8 }}>{teamA || 'Side A'} gives</div>
+            <div style={{ flex:1, minWidth:140, background:TG_C.surface, borderRadius:10, padding:12 }}>
+              <div style={{ color:TG_C.gold, fontSize:12, fontWeight:'bold', textTransform:'uppercase', marginBottom:8 }}>{teamA || 'Side A'} gives</div>
               {result.sA.map((p,i) => <PlayerRow key={i} p={p} />)}
             </div>
-            <div style={{ flex:1, minWidth:140, background:C.surface, borderRadius:10, padding:12 }}>
-              <div style={{ color:C.gold, fontSize:12, fontWeight:'bold', textTransform:'uppercase', marginBottom:8 }}>{teamB || 'Side B'} gives</div>
+            <div style={{ flex:1, minWidth:140, background:TG_C.surface, borderRadius:10, padding:12 }}>
+              <div style={{ color:TG_C.gold, fontSize:12, fontWeight:'bold', textTransform:'uppercase', marginBottom:8 }}>{teamB || 'Side B'} gives</div>
               {result.sB.map((p,i) => <PlayerRow key={i} p={p} />)}
             </div>
           </div>
 
           {/* Add-ons */}
           {result.winner !== 'even' && result.addOns.length > 0 && (
-            <div style={{ background:C.surface, border:`1px solid ${C.border}`, borderRadius:10, padding:12, marginBottom:12 }}>
-              <div style={{ color:C.muted, fontSize:13, marginBottom:8 }}>To balance, {result.winner==='A' ? teamA : teamB} could add:</div>
+            <div style={{ background:TG_C.surface, border:`1px solid ${TG_C.border}`, borderRadius:10, padding:12, marginBottom:12 }}>
+              <div style={{ color:TG_C.muted, fontSize:13, marginBottom:8 }}>To balance, {result.winner==='A' ? teamA : teamB} could add:</div>
               {result.addOns.map((a,i) => <div key={i} style={{ fontSize:14, marginBottom:2 }}>• {a.name} ({a.value})</div>)}
             </div>
           )}
 
           {/* Verdict button */}
           <button onClick={getVerdict} disabled={verdictLoading}
-            style={{ background:C.surface, border:`1px solid ${C.gold}`, color:C.gold, borderRadius:10, padding:'12px 20px', fontSize:14, fontWeight:'bold', cursor: verdictLoading ? 'default' : 'pointer', display:'flex', alignItems:'center', gap:8, opacity: verdictLoading ? 0.7 : 1 }}>
-            {verdictLoading && <span style={{ width:14, height:14, border:`2px solid ${C.gold}`, borderTopColor:'transparent', borderRadius:'50%', display:'inline-block', animation:'tg-spin 0.8s linear infinite' }} />}
+            style={{ background:TG_C.surface, border:`1px solid ${TG_C.gold}`, color:TG_C.gold, borderRadius:10, padding:'12px 20px', fontSize:14, fontWeight:'bold', cursor: verdictLoading ? 'default' : 'pointer', display:'flex', alignItems:'center', gap:8, opacity: verdictLoading ? 0.7 : 1 }}>
+            {verdictLoading && <span style={{ width:14, height:14, border:`2px solid ${TG_C.gold}`, borderTopColor:'transparent', borderRadius:'50%', display:'inline-block', animation:'tg-spin 0.8s linear infinite' }} />}
             Get the Commissioner's Verdict
           </button>
 
           {/* Verdict / error */}
           {(verdict || verdictError) && (
-            <div style={{ background:C.surface, border:`1px solid ${verdictError ? C.red : C.gold}`, borderRadius:12, padding:14, color: verdictError ? C.red : C.text, whiteSpace:'pre-wrap', marginTop:8, fontSize:14, lineHeight:1.6 }}>
+            <div style={{ background:TG_C.surface, border:`1px solid ${verdictError ? TG_C.red : TG_C.gold}`, borderRadius:12, padding:14, color: verdictError ? TG_C.red : TG_C.text, whiteSpace:'pre-wrap', marginTop:8, fontSize:14, lineHeight:1.6 }}>
               {verdictError ? 'The Commissioner is unavailable — give it another go.' : verdict}
             </div>
           )}
