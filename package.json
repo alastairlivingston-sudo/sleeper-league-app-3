@@ -1,0 +1,14 @@
+{
+  "name": "sleeper-league-data",
+  "version": "1.0.0",
+  "description": "Auto-refreshing data pipeline for Borehamwood Plancy fantasy league",
+  "scripts": {
+    "fetch-history": "node scripts/fetch-history.js",
+    "fetch-rosters": "node scripts/fetch-rosters.js",
+    "fetch-stats": "node scripts/fetch-stats.js",
+    "refresh": "node scripts/fetch-history.js && node scripts/fetch-rosters.js && node scripts/fetch-stats.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
