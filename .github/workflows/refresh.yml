@@ -2,7 +2,7 @@ name: Refresh League Data
 
 on:
   schedule:
-    - cron: "0 11 * * 2"  # Tuesday 11:00 UTC (weekly, in-season)
+    - cron: "0 11 * * 2"  # Tuesday 11:00 UTC
   workflow_dispatch:
 
 jobs:
@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pages: write      # needed to enable/deploy GitHub Pages
+      id-token: write   # needed for Pages OIDC deploy
 
     steps:
       - uses: actions/checkout@v4
@@ -18,9 +20,8 @@ jobs:
         with:
           node-version: "20"
 
-      # Data fetches: season auto-detected from /state/nfl API
-      # Falls back to previous year if new league not created yet (off-season)
-      - name: Fetch history (all seasons, with positional breakdown)
+      # Data fetches — season auto-detected, falls back to previous year in off-season
+      - name: Fetch history (all seasons + positional breakdown)
         run: node scripts/fetch-history.js
 
       - name: Fetch rosters (most recent season with players)
@@ -29,17 +30,26 @@ jobs:
       - name: Fetch stats (most recent season with games)
         run: node scripts/fetch-stats.js
 
-      - name: Fetch trade values (FantasyCalc half-PPR 1QB 8-team)
+      - name: Fetch trade values (FantasyCalc, trimmed)
         run: node scripts/fetch-trades.js
 
-      # Rebuild the self-contained artifact with fresh inlined data
-      - name: Build commissioner.jsx artifact
+      # Rebuild self-contained artifact with fresh inlined data
+      - name: Build commissioner.jsx
         run: node scripts/build-artifact.js
+
+      # Enable GitHub Pages (idempotent — safe to run every week)
+      - name: Enable GitHub Pages
+        run: |
+          curl -s -o /dev/null -w "%{http_code}" -X PUT \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/${{ github.repository }}/pages" \
+            -d '{"source":{"branch":"main","path":"/public"}}' || true
 
       - name: Commit updated data and artifact
         run: |
-          git config user.name "github-actions[bot]"
+          git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add public/data/*.json commissioner.jsx
+          git add public/data/*.json public/.nojekyll commissioner.jsx
           git diff --cached --quiet || git commit -m "chore: refresh league data + rebuild artifact [skip ci]"
           git push

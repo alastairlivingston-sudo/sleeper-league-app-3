@@ -17,15 +17,6 @@ const DATA = {
   __TRADES__:  path.join(ROOT, "public/data/fc-values.json"),
 };
 
-// Trim FantasyCalc to the 3 fields the artifact uses — keeps the built
-// artifact lean without needing a separate trimming step.
-function trimFC(raw) {
-  return raw.map(x => ({
-    player: { name: x.player.name, sleeperId: x.player.sleeperId, position: x.player.position },
-    redraftValue: x.redraftValue,
-  }));
-}
-
 async function main() {
   if (!fs.existsSync(SRC)) {
     console.error(`Template not found: ${SRC}`);
@@ -39,8 +30,7 @@ async function main() {
       console.error(`Data file not found: ${filePath}`);
       process.exit(1);
     }
-    let raw = JSON.parse(fs.readFileSync(filePath, "utf8"));
-    if (placeholder === "__TRADES__") raw = trimFC(raw);
+    const raw  = JSON.parse(fs.readFileSync(filePath, "utf8"));
     const json = JSON.stringify(raw);
     if (!src.includes(placeholder)) {
       console.error(`Placeholder "${placeholder}" not found in template`);

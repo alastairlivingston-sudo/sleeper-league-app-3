@@ -22,13 +22,34 @@ Suggestions:
 `;
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// INLINED DATA (no network calls — artifact sandbox blocks CORS)
-// Rebuilt weekly by GitHub Actions via scripts/build-artifact.js
+// INLINED DATA — baked-in snapshot, always works.
+// On load we also attempt a live fetch from JSDelivr / GitHub Pages.
+// If the live fetch succeeds the data silently upgrades and the header
+// shows a green LIVE badge. If blocked, the cached snapshot is used.
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const HISTORY_DATA = __HISTORY__;
 const STATS_DATA   = __STATS__;
 const ROSTERS_DATA = __ROSTERS__;
 const TRADE_VALUES = __TRADES__;
+
+// Candidate CDN/Pages URLs tried in order — first success wins
+const REPO = 'alastairlivingston-sudo/sleeper-league-app-3';
+const DATA_SOURCES = [
+  // JSDelivr: global CDN, serves any public GitHub file with CORS headers
+  {
+    history: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/public/data/history.json',
+    stats:   'https://cdn.jsdelivr.net/gh/' + REPO + '@main/public/data/stats.json',
+    rosters: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/public/data/rosters.json',
+    trades:  'https://cdn.jsdelivr.net/gh/' + REPO + '@main/public/data/fc-values.json',
+  },
+  // GitHub Pages (enabled via workflow)
+  {
+    history: 'https://alastairlivingston-sudo.github.io/' + REPO.split('/')[1] + '/public/data/history.json',
+    stats:   'https://alastairlivingston-sudo.github.io/' + REPO.split('/')[1] + '/public/data/stats.json',
+    rosters: 'https://alastairlivingston-sudo.github.io/' + REPO.split('/')[1] + '/public/data/rosters.json',
+    trades:  'https://alastairlivingston-sudo.github.io/' + REPO.split('/')[1] + '/public/data/fc-values.json',
+  },
+];
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // THEME — deep navy / red energy / gold prestige / green for wins
@@ -78,6 +99,40 @@ async function claudeCall(messages, systemPrompt) {
     if (/model/i.test(msg) || /404/.test(msg) || e?.status === 404) throw new Error('MODEL_ERROR');
     throw e;
   }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// LIVE DATA HOOK
+// Tries each source in DATA_SOURCES order; falls back to inlined.
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function useLeagueData() {
+  const [data, setData] = useState({
+    history: HISTORY_DATA,
+    stats:   STATS_DATA,
+    rosters: ROSTERS_DATA,
+    trades:  TRADE_VALUES,
+    source:  'cached',
+  });
+
+  useEffect(() => {
+    (async () => {
+      for (const urls of DATA_SOURCES) {
+        try {
+          const [history, stats, rosters, trades] = await Promise.all(
+            Object.values(urls).map(url =>
+              fetch(url).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+            )
+          );
+          setData({ history, stats, rosters, trades, source: 'live' });
+          return; // first success wins
+        } catch { /* try next source */ }
+      }
+      // All sources blocked — keep inlined data, mark cached
+      setData(d => ({ ...d, source: 'cached' }));
+    })();
+  }, []);
+
+  return data;
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -174,7 +229,7 @@ function ChatTab({ systemPrompt, chips, placeholder, errorMsg, intro }) {
 //   a/b = manager handle, pa/pb = total team points that week
 //   ap/bp = positional breakdown (starters only, non-zero positions)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function StatsTab() {
+function StatsTab({ historyData, statsData }) {
   const systemPrompt = `You are the statistician for the Borehamwood Plancy League. Answer ONLY from the data below — never invent numbers.
 
 DATA SCHEMA:
@@ -189,10 +244,10 @@ COMPUTING TIPS (you MUST actually compute, do not just describe):
 - All-time record: count wins/losses across all seasons for each manager
 
 HISTORY (all seasons):
-${JSON.stringify(HISTORY_DATA)}
+${JSON.stringify(historyData)}
 
 CURRENT SEASON STATS:
-${JSON.stringify(STATS_DATA)}`;
+${JSON.stringify(statsData)}`;
 
   return (
     <ChatTab
@@ -215,7 +270,7 @@ const LEAGUE_FACTS = `Borehamwood Plancy League. 1-QB redraft, WR/RB/TE flex, ha
 @sanfbe is AlastairL's bogey team — beat him twice in 2025 regular season.
 Managers: AlastairL/Fourth and Goalda Meir; dpol/Plancey Neutral; GSac/Jewish Mccaffrey; sanfbe/J'Allen Plancey z'l; saulgoat/Love Thy Naber; drjkay/A rookie error; benjlev/benjlev; joshjr11/Denver Brochos.`;
 
-function BanterTab() {
+function BanterTab({ historyData }) {
   const systemPrompt = `You are the resident wind-up merchant of the Borehamwood Plancy League. Voice: bone-dry British banter, mock gravity, never cruel. Use the LORE and history for material. Keep replies punchy (3-5 sentences max). Never invent a statistic.
 
 ${LEAGUE_FACTS}
@@ -224,7 +279,7 @@ LORE:
 ${LORE}
 
 HISTORY:
-${JSON.stringify(HISTORY_DATA)}`;
+${JSON.stringify(historyData)}`;
 
   return (
     <ChatTab
@@ -277,8 +332,8 @@ function normalizeName(str) {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // TRADE GRADER
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function TradeGrader() {
-  const teamKeys = useMemo(() => Object.keys(ROSTERS_DATA || {}), []);
+function TradeGrader({ rostersData, tradeValues }) {
+  const teamKeys = useMemo(() => Object.keys(rostersData || {}), [rostersData]);
 
   const [teamA, setTeamA]           = useState(teamKeys[0] || '');
   const [teamB, setTeamB]           = useState(teamKeys[1] || '');
@@ -300,7 +355,7 @@ function TradeGrader() {
 
   const { idMap, nameMap } = useMemo(() => {
     const id = new Map(), nm = new Map();
-    for (const { player, redraftValue } of (TRADE_VALUES || [])) {
+    for (const { player, redraftValue } of (tradeValues || [])) {
       const val = redraftValue || 0;
       if (player.sleeperId) id.set(player.sleeperId, { value: val, officialName: player.name, position: player.position });
       nm.set(normalizeName(player.name), { value: val, sleeperId: player.sleeperId, officialName: player.name, position: player.position });
@@ -308,12 +363,12 @@ function TradeGrader() {
     return { idMap: id, nameMap: nm };
   }, []);
 
-  // Available (unrostered) players from TRADE_VALUES × ROSTERS_DATA
+  // Available (unrostered) players from tradeValues × rostersData
   const waiverByPos = useMemo(() => {
     const rostered = new Set(
-      Object.values(ROSTERS_DATA || {}).flatMap(team => team.map(p => p.id))
+      Object.values(rostersData || {}).flatMap(team => team.map(p => p.id))
     );
-    const avail = (TRADE_VALUES || []).filter(x => x.player.sleeperId && !rostered.has(x.player.sleeperId));
+    const avail = (tradeValues || []).filter(x => x.player.sleeperId && !rostered.has(x.player.sleeperId));
     const byPos = {};
     for (const p of avail) {
       const pos = p.player.position;
@@ -347,7 +402,7 @@ function TradeGrader() {
       const wTeam  = winner === 'A' ? teamA : teamB;
       const wSide  = winner === 'A' ? sA : sB;
       const exclude = new Set(wSide.map(p => p.officialName));
-      addOns = (ROSTERS_DATA[wTeam] || [])
+      addOns = ((rostersData || {})[wTeam] || [])
         .map(rp => ({ name: idMap.get(rp.id)?.officialName || rp.name, value: idMap.get(rp.id)?.value || 0, id: rp.id }))
         .filter(rp => !exclude.has(rp.name) && rp.value > 0)
         .sort((a,b) => Math.abs(a.value - gap) - Math.abs(b.value - gap))
@@ -634,6 +689,7 @@ const TABS = [
 
 export default function App() {
   const [tab, setTab] = useState('stats');
+  const { history, stats, rosters, trades, source } = useLeagueData();
 
   useEffect(() => {
     if (document.getElementById('plaincy-css')) return;
@@ -659,6 +715,8 @@ export default function App() {
     );
   };
 
+  const isLive = source === 'live';
+
   return (
     <div className="plaincy-app">
       {/* Top accent stripe */}
@@ -675,8 +733,10 @@ export default function App() {
             Borehamwood Plancy League
           </div>
         </div>
-        <div style={{ fontFamily:FH, fontWeight:700, fontSize:10.5, color:T.gold, border:`1px solid ${T.borderHi}`, borderRadius:5, padding:'4px 9px', letterSpacing:'0.05em', whiteSpace:'nowrap', flexShrink:0 }}>
-          '25 DATA
+        {/* Data freshness badge — green LIVE if CDN reachable, amber CACHED if not */}
+        <div style={{ fontFamily:FH, fontWeight:700, fontSize:10.5, color: isLive ? T.green : T.gold, border:`1px solid ${isLive ? T.green : T.borderHi}`, borderRadius:5, padding:'4px 9px', letterSpacing:'0.05em', whiteSpace:'nowrap', flexShrink:0, display:'flex', alignItems:'center', gap:4 }}>
+          <span style={{ width:6, height:6, borderRadius:'50%', background: isLive ? T.green : T.gold, display:'inline-block' }} />
+          {isLive ? 'LIVE' : 'CACHED'}
         </div>
       </div>
 
@@ -685,11 +745,11 @@ export default function App() {
         {TABS.map(t => <Tab key={t.id} {...t} />)}
       </div>
 
-      {/* Content */}
+      {/* Content — data passed as props so all tabs use the same source */}
       <div style={{ flex:1, overflow:'hidden', display:'flex', flexDirection:'column' }}>
-        {tab === 'stats'  && <StatsTab />}
-        {tab === 'banter' && <BanterTab />}
-        {tab === 'trade'  && <TradeGrader />}
+        {tab === 'stats'  && <StatsTab  historyData={history} statsData={stats} />}
+        {tab === 'banter' && <BanterTab historyData={history} />}
+        {tab === 'trade'  && <TradeGrader rostersData={rosters} tradeValues={trades} />}
       </div>
     </div>
   );
