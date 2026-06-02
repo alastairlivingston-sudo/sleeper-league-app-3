@@ -8,7 +8,7 @@ const path = require("path");
 
 const BASE     = "https://api.sleeper.app/v1";
 const USERNAME = "AlastairL";
-const OUT      = path.join(__dirname, "../public/data/history.json");
+const OUT      = path.join(__dirname, "../docs/data/history.json");
 
 async function get(url) {
   const res = await fetch(url);

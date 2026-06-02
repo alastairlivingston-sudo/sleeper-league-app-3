@@ -11,10 +11,10 @@ const SRC  = path.join(ROOT, "commissioner.template.jsx");
 const OUT  = path.join(ROOT, "commissioner.jsx");
 
 const DATA = {
-  __HISTORY__: path.join(ROOT, "public/data/history.json"),
-  __STATS__:   path.join(ROOT, "public/data/stats.json"),
-  __ROSTERS__: path.join(ROOT, "public/data/rosters.json"),
-  __TRADES__:  path.join(ROOT, "public/data/fc-values.json"),
+  __HISTORY__: path.join(ROOT, "docs/data/history.json"),
+  __STATS__:   path.join(ROOT, "docs/data/stats.json"),
+  __ROSTERS__: path.join(ROOT, "docs/data/rosters.json"),
+  __TRADES__:  path.join(ROOT, "docs/data/fc-values.json"),
 };
 
 async function main() {

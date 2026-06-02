@@ -7,7 +7,7 @@ const fs   = require("fs");
 const path = require("path");
 
 const URL = "https://api.fantasycalc.com/values/current?isDynasty=false&numQbs=1&numTeams=8&ppr=0.5";
-const OUT  = path.join(__dirname, "../public/data/fc-values.json");
+const OUT  = path.join(__dirname, "../docs/data/fc-values.json");
 
 async function main() {
   const res  = await fetch(URL);

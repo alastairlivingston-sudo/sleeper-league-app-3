@@ -37,17 +37,17 @@ const REPO = 'alastairlivingston-sudo/sleeper-league-app-3';
 const DATA_SOURCES = [
   // JSDelivr: global CDN, serves any public GitHub file with CORS headers
   {
-    history: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/public/data/history.json',
-    stats:   'https://cdn.jsdelivr.net/gh/' + REPO + '@main/public/data/stats.json',
-    rosters: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/public/data/rosters.json',
-    trades:  'https://cdn.jsdelivr.net/gh/' + REPO + '@main/public/data/fc-values.json',
+    history: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/history.json',
+    stats:   'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/stats.json',
+    rosters: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/rosters.json',
+    trades:  'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/fc-values.json',
   },
-  // GitHub Pages (enabled via workflow)
+  // GitHub Pages (enabled via workflow — /docs folder, prefix stripped when served)
   {
-    history: 'https://alastairlivingston-sudo.github.io/' + REPO.split('/')[1] + '/public/data/history.json',
-    stats:   'https://alastairlivingston-sudo.github.io/' + REPO.split('/')[1] + '/public/data/stats.json',
-    rosters: 'https://alastairlivingston-sudo.github.io/' + REPO.split('/')[1] + '/public/data/rosters.json',
-    trades:  'https://alastairlivingston-sudo.github.io/' + REPO.split('/')[1] + '/public/data/fc-values.json',
+    history: 'https://alastairlivingston-sudo.github.io/' + REPO.split('/')[1] + '/data/history.json',
+    stats:   'https://alastairlivingston-sudo.github.io/' + REPO.split('/')[1] + '/data/stats.json',
+    rosters: 'https://alastairlivingston-sudo.github.io/' + REPO.split('/')[1] + '/data/rosters.json',
+    trades:  'https://alastairlivingston-sudo.github.io/' + REPO.split('/')[1] + '/data/fc-values.json',
   },
 ];
 
