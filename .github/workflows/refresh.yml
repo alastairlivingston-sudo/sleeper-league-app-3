@@ -2,7 +2,7 @@ name: Refresh League Data
 
 on:
   schedule:
-    - cron: "0 11 * * 2"  # Tuesday 11:00 UTC
+    - cron: "0 11 * * 2"  # Tuesday 11:00 UTC (weekly, in-season)
   workflow_dispatch:
 
 jobs:
@@ -18,19 +18,28 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Fetch history
+      # Data fetches: season auto-detected from /state/nfl API
+      # Falls back to previous year if new league not created yet (off-season)
+      - name: Fetch history (all seasons, with positional breakdown)
         run: node scripts/fetch-history.js
 
-      - name: Fetch rosters
+      - name: Fetch rosters (most recent season with players)
         run: node scripts/fetch-rosters.js
 
-      - name: Fetch stats
+      - name: Fetch stats (most recent season with games)
         run: node scripts/fetch-stats.js
 
-      - name: Commit updated data
+      - name: Fetch trade values (FantasyCalc half-PPR 1QB 8-team)
+        run: node scripts/fetch-trades.js
+
+      # Rebuild the self-contained artifact with fresh inlined data
+      - name: Build commissioner.jsx artifact
+        run: node scripts/build-artifact.js
+
+      - name: Commit updated data and artifact
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add public/data/*.json
-          git diff --cached --quiet || git commit -m "chore: refresh league data [skip ci]"
+          git add public/data/*.json commissioner.jsx
+          git diff --cached --quiet || git commit -m "chore: refresh league data + rebuild artifact [skip ci]"
           git push

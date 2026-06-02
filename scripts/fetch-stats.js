@@ -6,7 +6,6 @@ const path = require("path");
 
 const BASE = "https://api.sleeper.app/v1";
 const USERNAME = "AlastairL";
-const SEASON = "2025";
 const OUT = path.join(__dirname, "../public/data/stats.json");
 
 async function get(url) {
@@ -15,12 +14,23 @@ async function get(url) {
   return res.json();
 }
 
-async function findLeague() {
-  const user = await get(`${BASE}/user/${USERNAME}`);
-  const leagues = await get(`${BASE}/user/${user.user_id}/leagues/nfl/${SEASON}`);
-  const league = leagues.find((l) => /borehamwood|plancy/i.test(l.name));
-  if (!league) throw new Error("League not found for season " + SEASON);
-  return league;
+async function findActiveLeague() {
+  const state  = await get(`${BASE}/state/nfl`);
+  const season = state.season;
+  const user   = await get(`${BASE}/user/${USERNAME}`);
+
+  for (const yr of [season, String(parseInt(season) - 1)]) {
+    const leagues = await get(`${BASE}/user/${user.user_id}/leagues/nfl/${yr}`);
+    const league  = leagues.find((l) => /borehamwood|plancy/i.test(l.name));
+    if (!league) continue;
+
+    // Skip leagues that haven't played any games yet
+    const rosters = await get(`${BASE}/league/${league.league_id}/rosters`);
+    const hasGames = rosters.some((r) => (r.settings?.wins || 0) + (r.settings?.losses || 0) > 0);
+    if (hasGames) { console.log(`Using ${yr} season for stats`); return league; }
+    console.log(`${yr} season exists but no games played yet — trying previous year`);
+  }
+  throw new Error("No Plancy league with played games found");
 }
 
 async function fetchAllMatchups(leagueId, playoffWeekStart) {
@@ -38,7 +48,7 @@ async function fetchAllMatchups(leagueId, playoffWeekStart) {
 }
 
 async function main() {
-  const league = await findLeague();
+  const league = await findActiveLeague();
   const leagueId = league.league_id;
   const playoffWeekStart = league.settings?.playoff_week_start || 15;
 
@@ -140,7 +150,7 @@ async function main() {
 
   const out = {
     league: league.name,
-    season: SEASON,
+    season: league.season,
     standings: standingsArr,
     headToHead: h2h,
     extremes: {
