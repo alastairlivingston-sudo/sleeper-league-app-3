@@ -2,573 +2,712 @@
   "Denver Brochos (@joshjr11)": [
     {
       "id": "10229",
-      "name": "Rashee Rice"
+      "name": "Rashee Rice",
+      "pos": "WR"
     },
     {
       "id": "11631",
-      "name": "Brian Thomas"
+      "name": "Brian Thomas",
+      "pos": "WR"
     },
     {
       "id": "12474",
-      "name": "Woody Marks"
+      "name": "Woody Marks",
+      "pos": "RB"
     },
     {
       "id": "3451",
-      "name": "Ka'imi Fairbairn"
+      "name": "Ka'imi Fairbairn",
+      "pos": "K"
     },
     {
       "id": "4137",
-      "name": "James Conner"
+      "name": "James Conner",
+      "pos": "RB"
     },
     {
       "id": "6770",
-      "name": "Joe Burrow"
+      "name": "Joe Burrow",
+      "pos": "QB"
     },
     {
       "id": "6794",
-      "name": "Justin Jefferson"
+      "name": "Justin Jefferson",
+      "pos": "WR"
     },
     {
       "id": "7564",
-      "name": "Ja'Marr Chase"
+      "name": "Ja'Marr Chase",
+      "pos": "WR"
     },
     {
       "id": "7594",
-      "name": "Chuba Hubbard"
+      "name": "Chuba Hubbard",
+      "pos": "RB"
     },
     {
       "id": "8112",
-      "name": "Drake London"
+      "name": "Drake London",
+      "pos": "WR"
     },
     {
       "id": "8130",
-      "name": "Trey McBride"
+      "name": "Trey McBride",
+      "pos": "TE"
     },
     {
       "id": "8144",
-      "name": "Chris Olave"
+      "name": "Chris Olave",
+      "pos": "WR"
     },
     {
       "id": "8183",
-      "name": "Brock Purdy"
+      "name": "Brock Purdy",
+      "pos": "QB"
     },
     {
       "id": "9224",
-      "name": "Chase Brown"
+      "name": "Chase Brown",
+      "pos": "RB"
     },
     {
       "id": "9226",
-      "name": "De'Von Achane"
+      "name": "De'Von Achane",
+      "pos": "RB"
     },
     {
       "id": "CHI",
-      "name": "Chicago Bears"
+      "name": "Chicago Bears",
+      "pos": "DEF"
     },
     {
       "id": "DEN",
-      "name": "Denver Broncos"
+      "name": "Denver Broncos",
+      "pos": "DEF"
     }
   ],
   "benjlev (@benjlev)": [
     {
       "id": "10213",
-      "name": "Tre Tucker"
+      "name": "Tre Tucker",
+      "pos": "WR"
     },
     {
       "id": "11635",
-      "name": "Ladd McConkey"
+      "name": "Ladd McConkey",
+      "pos": "WR"
     },
     {
       "id": "11638",
-      "name": "Ricky Pearsall"
+      "name": "Ricky Pearsall",
+      "pos": "WR"
     },
     {
       "id": "1466",
-      "name": "Travis Kelce"
+      "name": "Travis Kelce",
+      "pos": "TE"
     },
     {
       "id": "2747",
-      "name": "Jason Myers"
+      "name": "Jason Myers",
+      "pos": "K"
     },
     {
       "id": "3198",
-      "name": "Derrick Henry"
+      "name": "Derrick Henry",
+      "pos": "RB"
     },
     {
       "id": "3321",
-      "name": "Tyreek Hill"
+      "name": "Tyreek Hill",
+      "pos": "WR"
     },
     {
       "id": "4199",
-      "name": "Aaron Jones"
+      "name": "Aaron Jones",
+      "pos": "RB"
     },
     {
       "id": "4866",
-      "name": "Saquon Barkley"
+      "name": "Saquon Barkley",
+      "pos": "RB"
     },
     {
       "id": "4881",
-      "name": "Lamar Jackson"
+      "name": "Lamar Jackson",
+      "pos": "QB"
     },
     {
       "id": "4983",
-      "name": "DJ Moore"
+      "name": "DJ Moore",
+      "pos": "WR"
     },
     {
       "id": "7523",
-      "name": "Trevor Lawrence"
+      "name": "Trevor Lawrence",
+      "pos": "QB"
     },
     {
       "id": "7611",
-      "name": "Rhamondre Stevenson"
+      "name": "Rhamondre Stevenson",
+      "pos": "RB"
     },
     {
       "id": "8142",
-      "name": "Alec Pierce"
+      "name": "Alec Pierce",
+      "pos": "WR"
     },
     {
       "id": "8155",
-      "name": "Breece Hall"
+      "name": "Breece Hall",
+      "pos": "RB"
     },
     {
       "id": "9756",
-      "name": "Jordan Addison"
+      "name": "Jordan Addison",
+      "pos": "WR"
     },
     {
       "id": "NYG",
-      "name": "New York Giants"
+      "name": "New York Giants",
+      "pos": "DEF"
     }
   ],
   "Plancey Neutral (@dpol)": [
     {
       "id": "11584",
-      "name": "Bucky Irving"
+      "name": "Bucky Irving",
+      "pos": "RB"
     },
     {
       "id": "11655",
-      "name": "Tyrone Tracy"
+      "name": "Tyrone Tracy",
+      "pos": "RB"
     },
     {
       "id": "12481",
-      "name": "Cam Skattebo"
+      "name": "Cam Skattebo",
+      "pos": "RB"
     },
     {
       "id": "12507",
-      "name": "Omarion Hampton"
+      "name": "Omarion Hampton",
+      "pos": "RB"
     },
     {
       "id": "2216",
-      "name": "Mike Evans"
+      "name": "Mike Evans",
+      "pos": "WR"
     },
     {
       "id": "3214",
-      "name": "Hunter Henry"
+      "name": "Hunter Henry",
+      "pos": "TE"
     },
     {
       "id": "3257",
-      "name": "Jacoby Brissett"
+      "name": "Jacoby Brissett",
+      "pos": "QB"
     },
     {
       "id": "4217",
-      "name": "George Kittle"
+      "name": "George Kittle",
+      "pos": "TE"
     },
     {
       "id": "4381",
-      "name": "Taysom Hill"
+      "name": "Taysom Hill",
+      "pos": "TE"
     },
     {
       "id": "5859",
-      "name": "A.J. Brown"
+      "name": "A.J. Brown",
+      "pos": "WR"
     },
     {
       "id": "5947",
-      "name": "Jakobi Meyers"
+      "name": "Jakobi Meyers",
+      "pos": "WR"
     },
     {
       "id": "6786",
-      "name": "CeeDee Lamb"
+      "name": "CeeDee Lamb",
+      "pos": "WR"
     },
     {
       "id": "6813",
-      "name": "Jonathan Taylor"
+      "name": "Jonathan Taylor",
+      "pos": "RB"
     },
     {
       "id": "7839",
-      "name": "Evan McPherson"
+      "name": "Evan McPherson",
+      "pos": "K"
     },
     {
       "id": "8126",
-      "name": "Wan'Dale Robinson"
+      "name": "Wan'Dale Robinson",
+      "pos": "WR"
     },
     {
       "id": "9493",
-      "name": "Puka Nacua"
+      "name": "Puka Nacua",
+      "pos": "WR"
     },
     {
       "id": "NE",
-      "name": "New England Patriots"
+      "name": "New England Patriots",
+      "pos": "DEF"
     }
   ],
   "Love Thy Naber (@saulgoat)": [
     {
       "id": "11539",
-      "name": "Jake Bates"
+      "name": "Jake Bates",
+      "pos": "K"
     },
     {
       "id": "11586",
-      "name": "Blake Corum"
+      "name": "Blake Corum",
+      "pos": "RB"
     },
     {
       "id": "11589",
-      "name": "Trey Benson"
+      "name": "Trey Benson",
+      "pos": "RB"
     },
     {
       "id": "11632",
-      "name": "Malik Nabers"
+      "name": "Malik Nabers",
+      "pos": "WR"
     },
     {
       "id": "11643",
-      "name": "Jaylen Wright"
+      "name": "Jaylen Wright",
+      "pos": "RB"
     },
     {
       "id": "12506",
-      "name": "Harold Fannin"
+      "name": "Harold Fannin",
+      "pos": "TE"
     },
     {
       "id": "12529",
-      "name": "TreVeyon Henderson"
+      "name": "TreVeyon Henderson",
+      "pos": "RB"
     },
     {
       "id": "2505",
-      "name": "Darren Waller"
+      "name": "Darren Waller",
+      "pos": "TE"
     },
     {
       "id": "3163",
-      "name": "Jared Goff"
+      "name": "Jared Goff",
+      "pos": "QB"
     },
     {
       "id": "5045",
-      "name": "Courtland Sutton"
+      "name": "Courtland Sutton",
+      "pos": "WR"
     },
     {
       "id": "6801",
-      "name": "Tee Higgins"
+      "name": "Tee Higgins",
+      "pos": "WR"
     },
     {
       "id": "7526",
-      "name": "Jaylen Waddle"
+      "name": "Jaylen Waddle",
+      "pos": "WR"
     },
     {
       "id": "7543",
-      "name": "Travis Etienne"
+      "name": "Travis Etienne",
+      "pos": "RB"
     },
     {
       "id": "7569",
-      "name": "Nico Collins"
+      "name": "Nico Collins",
+      "pos": "WR"
     },
     {
       "id": "7588",
-      "name": "Javonte Williams"
+      "name": "Javonte Williams",
+      "pos": "RB"
     },
     {
       "id": "7607",
-      "name": "Michael Carter"
+      "name": "Michael Carter",
+      "pos": "RB"
     },
     {
       "id": "8408",
-      "name": "Jordan Mason"
+      "name": "Jordan Mason",
+      "pos": "RB"
     },
     {
       "id": "BUF",
-      "name": "Buffalo Bills"
+      "name": "Buffalo Bills",
+      "pos": "DEF"
     }
   ],
   "A rookie error (@drjkay)": [
     {
       "id": "10236",
-      "name": "Dalton Kincaid"
+      "name": "Dalton Kincaid",
+      "pos": "TE"
     },
     {
       "id": "12489",
-      "name": "RJ Harvey"
+      "name": "RJ Harvey",
+      "pos": "RB"
     },
     {
       "id": "12508",
-      "name": "Jaxson Dart"
+      "name": "Jaxson Dart",
+      "pos": "QB"
     },
     {
       "id": "12512",
-      "name": "Quinshon Judkins"
+      "name": "Quinshon Judkins",
+      "pos": "RB"
     },
     {
       "id": "12514",
-      "name": "Emeka Egbuka"
+      "name": "Emeka Egbuka",
+      "pos": "WR"
     },
     {
       "id": "12526",
-      "name": "Tetairoa McMillan"
+      "name": "Tetairoa McMillan",
+      "pos": "WR"
     },
     {
       "id": "12711",
-      "name": "Tyler Loop"
+      "name": "Tyler Loop",
+      "pos": "K"
     },
     {
       "id": "3294",
-      "name": "Dak Prescott"
+      "name": "Dak Prescott",
+      "pos": "QB"
     },
     {
       "id": "4098",
-      "name": "Kareem Hunt"
+      "name": "Kareem Hunt",
+      "pos": "RB"
     },
     {
       "id": "6806",
-      "name": "J.K. Dobbins"
+      "name": "J.K. Dobbins",
+      "pos": "RB"
     },
     {
       "id": "6819",
-      "name": "Michael Pittman"
+      "name": "Michael Pittman",
+      "pos": "WR"
     },
     {
       "id": "7567",
-      "name": "Kenneth Gainwell"
+      "name": "Kenneth Gainwell",
+      "pos": "RB"
     },
     {
       "id": "8137",
-      "name": "George Pickens"
+      "name": "George Pickens",
+      "pos": "WR"
     },
     {
       "id": "8228",
-      "name": "Jaylen Warren"
+      "name": "Jaylen Warren",
+      "pos": "RB"
     },
     {
       "id": "9480",
-      "name": "Brenton Strange"
+      "name": "Brenton Strange",
+      "pos": "TE"
     },
     {
       "id": "9488",
-      "name": "Jaxon Smith-Njigba"
+      "name": "Jaxon Smith-Njigba",
+      "pos": "WR"
     },
     {
       "id": "SEA",
-      "name": "Seattle Seahawks"
+      "name": "Seattle Seahawks",
+      "pos": "DEF"
     }
   ],
   "Fourth and Goalda Meir (@AlastairL)": [
     {
       "id": "11533",
-      "name": "Brandon Aubrey"
+      "name": "Brandon Aubrey",
+      "pos": "K"
     },
     {
       "id": "11564",
-      "name": "Drake Maye"
+      "name": "Drake Maye",
+      "pos": "QB"
     },
     {
       "id": "11604",
-      "name": "Brock Bowers"
+      "name": "Brock Bowers",
+      "pos": "TE"
     },
     {
       "id": "12519",
-      "name": "Luther Burden"
+      "name": "Luther Burden",
+      "pos": "WR"
     },
     {
       "id": "2449",
-      "name": "Stefon Diggs"
+      "name": "Stefon Diggs",
+      "pos": "WR"
     },
     {
       "id": "4034",
-      "name": "Christian McCaffrey"
+      "name": "Christian McCaffrey",
+      "pos": "RB"
     },
     {
       "id": "421",
-      "name": "Matthew Stafford"
+      "name": "Matthew Stafford",
+      "pos": "QB"
     },
     {
       "id": "6790",
-      "name": "D'Andre Swift"
+      "name": "D'Andre Swift",
+      "pos": "RB"
     },
     {
       "id": "7002",
-      "name": "Juwan Johnson"
+      "name": "Juwan Johnson",
+      "pos": "TE"
     },
     {
       "id": "7547",
-      "name": "Amon-Ra St. Brown"
+      "name": "Amon-Ra St. Brown",
+      "pos": "WR"
     },
     {
       "id": "7553",
-      "name": "Kyle Pitts"
+      "name": "Kyle Pitts",
+      "pos": "TE"
     },
     {
       "id": "8132",
-      "name": "Tyler Allgeier"
+      "name": "Tyler Allgeier",
+      "pos": "RB"
     },
     {
       "id": "8148",
-      "name": "Jameson Williams"
+      "name": "Jameson Williams",
+      "pos": "WR"
     },
     {
       "id": "8150",
-      "name": "Kyren Williams"
+      "name": "Kyren Williams",
+      "pos": "RB"
     },
     {
       "id": "8151",
-      "name": "Kenneth Walker"
+      "name": "Kenneth Walker",
+      "pos": "RB"
     },
     {
       "id": "8154",
-      "name": "Brian Robinson"
+      "name": "Brian Robinson",
+      "pos": "RB"
     },
     {
       "id": "PIT",
-      "name": "Pittsburgh Steelers"
+      "name": "Pittsburgh Steelers",
+      "pos": "DEF"
     }
   ],
   "This One Really Hurts (@GSac)": [
     {
       "id": "11579",
-      "name": "Audric Estime"
+      "name": "Audric Estime",
+      "pos": "RB"
     },
     {
       "id": "11620",
-      "name": "Rome Odunze"
+      "name": "Rome Odunze",
+      "pos": "WR"
     },
     {
       "id": "11786",
-      "name": "Cam Little"
+      "name": "Cam Little",
+      "pos": "K"
     },
     {
       "id": "12476",
-      "name": "Devin Neal"
+      "name": "Devin Neal",
+      "pos": "RB"
     },
     {
       "id": "12527",
-      "name": "Ashton Jeanty"
+      "name": "Ashton Jeanty",
+      "pos": "RB"
     },
     {
       "id": "12530",
-      "name": "Travis Hunter"
+      "name": "Travis Hunter",
+      "pos": null
     },
     {
       "id": "2133",
-      "name": "Davante Adams"
+      "name": "Davante Adams",
+      "pos": "WR"
     },
     {
       "id": "6904",
-      "name": "Jalen Hurts"
+      "name": "Jalen Hurts",
+      "pos": "QB"
     },
     {
       "id": "7049",
-      "name": "Jauan Jennings"
+      "name": "Jauan Jennings",
+      "pos": "WR"
     },
     {
       "id": "7525",
-      "name": "DeVonta Smith"
+      "name": "DeVonta Smith",
+      "pos": "WR"
     },
     {
       "id": "8110",
-      "name": "Jake Ferguson"
+      "name": "Jake Ferguson",
+      "pos": "TE"
     },
     {
       "id": "8134",
-      "name": "Khalil Shakir"
+      "name": "Khalil Shakir",
+      "pos": "WR"
     },
     {
       "id": "8138",
-      "name": "James Cook"
+      "name": "James Cook",
+      "pos": "RB"
     },
     {
       "id": "8167",
-      "name": "Christian Watson"
+      "name": "Christian Watson",
+      "pos": "WR"
     },
     {
       "id": "9221",
-      "name": "Jahmyr Gibbs"
+      "name": "Jahmyr Gibbs",
+      "pos": "RB"
     },
     {
       "id": "9504",
-      "name": "Kayshon Boutte"
+      "name": "Kayshon Boutte",
+      "pos": "WR"
     },
     {
       "id": "9508",
-      "name": "Tyjae Spears"
+      "name": "Tyjae Spears",
+      "pos": "RB"
     },
     {
       "id": "JAX",
-      "name": "Jacksonville Jaguars"
+      "name": "Jacksonville Jaguars",
+      "pos": "DEF"
     }
   ],
   "J’Allen Plancey z’l (@sanfbe)": [
     {
       "id": "10222",
-      "name": "Jayden Reed"
+      "name": "Jayden Reed",
+      "pos": "WR"
     },
     {
       "id": "10232",
-      "name": "Michael Wilson"
+      "name": "Michael Wilson",
+      "pos": "WR"
     },
     {
       "id": "10859",
-      "name": "Sam LaPorta"
+      "name": "Sam LaPorta",
+      "pos": "TE"
     },
     {
       "id": "11627",
-      "name": "Troy Franklin"
+      "name": "Troy Franklin",
+      "pos": "WR"
     },
     {
       "id": "12534",
-      "name": "Kyle Monangai"
+      "name": "Kyle Monangai",
+      "pos": "RB"
     },
     {
       "id": "4984",
-      "name": "Josh Allen"
+      "name": "Josh Allen",
+      "pos": "QB"
     },
     {
       "id": "5022",
-      "name": "Dallas Goedert"
+      "name": "Dallas Goedert",
+      "pos": "TE"
     },
     {
       "id": "5189",
-      "name": "Eddy Pineiro"
+      "name": "Eddy Pineiro",
+      "pos": "K"
     },
     {
       "id": "5846",
-      "name": "DK Metcalf"
+      "name": "DK Metcalf",
+      "pos": "WR"
     },
     {
       "id": "5850",
-      "name": "Josh Jacobs"
+      "name": "Josh Jacobs",
+      "pos": "RB"
     },
     {
       "id": "5872",
-      "name": "Deebo Samuel"
+      "name": "Deebo Samuel",
+      "pos": "WR"
     },
     {
       "id": "6865",
-      "name": "Colby Parkinson"
+      "name": "Colby Parkinson",
+      "pos": "TE"
     },
     {
       "id": "7021",
-      "name": "Rico Dowdle"
+      "name": "Rico Dowdle",
+      "pos": "RB"
     },
     {
       "id": "8146",
-      "name": "Garrett Wilson"
+      "name": "Garrett Wilson",
+      "pos": "WR"
     },
     {
       "id": "9509",
-      "name": "Bijan Robinson"
+      "name": "Bijan Robinson",
+      "pos": "RB"
     },
     {
       "id": "9753",
-      "name": "Zach Charbonnet"
+      "name": "Zach Charbonnet",
+      "pos": "RB"
     },
     {
       "id": "9997",
-      "name": "Zay Flowers"
+      "name": "Zay Flowers",
+      "pos": "WR"
     },
     {
       "id": "TB",
-      "name": "Tampa Bay Buccaneers"
+      "name": "Tampa Bay Buccaneers",
+      "pos": "DEF"
     }
   ]
 }
