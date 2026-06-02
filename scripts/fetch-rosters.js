@@ -6,7 +6,7 @@ const path = require("path");
 
 const BASE = "https://api.sleeper.app/v1";
 const USERNAME = "AlastairL";
-const OUT = path.join(__dirname, "../public/data/rosters.json");
+const OUT = path.join(__dirname, "../docs/data/rosters.json");
 
 async function get(url) {
   const res = await fetch(url);
