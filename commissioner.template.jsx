@@ -14,13 +14,12 @@ const NAMES = {
   AlastairL: 'Alastair',
   dpol:      'Dan',
   saulgoat:  'Saul',
-  // —— TODO: confirm these six ——
-  sanfbe:    'sanfbe',
-  joshjr11:  'joshjr11',
-  drjkay:    'drjkay',
-  GSac:      'GSac',
-  benjlev:   'benjlev',
-  allyl900:  'allyl900',
+  sanfbe:    'Benjy',
+  joshjr11:  'Josh',
+  drjkay:    'Jamie',
+  GSac:      'Gideon',
+  benjlev:   'Benjy L',
+  allyl900:  'Alastair L',
 };
 function displayName(handle) {
   if (!handle) return handle;
@@ -45,10 +44,10 @@ const LORE = `
 (Replace this block with your league lore before publishing.)
 
 Suggestions:
-- Alastair won the 2025 title despite sanfbe beating him twice in the regular season.
+- Alastair won the 2025 title despite Benjy beating him twice in the regular season.
 - Dan won a game in Week 3 by 0.02 points and never lets anyone forget it.
-- GSac put up 202.36 in Wk12 2025 — the highest score in league history — and still didn't make the final.
-- benjlev went 0-14 in 2024. A perfect record of futility. The Borehamwood Spiral.
+- Gideon put up 202.36 in Wk12 2025 — the highest score in league history — and still didn't make the final.
+- Benjy L went 0-14 in 2024. A perfect record of futility. The Borehamwood Spiral.
 - Add your own: nicknames, draft regrets, waiver crimes, feuds, superstitions...
 `;
 
@@ -473,8 +472,9 @@ ${JSON.stringify(statsData)}`;
 const LEAGUE_FACTS = `Borehamwood Plancy League. 1-QB redraft, WR/RB/TE flex, half-PPR, 8 teams. 2023–2025 complete.
 2025 champion: Alastair (Fourth and Goalda Meir), beat Dan 143.96-118.58 in the final.
 Dan won Wk3 2025 by 0.02 pts — the most celebrated marginal win in league history — then lost the final by 25.
-GSac posted 202.36 in Wk12 2025 (league all-time high) and still didn't make the final.
-sanfbe is Alastair's bogey team — beat him twice in 2025 regular season.`;
+Gideon posted 202.36 in Wk12 2025 (league all-time high) and still didn't make the final.
+Benjy (sanfbe) is Alastair's bogey team — beat him twice in 2025 regular season.
+Managers: Alastair, Dan, Saul, Benjy, Josh, Jamie, Gideon, Benjy L.`;
 
 function BanterTab({ historyData }) {
   const systemPrompt = `You are the resident wind-up merchant of the Borehamwood Plancy League. Voice: bone-dry British banter, mock gravity, never cruel. Keep replies punchy (3-5 sentences). Never invent a statistic.
