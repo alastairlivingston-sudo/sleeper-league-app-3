@@ -17,6 +17,10 @@ const DATA = {
   __TRADES__:  path.join(ROOT, "docs/data/fc-values.json"),
 };
 
+const SCALARS = {
+  __BUILT_AT__: () => JSON.stringify(new Date().toISOString()),
+};
+
 async function main() {
   if (!fs.existsSync(SRC)) {
     console.error(`Template not found: ${SRC}`);
@@ -25,6 +29,7 @@ async function main() {
 
   let src = fs.readFileSync(SRC, "utf8");
 
+  // Inline JSON data files
   for (const [placeholder, filePath] of Object.entries(DATA)) {
     if (!fs.existsSync(filePath)) {
       console.error(`Data file not found: ${filePath}`);
@@ -36,8 +41,12 @@ async function main() {
       console.error(`Placeholder "${placeholder}" not found in template`);
       process.exit(1);
     }
-    // Use a function replacer to avoid $-expansion issues in JSON strings
     src = src.replace(placeholder, () => json);
+  }
+
+  // Inline scalar values
+  for (const [placeholder, fn] of Object.entries(SCALARS)) {
+    src = src.replace(placeholder, fn);
   }
 
   fs.writeFileSync(OUT, src);

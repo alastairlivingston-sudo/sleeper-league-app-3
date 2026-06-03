@@ -29,26 +29,28 @@ async function findLeague(season) {
   return league;
 }
 
-// Build sleeperId → fantasy position map (fetched once for all seasons)
+// Build sleeperId → {pos, name} map (fetched once for all seasons)
 async function buildPosMap() {
-  console.log("Fetching /players/nfl for position data...");
+  console.log("Fetching /players/nfl for position + name data...");
   const players = await get(`${BASE}/players/nfl`);
   const pos = {};
   for (const [id, p] of Object.entries(players)) {
     if (!p) continue;
     const fp = p.fantasy_positions?.[0] || p.position;
-    if (fp === "QB") pos[id] = "QB";
-    else if (fp === "RB" || fp === "FB") pos[id] = "RB";
-    else if (fp === "WR") pos[id] = "WR";
-    else if (fp === "TE") pos[id] = "TE";
-    else if (fp === "K")  pos[id] = "K";
+    let posStr = null;
+    if (fp === "QB") posStr = "QB";
+    else if (fp === "RB" || fp === "FB") posStr = "RB";
+    else if (fp === "WR") posStr = "WR";
+    else if (fp === "TE") posStr = "TE";
+    else if (fp === "K")  posStr = "K";
+    if (posStr) pos[id] = { pos: posStr, name: p.full_name || null };
   }
   return pos;
 }
 
 function playerPos(pid, posMap) {
   if (/^[A-Z]{2,3}$/.test(pid)) return "DEF"; // team defenses e.g. "NE", "LAR"
-  return posMap[pid] || null;
+  return posMap[pid]?.pos || null;
 }
 
 function posPoints(entry, posMap) {
@@ -62,6 +64,21 @@ function posPoints(entry, posMap) {
     result[pos] = Math.round(((result[pos] || 0) + score) * 100) / 100;
   }
   return result; // only non-zero positions present
+}
+
+// Individual starter performances: [{n, pos, pts}] sorted by pts desc
+function starterList(entry, posMap) {
+  const starters = entry.starters || [];
+  const pts      = entry.players_points || {};
+  const result   = [];
+  for (const pid of starters) {
+    let n, pos;
+    if (/^[A-Z]{2,3}$/.test(pid)) { n = pid; pos = "DEF"; }
+    else { const m = posMap[pid]; if (!m) continue; n = m.name || pid; pos = m.pos; }
+    const score = pts[pid] || 0;
+    result.push({ n, pos, pts: Math.round(score * 100) / 100 });
+  }
+  return result.sort((a, b) => b.pts - a.pts);
 }
 
 async function fetchAllMatchups(leagueId) {
@@ -160,8 +177,10 @@ async function fetchSeason(leagueId, posMap) {
         b:       userMap[bUid]?.name || String(y.roster_id),
         pa:      x.points || 0,
         pb:      y.points || 0,
-        ap:      posPoints(x, posMap), // e.g. {QB:18.5, WR:42.3, RB:28.1, TE:9.4, K:11.2, DEF:8}
+        ap:      posPoints(x, posMap),
         bp:      posPoints(y, posMap),
+        as:      starterList(x, posMap), // individual starters: [{n,pos,pts}]
+        bs:      starterList(y, posMap),
       });
     }
   }

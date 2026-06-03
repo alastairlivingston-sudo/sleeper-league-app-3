@@ -68,57 +68,46 @@ Suggestions:
 `;
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// INLINED DATA — baked-in snapshot, always works.
-// On load we also attempt a live fetch from JSDelivr / GitHub Pages.
-// If the live fetch succeeds the data silently upgrades and the header
-// shows a green LIVE badge. If blocked, the cached snapshot is used.
+// INLINED DATA — baked in at build time, refreshed daily by workflow.
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const BUILT_AT     = __BUILT_AT__;  // ISO string injected by build-artifact.js
 const HISTORY_DATA = __HISTORY__;
 const STATS_DATA   = __STATS__;
 const ROSTERS_DATA = __ROSTERS__;
 const TRADE_VALUES = __TRADES__;
 
-// Candidate CDN/Pages URLs tried in order — first success wins
-const REPO = 'alastairlivingston-sudo/sleeper-league-app-3';
-const DATA_SOURCES = [
-  // JSDelivr: global CDN, serves any public GitHub file with CORS headers
-  {
-    history: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/history.json',
-    stats:   'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/stats.json',
-    rosters: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/rosters.json',
-    trades:  'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/fc-values.json',
-  },
-  // GitHub Pages (enabled via workflow — /docs folder, prefix stripped when served)
-  {
-    history: 'https://alastairlivingston-sudo.github.io/' + REPO.split('/')[1] + '/data/history.json',
-    stats:   'https://alastairlivingston-sudo.github.io/' + REPO.split('/')[1] + '/data/stats.json',
-    rosters: 'https://alastairlivingston-sudo.github.io/' + REPO.split('/')[1] + '/data/rosters.json',
-    trades:  'https://alastairlivingston-sudo.github.io/' + REPO.split('/')[1] + '/data/fc-values.json',
-  },
-];
+// Format the build timestamp for display: "Updated 3 Jun 2025"
+function fmtBuiltAt(iso) {
+  try {
+    const d = new Date(iso);
+    return 'Updated ' + d.getDate() + ' ' + ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()] + ' ' + d.getFullYear();
+  } catch { return 'Updated recently'; }
+}
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// THEME — deep slate / red energy / gold prestige / green wins
+// THEME — midnight navy + electric indigo + amber (Linear/Sleeper-inspired)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const T = {
-  bg:       '#0a0e17',
-  panel:    '#111726',
-  panel2:   '#161d2e',
-  raised:   '#1c2436',
-  border:   '#283246',
-  borderHi: '#3a4760',
-  text:     '#f0f4fa',
-  dim:      '#8595ad',
-  faint:    '#56657e',
-  red:      '#ff2244',
-  redDk:    '#cc1733',
-  green:    '#1ed47f',
-  gold:     '#ffc233',
-  blue:     '#3d9bff',
-  purple:   '#a855f7',
+  bg:       '#090d18',
+  panel:    '#0f1625',
+  panel2:   '#141e32',
+  raised:   '#1a2640',
+  border:   '#24344e',
+  borderHi: '#304260',
+  text:     '#e8f1ff',
+  dim:      '#6e8db0',
+  faint:    '#3d5470',
+  indigo:   '#6366f1',   // primary interactive
+  indigoDk: '#4f46e5',
+  green:    '#10b981',   // wins
+  amber:    '#f59e0b',   // scores / gold
+  blue:     '#60a5fa',   // side A in trades
+  red:      '#f87171',   // errors / side B
 };
-const FH = "'Impact','Arial Narrow','Helvetica Neue',Arial,sans-serif"; // headings
-const FB = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif"; // body
+// Single system-font stack at heavy weight — SF Pro Display on iOS,
+// Segoe UI Black on Windows, Roboto Black on Android. No Impact.
+const FH = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif";
+const FB = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // CLAUDE CALL
@@ -256,31 +245,9 @@ function computeAnalytics(history) {
   return { perSeason, allTime };
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// LIVE DATA HOOK — tries each source; falls back to inlined.
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Data is baked in at build time — no runtime fetch needed.
 function useLeagueData() {
-  const [data, setData] = useState({
-    history: HISTORY_DATA, stats: STATS_DATA,
-    rosters: ROSTERS_DATA, trades: TRADE_VALUES, source: 'cached',
-  });
-  useEffect(() => {
-    (async () => {
-      for (const urls of DATA_SOURCES) {
-        try {
-          const [history, stats, rosters, trades] = await Promise.all(
-            Object.values(urls).map(url =>
-              fetch(url).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
-            )
-          );
-          setData({ history, stats, rosters, trades, source: 'live' });
-          return;
-        } catch { /* try next */ }
-      }
-      setData(d => ({ ...d, source: 'cached' }));
-    })();
-  }, []);
-  return data;
+  return { history: HISTORY_DATA, stats: STATS_DATA, rosters: ROSTERS_DATA, trades: TRADE_VALUES };
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -450,25 +417,29 @@ ANSWER FORMAT — follow exactly:
 Keep it tight. No preamble like "Great question".
 
 PRECOMPUTED ADVANCED METRICS (use these directly — do NOT recompute):
-- allPlay: the team's record if it had played EVERY other team every week (all-vs-all). The truest measure of how good a team actually was.
+- allPlay: record if played EVERY other team every week (all-vs-all). The truest measure of how good a team actually was.
 - allPlayWinPct: all-play win %.
-- expectedWins: wins you'd expect from performance alone = allPlayWinPct × games.
-- luck: actualWins − expectedWins. POSITIVE = LUCKY (won more than deserved). NEGATIVE = UNLUCKY (deserved more wins than they got). This is the metric for "luckiest" / "unluckiest".
-- consistencySD: std-dev of weekly scores. LOW = consistent/steady, HIGH = boom-or-bust.
-- avgScore, high, low, pf (points for), pa (points against), record.
+- expectedWins: allPlayWinPct × games.
+- luck: actualWins − expectedWins. POSITIVE = LUCKY. NEGATIVE = UNLUCKY. Use this for "luckiest"/"unluckiest".
+- consistencySD: std-dev of weekly scores. LOW = consistent, HIGH = boom-or-bust.
+- avgScore, high, low, pf, pa, record.
 
 GUIDANCE:
-- "Unluckiest" / "most hard done by" → most NEGATIVE luck (back it up with allPlay vs actual record).
-- "Luckiest" → most POSITIVE luck.
+- "Unluckiest" → most NEGATIVE luck.
 - "Best team that missed out" → strong allPlayWinPct but poor actual record.
-- "Most consistent" → lowest consistencySD (min ~6 games). "Boom or bust" → highest.
-- "Best ever" → combine allPlayWinPct + titles + pf.
-- For anything positional / single-game (closest game, most WR pts, blowout) use RAW HISTORY games[].
+- "Most consistent" → lowest consistencySD.
+- For individual player questions (top WR scorer, best single performance) → use RAW HISTORY games[].as / games[].bs.
 
-ANALYTICS (per season + all-time, already computed):
+RAW HISTORY game schema:
+  a/b = manager handle. pa/pb = total team points.
+  ap/bp = positional totals e.g. {QB:18.5, WR:42.3, RB:28.1, TE:9.4, K:11.2, DEF:8}.
+  as/bs = individual starter performances: [{n:"Player Name", pos:"WR", pts:32.5}, ...] sorted pts desc.
+  Use as/bs to answer "who scored X points", "top WR scorer", "best individual performance" etc.
+
+ANALYTICS (per season + all-time):
 ${JSON.stringify(analytics)}
 
-RAW HISTORY — games[]: {week, playoff, a, b, pa, pb, ap:{QB,RB,WR,TE,K,DEF}, bp:{...}}. a/b = handle, pa/pb = total points, ap/bp = positional breakdown:
+RAW HISTORY — all games[]:
 ${JSON.stringify(historyData)}
 
 CURRENT SEASON STATS:
@@ -525,7 +496,7 @@ ${JSON.stringify(historyData)}`;
 // TRADE GRADER — module-level helpers (hoisted to prevent remount)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function TradePanel({ side, label, team, setTeam, text, setText, teamOpts }) {
-  const accent = side === 'A' ? T.blue : T.red;
+  const accent = side === 'A' ? T.blue : T.indigo;
   return (
     <div style={{ background: T.panel, border: `1px solid ${T.border}`, borderTop: `3px solid ${accent}`, borderRadius: '4px 4px 12px 12px', padding: 13, flex: 1, minWidth: 0 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 9 }}>
@@ -546,8 +517,8 @@ function TradePanel({ side, label, team, setTeam, text, setText, teamOpts }) {
 function PlayerRow({ p }) {
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px 0', borderBottom: `1px solid ${T.border}`, fontSize: 13.5 }}>
-      <span style={{ color: p.found ? T.text : T.gold }}>{p.found ? p.officialName : `${p.input} ⚠`}</span>
-      <span style={{ color: p.found ? T.dim : T.gold, fontSize: 12.5, marginLeft: 8, fontFamily: FH, fontWeight: 700 }}>
+      <span style={{ color: p.found ? T.text : T.amber }}>{p.found ? p.officialName : `${p.input} ⚠`}</span>
+      <span style={{ color: p.found ? T.dim : T.amber, fontSize: 12.5, marginLeft: 8, fontWeight: 700 }}>
         {p.found ? p.value.toLocaleString() : 'no match'}
       </span>
     </div>
@@ -664,7 +635,7 @@ function TradeGrader({ rostersData, tradeValues }) {
   const teamOpts = teamKeys.map(k => <option key={k} value={k}>{teamLabel(k)}</option>);
   const winA = result?.winner === 'A', winB = result?.winner === 'B';
   const POSColors = { QB: '#ff7a1a', RB: '#1ed47f', WR: '#3d9bff', TE: '#a855f7', K: '#888', DEF: '#c44' };
-  const spin = { width: 14, height: 14, border: `2px solid ${T.gold}`, borderTopColor: 'transparent', borderRadius: '50%', display: 'inline-block', animation: 'tg-spin 0.8s linear infinite' };
+  const spin = { width: 14, height: 14, border: `2px solid ${T.amber}`, borderTopColor: 'transparent', borderRadius: '50%', display: 'inline-block', animation: 'tg-spin 0.8s linear infinite' };
 
   return (
     <div style={{ background: T.bg, color: T.text, overflowY: 'auto', height: '100%', boxSizing: 'border-box' }}>
@@ -705,7 +676,7 @@ function TradeGrader({ rostersData, tradeValues }) {
         </div>
 
         <button onClick={gradeTrade} disabled={!sideAText.trim() && !sideBText.trim()}
-          style={{ width: '100%', background: (!sideAText.trim() && !sideBText.trim()) ? T.raised : `linear-gradient(135deg,${T.red},${T.redDk})`, color: (!sideAText.trim() && !sideBText.trim()) ? T.faint : '#fff', border: 'none', borderRadius: 12, padding: 15, fontSize: 15, fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase', fontFamily: FH, cursor: (!sideAText.trim() && !sideBText.trim()) ? 'default' : 'pointer', marginTop: 12, boxShadow: (!sideAText.trim() && !sideBText.trim()) ? 'none' : '0 4px 18px rgba(255,34,68,0.3)' }}>
+          style={{ width: '100%', background: (!sideAText.trim() && !sideBText.trim()) ? T.raised : `linear-gradient(135deg,${T.indigo},${T.indigoDk})`, color: (!sideAText.trim() && !sideBText.trim()) ? T.faint : '#fff', border: 'none', borderRadius: 12, padding: 15, fontSize: 15, fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase', cursor: (!sideAText.trim() && !sideBText.trim()) ? 'default' : 'pointer', marginTop: 12, boxShadow: (!sideAText.trim() && !sideBText.trim()) ? 'none' : '0 4px 18px rgba(99,102,241,0.35)' }}>
           Grade This Trade
         </button>
 
@@ -721,7 +692,7 @@ function TradeGrader({ rostersData, tradeValues }) {
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0 12px', minWidth: 92 }}>
                   <div style={{ fontSize: 22 }}>{result.icon}</div>
-                  <div style={{ fontFamily: FH, fontWeight: 700, fontSize: 12.5, color: T.gold, letterSpacing: '0.04em', textAlign: 'center', lineHeight: 1.1, marginTop: 3 }}>{result.tier}</div>
+                  <div style={{ fontWeight: 800, fontSize: 12.5, color: T.amber, letterSpacing: '0.04em', textAlign: 'center', lineHeight: 1.1, marginTop: 3 }}>{result.tier}</div>
                   {result.winner !== 'even' && <div style={{ fontSize: 10.5, color: T.dim, marginTop: 3 }}>by {result.gap.toLocaleString()} ({result.gapPct.toFixed(0)}%)</div>}
                 </div>
                 <div style={{ flex: 1, padding: '15px 10px', textAlign: 'center', background: winB ? 'rgba(30,212,127,0.08)' : 'transparent', borderLeft: `1px solid ${T.border}` }}>
@@ -734,7 +705,7 @@ function TradeGrader({ rostersData, tradeValues }) {
 
             {/* Player breakdown */}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 11, marginBottom: 12 }}>
-              {[{ side: 'A', players: result.sA, team: teamA, accent: T.blue }, { side: 'B', players: result.sB, team: teamB, accent: T.red }].map(({ side, players, team, accent }) => (
+              {[{ side: 'A', players: result.sA, team: teamA, accent: T.blue }, { side: 'B', players: result.sB, team: teamB, accent: T.indigo }].map(({ side, players, team, accent }) => (
                 <div key={side} style={{ flex: 1, minWidth: 140, background: T.panel, border: `1px solid ${T.border}`, borderRadius: 11, padding: '11px 13px' }}>
                   <div style={{ color: accent, fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6, fontFamily: FH }}>{teamLabel(team) || `Side ${side}`} gives</div>
                   {players.length ? players.map((p, i) => <PlayerRow key={i} p={p} />) : <div style={{ color: T.faint, fontSize: 12 }}>—</div>}
@@ -744,8 +715,8 @@ function TradeGrader({ rostersData, tradeValues }) {
 
             {/* Add-ons */}
             {result.winner !== 'even' && result.addOns.length > 0 && (
-              <div style={{ background: T.panel, border: `1px solid ${T.border}`, borderLeft: `3px solid ${T.gold}`, borderRadius: '4px 11px 11px 4px', padding: '11px 13px', marginBottom: 12 }}>
-                <div style={{ color: T.gold, fontSize: 11, marginBottom: 6, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', fontFamily: FH }}>To balance, {teamLabel(result.winner === 'A' ? teamA : teamB)} could add</div>
+              <div style={{ background: T.panel, border: `1px solid ${T.border}`, borderLeft: `3px solid ${T.amber}`, borderRadius: '4px 11px 11px 4px', padding: '11px 13px', marginBottom: 12 }}>
+                <div style={{ color: T.amber, fontSize: 11, marginBottom: 6, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>To balance, {teamLabel(result.winner === 'A' ? teamA : teamB)} could add</div>
                 {result.addOns.map((a, i) => (
                   <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13.5, padding: '3px 0' }}>
                     <span>{a.name}</span><span style={{ color: T.dim, fontFamily: FH }}>{a.value.toLocaleString()}</span>
@@ -774,13 +745,13 @@ function TradeGrader({ rostersData, tradeValues }) {
 
             {/* Commissioner's Verdict */}
             <button onClick={getVerdict} disabled={verdictLoading}
-              style={{ width: '100%', background: T.panel, border: `1px solid ${T.gold}`, color: T.gold, borderRadius: 11, padding: '13px 20px', fontSize: 13.5, fontWeight: 700, letterSpacing: '0.5px', textTransform: 'uppercase', fontFamily: FH, cursor: verdictLoading ? 'default' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9, opacity: verdictLoading ? 0.7 : 1 }}>
+              style={{ width: '100%', background: T.panel, border: `1px solid ${T.amber}`, color: T.amber, borderRadius: 11, padding: '13px 20px', fontSize: 13.5, fontWeight: 700, letterSpacing: '0.5px', textTransform: 'uppercase', cursor: verdictLoading ? 'default' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9, opacity: verdictLoading ? 0.7 : 1 }}>
               {verdictLoading ? <span style={spin} /> : '🎙'}
               The Commissioner's Verdict
             </button>
 
             {(verdict || verdictError) && (
-              <div className="msg-in" style={{ background: T.panel2, border: `1px solid ${verdictError ? T.gold : T.border}`, borderLeft: `3px solid ${verdictError ? T.gold : T.red}`, borderRadius: '4px 12px 12px 4px', padding: 14, color: verdictError ? T.gold : T.text, marginTop: 10, fontSize: 14, lineHeight: 1.6 }}>
+              <div className="msg-in" style={{ background: T.panel2, border: `1px solid ${verdictError ? T.amber : T.border}`, borderLeft: `3px solid ${verdictError ? T.amber : T.indigo}`, borderRadius: '4px 12px 12px 4px', padding: 14, color: verdictError ? T.amber : T.text, marginTop: 10, fontSize: 14, lineHeight: 1.6 }}>
                 {verdictError ? 'The Commissioner is unavailable — give it another go.' : <MarkdownMessage text={verdict} />}
               </div>
             )}
@@ -797,95 +768,98 @@ function TradeGrader({ rostersData, tradeValues }) {
 const CSS = `
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; }
-  body { background: #0a0e17; -webkit-font-smoothing: antialiased; overflow: hidden; }
+  body { background: #090d18; -webkit-font-smoothing: antialiased; overflow: hidden; }
 
   ::-webkit-scrollbar { width: 5px; height: 5px; }
-  ::-webkit-scrollbar-thumb { background: #283246; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb { background: #24344e; border-radius: 3px; }
 
   @keyframes ld-pulse { 0%,80%,100%{opacity:.2;transform:scale(.7)} 40%{opacity:1;transform:scale(1)} }
-  .ld { display:inline-block; width:7px; height:7px; background:#ff2244; border-radius:50%; margin:0 2px; animation:ld-pulse 1.4s infinite ease-in-out both; }
+  .ld { display:inline-block; width:7px; height:7px; background:#6366f1; border-radius:50%; margin:0 2px; animation:ld-pulse 1.4s infinite ease-in-out both; }
   .ld:nth-child(2){animation-delay:.2s} .ld:nth-child(3){animation-delay:.4s}
 
-  @keyframes fadeUp { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:none} }
-  .msg-in { animation: fadeUp .22s ease both; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
+  .msg-in { animation: fadeUp .2s ease both; }
 
   .bubble-user {
     align-self:flex-end;
-    background:linear-gradient(135deg,#ff2244,#cc1733);
-    color:#fff; border-radius:16px 16px 4px 16px;
+    background:linear-gradient(135deg,#6366f1,#4f46e5);
+    color:#fff; border-radius:18px 18px 4px 18px;
     padding:11px 15px; max-width:82%; font-size:15px; line-height:1.5;
-    white-space:pre-wrap; box-shadow:0 2px 12px rgba(255,34,68,0.24);
+    white-space:pre-wrap; box-shadow:0 3px 14px rgba(99,102,241,0.3);
   }
   .bubble-assistant {
     align-self:flex-start;
-    background:#161d2e; color:#f0f4fa; border-left:3px solid #ff2244;
-    border-radius:4px 16px 16px 16px; padding:11px 15px; max-width:88%;
-    font-size:15px; line-height:1.55; white-space:pre-wrap;
-    box-shadow:0 1px 8px rgba(0,0,0,0.35);
+    background:#141e32; color:#e8f1ff;
+    border:1px solid #24344e; border-left:3px solid #6366f1;
+    border-radius:4px 18px 18px 18px; padding:12px 15px; max-width:88%;
+    font-size:15px; line-height:1.6; white-space:pre-wrap;
+    box-shadow:0 2px 10px rgba(0,0,0,0.4);
   }
   .bubble-assistant.md { white-space:normal; }
   .bubble-assistant.md p:last-child { margin-bottom:0; }
   .bubble-error {
     align-self:flex-start;
-    background:#161d2e; color:#ffc233; border-left:3px solid #ffc233;
-    border-radius:4px 16px 16px 16px; padding:11px 15px; max-width:88%;
+    background:#141e32; color:#f59e0b;
+    border:1px solid #24344e; border-left:3px solid #f59e0b;
+    border-radius:4px 18px 18px 18px; padding:12px 15px; max-width:88%;
     font-size:15px; white-space:pre-wrap;
   }
 
-  .md-table { border-collapse:collapse; width:100%; font-size:13px; background:#111726; border-radius:8px; overflow:hidden; }
+  .md-table { border-collapse:collapse; width:100%; font-size:13px; background:#0f1625; border-radius:10px; overflow:hidden; }
   .md-table th {
-    text-align:left; padding:8px 11px; background:#0a0e17; color:#ffc233;
-    font-family:Impact,'Arial Narrow',Arial,sans-serif; text-transform:uppercase;
-    font-size:11px; letter-spacing:0.05em; border-bottom:1px solid #283246; white-space:nowrap;
+    text-align:left; padding:9px 12px; background:#090d18;
+    color:#f59e0b; font-weight:800; text-transform:uppercase;
+    font-size:10.5px; letter-spacing:0.07em; border-bottom:1px solid #24344e; white-space:nowrap;
   }
-  .md-table td { padding:7px 11px; border-bottom:1px solid #283246; color:#f0f4fa; }
+  .md-table td { padding:8px 12px; border-bottom:1px solid #1a2640; color:#e8f1ff; }
   .md-table td:first-child { font-weight:600; }
   .md-table tr:last-child td { border-bottom:none; }
-  .md-table tbody tr:nth-child(even) td { background:rgba(255,255,255,0.018); }
+  .md-table tbody tr:nth-child(even) td { background:rgba(99,102,241,0.04); }
+  .md-table tbody tr:hover td { background:rgba(99,102,241,0.08); }
 
   .chip {
-    background:#1c2436; border:1px solid #3a4760; color:#f0f4fa;
-    border-radius:20px; padding:8px 14px; font-size:12.5px; font-weight:600;
-    cursor:pointer; white-space:nowrap; flex-shrink:0; letter-spacing:0.2px;
-    transition:border-color .12s, background .12s;
+    background:#1a2640; border:1px solid #304260; color:#e8f1ff;
+    border-radius:20px; padding:8px 15px; font-size:13px; font-weight:600;
+    cursor:pointer; white-space:nowrap; flex-shrink:0;
+    transition:border-color .15s, background .15s, color .15s;
   }
-  .chip:hover:not(:disabled) { border-color:#ff2244; background:#222b40; }
+  .chip:hover:not(:disabled) { border-color:#6366f1; background:#232e50; color:#fff; }
   .chip:disabled { opacity:0.4; cursor:default; }
 
   .send-btn {
-    background:linear-gradient(135deg,#ff2244,#cc1733); color:#fff; border:none;
-    border-radius:11px; padding:0 18px; font-weight:700; font-size:12.5px;
-    letter-spacing:1px; text-transform:uppercase; cursor:pointer; align-self:stretch;
-    flex-shrink:0; font-family:Impact,'Arial Narrow',Arial,sans-serif; transition:opacity .1s;
+    background:linear-gradient(135deg,#6366f1,#4f46e5); color:#fff; border:none;
+    border-radius:12px; padding:0 18px; font-weight:700; font-size:12.5px;
+    letter-spacing:0.8px; text-transform:uppercase; cursor:pointer; align-self:stretch;
+    flex-shrink:0; transition:opacity .12s; box-shadow:0 2px 10px rgba(99,102,241,0.3);
   }
-  .send-btn:disabled { background:#1c2436; color:#56657e; cursor:default; }
+  .send-btn:disabled { background:#1a2640; color:#3d5470; cursor:default; box-shadow:none; }
 
   .nav-btn {
     flex:1; display:flex; flex-direction:column; align-items:center; gap:3px;
-    padding:9px 4px; background:transparent; border:none; cursor:pointer;
+    padding:10px 4px; background:transparent; border:none; cursor:pointer;
     transition:color .12s; position:relative;
   }
-  .nav-btn .nav-ico { font-size:19px; transition:transform .12s, filter .12s; }
+  .nav-btn .nav-ico { font-size:20px; transition:transform .15s, filter .15s; }
   .nav-btn.active .nav-ico { transform:translateY(-1px); }
-  .nav-btn:not(.active) .nav-ico { filter:grayscale(0.6) opacity(0.55); }
-  .nav-lab { font-size:10.5px; font-weight:700; letter-spacing:0.08em; font-family:Impact,'Arial Narrow',Arial,sans-serif; }
+  .nav-btn:not(.active) .nav-ico { filter:grayscale(0.7) opacity(0.5); }
+  .nav-lab { font-size:10px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; }
 
   .plaincy-app {
     display:flex; flex-direction:column;
     height:var(--app-h, 100dvh);
-    width:100%; max-width:540px; margin:0 auto;
-    background:#0a0e17; overflow:hidden; box-shadow:0 0 80px rgba(0,0,0,0.7);
+    width:100%; max-width:560px; margin:0 auto;
+    background:#090d18; overflow:hidden; box-shadow:0 0 80px rgba(0,0,0,0.7);
   }
   @media(min-width:640px) {
-    .plaincy-app { max-width:760px; }
+    .plaincy-app { max-width:780px; }
     .bubble-assistant, .bubble-error { max-width:78%; }
     .bubble-user { max-width:70%; }
   }
 
   button { font-family:inherit; }
   textarea, select, input { font-family:inherit; font-size:16px; }
-  textarea:focus, select:focus { border-color:#3a4760; outline:none; }
-  select option { background:#161d2e; color:#f0f4fa; }
+  textarea:focus, select:focus { border-color:#304260; outline:none; }
+  select option { background:#141e32; color:#e8f1ff; }
 `;
 
 const TABS = [
@@ -896,7 +870,7 @@ const TABS = [
 
 export default function App() {
   const [tab, setTab] = useState('stats');
-  const { history, stats, rosters, trades, source } = useLeagueData();
+  const { history, stats, rosters, trades } = useLeagueData();
   const { keyboardOpen } = useViewport();
 
   useEffect(() => {
@@ -907,27 +881,26 @@ export default function App() {
     document.head.appendChild(el);
   }, []);
 
-  const isLive = source === 'live';
-
   return (
     <div className="plaincy-app">
-      {/* Top accent stripe */}
-      <div style={{ height: 3, background: `linear-gradient(90deg,${T.red} 0%,${T.gold} 50%,${T.red} 100%)`, flexShrink: 0 }} />
+      {/* Top accent stripe — indigo to amber */}
+      <div style={{ height: 3, background: `linear-gradient(90deg,${T.indigo} 0%,${T.amber} 60%,${T.indigo} 100%)`, flexShrink: 0 }} />
 
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '11px 16px', background: `linear-gradient(180deg,${T.panel} 0%,${T.bg} 100%)`, borderBottom: `1px solid ${T.border}`, flexShrink: 0 }}>
-        <div style={{ width: 40, height: 40, borderRadius: 11, background: `linear-gradient(135deg,${T.red},${T.redDk})`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: FH, fontWeight: 700, fontSize: 24, color: '#fff', boxShadow: '0 2px 14px rgba(255,34,68,0.4)', border: `1px solid ${T.gold}`, borderBottom: `3px solid ${T.gold}`, flexShrink: 0 }}>P</div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 13, padding: '12px 16px', background: T.panel, borderBottom: `1px solid ${T.border}`, flexShrink: 0 }}>
+        {/* Logo mark */}
+        <div style={{ width: 40, height: 40, borderRadius: 12, background: `linear-gradient(135deg,${T.indigo},${T.indigoDk})`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: 22, color: '#fff', boxShadow: `0 3px 14px rgba(99,102,241,0.45)`, flexShrink: 0, letterSpacing: '-1px' }}>P</div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontFamily: FH, fontSize: 23, fontWeight: 700, color: T.text, letterSpacing: '0.02em', lineHeight: 1, textTransform: 'uppercase' }}>
-            Pl<span style={{ color: T.red }}>AI</span>ncy
+          <div style={{ fontWeight: 900, fontSize: 22, color: T.text, letterSpacing: '-0.5px', lineHeight: 1 }}>
+            Pl<span style={{ color: T.indigo }}>AI</span>ncy
           </div>
-          <div style={{ fontSize: 10.5, color: T.dim, marginTop: 3, letterSpacing: '0.12em', textTransform: 'uppercase', fontFamily: FH, fontWeight: 600 }}>
+          <div style={{ fontSize: 11, color: T.dim, marginTop: 2, letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 600 }}>
             Borehamwood Plancy League
           </div>
         </div>
-        <div style={{ fontFamily: FH, fontWeight: 700, fontSize: 10.5, color: isLive ? T.green : T.gold, border: `1px solid ${isLive ? T.green : T.borderHi}`, borderRadius: 6, padding: '4px 9px', letterSpacing: '0.05em', whiteSpace: 'nowrap', flexShrink: 0, display: 'flex', alignItems: 'center', gap: 4 }}>
-          <span style={{ width: 6, height: 6, borderRadius: '50%', background: isLive ? T.green : T.gold, display: 'inline-block' }} />
-          {isLive ? 'LIVE' : 'CACHED'}
+        {/* Build date badge — honest and informative */}
+        <div style={{ fontSize: 10.5, color: T.dim, border: `1px solid ${T.border}`, borderRadius: 6, padding: '4px 9px', whiteSpace: 'nowrap', flexShrink: 0, fontWeight: 600 }}>
+          {fmtBuiltAt(BUILT_AT)}
         </div>
       </div>
 
@@ -938,7 +911,7 @@ export default function App() {
         {tab === 'trade'  && <TradeGrader rostersData={rosters} tradeValues={trades} />}
       </div>
 
-      {/* Bottom tab bar — app-style nav; hidden while typing to free up space */}
+      {/* Bottom tab bar — hidden while keyboard is open */}
       {!keyboardOpen && (
         <nav style={{ display: 'flex', background: T.panel, borderTop: `1px solid ${T.border}`, flexShrink: 0, paddingBottom: 'env(safe-area-inset-bottom)' }}>
           {TABS.map(t => {
@@ -946,7 +919,7 @@ export default function App() {
             return (
               <button key={t.id} onClick={() => setTab(t.id)} className={`nav-btn${active ? ' active' : ''}`}
                 style={{ color: active ? T.text : T.faint }}>
-                {active && <span style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 32, height: 3, borderRadius: '0 0 3px 3px', background: T.red }} />}
+                {active && <span style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 36, height: 3, borderRadius: '0 0 4px 4px', background: T.indigo }} />}
                 <span className="nav-ico">{t.icon}</span>
                 <span className="nav-lab">{t.label}</span>
               </button>
