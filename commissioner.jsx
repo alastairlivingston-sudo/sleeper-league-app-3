@@ -10,6 +10,14 @@ const { useState, useEffect, useRef, useMemo } = React;
 // NAMES ← real names, used EVERYWHERE instead of Sleeper handles.
 // Fill in the blanks (currently fall back to the handle).
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Duplicate accounts → one canonical manager (old handle = same person).
+// allyl900 was Alastair's 2023 account before switching to AlastairL.
+const ALIAS = { allyl900: 'AlastairL' };
+function canonical(handle) {
+  const c = String(handle || '').replace(/^@/, '').trim();
+  return ALIAS[c] || c;
+}
+
 const NAMES = {
   AlastairL: 'Alastair',
   dpol:      'Dan',
@@ -18,13 +26,21 @@ const NAMES = {
   joshjr11:  'Josh',
   drjkay:    'Jamie',
   GSac:      'Gideon',
-  benjlev:   'Benjy L',
-  allyl900:  'Alastair L',
+  benjlev:   'Benjy',
 };
+// Two managers are both "Benjy". Disambiguate to these ONLY when both
+// are referenced together; otherwise plain "Benjy" is fine.
+const DISAMBIG = { benjlev: 'Lev', sanfbe: 'Sanford' };
+
+// Everyday name (handles aliased + Benjy-collision both → "Benjy")
 function displayName(handle) {
-  if (!handle) return handle;
-  const clean = String(handle).replace(/^@/, '').trim();
-  return NAMES[clean] || clean;
+  const c = canonical(handle);
+  return NAMES[c] || c;
+}
+// Unambiguous name — Lev / Sanford for the two Benjys
+function distinctName(handle) {
+  const c = canonical(handle);
+  return DISAMBIG[c] || NAMES[c] || c;
 }
 // "Team Name (@handle)" → "Alastair · Team Name"
 function teamLabel(rosterKey) {
@@ -161,6 +177,7 @@ function finalizeRow(m) {
   const avg     = m.scores.length ? m.scores.reduce((a, b) => a + b, 0) / m.scores.length : 0;
   return {
     name:          displayName(m.handle),
+    alias:         distinctName(m.handle), // disambiguated (Lev/Sanford) for the two Benjys
     handle:        m.handle,
     record:        `${m.w}-${m.l}${m.t ? '-' + m.t : ''}`,
     wins:          m.w,
@@ -195,14 +212,15 @@ function computeAnalytics(history) {
     for (const games of Object.values(weeks)) {
       const board = []; // [handle, score] for every team this week
       for (const g of games) {
-        const A = (acc[g.a] = acc[g.a] || blankRow(g.a));
-        const B = (acc[g.b] = acc[g.b] || blankRow(g.b));
+        const ha = canonical(g.a), hb = canonical(g.b);
+        const A = (acc[ha] = acc[ha] || blankRow(ha));
+        const B = (acc[hb] = acc[hb] || blankRow(hb));
         A.pf += g.pa; A.pa += g.pb; A.scores.push(g.pa);
         B.pf += g.pb; B.pa += g.pa; B.scores.push(g.pb);
         if (g.pa > g.pb) { A.w++; B.l++; }
         else if (g.pb > g.pa) { B.w++; A.l++; }
         else { A.t++; B.t++; }
-        board.push([g.a, g.pa], [g.b, g.pb]);
+        board.push([ha, g.pa], [hb, g.pb]);
       }
       // all-play: each team vs every other team's score this week
       for (const [h, sc] of board) {
@@ -423,6 +441,7 @@ function StatsTab({ historyData, statsData }) {
   const systemPrompt = `You are the statistician for the Borehamwood Plancy League. Answer ONLY from the data below — never invent numbers.
 
 NAMES: always refer to managers by their real NAME (in the data), never their Sleeper handle.
+TWO BENJYS: two managers are both called Benjy. In any table or any sentence where BOTH appear, use the "alias" field to disambiguate them (Lev = benjlev, Sanford = sanfbe). When only one is referenced, plain "Benjy" is fine. The all-time/2023 record for Alastair already includes his old allyl900 account — treat it as one person.
 
 ANSWER FORMAT — follow exactly:
 1. ONE short sentence naming the method you used. If 2–3 valid methods exist you may briefly note them and say which you picked. NEVER describe, list, or explain methods you rejected. No "I considered… but…". No working-out.
@@ -473,14 +492,15 @@ const LEAGUE_FACTS = `Borehamwood Plancy League. 1-QB redraft, WR/RB/TE flex, ha
 2025 champion: Alastair (Fourth and Goalda Meir), beat Dan 143.96-118.58 in the final.
 Dan won Wk3 2025 by 0.02 pts — the most celebrated marginal win in league history — then lost the final by 25.
 Gideon posted 202.36 in Wk12 2025 (league all-time high) and still didn't make the final.
-Benjy (sanfbe) is Alastair's bogey team — beat him twice in 2025 regular season.
-Managers: Alastair, Dan, Saul, Benjy, Josh, Jamie, Gideon, Benjy L.`;
+Benjy/Sanford (sanfbe) is Alastair's bogey team — beat him twice in 2025 regular season.
+Managers: Alastair, Dan, Saul, Josh, Jamie, Gideon, and TWO Benjys (Lev=benjlev, Sanford=sanfbe).`;
 
 function BanterTab({ historyData }) {
   const systemPrompt = `You are the resident wind-up merchant of the Borehamwood Plancy League. Voice: bone-dry British banter, mock gravity, never cruel. Keep replies punchy (3-5 sentences). Never invent a statistic.
 
 ALWAYS use people's real NAMES, never Sleeper handles.
 NAME MAP (handle → name): ${JSON.stringify(NAMES)}
+TWO BENJYS: benjlev and sanfbe are both "Benjy". When mentioning both together, call them Lev (benjlev) and Sanford (sanfbe). allyl900 is Alastair's old account — same person as AlastairL.
 
 ${LEAGUE_FACTS}
 
