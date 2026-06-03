@@ -68,13 +68,35 @@ Suggestions:
 `;
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// INLINED DATA — baked in at build time, refreshed daily by workflow.
+// DATA — the FULL data (incl. per-game individual player stats) lives in
+// docs/data/*.json and is fetched at runtime so this file stays static.
+// The inlined constants below are a TRIMMED offline fallback (player-level
+// arrays stripped by build-artifact.js) used only if the fetch is blocked.
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const BUILT_AT     = __BUILT_AT__;  // ISO string injected by build-artifact.js
 const HISTORY_DATA = __HISTORY__;
 const STATS_DATA   = __STATS__;
 const ROSTERS_DATA = __ROSTERS__;
 const TRADE_VALUES = __TRADES__;
+
+// Runtime data sources, tried in order. JSDelivr serves GitHub files with
+// CORS headers (works inside the artifact sandbox); GitHub Pages is backup.
+const REPO = 'alastairlivingston-sudo/sleeper-league-app-3';
+const PAGES = 'https://alastairlivingston-sudo.github.io/' + REPO.split('/')[1];
+const DATA_SOURCES = [
+  {
+    history: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/history.json',
+    stats:   'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/stats.json',
+    rosters: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/rosters.json',
+    trades:  'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/fc-values.json',
+  },
+  {
+    history: PAGES + '/data/history.json',
+    stats:   PAGES + '/data/stats.json',
+    rosters: PAGES + '/data/rosters.json',
+    trades:  PAGES + '/data/fc-values.json',
+  },
+];
 
 // Format the build timestamp for display: "Updated 3 Jun 2025"
 function fmtBuiltAt(iso) {
@@ -245,9 +267,32 @@ function computeAnalytics(history) {
   return { perSeason, allTime };
 }
 
-// Data is baked in at build time — no runtime fetch needed.
+// Fetch the full data files at runtime; fall back to the trimmed inline
+// snapshot if every source is unreachable. `live` is true once the full
+// (player-level) data has loaded.
 function useLeagueData() {
-  return { history: HISTORY_DATA, stats: STATS_DATA, rosters: ROSTERS_DATA, trades: TRADE_VALUES };
+  const [data, setData] = useState({
+    history: HISTORY_DATA, stats: STATS_DATA,
+    rosters: ROSTERS_DATA, trades: TRADE_VALUES, live: false,
+  });
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      for (const urls of DATA_SOURCES) {
+        try {
+          const [history, stats, rosters, trades] = await Promise.all(
+            Object.values(urls).map(url =>
+              fetch(url).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+            )
+          );
+          if (!cancelled) setData({ history, stats, rosters, trades, live: true });
+          return; // first working source wins
+        } catch { /* try next source */ }
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+  return data;
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -405,6 +450,16 @@ function ChatTab({ systemPrompt, chips, placeholder, errorMsg, intro }) {
 function StatsTab({ historyData, statsData }) {
   const analytics = useMemo(() => computeAnalytics(historyData), [historyData]);
 
+  // Individual-player data (as/bs) only loads with the full fetched dataset.
+  const hasPlayerData = useMemo(
+    () => (historyData?.seasons || []).some(s => (s.games || []).some(g => Array.isArray(g.as) && g.as.length)),
+    [historyData]
+  );
+
+  const playerNote = hasPlayerData
+    ? `- For individual player questions (top WR scorer, best single performance) → use RAW HISTORY games[].as / games[].bs.`
+    : `- Individual player-level data is still loading; if asked about a specific player's points, say that detail is loading and to try again in a moment — do NOT guess.`;
+
   const systemPrompt = `You are the statistician for the Borehamwood Plancy League. Answer ONLY from the data below — never invent numbers.
 
 NAMES: always refer to managers by their real NAME (in the data), never their Sleeper handle.
@@ -428,7 +483,7 @@ GUIDANCE:
 - "Unluckiest" → most NEGATIVE luck.
 - "Best team that missed out" → strong allPlayWinPct but poor actual record.
 - "Most consistent" → lowest consistencySD.
-- For individual player questions (top WR scorer, best single performance) → use RAW HISTORY games[].as / games[].bs.
+${playerNote}
 
 RAW HISTORY game schema:
   a/b = manager handle. pa/pb = total team points.
@@ -870,7 +925,7 @@ const TABS = [
 
 export default function App() {
   const [tab, setTab] = useState('stats');
-  const { history, stats, rosters, trades } = useLeagueData();
+  const { history, stats, rosters, trades, live } = useLeagueData();
   const { keyboardOpen } = useViewport();
 
   useEffect(() => {
@@ -898,8 +953,9 @@ export default function App() {
             Borehamwood Plancy League
           </div>
         </div>
-        {/* Build date badge — honest and informative */}
-        <div style={{ fontSize: 10.5, color: T.dim, border: `1px solid ${T.border}`, borderRadius: 6, padding: '4px 9px', whiteSpace: 'nowrap', flexShrink: 0, fontWeight: 600 }}>
+        {/* Build date badge — a subtle dot turns green once full data loads */}
+        <div style={{ fontSize: 10.5, color: T.dim, border: `1px solid ${T.border}`, borderRadius: 6, padding: '4px 9px', whiteSpace: 'nowrap', flexShrink: 0, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 5 }}>
+          <span style={{ width: 6, height: 6, borderRadius: '50%', background: live ? T.green : T.faint, display: 'inline-block', transition: 'background .3s' }} />
           {fmtBuiltAt(BUILT_AT)}
         </div>
       </div>

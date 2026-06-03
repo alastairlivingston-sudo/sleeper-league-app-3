@@ -10,11 +10,26 @@ const ROOT = path.join(__dirname, "..");
 const SRC  = path.join(ROOT, "commissioner.template.jsx");
 const OUT  = path.join(ROOT, "commissioner.jsx");
 
+// Strip the heavy per-game individual-starter arrays (as/bs) from the
+// history that gets INLINED into commissioner.jsx. The app fetches the
+// full history.json (with player names) at runtime; this trimmed copy is
+// only the offline fallback, keeping the static JSX small.
+function trimHistory(raw) {
+  if (!raw || !Array.isArray(raw.seasons)) return raw;
+  return {
+    ...raw,
+    seasons: raw.seasons.map(s => ({
+      ...s,
+      games: (s.games || []).map(({ as, bs, ...rest }) => rest),
+    })),
+  };
+}
+
 const DATA = {
-  __HISTORY__: path.join(ROOT, "docs/data/history.json"),
-  __STATS__:   path.join(ROOT, "docs/data/stats.json"),
-  __ROSTERS__: path.join(ROOT, "docs/data/rosters.json"),
-  __TRADES__:  path.join(ROOT, "docs/data/fc-values.json"),
+  __HISTORY__: { file: path.join(ROOT, "docs/data/history.json"), transform: trimHistory },
+  __STATS__:   { file: path.join(ROOT, "docs/data/stats.json") },
+  __ROSTERS__: { file: path.join(ROOT, "docs/data/rosters.json") },
+  __TRADES__:  { file: path.join(ROOT, "docs/data/fc-values.json") },
 };
 
 const SCALARS = {
@@ -29,13 +44,14 @@ async function main() {
 
   let src = fs.readFileSync(SRC, "utf8");
 
-  // Inline JSON data files
-  for (const [placeholder, filePath] of Object.entries(DATA)) {
-    if (!fs.existsSync(filePath)) {
-      console.error(`Data file not found: ${filePath}`);
+  // Inline JSON data files (trimmed fallback — full data fetched at runtime)
+  for (const [placeholder, { file, transform }] of Object.entries(DATA)) {
+    if (!fs.existsSync(file)) {
+      console.error(`Data file not found: ${file}`);
       process.exit(1);
     }
-    const raw  = JSON.parse(fs.readFileSync(filePath, "utf8"));
+    let raw = JSON.parse(fs.readFileSync(file, "utf8"));
+    if (transform) raw = transform(raw);
     const json = JSON.stringify(raw);
     if (!src.includes(placeholder)) {
       console.error(`Placeholder "${placeholder}" not found in template`);
