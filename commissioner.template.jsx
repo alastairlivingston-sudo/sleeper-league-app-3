@@ -37,13 +37,15 @@ const HISTORY_DATA = __HISTORY__;
 const STATS_DATA = __STATS__;
 const ROSTERS_DATA = __ROSTERS__;
 const TRADE_VALUES = __TRADES__;
+const ALLTIME_DATA = __ALLTIME__;
+const TRANSACTIONS_DATA = __TRANSACTIONS__;
 
 const REPO = 'alastairlivingston-sudo/sleeper-league-app-3';
 const PAGES_BASE = 'https://alastairlivingston-sudo.github.io/' + REPO.split('/')[1];
 
 const DATA_SOURCES = [
-  { history: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/history.json', stats: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/stats.json', rosters: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/rosters.json', trades: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/fc-values.json' },
-  { history: PAGES_BASE + '/data/history.json', stats: PAGES_BASE + '/data/stats.json', rosters: PAGES_BASE + '/data/rosters.json', trades: PAGES_BASE + '/data/fc-values.json' },
+  { history: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/history.json', stats: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/stats.json', rosters: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/rosters.json', trades: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/fc-values.json', alltime: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/alltime.json', transactions: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/transactions.json' },
+  { history: PAGES_BASE + '/data/history.json', stats: PAGES_BASE + '/data/stats.json', rosters: PAGES_BASE + '/data/rosters.json', trades: PAGES_BASE + '/data/fc-values.json', alltime: PAGES_BASE + '/data/alltime.json', transactions: PAGES_BASE + '/data/transactions.json' },
 ];
 
 const LORE_SOURCES = [
@@ -169,7 +171,7 @@ function computeAnalytics(history) {
 }
 
 function useLeagueData() {
-  const [data, setData] = useState({ history: HISTORY_DATA, stats: STATS_DATA, rosters: ROSTERS_DATA, trades: TRADE_VALUES, live: false });
+  const [data, setData] = useState({ history: HISTORY_DATA, stats: STATS_DATA, rosters: ROSTERS_DATA, trades: TRADE_VALUES, alltime: ALLTIME_DATA, transactions: TRANSACTIONS_DATA, live: false });
   useEffect(function() {
     let cancelled = false;
     (async function() {
@@ -414,7 +416,7 @@ function ChatTab(props) {
 }
 
 function StatsTab(props) {
-  const { historyData, statsData, loreMaster } = props;
+  const { historyData, statsData, alltimeData, transactionsData, loreMaster } = props;
   const analytics = useMemo(function() { return computeAnalytics(historyData); }, [historyData]);
   const loreCtx = loreMaster
     ? '\n\nLEAGUE CONTEXT (names, champions, glossary — for resolving names only, NOT for inventing stats):\n' + loreMaster.slice(0, 2500)
@@ -422,9 +424,15 @@ function StatsTab(props) {
   const sp = 'You are the statistician for the Borehamwood Plancy League. Answer ONLY from the data below — never invent numbers.\n\n'
     + 'NAMES: always use real NAME not Sleeper handle. TWO BENJYS: benjlev=Lev, sanfbe=Sanford when both appear. Alastair\'s allyl900 account is the same person.\n\n'
     + 'ANSWER FORMAT: 1) ONE short sentence on method. 2) GitHub Markdown table for any ranking. 3) At most ONE closing sentence. No preamble.\n\n'
-    + 'METRICS: allPlay, allPlayWinPct, expectedWins, luck (positive=lucky, negative=unlucky), consistencySD, avgScore, high, low, pf, pa, record.'
+    + 'METRICS: allPlay, allPlayWinPct, expectedWins, luck (positive=lucky, negative=unlucky), consistencySD, avgScore, high, low, pf, pa, record.\n\n'
+    + 'BENCH DATA: ab/bb fields on games = bench player list [{n,pos,pts}]. Use to answer "left on bench", "best bench week", "optimal lineup" questions.\n\n'
+    + 'TRADE DATA: transactions array has every completed trade: {season, week, managerA, managerB, aReceives[], bReceives[]}. Use for trade history questions.'
     + loreCtx
-    + '\n\nANALYTICS:\n' + JSON.stringify(analytics) + '\n\nRAW HISTORY:\n' + JSON.stringify(historyData) + '\n\nCURRENT SEASON:\n' + JSON.stringify(statsData);
+    + '\n\nANALYTICS:\n' + JSON.stringify(analytics)
+    + '\n\nALL-TIME RECORDS:\n' + JSON.stringify(alltimeData)
+    + '\n\nTRADE HISTORY:\n' + JSON.stringify(transactionsData)
+    + '\n\nRAW HISTORY:\n' + JSON.stringify(historyData)
+    + '\n\nCURRENT SEASON:\n' + JSON.stringify(statsData);
   return <ChatTab systemPrompt={sp} chips={['Unluckiest manager ever?', 'All-play standings', 'Most consistent?', 'Closest game ever?']} placeholder="Ask about luck, all-play, records, H2H…" errorMsg="Something went wrong — try again." intro="The record book — all-play records, luck ratings, consistency. Ask who's been unluckiest, the all-play standings, or any head-to-head." />;
 }
 
@@ -744,7 +752,7 @@ const TABS = [
 
 export default function App() {
   const [tab, setTab] = useState('stats');
-  const { history, stats, rosters, trades, live } = useLeagueData();
+  const { history, stats, rosters, trades, alltime, transactions, live } = useLeagueData();
   const { keyboardOpen } = useViewport();
   const lore = useLore(tab === 'banter');
 
@@ -772,7 +780,7 @@ export default function App() {
       </div>
 
       <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-        {tab === 'stats' && <StatsTab historyData={history} statsData={stats} loreMaster={lore.master} />}
+        {tab === 'stats' && <StatsTab historyData={history} statsData={stats} alltimeData={alltime} transactionsData={transactions} loreMaster={lore.master} />}
         {tab === 'banter' && <BanterTab historyData={history} lore={lore} />}
         {tab === 'trade' && <TradeGrader rostersData={rosters} tradeValues={trades} />}
       </div>

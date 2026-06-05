@@ -3,13 +3,15 @@
   "version": "1.0.0",
   "description": "Auto-refreshing data pipeline for Borehamwood Plancy fantasy league",
   "scripts": {
-    "fetch-history": "node scripts/fetch-history.js",
-    "fetch-rosters": "node scripts/fetch-rosters.js",
-    "fetch-stats":   "node scripts/fetch-stats.js",
-    "fetch-trades":  "node scripts/fetch-trades.js",
-    "build-lore":    "node scripts/build-lore.js",
-    "build":         "node scripts/build-lore.js && node scripts/build-artifact.js",
-    "refresh":       "node scripts/fetch-history.js && node scripts/fetch-rosters.js && node scripts/fetch-stats.js && node scripts/fetch-trades.js && node scripts/build-lore.js && node scripts/build-artifact.js"
+    "fetch-history":      "node scripts/fetch-history.js",
+    "fetch-rosters":      "node scripts/fetch-rosters.js",
+    "fetch-stats":        "node scripts/fetch-stats.js",
+    "fetch-trades":       "node scripts/fetch-trades.js",
+    "fetch-transactions": "node scripts/fetch-transactions.js",
+    "build-lore":         "node scripts/build-lore.js",
+    "build-alltime":      "node scripts/build-alltime.js",
+    "build":              "node scripts/build-lore.js && node scripts/build-alltime.js && node scripts/build-artifact.js",
+    "refresh":            "node scripts/fetch-history.js && node scripts/fetch-rosters.js && node scripts/fetch-stats.js && node scripts/fetch-trades.js && node scripts/fetch-transactions.js && node scripts/build-lore.js && node scripts/build-alltime.js && node scripts/build-artifact.js"
   },
   "engines": {
     "node": ">=20"

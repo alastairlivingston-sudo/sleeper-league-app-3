@@ -50,10 +50,25 @@ function starterList(entry, posMap) {
   const pts = entry.players_points || {};
   return starters.map((pid) => {
     let n, pos;
-    if (pid === "DEF") { n = "DEF"; pos = "DEF"; }
+    if (/^[A-Z]{2,3}$/.test(pid)) { n = pid; pos = "DEF"; }
     else { const m = posMap[pid]; if (!m) return null; n = m.name || pid; pos = m.pos; }
     return { n, pos, pts: Math.round((pts[pid] || 0) * 100) / 100 };
   }).filter(Boolean);
+}
+
+function benchList(entry, posMap) {
+  const starters = new Set(entry.starters || []);
+  const all = entry.players || [];
+  const pts = entry.players_points || {};
+  return all
+    .filter(pid => !starters.has(pid) && !/^[A-Z]{2,3}$/.test(pid))
+    .map(pid => {
+      const m = posMap[pid];
+      if (!m) return null;
+      return { n: m.name || pid, pos: m.pos, pts: Math.round((pts[pid] || 0) * 100) / 100 };
+    })
+    .filter(Boolean)
+    .sort((a, b) => b.pts - a.pts);
 }
 
 async function findActiveLeague() {
@@ -152,6 +167,7 @@ async function main() {
         pa: x.points || 0, pb: y.points || 0,
         ap: posPoints(x, posMap), bp: posPoints(y, posMap),
         as: starterList(x, posMap), bs: starterList(y, posMap),
+        ab: benchList(x, posMap), bb: benchList(y, posMap),
       });
 
       if (!playoff) {

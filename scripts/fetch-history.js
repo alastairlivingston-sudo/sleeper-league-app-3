@@ -81,6 +81,22 @@ function starterList(entry, posMap) {
   return result.sort((a, b) => b.pts - a.pts);
 }
 
+// Bench player performances: [{n, pos, pts}] — rostered but not started
+function benchList(entry, posMap) {
+  const starters = new Set(entry.starters || []);
+  const all      = entry.players || [];
+  const pts      = entry.players_points || {};
+  const result   = [];
+  for (const pid of all) {
+    if (starters.has(pid)) continue;
+    if (/^[A-Z]{2,3}$/.test(pid)) continue; // skip DEF on bench
+    const m = posMap[pid];
+    if (!m) continue;
+    result.push({ n: m.name || pid, pos: m.pos, pts: Math.round((pts[pid] || 0) * 100) / 100 });
+  }
+  return result.sort((a, b) => b.pts - a.pts);
+}
+
 async function fetchAllMatchups(leagueId) {
   const results = [];
   for (let w = 1; w <= 18; w++) {
@@ -179,8 +195,10 @@ async function fetchSeason(leagueId, posMap) {
         pb:      y.points || 0,
         ap:      posPoints(x, posMap),
         bp:      posPoints(y, posMap),
-        as:      starterList(x, posMap), // individual starters: [{n,pos,pts}]
+        as:      starterList(x, posMap),
         bs:      starterList(y, posMap),
+        ab:      benchList(x, posMap),
+        bb:      benchList(y, posMap),
       });
     }
   }

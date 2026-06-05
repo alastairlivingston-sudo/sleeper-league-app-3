@@ -10,26 +10,27 @@ const ROOT = path.join(__dirname, "..");
 const SRC  = path.join(ROOT, "commissioner.template.jsx");
 const OUT  = path.join(ROOT, "commissioner.jsx");
 
-// Strip the heavy per-game individual-starter arrays (as/bs) from the
-// history that gets INLINED into commissioner.jsx. The app fetches the
-// full history.json (with player names) at runtime; this trimmed copy is
-// only the offline fallback, keeping the static JSX small.
+// Strip per-game player name arrays (as/bs/ab/bb) from the INLINED fallback.
+// The app always fetches full history.json at runtime; the inlined copy is
+// only used offline, so we keep it small by dropping the bulky player lists.
 function trimHistory(raw) {
   if (!raw || !Array.isArray(raw.seasons)) return raw;
   return {
     ...raw,
     seasons: raw.seasons.map(s => ({
       ...s,
-      games: (s.games || []).map(({ as, bs, ...rest }) => rest),
+      games: (s.games || []).map(({ as, bs, ab, bb, ...rest }) => rest),
     })),
   };
 }
 
 const DATA = {
-  __HISTORY__: { file: path.join(ROOT, "docs/data/history.json"), transform: trimHistory },
-  __STATS__:   { file: path.join(ROOT, "docs/data/stats.json") },
-  __ROSTERS__: { file: path.join(ROOT, "docs/data/rosters.json") },
-  __TRADES__:  { file: path.join(ROOT, "docs/data/fc-values.json") },
+  __HISTORY__:      { file: path.join(ROOT, "docs/data/history.json"), transform: trimHistory },
+  __STATS__:        { file: path.join(ROOT, "docs/data/stats.json") },
+  __ROSTERS__:      { file: path.join(ROOT, "docs/data/rosters.json") },
+  __TRADES__:       { file: path.join(ROOT, "docs/data/fc-values.json") },
+  __ALLTIME__:      { file: path.join(ROOT, "docs/data/alltime.json") },
+  __TRANSACTIONS__: { file: path.join(ROOT, "docs/data/transactions.json"), optional: true },
 };
 
 const SCALARS = {
@@ -45,8 +46,13 @@ async function main() {
   let src = fs.readFileSync(SRC, "utf8");
 
   // Inline JSON data files (trimmed fallback — full data fetched at runtime)
-  for (const [placeholder, { file, transform }] of Object.entries(DATA)) {
+  for (const [placeholder, { file, transform, optional }] of Object.entries(DATA)) {
     if (!fs.existsSync(file)) {
+      if (optional) {
+        src = src.replace(placeholder, "null");
+        console.warn(`Optional data file not found (using null): ${file}`);
+        continue;
+      }
       console.error(`Data file not found: ${file}`);
       process.exit(1);
     }
