@@ -53,8 +53,9 @@ personSections.forEach(function(section) {
   // Skip the title line "THE PLANCEY — PER-PERSON QUOTE BANK" etc.
   if (headerLine.startsWith('THE ')) return;
 
-  // Extract the canonical person name (before the em-dash)
-  const person = headerLine.split('—')[0].trim().split('/')[0].trim();
+  // Extract the canonical person name (before the em-dash), title-cased
+  const rawPerson = headerLine.split('—')[0].trim().split('/')[0].trim();
+  const person = rawPerson.replace(/\b\w/g, c => c.toUpperCase()).replace(/\b(\w+)\b/g, w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
 
   // Extract verbatim quote lines: lines starting with - "
   const lines = [];

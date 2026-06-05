@@ -23,7 +23,7 @@ function teamLabel(k) {
   return (nm && nm !== handle) ? `${nm} · ${team}` : (team || k);
 }
 
-const BUILT_AT = "2026-06-05T08:13:22.729Z";
+const BUILT_AT = "2026-06-05T08:22:35.480Z";
 
 function fmtBuiltAt(iso) {
   try {
