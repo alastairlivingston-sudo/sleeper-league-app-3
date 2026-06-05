@@ -9,7 +9,18 @@ const path = require("path");
 const HISTORY = path.join(__dirname, "../docs/data/history.json");
 const OUT     = path.join(__dirname, "../docs/data/alltime.json");
 
+// Merge alternate Sleeper handles for the same person (Alastair's old account).
+// MUST stay in sync with canonical() in commissioner.template.jsx.
+const ALIAS = { allyl900: "AlastairL" };
+function canon(h) { const c = String(h || "").replace(/^@/, "").trim(); return ALIAS[c] || c; }
+
 const { seasons } = JSON.parse(fs.readFileSync(HISTORY, "utf8"));
+// Canonicalise every manager handle up-front so all derived stats merge accounts.
+for (const s of seasons) {
+  if (s.champion) s.champion = canon(s.champion);
+  for (const row of (s.standings || [])) row.manager = canon(row.manager);
+  for (const g of (s.games || [])) { g.a = canon(g.a); g.b = canon(g.b); }
+}
 
 // ── Career standings ──────────────────────────────────────────────────────────
 const career = {}; // manager → { wins, losses, ties, pf, pa, seasons, championships, appearances }
@@ -71,6 +82,25 @@ for (const a of Object.values(h2h))
     b.pf = Math.round(b.pf * 100) / 100;
     b.pa = Math.round(b.pa * 100) / 100;
   }
+
+// ── Nemesis & bunny per manager (deterministic, from H2H matrix) ──────────────
+// nemesis = worst win% opponent; bunny = best win% opponent. Min 3 meetings.
+const MIN_MEETINGS = 3;
+const nemesis = {};
+const bunny   = {};
+for (const [manager, opps] of Object.entries(h2h)) {
+  const rows = Object.entries(opps)
+    .map(([opponent, r]) => {
+      const games = r.wins + r.losses;
+      return { opponent, wins: r.wins, losses: r.losses, games, winPct: games ? Math.round(r.wins / games * 1000) / 1000 : 0, pf: r.pf, pa: r.pa };
+    })
+    .filter(r => r.games >= MIN_MEETINGS);
+  if (!rows.length) continue;
+  // nemesis: lowest winPct, tiebreak by most losses then lowest pf
+  nemesis[manager] = rows.slice().sort((x, y) => x.winPct - y.winPct || y.losses - x.losses || x.pf - y.pf)[0];
+  // bunny: highest winPct, tiebreak by most wins then highest pf
+  bunny[manager]   = rows.slice().sort((x, y) => y.winPct - x.winPct || y.wins - x.wins || y.pf - x.pf)[0];
+}
 
 // ── Season-by-season rankings (position each manager finished) ────────────────
 const seasonRankings = seasons.map(s => ({
@@ -148,6 +178,8 @@ fs.mkdirSync(path.dirname(OUT), { recursive: true });
 fs.writeFileSync(OUT, JSON.stringify({
   careerRankings,
   allTimeH2H: h2h,
+  nemesis,
+  bunny,
   seasonRankings,
   records,
   benchStats: { gamesWithData: benchGamesCount, perManager: benchAvg },

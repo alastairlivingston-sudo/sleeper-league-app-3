@@ -170,6 +170,148 @@ function computeAnalytics(history) {
   return { perSeason: perSeason, allTime: allTime };
 }
 
+// ── Deterministic stats query engine ─────────────────────────────────────────
+// Flattens every game (canonicalised handles) into one list the query engine
+// reads from. Never lets the model do arithmetic — JS computes, model narrates.
+function flattenGames(history) {
+  const seasons = (history && history.seasons) ? history.seasons : [];
+  const rows = [];
+  for (const s of seasons) {
+    for (const g of (s.games || [])) {
+      if (!(g.pa > 0 || g.pb > 0)) continue; // skip unplayed
+      rows.push({ season: s.season, week: g.week, playoff: !!g.playoff, a: canonical(g.a), b: canonical(g.b), pa: g.pa, pb: g.pb });
+    }
+  }
+  return rows;
+}
+
+// Executes a constrained query spec against flattened games. Pure + deterministic.
+function runStatQuery(spec, games) {
+  if (!spec || spec.type === 'none') return null;
+  const regOnly = spec.regularSeasonOnly !== false; // default true
+  const seasonSet = Array.isArray(spec.seasons) && spec.seasons.length ? new Set(spec.seasons.map(String)) : null;
+  const mgrSet = Array.isArray(spec.managers) && spec.managers.length ? new Set(spec.managers.map(canonical)) : null;
+
+  let pool = games.filter(function(g) {
+    if (regOnly && g.playoff) return false;
+    if (seasonSet && !seasonSet.has(String(g.season))) return false;
+    return true;
+  });
+
+  if (spec.type === 'headToHead') {
+    // Build record between every ordered pair, then filter to requested managers.
+    const rec = {};
+    function cell(x, y) { const k = x + '|' + y; if (!rec[k]) rec[k] = { manager: x, opponent: y, wins: 0, losses: 0, ties: 0, pf: 0, pa: 0, games: 0 }; return rec[k]; }
+    for (const g of pool) {
+      const A = cell(g.a, g.b), B = cell(g.b, g.a);
+      A.pf += g.pa; A.pa += g.pb; A.games++;
+      B.pf += g.pb; B.pa += g.pa; B.games++;
+      if (g.pa > g.pb) { A.wins++; B.losses++; }
+      else if (g.pb > g.pa) { B.wins++; A.losses++; }
+      else { A.ties++; B.ties++; }
+    }
+    let rows = Object.values(rec);
+    if (mgrSet) {
+      if (mgrSet.size === 2) {
+        const [m1, m2] = Array.from(mgrSet);
+        rows = rows.filter(function(r) { return (r.manager === m1 && r.opponent === m2) || (r.manager === m2 && r.opponent === m1); });
+      } else {
+        rows = rows.filter(function(r) { return mgrSet.has(r.manager); });
+      }
+    }
+    rows.forEach(function(r) { r.pf = Math.round(r.pf * 100) / 100; r.pa = Math.round(r.pa * 100) / 100; r.winPct = r.games ? Math.round(r.wins / r.games * 1000) / 1000 : 0; });
+    rows.sort(function(x, y) { return x.manager.localeCompare(y.manager) || y.games - x.games; });
+    return { type: 'headToHead', rows: rows };
+  }
+
+  if (spec.type === 'totals') {
+    const acc = {};
+    function row(m) { if (!acc[m]) acc[m] = { manager: m, games: 0, wins: 0, losses: 0, ties: 0, pf: 0, pa: 0, high: 0, low: Infinity }; return acc[m]; }
+    for (const g of pool) {
+      if (mgrSet && !mgrSet.has(g.a) && !mgrSet.has(g.b)) continue;
+      const A = row(g.a), B = row(g.b);
+      A.games++; B.games++;
+      A.pf += g.pa; A.pa += g.pb; B.pf += g.pb; B.pa += g.pa;
+      A.high = Math.max(A.high, g.pa); A.low = Math.min(A.low, g.pa);
+      B.high = Math.max(B.high, g.pb); B.low = Math.min(B.low, g.pb);
+      if (g.pa > g.pb) { A.wins++; B.losses++; } else if (g.pb > g.pa) { B.wins++; A.losses++; } else { A.ties++; B.ties++; }
+    }
+    let rows = Object.values(acc);
+    if (mgrSet) rows = rows.filter(function(r) { return mgrSet.has(r.manager); });
+    rows.forEach(function(r) {
+      r.pf = Math.round(r.pf * 100) / 100; r.pa = Math.round(r.pa * 100) / 100;
+      r.avg = r.games ? Math.round(r.pf / r.games * 100) / 100 : 0;
+      if (r.low === Infinity) r.low = 0;
+      r.winPct = r.games ? Math.round(r.wins / r.games * 1000) / 1000 : 0;
+    });
+    rows.sort(function(x, y) { return y.wins - x.wins || y.pf - x.pf; });
+    return { type: 'totals', rows: rows };
+  }
+
+  if (spec.type === 'gameList') {
+    let rows = pool.slice();
+    if (mgrSet) rows = rows.filter(function(g) { return mgrSet.has(g.a) || mgrSet.has(g.b); });
+    const by = spec.sortBy || 'combined';
+    function metric(g) {
+      if (by === 'margin') return Math.abs(g.pa - g.pb);
+      if (by === 'high') return Math.max(g.pa, g.pb);
+      if (by === 'low') return Math.min(g.pa, g.pb);
+      return g.pa + g.pb; // combined
+    }
+    const order = spec.order === 'asc' ? 1 : -1;
+    rows.sort(function(x, y) { return (metric(x) - metric(y)) * order; });
+    const limit = Math.min(spec.limit || 10, 25);
+    return { type: 'gameList', rows: rows.slice(0, limit) };
+  }
+
+  return null;
+}
+
+// Asks the model to translate a question into a query spec (JSON only).
+async function planStatQuery(query, messages) {
+  const handles = Object.keys(NAMES);
+  const nameLines = handles.map(function(h) { return h + '=' + distinctName(h); }).join(', ');
+  const planner = [
+    'You translate a fantasy-football question into a JSON query spec. Output ONLY valid JSON, nothing else.',
+    'Manager handles (use these exact strings in "managers"): ' + nameLines + '. Note benjlev=Lev, sanfbe=Sanford, allyl900 maps to AlastairL.',
+    'Schema:',
+    '{ "type": "headToHead" | "totals" | "gameList" | "none",',
+    '  "managers": [handle, ...]   // optional; for headToHead between two, list both',
+    '  "seasons": ["2023", ...]    // optional; omit for all-time',
+    '  "regularSeasonOnly": true,  // default true; set false to include playoffs',
+    '  "sortBy": "margin"|"high"|"low"|"combined",  // gameList only',
+    '  "order": "desc"|"asc",      // gameList only',
+    '  "limit": 10 }               // gameList only',
+    'Rules: head-to-head / nemesis / "who beats whom" -> headToHead. Records/standings/win totals/points -> totals. "biggest/closest/highest game" -> gameList. If the question is not a numeric data lookup (opinion, definition, lore) -> {"type":"none"}.',
+  ].join('\n');
+  try {
+    const raw = await claudeCall(messages.slice(-3), planner);
+    const m = raw.match(/\{[\s\S]*\}/);
+    if (!m) return { type: 'none' };
+    return JSON.parse(m[0]);
+  } catch (e) {
+    return { type: 'none' };
+  }
+}
+
+// Renders a query result into a deterministic context block the narrator reads.
+function formatQueryResult(spec, result) {
+  if (!result || !result.rows || !result.rows.length) return '';
+  function nm(h) { return distinctName(h); }
+  const lines = [];
+  if (result.type === 'headToHead') {
+    lines.push('Head-to-head records (regular season unless stated):');
+    result.rows.forEach(function(r) { lines.push('- ' + nm(r.manager) + ' vs ' + nm(r.opponent) + ': ' + r.wins + '-' + r.losses + (r.ties ? '-' + r.ties : '') + ', PF ' + r.pf + ' / PA ' + r.pa + ' (' + r.games + ' games)'); });
+  } else if (result.type === 'totals') {
+    lines.push('Aggregate records:');
+    result.rows.forEach(function(r) { lines.push('- ' + nm(r.manager) + ': ' + r.wins + '-' + r.losses + (r.ties ? '-' + r.ties : '') + ', PF ' + r.pf + ', avg ' + r.avg + ', high ' + r.high + ', low ' + r.low + ' (' + r.games + ' games)'); });
+  } else if (result.type === 'gameList') {
+    lines.push('Matching games:');
+    result.rows.forEach(function(g) { lines.push('- ' + g.season + ' wk' + g.week + (g.playoff ? ' (playoff)' : '') + ': ' + nm(g.a) + ' ' + g.pa + ' – ' + g.pb + ' ' + nm(g.b)); });
+  }
+  return '══ DETERMINISTIC QUERY RESULT (authoritative — narrate ONLY these numbers, do not recompute) ══\n' + lines.join('\n');
+}
+
 function useLeagueData() {
   const [data, setData] = useState({ history: HISTORY_DATA, stats: STATS_DATA, rosters: ROSTERS_DATA, trades: TRADE_VALUES, alltime: ALLTIME_DATA, transactions: TRANSACTIONS_DATA, live: false });
   useEffect(function() {
@@ -364,8 +506,8 @@ function ChatTab(props) {
     setMessages(next); setInput(''); setLoading(true);
     if (taRef.current) taRef.current.style.height = 'auto';
     try {
-      const extra = buildContext ? buildContext(t) : '';
-      const fullPrompt = extra ? systemPrompt + '\n\n--- RETRIEVED LORE ---\n' + extra : systemPrompt;
+      const extra = buildContext ? await buildContext(t, next) : '';
+      const fullPrompt = extra ? systemPrompt + '\n\n' + extra : systemPrompt;
       const raw = await claudeCall(next.filter(function(m) { return m.role === 'user' || m.role === 'assistant'; }), fullPrompt);
       const reply = raw.replace(/\[(FACT|MYTH|REAL|EVENT)\]/g, '').replace(/  +/g, ' ').trim();
       setMessages(function(p) { return p.concat([{ role: 'assistant', content: reply }]); });
@@ -419,22 +561,35 @@ function ChatTab(props) {
 function StatsTab(props) {
   const { historyData, statsData, alltimeData, transactionsData, loreMaster } = props;
   const analytics = useMemo(function() { return computeAnalytics(historyData); }, [historyData]);
+  const games = useMemo(function() { return flattenGames(historyData); }, [historyData]);
   const loreCtx = loreMaster
     ? '\n\nLEAGUE CONTEXT (names, champions, glossary — for resolving names only, NOT for inventing stats):\n' + loreMaster.slice(0, 2500)
     : '';
-  const sp = 'You are the statistician for the Borehamwood Plancy League. Answer ONLY from the data below — never invent numbers.\n\n'
+  // Narration prompt: deterministic pre-computed tables ONLY — no raw game dump,
+  // so the model cannot do its own (error-prone) win/loss arithmetic. Anything
+  // not in the tables arrives via the DETERMINISTIC QUERY RESULT block (buildContext).
+  const sp = 'You are the statistician for the Borehamwood Plancy League. Answer ONLY from the data below — NEVER compute or invent numbers yourself.\n\n'
+    + 'CRITICAL: All win/loss/points figures must be read verbatim from the pre-computed tables or the DETERMINISTIC QUERY RESULT block. Do NOT add up games or derive records yourself — if a number is not given to you, say you do not have it rather than estimate.\n\n'
     + 'NAMES: always use real NAME not Sleeper handle. TWO BENJYS: benjlev=Lev, sanfbe=Sanford when both appear. Alastair\'s allyl900 account is the same person.\n\n'
     + 'ANSWER FORMAT: 1) ONE short sentence on method. 2) GitHub Markdown table for any ranking. 3) At most ONE closing sentence. No preamble.\n\n'
-    + 'METRICS: allPlay, allPlayWinPct, expectedWins, luck (positive=lucky, negative=unlucky), consistencySD, avgScore, high, low, pf, pa, record.\n\n'
-    + 'BENCH DATA: ab/bb fields on games = bench player list [{n,pos,pts}]. Use to answer "left on bench", "best bench week", "optimal lineup" questions.\n\n'
+    + 'METRICS: allPlay, allPlayWinPct, expectedWins, luck (positive=lucky, negative=unlucky), consistencySD, avgScore, high, low, pf, pa, record. nemesis=worst H2H opponent, bunny=best H2H opponent (both pre-computed, symmetric — trust them).\n\n'
     + 'TRADE DATA: transactions array has every completed trade: {season, week, managerA, managerB, aReceives[], bReceives[]}. Use for trade history questions.'
     + loreCtx
-    + '\n\nANALYTICS:\n' + JSON.stringify(analytics)
-    + '\n\nALL-TIME RECORDS:\n' + JSON.stringify(alltimeData)
+    + '\n\nANALYTICS (all-play, luck, consistency — pre-computed):\n' + JSON.stringify(analytics)
+    + '\n\nALL-TIME RECORDS, H2H MATRIX, NEMESIS/BUNNY (pre-computed, authoritative):\n' + JSON.stringify(alltimeData)
     + '\n\nTRADE HISTORY:\n' + JSON.stringify(transactionsData)
-    + '\n\nRAW HISTORY:\n' + JSON.stringify(historyData)
-    + '\n\nCURRENT SEASON:\n' + JSON.stringify(statsData);
-  return <ChatTab systemPrompt={sp} chips={['Unluckiest manager ever?', 'All-play standings', 'Most consistent?', 'Closest game ever?']} placeholder="Message…" errorMsg="Something went wrong — try again." intro="The record book — all-play records, luck ratings, consistency. Ask who's been unluckiest, the all-play standings, or any head-to-head." />;
+    + '\n\nCURRENT SEASON SUMMARY:\n' + JSON.stringify({ league: statsData && statsData.league, season: statsData && statsData.season, standings: statsData && statsData.standings, headToHead: statsData && statsData.headToHead, extremes: statsData && statsData.extremes });
+
+  // buildContext: deterministic query layer. Plan → execute in JS → inject result.
+  async function buildContext(query) {
+    try {
+      const spec = await planStatQuery(query, [{ role: 'user', content: query }]);
+      const result = runStatQuery(spec, games);
+      return formatQueryResult(spec, result);
+    } catch (e) { return ''; }
+  }
+
+  return <ChatTab systemPrompt={sp} buildContext={buildContext} chips={['Unluckiest manager ever?', 'All-play standings', 'Most consistent?', 'Closest game ever?']} placeholder="Message…" errorMsg="Something went wrong — try again." intro="The record book — all-play records, luck ratings, consistency. Ask who's been unluckiest, the all-play standings, or any head-to-head." />;
 }
 
 function BanterTab(props) {
@@ -471,7 +626,8 @@ function BanterTab(props) {
 
   function buildContext(query) {
     if (!lore.ready) return '';
-    return retrieveLore(query, lore.archive, lore.quotes);
+    const lore_ctx = retrieveLore(query, lore.archive, lore.quotes);
+    return lore_ctx ? '--- RETRIEVED LORE ---\n' + lore_ctx : '';
   }
 
   return <ChatTab

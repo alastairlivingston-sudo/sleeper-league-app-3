@@ -38,25 +38,21 @@ analyst and resident wind-up merchant.
 beat @dpol 143.96-118.58 in the final. If fetched data contradicts these known facts, the script/parse is
 wrong — investigate, don't "correct" the data to fit.
 
-## Logged upcoming changes (not yet implemented)
+## Stats engine — deterministic, never LLM arithmetic
+The Stats bot must NEVER compute win/loss/points itself (it produced impossible results like
+"A beats B" and "B beats A" simultaneously). Two-layer design:
+1. Pre-computed tables in build-alltime.js (careerRankings, symmetric allTimeH2H, nemesis/bunny,
+   records, seasonRankings) — the narration prompt gets these tables but NOT the raw game list.
+2. A query engine in the artifact (flattenGames / runStatQuery / planStatQuery / formatQueryResult):
+   the model plans a JSON query spec (headToHead | totals | gameList), JS executes it deterministically,
+   and the result is injected as an authoritative "DETERMINISTIC QUERY RESULT" block for narration.
+ALIAS map (allyl900→AlastairL) must stay in sync between commissioner.template.jsx canonical() and
+build-alltime.js canon().
 
-### Banter bot — fact verification against data
-The banter bot is hallucinating league facts (e.g. claiming Alastair beat Saul in 2025 when the data
-shows otherwise). Fix: inject the same structured data the Stats tab uses (history.json, stats.json,
-alltime.json) into the Banter system prompt, with a hard rule that any factual claim about a result,
-score, record, or season outcome MUST be verified against that data first. The bot may still riff on
-pre-2023 history (not in our dataset) but should flag it as unverified rather than state it as fact.
-
-### Banter bot — remove canon tag labels from output
-The [FACT], [MYTH], [REAL], [EVENT] tags appear verbatim in responses, making them feel robotic.
-These are internal tone/sourcing instructions for the model, not meant to be printed. Fix: add an
-explicit rule to the system prompt that these tags must NEVER appear in the output — they are for
-the model's internal reasoning only. Alternatively post-process the response to strip [ALL_CAPS_TAGS].
-
-### Mobile UI — remove placeholder text from chat inputs
-On mobile, the suggested placeholder text inside the chat input wraps onto two lines, breaking the
-layout. Fix: remove the `placeholder` attribute entirely from the ChatTab <input> element (or set it
-to a single short word like "Message…"). The chip buttons already serve as suggested prompts.
+## Banter bot
+- Inject history/stats/alltime into the banter prompt; verify any result/record against it before
+  asserting. Pre-2023 events may be cited as unverified lore only.
+- NEVER print [FACT]/[MYTH]/[REAL]/[EVENT] tags — internal cues only; also stripped post-hoc in send().
 
 ## Automation
 .github/workflows/refresh.yml runs all three scripts on a weekly cron (Tuesday 11:00 UTC) + manual

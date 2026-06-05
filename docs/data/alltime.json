@@ -1,18 +1,6 @@
 {
   "careerRankings": [
     {
-      "manager": "AlastairL",
-      "wins": 19,
-      "losses": 9,
-      "ties": 0,
-      "pf": 3797.32,
-      "pa": 0,
-      "seasons": 3,
-      "championships": 1,
-      "playoffAppearances": 2,
-      "winPct": 0.679
-    },
-    {
       "manager": "saulgoat",
       "wins": 26,
       "losses": 16,
@@ -35,6 +23,18 @@
       "championships": 0,
       "playoffAppearances": 3,
       "winPct": 0.619
+    },
+    {
+      "manager": "AlastairL",
+      "wins": 25,
+      "losses": 17,
+      "ties": 0,
+      "pf": 5553.38,
+      "pa": 0,
+      "seasons": 4,
+      "championships": 1,
+      "playoffAppearances": 3,
+      "winPct": 0.595
     },
     {
       "manager": "joshjr11",
@@ -85,18 +85,6 @@
       "winPct": 0.429
     },
     {
-      "manager": "allyl900",
-      "wins": 6,
-      "losses": 8,
-      "ties": 0,
-      "pf": 1756.06,
-      "pa": 0,
-      "seasons": 1,
-      "championships": 0,
-      "playoffAppearances": 1,
-      "winPct": 0.429
-    },
-    {
       "manager": "benjlev",
       "wins": 7,
       "losses": 35,
@@ -111,11 +99,11 @@
   ],
   "allTimeH2H": {
     "dpol": {
-      "allyl900": {
-        "wins": 1,
-        "losses": 1,
-        "pf": 213.3,
-        "pa": 250.28
+      "AlastairL": {
+        "wins": 3,
+        "losses": 3,
+        "pf": 701.32,
+        "pa": 848.08
       },
       "saulgoat": {
         "wins": 4,
@@ -152,56 +140,50 @@
         "losses": 1,
         "pf": 737.68,
         "pa": 655.94
-      },
-      "AlastairL": {
-        "wins": 2,
-        "losses": 2,
-        "pf": 488.02,
-        "pa": 597.8
       }
     },
-    "allyl900": {
+    "AlastairL": {
       "dpol": {
-        "wins": 1,
-        "losses": 1,
-        "pf": 250.28,
-        "pa": 213.3
+        "wins": 3,
+        "losses": 3,
+        "pf": 848.08,
+        "pa": 701.32
       },
       "GSac": {
-        "wins": 0,
-        "losses": 2,
-        "pf": 233.62,
-        "pa": 244.62
+        "wins": 3,
+        "losses": 3,
+        "pf": 739.8,
+        "pa": 804.58
       },
       "drjkay": {
-        "wins": 2,
+        "wins": 6,
         "losses": 0,
-        "pf": 265.46,
-        "pa": 251.4
+        "pf": 889.32,
+        "pa": 714.2
       },
       "joshjr11": {
-        "wins": 0,
-        "losses": 2,
-        "pf": 265.28,
-        "pa": 310.5
+        "wins": 3,
+        "losses": 3,
+        "pf": 807.72,
+        "pa": 848.66
       },
       "benjlev": {
-        "wins": 2,
-        "losses": 0,
-        "pf": 243.32,
-        "pa": 168.52
+        "wins": 5,
+        "losses": 1,
+        "pf": 755.62,
+        "pa": 594.92
       },
       "sanfbe": {
-        "wins": 0,
-        "losses": 2,
-        "pf": 195.5,
-        "pa": 215.08
+        "wins": 2,
+        "losses": 4,
+        "pf": 759.26,
+        "pa": 779.22
       },
       "saulgoat": {
-        "wins": 2,
-        "losses": 0,
-        "pf": 288.2,
-        "pa": 255.62
+        "wins": 4,
+        "losses": 2,
+        "pf": 739.18,
+        "pa": 731.6
       }
     },
     "benjlev": {
@@ -229,11 +211,11 @@
         "pf": 592.84,
         "pa": 790.82
       },
-      "allyl900": {
-        "wins": 0,
-        "losses": 2,
-        "pf": 168.52,
-        "pa": 243.32
+      "AlastairL": {
+        "wins": 1,
+        "losses": 5,
+        "pf": 594.92,
+        "pa": 755.62
       },
       "GSac": {
         "wins": 1,
@@ -246,12 +228,6 @@
         "losses": 5,
         "pf": 655.94,
         "pa": 737.68
-      },
-      "AlastairL": {
-        "wins": 1,
-        "losses": 3,
-        "pf": 426.4,
-        "pa": 512.3
       }
     },
     "saulgoat": {
@@ -291,17 +267,11 @@
         "pf": 821.9,
         "pa": 756.58
       },
-      "allyl900": {
-        "wins": 0,
-        "losses": 2,
-        "pf": 255.62,
-        "pa": 288.2
-      },
       "AlastairL": {
         "wins": 2,
-        "losses": 2,
-        "pf": 475.98,
-        "pa": 450.98
+        "losses": 4,
+        "pf": 731.6,
+        "pa": 739.18
       }
     },
     "joshjr11": {
@@ -323,11 +293,11 @@
         "pf": 746.76,
         "pa": 792.02
       },
-      "allyl900": {
-        "wins": 2,
-        "losses": 0,
-        "pf": 310.5,
-        "pa": 265.28
+      "AlastairL": {
+        "wins": 3,
+        "losses": 3,
+        "pf": 848.66,
+        "pa": 807.72
       },
       "dpol": {
         "wins": 0,
@@ -346,12 +316,6 @@
         "losses": 0,
         "pf": 828.32,
         "pa": 631.62
-      },
-      "AlastairL": {
-        "wins": 1,
-        "losses": 3,
-        "pf": 538.16,
-        "pa": 542.44
       }
     },
     "sanfbe": {
@@ -385,23 +349,17 @@
         "pf": 649.4,
         "pa": 752.52
       },
-      "allyl900": {
-        "wins": 2,
-        "losses": 0,
-        "pf": 215.08,
-        "pa": 195.5
+      "AlastairL": {
+        "wins": 4,
+        "losses": 2,
+        "pf": 779.22,
+        "pa": 759.26
       },
       "drjkay": {
         "wins": 2,
         "losses": 4,
         "pf": 698.14,
         "pa": 803.32
-      },
-      "AlastairL": {
-        "wins": 2,
-        "losses": 2,
-        "pf": 564.14,
-        "pa": 563.76
       }
     },
     "drjkay": {
@@ -417,11 +375,11 @@
         "pf": 682.16,
         "pa": 800.3
       },
-      "allyl900": {
+      "AlastairL": {
         "wins": 0,
-        "losses": 2,
-        "pf": 251.4,
-        "pa": 265.46
+        "losses": 6,
+        "pf": 714.2,
+        "pa": 889.32
       },
       "benjlev": {
         "wins": 6,
@@ -446,12 +404,6 @@
         "losses": 2,
         "pf": 803.32,
         "pa": 698.14
-      },
-      "AlastairL": {
-        "wins": 0,
-        "losses": 4,
-        "pf": 462.8,
-        "pa": 623.86
       }
     },
     "GSac": {
@@ -461,11 +413,11 @@
         "pf": 759.44,
         "pa": 870.52
       },
-      "allyl900": {
-        "wins": 2,
-        "losses": 0,
-        "pf": 244.62,
-        "pa": 233.62
+      "AlastairL": {
+        "wins": 3,
+        "losses": 3,
+        "pf": 804.58,
+        "pa": 739.8
       },
       "saulgoat": {
         "wins": 1,
@@ -496,57 +448,155 @@
         "losses": 6,
         "pf": 631.62,
         "pa": 828.32
-      },
-      "AlastairL": {
-        "wins": 1,
-        "losses": 3,
-        "pf": 559.96,
-        "pa": 506.18
       }
+    }
+  },
+  "nemesis": {
+    "dpol": {
+      "opponent": "AlastairL",
+      "wins": 3,
+      "losses": 3,
+      "games": 6,
+      "winPct": 0.5,
+      "pf": 701.32,
+      "pa": 848.08
     },
     "AlastairL": {
-      "benjlev": {
-        "wins": 3,
-        "losses": 1,
-        "pf": 512.3,
-        "pa": 426.4
-      },
-      "joshjr11": {
-        "wins": 3,
-        "losses": 1,
-        "pf": 542.44,
-        "pa": 538.16
-      },
-      "GSac": {
-        "wins": 3,
-        "losses": 1,
-        "pf": 506.18,
-        "pa": 559.96
-      },
-      "dpol": {
-        "wins": 2,
-        "losses": 2,
-        "pf": 597.8,
-        "pa": 488.02
-      },
-      "drjkay": {
-        "wins": 4,
-        "losses": 0,
-        "pf": 623.86,
-        "pa": 462.8
-      },
-      "saulgoat": {
-        "wins": 2,
-        "losses": 2,
-        "pf": 450.98,
-        "pa": 475.98
-      },
-      "sanfbe": {
-        "wins": 2,
-        "losses": 2,
-        "pf": 563.76,
-        "pa": 564.14
-      }
+      "opponent": "sanfbe",
+      "wins": 2,
+      "losses": 4,
+      "games": 6,
+      "winPct": 0.333,
+      "pf": 759.26,
+      "pa": 779.22
+    },
+    "benjlev": {
+      "opponent": "drjkay",
+      "wins": 0,
+      "losses": 6,
+      "games": 6,
+      "winPct": 0,
+      "pf": 592.84,
+      "pa": 790.82
+    },
+    "saulgoat": {
+      "opponent": "dpol",
+      "wins": 2,
+      "losses": 4,
+      "games": 6,
+      "winPct": 0.333,
+      "pf": 692.5,
+      "pa": 710.14
+    },
+    "joshjr11": {
+      "opponent": "dpol",
+      "wins": 0,
+      "losses": 6,
+      "games": 6,
+      "winPct": 0,
+      "pf": 639.2,
+      "pa": 841.18
+    },
+    "sanfbe": {
+      "opponent": "joshjr11",
+      "wins": 2,
+      "losses": 4,
+      "games": 6,
+      "winPct": 0.333,
+      "pf": 638.52,
+      "pa": 660.38
+    },
+    "drjkay": {
+      "opponent": "AlastairL",
+      "wins": 0,
+      "losses": 6,
+      "games": 6,
+      "winPct": 0,
+      "pf": 714.2,
+      "pa": 889.32
+    },
+    "GSac": {
+      "opponent": "joshjr11",
+      "wins": 0,
+      "losses": 6,
+      "games": 6,
+      "winPct": 0,
+      "pf": 631.62,
+      "pa": 828.32
+    }
+  },
+  "bunny": {
+    "dpol": {
+      "opponent": "joshjr11",
+      "wins": 6,
+      "losses": 0,
+      "games": 6,
+      "winPct": 1,
+      "pf": 841.18,
+      "pa": 639.2
+    },
+    "AlastairL": {
+      "opponent": "drjkay",
+      "wins": 6,
+      "losses": 0,
+      "games": 6,
+      "winPct": 1,
+      "pf": 889.32,
+      "pa": 714.2
+    },
+    "benjlev": {
+      "opponent": "joshjr11",
+      "wins": 3,
+      "losses": 3,
+      "games": 6,
+      "winPct": 0.5,
+      "pf": 792.02,
+      "pa": 746.76
+    },
+    "saulgoat": {
+      "opponent": "benjlev",
+      "wins": 6,
+      "losses": 0,
+      "games": 6,
+      "winPct": 1,
+      "pf": 785.58,
+      "pa": 655.52
+    },
+    "joshjr11": {
+      "opponent": "GSac",
+      "wins": 6,
+      "losses": 0,
+      "games": 6,
+      "winPct": 1,
+      "pf": 828.32,
+      "pa": 631.62
+    },
+    "sanfbe": {
+      "opponent": "benjlev",
+      "wins": 5,
+      "losses": 1,
+      "games": 6,
+      "winPct": 0.833,
+      "pf": 716.78,
+      "pa": 703.44
+    },
+    "drjkay": {
+      "opponent": "benjlev",
+      "wins": 6,
+      "losses": 0,
+      "games": 6,
+      "winPct": 1,
+      "pf": 790.82,
+      "pa": 592.84
+    },
+    "GSac": {
+      "opponent": "benjlev",
+      "wins": 5,
+      "losses": 1,
+      "games": 6,
+      "winPct": 0.833,
+      "pf": 730.8,
+      "pa": 626.78
     }
   },
   "seasonRankings": [
@@ -584,7 +634,7 @@
         },
         {
           "rank": 5,
-          "manager": "allyl900",
+          "manager": "AlastairL",
           "wins": 6,
           "losses": 8,
           "pf": 1756.06
@@ -927,6 +977,70 @@
           "pts": 6.8
         }
       ],
+      "ab": [
+        {
+          "n": "Matthew Stafford",
+          "pos": "QB",
+          "pts": 28.92
+        },
+        {
+          "n": "Khalil Shakir",
+          "pos": "WR",
+          "pts": 13
+        },
+        {
+          "n": "Kenneth Walker",
+          "pos": "RB",
+          "pts": 11.6
+        },
+        {
+          "n": "Brian Robinson",
+          "pos": "RB",
+          "pts": 4.9
+        },
+        {
+          "n": "Ricky Pearsall",
+          "pos": "WR",
+          "pts": 1.8
+        },
+        {
+          "n": "D'Andre Swift",
+          "pos": "RB",
+          "pts": 1.4
+        }
+      ],
+      "bb": [
+        {
+          "n": "Wan'Dale Robinson",
+          "pos": "WR",
+          "pts": 26.1
+        },
+        {
+          "n": "Jauan Jennings",
+          "pos": "WR",
+          "pts": 12.6
+        },
+        {
+          "n": "Tyjae Spears",
+          "pos": "RB",
+          "pts": 4.5
+        },
+        {
+          "n": "Jerry Jeudy",
+          "pos": "WR",
+          "pts": 2.4
+        },
+        {
+          "n": "Chris Godwin",
+          "pos": "WR",
+          "pts": 1.9
+        },
+        {
+          "n": "Rashid Shaheed",
+          "pos": "WR",
+          "pts": 0.5
+        }
+      ],
       "season": "2025"
     },
     "lowestScore": {
@@ -1053,6 +1167,80 @@
         {
           "n": "Khalil Herbert",
           "pos": "RB",
+          "pts": 0
+        }
+      ],
+      "ab": [
+        {
+          "n": "Jaylen Warren",
+          "pos": "RB",
+          "pts": 9.4
+        },
+        {
+          "n": "Jerry Jeudy",
+          "pos": "WR",
+          "pts": 8
+        },
+        {
+          "n": "Younghoe Koo",
+          "pos": "K",
+          "pts": 7
+        },
+        {
+          "n": "Tyler Lockett",
+          "pos": "WR",
+          "pts": 0
+        },
+        {
+          "n": "Javonte Williams",
+          "pos": "RB",
+          "pts": 0
+        },
+        {
+          "n": "Jaxon Smith-Njigba",
+          "pos": "WR",
+          "pts": 0
+        },
+        {
+          "n": "Zach Charbonnet",
+          "pos": "RB",
+          "pts": 0
+        }
+      ],
+      "bb": [
+        {
+          "n": "AJ Dillon",
+          "pos": "RB",
+          "pts": 13.6
+        },
+        {
+          "n": "Drake London",
+          "pos": "WR",
+          "pts": 11.68
+        },
+        {
+          "n": "Kendre Miller",
+          "pos": "RB",
+          "pts": 11
+        },
+        {
+          "n": "Roschon Johnson",
+          "pos": "RB",
+          "pts": 1.9
+        },
+        {
+          "n": "Brandin Cooks",
+          "pos": "WR",
+          "pts": 1.8
+        },
+        {
+          "n": "Miles Sanders",
+          "pos": "RB",
+          "pts": 1.2
+        },
+        {
+          "n": "Tee Higgins",
+          "pos": "WR",
           "pts": 0
         }
       ],
@@ -1185,6 +1373,85 @@
           "pts": 0
         }
       ],
+      "ab": [
+        {
+          "n": "Joe Burrow",
+          "pos": "QB",
+          "pts": 23.38
+        },
+        {
+          "n": "Jakobi Meyers",
+          "pos": "WR",
+          "pts": 17
+        },
+        {
+          "n": "Cooper Kupp",
+          "pos": "WR",
+          "pts": 15.8
+        },
+        {
+          "n": "Isiah Pacheco",
+          "pos": "RB",
+          "pts": 12.9
+        },
+        {
+          "n": "Aaron Jones",
+          "pos": "RB",
+          "pts": 0
+        },
+        {
+          "n": "Nick Chubb",
+          "pos": "RB",
+          "pts": 0
+        },
+        {
+          "n": "J.K. Dobbins",
+          "pos": "RB",
+          "pts": 0
+        },
+        {
+          "n": "Rachaad White",
+          "pos": "RB",
+          "pts": 0
+        }
+      ],
+      "bb": [
+        {
+          "n": "Keenan Allen",
+          "pos": "WR",
+          "pts": 0
+        },
+        {
+          "n": "Hunter Henry",
+          "pos": "TE",
+          "pts": 0
+        },
+        {
+          "n": "Chris Godwin",
+          "pos": "WR",
+          "pts": 0
+        },
+        {
+          "n": "Saquon Barkley",
+          "pos": "RB",
+          "pts": 0
+        },
+        {
+          "n": "DK Metcalf",
+          "pos": "WR",
+          "pts": 0
+        },
+        {
+          "n": "Justin Herbert",
+          "pos": "QB",
+          "pts": 0
+        },
+        {
+          "n": "Jerome Ford",
+          "pos": "RB",
+          "pts": 0
+        }
+      ],
       "season": "2023"
     },
     "closestGame": {
@@ -1314,6 +1581,70 @@
           "pts": 3
         }
       ],
+      "ab": [
+        {
+          "n": "Cam Skattebo",
+          "pos": "RB",
+          "pts": 21.1
+        },
+        {
+          "n": "A.J. Brown",
+          "pos": "WR",
+          "pts": 19.9
+        },
+        {
+          "n": "Matthew Golden",
+          "pos": "WR",
+          "pts": 8.1
+        },
+        {
+          "n": "Marquise Brown",
+          "pos": "WR",
+          "pts": 6.2
+        },
+        {
+          "n": "Jerry Jeudy",
+          "pos": "WR",
+          "pts": 2.2
+        },
+        {
+          "n": "Jauan Jennings",
+          "pos": "WR",
+          "pts": 0
+        }
+      ],
+      "bb": [
+        {
+          "n": "Drake Maye",
+          "pos": "QB",
+          "pts": 23.22
+        },
+        {
+          "n": "D'Andre Swift",
+          "pos": "RB",
+          "pts": 9.3
+        },
+        {
+          "n": "Jameson Williams",
+          "pos": "WR",
+          "pts": 5.3
+        },
+        {
+          "n": "Brian Robinson",
+          "pos": "RB",
+          "pts": 2.2
+        },
+        {
+          "n": "Xavier Worthy",
+          "pos": "WR",
+          "pts": 0
+        },
+        {
+          "n": "Justin Fields",
+          "pos": "QB",
+          "pts": 0
+        }
+      ],
       "season": "2025"
     },
     "highestSeason": {
@@ -1336,7 +1667,56 @@
     }
   },
   "benchStats": {
-    "gamesWithData": 0,
-    "perManager": []
+    "gamesWithData": 192,
+    "perManager": [
+      {
+        "manager": "AlastairL",
+        "totalBenchPts": 2411.7,
+        "games": 49,
+        "avgBenchPts": 49.22
+      },
+      {
+        "manager": "drjkay",
+        "totalBenchPts": 2181.06,
+        "games": 48,
+        "avgBenchPts": 45.44
+      },
+      {
+        "manager": "saulgoat",
+        "totalBenchPts": 2268.84,
+        "games": 50,
+        "avgBenchPts": 45.38
+      },
+      {
+        "manager": "sanfbe",
+        "totalBenchPts": 2014.52,
+        "games": 49,
+        "avgBenchPts": 41.11
+      },
+      {
+        "manager": "GSac",
+        "totalBenchPts": 1817.4,
+        "games": 46,
+        "avgBenchPts": 39.51
+      },
+      {
+        "manager": "dpol",
+        "totalBenchPts": 1861.88,
+        "games": 48,
+        "avgBenchPts": 38.79
+      },
+      {
+        "manager": "benjlev",
+        "totalBenchPts": 1765.36,
+        "games": 46,
+        "avgBenchPts": 38.38
+      },
+      {
+        "manager": "joshjr11",
+        "totalBenchPts": 1819.52,
+        "games": 48,
+        "avgBenchPts": 37.91
+      }
+    ]
   }
 }
