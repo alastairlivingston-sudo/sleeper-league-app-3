@@ -1,0 +1,499 @@
+# THE PLANCEY — PER-PERSON QUOTE BANK
+
+*A large bank of real [REAL] verbatim lines per person, mined from the chat and ranked for banter value, for the bot to look up and mimic each member's voice. Lightly filtered, not hand-polished — quantity over polish by design. Dates kept for context.*
+
+
+## DANIEL POLAK — Commissioner / Plancey Post author
+
+- "Penetrated 43 jurisdictions 😂😂😂😂"  *[25/11/2020]*
+- "Which is BS because a trade is a trade that happens now...you want to do a trade you have to face the consequences of that and find a TE off waivers"  *[21/11/2023]*
+- "Pretty soon Miriam could be working in a bank 😂😂😂"  *[18/12/2018]*
+- "If I was lazy I could just do this given we have the same match ups 😂😂😂"  *[26/12/2022]*
+- "Lol just searched for this time last year 😂😂"  *[26/08/2019]*
+- "So effectively gaon needs Adams to get > 14.76 points to become plancey champion"  *[23/12/2019]*
+- "I dunno it just feels weird to me to go after the draft and check how well a website thinks you have drafted 3 weeks before the season has started....you don't get no plancey for that"  *[21/08/2018]*
+- "Can I also add @⁨Alastair Livingston⁩ to the WOAT conversation....asterisk season aside....0 planceys 1 miriam"  *[20/12/2022]*
+- "Ye i dont think we can change the plancey name on the group it was always out of respect and it means even more now...his name will live on forever (it is also already engraved on the belt)"  *[08/06/2025]*
+- "😂 I was just thinking...wait ally has one win and then I remembered 😂😂....sanford was a nearly man one year"  *[03/02/2021]*
+- "Can he please chose amare Cooper 😂😂😂"  *[29/11/2020]*
+- "Do we get a double gameweek 😂😂😂"  *[29/09/2020]*
+- "Is lev the only player to have never played in either the plancey or miriam bowl"  *[28/10/2021]*
+- "@⁨Josh Gaon⁩ you've broken your own law....nacua on waivers!!!!"  *[26/10/2024]*
+- "The belt will be going to Israel unless Lindsay has an absolute stinker"  *[24/12/2018]*
+- "So the question i have to ask is....if you win the miriam bowl match up does that mean you have had a better season than the man who loses in the plancey bowl?"  *[23/05/2025]*
+- "@⁨Benjy Sanford⁩ you now have a reputation to uphold...an outrageous early round draft pick to save you in the miriam bowl"  *[22/08/2021]*
+- "Israels enemies dont recognise israel as a country nor the miriam as an event in the fantasy calendar"  *[18/12/2017]*
+- "He's definitely done worse 😂😂😂"  *[18/11/2020]*
+- "@⁨Alastair Livingston⁩ We never made a group decision on use of reserve spot!!!!"  *[13/09/2018]*
+- "😂😂 the North Korean train ride but have have been the most fun to write about"  *[11/09/2022]*
+- "For a trade that got you the miriam and saul the plancey"  *[07/01/2018]*
+- "The miriam has absolutely no incentive to make sure the belt is sorted"  *[04/02/2026]*
+- "Unlucky Lev and a hearty mazel tov on getting to your first plancey bowl....long live autodraft"  *[04/01/2022]*
+- "Just trade the dude then!!!!"  *[01/09/2019]*
+- "I feel like Israel always do well in the judo"  *[30/07/2024]*
+- "Is miriam getting demoted in the draft?"  *[30/06/2019]*
+- "I think we can hand you the win @⁨Alastair Livingston⁩ but because it is slightly odd circumstances we will put a asterisk on the belt"  *[28/12/2024]*
+- "Its the other parts of the trade that become the issue....if they are then traded on... do we have to rejig everyone's teams because of insurance"  *[28/10/2021]*
+- "I also think we need consistency on innovative trades...for example, trading of future draft picks is apparently a huge nono but something like this is deemed innovative 🤷‍♂️"  *[28/10/2021]*
+- "Yep I can confirm Gila is very relieved I'm not in the Miriam bowl I'm not sure I would have been much fun to live with if it happened 3 years in a row"  *[27/11/2018]*
+- "Dont include me in part of that obsene trade...my trade was alot fairer"  *[27/11/2017]*
+- "Much like spurs today? At least they turned up for 46 second today, which "for all intents purposes" was 46 more than the champions league final 😂"  *[27/10/2019]*
+- "Firstly I'm not in first place and secondly whilst you have been dreaming with your daughters dolls about this... everyone's actual dream is your miriamhood...sorry to break it to you 🤣"  *[26/10/2024]*
+- "Gaon im gonna say no to whatever you come up with first given your history of outrageous trade requests"  *[26/09/2017]*
+- "You were too busy doing that in last seasons semi plancey 😂"  *[26/08/2019]*
+- "Im sure you will all join me in wishing miriam plancey a happy birthday"  *[26/01/2018]*
+- "For the plancey bowlers....but really I think for the miriam bowlers....set your line ups....there are games tomorrow night"  *[24/12/2024]*
+- "I can't believe Lev has pulled another out the waiver wire bag of tricks"  *[24/12/2022]*
+- "And we are still yet to have a 2 time plancey champion"  *[24/12/2019]*
+- "I also realise that the plancey needs his belt"  *[23/03/2022]*
+- "When he came round I asked him to pray for one person in the Miriam bowl and one in the plancey bowl.....I'm not saying who though"  *[22/12/2019]*
+- "I'm not sure it's your kicker playing that will affect the result btw 🤣"  *[22/11/2024]*
+- "Welcome back to the Plancey Post where we have hit Semi Plancey week and our match ups take a familiar look"  *[21/12/2023]*
+- "To clarify - the trading partners, I think, had good intentions, but probably didn't take in to consideration the absolute mess it would create going forward if these types of trades became a thing."  *[21/11/2023]*
+- "I know the trade and the trade worries me much less than the concept"  *[21/11/2023]*
+- "@⁨Benjy Sanford⁩ the trade would be I would trade jacobs for Henry this week with lev....but then I give him both to play you this week and then ge sends me Henry next week"  *[21/11/2023]*
+- "@⁨Alastair Livingston⁩ the basis of the trade would be that I would trade jacobs for ceedee with saul this week"  *[21/11/2023]*
+- "A table created by you 😂....the stats do not lie ultimately 2 miriamhoods  to my 0"  *[20/12/2022]*
+- "You not gonna get chips to trade for draft picks?"  *[20/08/2018]*
+- "I have been providing Miriam bowl consultancy work to the government so that will never pass"  *[20/08/2018]*
+- "I love kickers I would play a whole team of kickers if I could"  *[20/05/2019]*
+- "Welcome back everyone to the Plancey post where we are at the semi plancey’s stage of the competition."  *[19/12/2025]*
+- "There are so many variables...but ultimately the two shittest teams on the week went out....sanford and my team, with those scores, don't deserve to be in the semi planceys"  *[19/12/2023]*
+- "Or was it Olivia who drafted fournette second round?"  *[19/01/2021]*
+- "Like israels enemies....i do not recognise the miriam"  *[18/12/2017]*
+- "In return mr hampton will  pick up his crutches and limp over to the plancey neutrals in an attempt to become plancey positive"  *[18/11/2025]*
+- "It should be mandatory that at the AGM or another time (where we all get together) that the belt is presented to the winner by the miriam"  *[16/09/2024]*
+- "@⁨Josh Gaon⁩ hates me going on about it but you are either plancey or miriam..."  *[15/02/2021]*
+- "However after I made the team eat the Goat i killed it looks like davante Adams has gone and got ill"  *[14/12/2023]*
+
+## SAUL FREEDMAN — The GOAT / Leavemyarsalona
+
+- "😂😂😂😂Dan “hello to the future”"  *[14/11/2021]*
+- "Do we have a date for the draft? That time of year is inching closer !!!"  *[23/08/2022]*
+- "Hahahaha my highlight is the image of davante adams standing on one of those tiny children service chairs"  *[17/12/2021]*
+- "Was my trade for bell the worst trade yet made in this league"  *[11/11/2018]*
+- "Tbf my waiver moves this year have been absolutely shite"  *[08/12/2021]*
+- "Is this the same guy who claimed to have lost his virginity to Miriam plancey ?"  *[26/03/2023]*
+- "Fucking gronk is fucking fucking me"  *[24/09/2017]*
+- "Who has best and worst all time records, does the website tell that?"  *[10/11/2020]*
+- "Oh thanks for the shout out for best player of all time. Does that make me the GOAT?"  *[04/12/2020]*
+- "Nice you. Wanna come here? Miriam and plancey in one room, high risk"  *[02/01/2022]*
+- "What happens if there’s a tie in a Miriam or plancey ?"  *[31/12/2023]*
+- "If gaon doesn’t get the belt engraved by the time of the draft, he gets automatic last pick"  *[29/04/2018]*
+- "Imagine the Shabbaton choir doing the halftime show 😂😂"  *[28/12/2022]*
+- "I actually deserve to be in the Miriam bowl for throwing mike Davis and chase to the waivers"  *[28/10/2020]*
+- "How can fantasy pros say I did the best and NFL say I only did the 6th best"  *[27/08/2019]*
+- "So Sanford has to come and collect the belt from Kilburn, engrave it and then take it to israel"  *[25/12/2018]*
+- "By allowing a lag we’re providing another way of evening up lopsided trades, which in theory should enable more trades to happen, which I think we are all for"  *[21/11/2023]*
+- "As I carelessly seemed to have drafted only one usable RB this year, anyone looking to offload and trade up at WR come at me. All prices listened to"  *[21/09/2021]*
+- "I have 3 planceys (two wins 1 loss) and 1 Miriam (1 win)"  *[20/12/2022]*
+- "@⁨Daniel Polak⁩ if you get a Miriam I think you are fucked"  *[20/12/2022]*
+- "Can you send round the other charts which show your draft as the worst?"  *[20/08/2018]*
+- "I’ll be taking 42 plancey dollar sensation chase Edmonds from the plancey 19 men"  *[18/11/2020]*
+- "I just traded my top 3 draft picks for a guy who hasn’t played for a year"  *[18/10/2018]*
+- "He tried to trade rape me too the fucker"  *[12/09/2017]*
+- "And also open to trades that get me more 6pm players as I forgot to take that into account when drafting"  *[08/09/2021]*
+- "Is the whole point of this to show that you’re the best @⁨Josh Gaon⁩ and @⁨Daniel Polak⁩ is the worst ?"  *[07/01/2024]*
+- "I love Polaks face reflected in the belt. Best intro yet"  *[04/12/2020]*
+- "I would like to see the plot of draft pick vs finish position for the 2 non asterisk seasons we have Gad"  *[03/07/2019]*
+- "Hilton for fournette if fournette is our"  *[30/09/2018]*
+- "Sac has done his davening!!!!"  *[29/11/2020]*
+- "I suggest scores to decide next years draft order?"  *[29/09/2020]*
+- "What happens if we go back to week 4 and reverse my trade?"  *[27/11/2018]*
+- "What the fuck is the waiver wire"  *[25/10/2017]*
+- "This may surpass sac giving away gronk for worst trade of the year"  *[24/10/2017]*
+- "Houston fucked means you fucked"  *[21/08/2018]*
+- "If you had the champs of each league in the champs league, the second in the Europe and the third in the whatever the new one is called, I’d be ok with that"  *[21/04/2021]*
+- "For the non Miriam and plancey contenders"  *[20/12/2022]*
+- "Hilarious that your first 2 draft picks are here @⁨Josh Gaon⁩ ‎<This message was edited>"  *[19/12/2024]*
+- "Can I get Chubb moved on to IR today so I can bid on waivers with a free roster spot ?"  *[19/09/2023]*
+- "It’s absolutely horrendous and shocking"  *[18/11/2021]*
+- "Never a good sign when your kicker is your top scorer"  *[18/11/2018]*
+- "What time do the waivers go trough ?"  *[18/09/2019]*
+- "Suggestion: whoever gets the Miriam has to arrange engraving of the belt"  *[17/12/2017]*
+- "The goat doesn’t bring the belt. That’s the woats responsibility @⁨Benjy Sanford⁩ @⁨Daniel Polak⁩ @⁨Josh Gaon⁩"  *[16/04/2023]*
+- "Hahahaha steeers lions is the biggest neb off"  *[14/11/2021]*
+- "It’s hilarious how the fighting talk in this league is to believe your team is shitter than anyone else’s"  *[13/09/2021]*
+- "Anyone wanna go to nfl Sunday? Tickets online are 90 and now my israel trip is cancelled im keen"  *[12/10/2023]*
+- "One trade is worth about 20 waiver transactions"  *[08/12/2021]*
+- "Can you get rabbi plancey himself as a guest ?"  *[08/11/2020]*
+- "If forward starting springing trades aren’t allowed why are forward starting waivers ok"  *[07/09/2025]*
+- "Thanks Dan. Never fail to lol"  *[06/12/2018]*
+- "Plancey bowl highest scoring, then bronze medal match, then the whimpering neb off and last the Miriam bowl"  *[03/01/2022]*
+- "@⁨Alastair Livingston⁩ what time you will be home? @⁨Josh Gaon⁩ needs  at least one hour to organise all his paperwork in front of him to be ready to draft"  *[02/09/2024]*
+- "Mazel tov Gid and Sophie and josh and Nicola"  *[01/06/2020]*
+- "So @⁨Benjy Levey⁩ has done the plancey to Miriam tango"  *[01/01/2024]*
+- "Miriam bowl specialist doing his best work"  *[01/01/2023]*
+- "Honestly @⁨Alastair Livingston⁩ deserves to be Miriam for dropping Dj moore"  *[01/01/2023]*
+- "What a time for ceedee to have the best game of his career"  *[31/12/2023]*
+- "Fuck I forgot there were games last night"  *[31/12/2023]*
+- "Conceding in the final is surely auto Miriam behaviour ?"  *[31/12/2023]*
+
+## ALASTAIR LIVINGSTON — Commissioner / Not if but Wentz
+
+- "Of course it’s bullshit. But it’s curated bullshit. And 11 years of consulting has shown me that curated bullshit sells"  *[30/10/2024]*
+- "I agree with you on trade and IR. I honestly think that rule should apply at all with the waiver bidding now."  *[14/09/2024]*
+- "Josh and I have agreed a trade for a relatively low level player. However in this trade, there would be a variable component. Sort of like how you get conditional trades in the nfl."  *[07/12/2022]*
+- "So it’s draft day. I’ve given you all 100 plancy pounds for waivers. Don’t trade them all at once."  *[06/09/2020]*
+- "People said that about Tunsil trade. Now Miami have third pick in draft!"  *[31/01/2021]*
+- "I already want to trade down in this years fantasy draft . @Josh?"  *[30/04/2021]*
+- "Bye for champion and bye for top point scorer. If top point scorer is champion then bye for second place. If top point scorer is in Miriam bowl then no bye for top point scorer as they are in bowl."  *[24/11/2020]*
+- "Josh Gaon has picked up Lev Bel lol lol lol"  *[23/12/2018]*
+- "Hypothetical question. If a player is drafted with an injury / suspension and I trade for said player. Can he go on my IR list?"  *[16/09/2022]*
+- "This is the best picture!!!!"  *[12/03/2021]*
+- "I think it doesn't help that I fear the Miriam more than I aspire for another belt. Perhaps that says more about my personality then it ought to!"  *[06/12/2023]*
+- "Hear my official concession. All hail our champion and GOAT"  *[31/12/2023]*
+- "I think bad Internet just follows him around. I take us back to his first draft where he was the only one to suffer an Internet outage and got a auto drafted on his first round pick"  *[31/12/2021]*
+- "A low-value trade but Sanford and I are keen to get the trade year under way"  *[31/08/2018]*
+- "Elly said to me last night. I hope you don't win the plancy but I won't be married to a Miriam"  *[27/11/2018]*
+- "I maintain. A critical advantage is Lev always drafts in the middle"  *[27/09/2022]*
+- "Honestly if there’s not collusion then I can’t see the issue. Every trade is with the intention of making both teams better off"  *[24/10/2017]*
+- "Yes I changed that on Tuesday or else I would have had waivers to myself and Saul lol"  *[24/09/2025]*
+- "I came so close to putting mattison onto waivers. And then I thought. Nah if somehow cook is out. Lev will bid the house to get him and then it will destroy my insides"  *[23/12/2021]*
+- "Fuck me that trade was a disaster. Wilson and Mixon truly shat the bed"  *[23/12/2019]*
+- "I maybe heading for Miriam-hood but I think I've become a very fair and easy trade dealer this year."  *[22/10/2023]*
+- "May I add that the belt has several questionable white stains on it that pre dated me receiving it.  Goat - were they there when you got it"  *[22/02/2026]*
+- "I’m sure this trade will screw me over. But I’m in favour of any trade innovation"  *[21/11/2023]*
+- "Anyone want to trade with me. I’m facing Polak and I know we all want to fuck him over."  *[21/11/2023]*
+- "Yeh but your waiver wire position is awesome lol"  *[21/11/2017]*
+- "What a game for Fournette. Sanford inspired drafting."  *[18/01/2021]*
+- "Names on the belt. Not counting my records is offensive to the belt"  *[17/12/2023]*
+- "Bored without waiver wire!! Sorry not bored of your podcast!"  *[17/12/2020]*
+- "Draft. Sunday 5th September. 1730 BST. With a bbq / takeout post draft. Any vehement disagreements ?"  *[15/06/2021]*
+- "You can't be the GOAT and a 2 time Miriam. That is for sure."  *[14/11/2023]*
+- "He hasn’t responded to my messages on draft date. So who knows lol"  *[13/08/2021]*
+- "Now I know why I never have left Accenture. I always had this on the skills"  *[13/01/2021]*
+- "I also think Jamie is regular season champion by about a point lol"  *[12/12/2023]*
+- "Honestly that was the most ridiculous fantasy football of my life"  *[12/12/2023]*
+- "What makes Saul the goat is he always gets some D / K joy"  *[12/09/2022]*
+- "Fun fact. When Elly finally got konked out I did a mock draft"  *[09/06/2019]*
+- "Looks good. I'm always open to change officially set the draft time"  *[08/08/2019]*
+- "I agonise over every trade. This is a big deal lol"  *[07/11/2021]*
+- "Well I think it deserves a mention on this thread. Big mazel to Josh and Nicola. The league welcomes another official saboteur"  *[07/05/2019]*
+- "Hahahahah. Derek is a lovely jewish name. My uncle is a derek. Seems fateful"  *[07/01/2018]*
+- "Ach the kicker I had to drop from my roster because of the trade veto has probably beaten me"  *[06/11/2017]*
+- "If Saul and Lev are shared champions. Sanford & Polak are shared miriams. That is for certain in my mind"  *[06/01/2023]*
+- "My already dog shit roster is further fucked."  *[05/09/2023]*
+- "I shall propose that we all hum this whenever the champ passes"  *[04/01/2022]*
+- "I mean we say auto draft. But Lev was incredible at waiver wire"  *[04/01/2022]*
+- "Honestly draft is my peak of the year. Why would you want to blow your load in 90 seconds when you can last 120 seconds"  *[03/03/2024]*
+- "Williams looked good in preseason. Now looks like I’ve taken him too early but what can you do. Can’t draft assuming trades into the team"  *[01/09/2019]*
+- "I did at least four mock drafts during Ellys"  *[01/06/2020]*
+- "We can always do the nfl one if we want a less shit ui"  *[31/12/2018]*
+- "Or order takeout? Or I can pause mid draft (I think)"  *[31/08/2021]*
+- "They drafted him at #4. Deciding not to draft Deshaun Watson or Mahomes, because they had Blake Bortles"  *[31/08/2020]*
+- "Very expensive for someone who has never won a playoff game. But since Megatron left never been any talent around him. But that’s very expensive."  *[31/01/2021]*
+- "Hahahaha. And a quote from Brawer too"  *[30/05/2022]*
+- "The best draft date appears to be Sunday 19th August"  *[29/06/2018]*
+- "Also highly irritating to (allegedly) have the best week 13 team and be playing the 2nd best week 13 team"  *[28/11/2023]*
+- "Kent State v Buffalo!!! I mean seriously how much NCAA football do you watch"  *[28/11/2020]*
+- "It still thinks Gid has the worst team lol"  *[28/10/2021]*
+- "I've changed it to no trade waiver"  *[28/09/2017]*
+- "We have our champion. Our Miriam is still to be known"  *[27/12/2020]*
+- "Lol. Yeh but the first round are the best"  *[27/10/2021]*
+
+## GIDEON SAKOFSKY — Sac / Israeli Ambassador
+
+- "Why not allow trades all the way through but only between people in the same stage… so after week 14 bye week can trade with bye week, play offs can trade with play offs and miriam with miriam"  *[08/12/2023]*
+- "Hahahahahahahahahahaha that’s amazing"  *[14/05/2019]*
+- "I imagine the trade chart says that one asterisked plancey win is worth the same as 2 proper plancey wins"  *[20/12/2022]*
+- "Might do an experiment next year, draft a whole roster of kickers and then not use waivers or trade all year and see how the universe still gets me to 7-7"  *[12/11/2024]*
+- "First plancey bowl in the modern era is the best asterisk year reference so far 😂"  *[22/12/2022]*
+- "Rabbi plancey just waved at me in the street!!!!!"  *[05/07/2019]*
+- "After promising myself I’d never trade again, I have been tempted back into the game by the trademeister general himself"  *[25/11/2020]*
+- "I would autodraft my anniversary before I autodrafted a draft"  *[23/07/2023]*
+- "When picking the order for the draft becomes more complicated than the actual draft then I’m happy just to accept whatever number in the draft I’m given!"  *[20/05/2019]*
+- "I believe Israel's enemies refer to the Miriam as "Western decadent bullshit""  *[18/12/2017]*
+- "England are the plancey!!!!!"  *[14/07/2019]*
+- "I’m drafting darkwa in the first round so I’ve got someone to trade for a change"  *[13/03/2019]*
+- "I should win pretty comfortably from here 😂😂😂"  *[12/11/2018]*
+- "I mean what are these guys doing...its the 9th round, nobody gives a shit, you aren't picking a bloody forever home!" Never has a truer word been spoken!"  *[11/09/2022]*
+- "I will draft Orleans Darkwa before I draft Jalen Hurts going forward"  *[09/12/2025]*
+- "I had a trade agreed with someone else who then changed their mind… I can only trade with people who want to trade"  *[07/12/2023]*
+- "Help settle at argument in my other league... two teams playing each other this week, both have kickers on a bye. Can they agree between themselves not to play kickers this week or is that collusion?"  *[30/10/2019]*
+- "Mazel tov! Too late to decide draft order based on closeness to the correct baby name?"  *[25/04/2024]*
+- "I drafted 7th and Jamie drafted 2nd I think so it doesn’t mean much!"  *[20/12/2018]*
+- "Yeah ridiculous that after that shitshow I still have to play him!"  *[14/09/2021]*
+- "Can we agree that if Miriam hasn’t sorted my belt out pretty soon that I get his first round pick this season??"  *[13/03/2019]*
+- "Site says draft time is 8:30 Israel time?"  *[04/09/2022]*
+- "I can't believe I have the same record as someone who can't believe they won a game!"  *[03/10/2017]*
+- "Well if you’ve been and I quote “pounding” miriam for years then I’d say he’s going to be making you the miriam!"  *[03/01/2023]*
+- "Does that mean another 90 second drafter will be autodrafting??"  *[31/08/2025]*
+- "It must be @⁨Josh Gaon⁩ , why the hell would the original miriam plancey call Jamie Rosenfeld??"  *[30/08/2021]*
+- "What about teams based in North Korea who have been rumoured to have found a way to mine plancey gelt illegally?"  *[29/06/2020]*
+- "There will always be room in my heart for Mr darkwa"  *[27/06/2018]*
+- "I think Alistair is saying that you take the record out of the equation - the 6/7/8 go into their own table and the worst two go into the miriam"  *[26/12/2023]*
+- "I make trades, I use waivers, I make good lineup calls, I make bad lineup calls"  *[26/11/2024]*
+- "I’ve heard the real plancey always comes second as well"  *[26/11/2019]*
+- "A trade whilst someone is mid matchup with me… this never ends well for me!"  *[26/09/2021]*
+- "Or an all star game in week 18… the best of the four week 17 teams vs the best of the remaining four teams"  *[24/12/2025]*
+- "I think after the time previous miriams have taken to get the belt engraved, a level of slack should be given"  *[24/12/2019]*
+- "You said I won the draft and I’m 0-2 and shit"  *[24/09/2020]*
+- "Plancey and Miriam bowls both going down to the final game of the fantasy season"  *[23/12/2019]*
+- "Hard to be in the GOAT chat without an overall win, but a win this week would make Jamie the GOAT I think"  *[22/12/2020]*
+- "My trade with Saul looking like one of the worst bits of business ever done in this league"  *[22/12/2019]*
+- "Worth it though, Fant probably the best player in the game (this message only applies to anyone I’m trying to trade with now)"  *[21/10/2020]*
+- "So I was spot on… I always lose to Saul and I always beat Sanford"  *[20/12/2022]*
+- "I think I’d come out pretty well in this given my record is always pretty poor but I always end up in the play offs"  *[20/12/2022]*
+- "I don’t know how anyone can look at the above table and combine it with the two planceys and say anything other than @⁨Saul Freedman⁩ is the GOAT"  *[20/12/2022]*
+- "The play off draft results could decide the draft order for next year?"  *[20/12/2018]*
+- "I'm looking forward to your analysis of the ertz/darkwa trade"  *[20/12/2017]*
+- "I meant to use that gif when Sanford traded away his entire team to gaon in exchange for a kicker"  *[20/11/2017]*
+- "I particularly enjoyed the Miriam pinata and plancey ice sculpture"  *[17/12/2021]*
+- "I think for every week in June that I don’t see a belt, I get another of Miriam’s picks"  *[17/05/2019]*
+- "I’d rather the punishment was me receiving some draft picks from the Miriam"  *[17/04/2019]*
+- "I'm 7 mins into the podcast... I NEED a calendar!!!!"  *[16/11/2023]*
+- "I’m doing my best to take the trading crown from @⁨Josh Gaon⁩. This time I’ve got @⁨Jamie Kay⁩ to help me move into first place on the number of trades chart…"  *[16/11/2022]*
+- "Polak got benefit from Jones and Adams in the same week despite trading Jones away and receiving Adams"  *[16/10/2018]*
+- "Can't believe I'm gonna lose off that dodgy trade"  *[16/10/2018]*
+- "I know it’s a tiny thing that almost definitely will never make a difference but it always bugs me"  *[15/10/2021]*
+- "And considering I'm playing the guy who's 9-1, the guy who's on the best run of form and the favourite in the play offs I'd say I'm about fucked"  *[14/11/2017]*
+- "Give everyone 5 plancey dollars every time they complete a trade, that encourages trading"  *[14/09/2024]*
+- "I honestly think it’s one of the worst decisions I’ve ever seen"  *[14/05/2026]*
+- "I don’t think my team is shit, I think my team is fine… I think Rodgers is a bellend and I hope aiyuk never recovers from his mystery injury"  *[13/09/2021]*
+- "I’ll just trade my draft position for a 3rd round pick if he does that"  *[12/08/2024]*
+- "Now I’ll just get “plancey champion 2018, bit of a twat”"  *[11/01/2021]*
+- "With my entire roster at best questionable and at worst apparently dead, some drastic action needed to be taken"  *[09/12/2021]*
+
+## JOSH GAON — The Trader
+
+- "Don't know I always thought you have to play a full roster every week or you lose. I was always given shit for not playing a kicker and then have since always made sure I had a complete line up"  *[24/10/2021]*
+- "Guys you know I mentioned a charity tournament I entered this year. Its best ball so you draft and then that's it. It selects the best lineup from your players. No waivers or anything."  *[29/11/2022]*
+- "The fans come to see the classics. Pre waivers add. Last minute kicker add. Anyone want to trade?"  *[21/09/2020]*
+- "Alright guys, enough of this nonsense. 2 weeks and no Gaon trade! Well it stops now! I will accept the next trade offer that is sent my way!"  *[20/09/2024]*
+- "Can we clarify it's the Miriam bowl... no way are we rebranding!! You're taking the Miriam from me!! (Or sanford)"  *[05/12/2018]*
+- "I will be proposing a Plancey Premier League at AGM. Better branding and TV coverage, a new belt and a reset of the records and pretending like the Plancey didn't exist before"  *[31/12/2024]*
+- "I don't mind about no IR from waivers or draft. But to trade for them that seems like a positive.  We encourage trading and this rule  discourages it"  *[25/08/2023]*
+- "Mazal tov on entering the trade game @⁨Benjy Sanford⁩. Only @⁨Benjy Levey⁩ left to make a trade his yearly trade"  *[23/10/2022]*
+- "Oh and fuck gurley. Fucked me in the Miriam now sending me to that God forsaken place again 😩"  *[22/10/2018]*
+- "I have separated them so I haven't published Sanford or Saul's trade analysis which means the Wolf of Wall Street award for best trader wont be announced until after. (Clue its not @⁨Daniel Polak⁩ )"  *[20/12/2017]*
+- "I don't think so but I've never autodrafted in sleeper on  so never looked into it"  *[14/08/2024]*
+- "And you're giving me start sit advice as well 🤣🤣🤣"  *[09/12/2021]*
+- "Funny you say that I have also run a miriam belt championship so will reveal that next week"  *[07/01/2024]*
+- "No need to vote as a majority of the league will always let the trade go through regardless of how they feel about the trade unless it's collusion"  *[27/09/2019]*
+- "I need to stop making this ridiculous trades!🤦🏻‍♂"  *[27/06/2018]*
+- "But that's ridiculous that you are forced to not trade him or if you want to trade him he has to clog someone else's bench"  *[25/08/2023]*
+- "you have Nicola to thank for that!!😂"  *[24/07/2022]*
+- "One option lay the trade out. Veto the trade if people feel aggrieved on the basis of thr trade."  *[21/11/2023]*
+- "Polak that goat eating was really ill advised. Hurts adams and cooks all got the shits from it"  *[17/12/2023]*
+- "All that hysteria for those 3 😂😂😂"  *[17/11/2021]*
+- "Saul when are you back from USA? I'll get it engraved as know where to go and Sanford you can owe me a favourable trade when I decide my trade abstinence isn't for me"  *[17/05/2019]*
+- "Sauls drafted from everywhere so it doesnt matter where you draft from just who is drafting for y"  *[13/07/2025]*
+- "Inflated sense of ability. 6% think they can make the 100m olympic team 😂😂😂"  *[11/08/2024]*
+- "Every time gronkowski kicks a fucking field goal after miss in 3 to cost me week 1!!! He's been trolling me all year"  *[08/11/2020]*
+- "Its based on when you last made a waiver claim. So because you waivered taysom hill is send you to bottom of the waiver priority etc"  *[05/10/2025]*
+- "We always wondered how ally would cope with the pressures of a plancey bowl.... I suppose we now have out answer"  *[31/12/2023]*
+- "Although I am currently suffering through my self imposed trade embargo. I am following the league carefully for any supposed trades that do occur."  *[31/08/2018]*
+- "Stafford is one of the best in terms if ratings. Lions have never had a run game to support him."  *[31/01/2021]*
+- "So we could do immediate trades and ally to reverse any trade rapes if agreed that it was on the whatsapp group? Any thoughts"  *[28/09/2017]*
+- "Ive drafted some of my best teams at Chez Livingston"  *[28/08/2025]*
+- "Nicola refers to me as miriam so it's kind of become automatic... #3moreweeks"  *[27/11/2018]*
+- "Tbh had I left it to autodraft I probably would have done better (couldn't have done worse!!)"  *[26/12/2017]*
+- "Ha ha ha. I might just take after our plancey finalists and rock up to the draft and wing it"  *[26/12/2017]*
+- "The Planc-19 Champions levoyah will be held at 9am today and I will be sitting Shiva for an unprecedented 2 weeks. Any visitors are advised to wear masks and bring trade requests"  *[24/11/2020]*
+- "And I drafted 2nd best... (also 0-2)"  *[24/09/2020]*
+- "Seriously buzzing. Hyped for the semi! Forgot we got the exciting builder for the semis so an excellent bonus!! Top work as always dan"  *[23/12/2021]*
+- "How was he not drafted 1st overall?!?!@?"  *[22/12/2025]*
+- "Also for clarification did we agree that the miriam bowl this year would be a best of 3 series? Or starting from next year."  *[22/11/2020]*
+- "I disagree strongly with this. I get far more grief for being miriam half a decade ago than anyone gets it for being the actual miriam"  *[21/09/2023]*
+- "😂😂 I sense a Borehamwood league as ESL founding teams coming on"  *[21/04/2021]*
+- "But I accept that until I win more planceys than miriams I will not gain the respect from my peers I deserve"  *[20/12/2022]*
+- "I fly to Israel 18th June but can probably make 17th work (Nicola might kill me but I can make things work I think)"  *[20/05/2025]*
+- "Suck all year and win miriam. Claim he has had the same season as the plancey final loser"  *[19/11/2024]*
+- "We do not recognise the state of Israel I'm its current form but pray for moshiach to come once the plancey is home"  *[18/10/2022]*
+- "I can't believe your risking opening this discussion up. Last time it ended in an asterix being added to the belt"  *[17/12/2023]*
+- "And we changed the rules when it comes to plancey qualification. I outscored lev by over 100 points but that was when we were doing head to head so I went into the miriam"  *[17/12/2023]*
+- "The 3 people who havent one a plancey* are the top 3!! Could this be the year?"  *[17/09/2025]*
+- "If you trade for Hopkins then no you can't put him on IR but if someone trades for Eli Mitchell they can put them on IR"  *[16/09/2022]*
+- "No way! David Johnson to Texans is what I'm seeing?!?!"  *[16/03/2020]*
+- "My 1st draft anniversary (auto draft gate)"  *[15/07/2019]*
+- "If he loses i want the release of the lost plancey post drafts regardless"  *[14/12/2025]*
+- "Further underlines the issue I brought up at AGM not being able to put players into IR you traded for. Sanford is now disincentivised to trade."  *[14/09/2024]*
+- "I picked Melvin Gordon by accident when  I didn't realise that nfl.com had my on autodraft my 1st ever draft"  *[14/08/2024]*
+- "If I didn't go 1st I was going 8th 😂😂"  *[13/07/2025]*
+- "I will enter negotiations with nicola. Given how productive my trade negotiations have been this year I'm hesitant"  *[12/10/2023]*
+- "Also after reflecting on sauls claim to have never had a week 14 matter until this year. I am also in that position. And it's only voluntary. Bye or Miriam for me. No inbetween"  *[10/12/2020]*
+- "I dont understand how you on one hand want waivers to be a spectacle but also want fastest finger 1st rush after the waivers run."  *[10/09/2025]*
+- "The plancey league stands firmly against the boycotting of Israeli performers."  *[09/12/2025]*
+- "Shkoyach I say name Jamie plancey no Miriam this year"  *[08/11/2020]*
+- "I got Kamara as a replacement for Fournette as I am also of the opinion he is going to be great. Last week in London he was the best player on the field by a long way"  *[08/10/2017]*
+
+## JAMIE KAY — Special K / The Doctor
+
+- "I'm sorry. What the fuck are you doing sanford? Did you honestly just trade away ertz??"  *[24/10/2017]*
+- "I propose a fine on miriam unless he delivers the belt to our plancey by a set date"  *[31/03/2019]*
+- "Miriam Sanford... need to pay to have the belt engraved so I can transport it to the new plancey"  *[02/02/2019]*
+- "Ahaha is that the meir plancey!??"  *[29/09/2022]*
+- "But ally I thought your draft was the best thing ever?"  *[25/09/2017]*
+- "Yeh waiver priority is a valid, if ridiculous, reason. But you didn't  tell us. In fact you didn't mention anything about the trade"  *[24/10/2017]*
+- "I’ve been bought a pair of these! 😂😂"  *[05/12/2020]*
+- "I think it’s reasonable that you wear miriams tichel as your head covering if you attain miriam status again"  *[31/10/2019]*
+- "Same say that being plancey champion makes you a dayan already"  *[28/06/2019]*
+- "It’s like birdieing the last in a round of golf but shitting the bed every other hole. You come away feeling great but really you’re still covered in shit ‎<This message was edited>"  *[23/05/2025]*
+- "And I assume these players are then frozen in trade time till the deal completes. To prevent a further trade to complicate things and to potentially give opportunities for collusion"  *[21/11/2023]*
+- "😂 miriam is going for hunt. Sure he’s going to come back"  *[20/12/2018]*
+- "i blame miriam.... two bloody tight ends--- gronks shit anyway mate"  *[18/11/2018]*
+- "our 2 time miriam and and favourite rouge drafter, snaf, has many many scores in the low 60s"  *[18/10/2020]*
+- "Any update on the champ belt engraving?"  *[17/06/2018]*
+- "ive never understood why rugby players go over to play offense. surely the best thing they could do would be to get someone like tom curry to play line back/DE?"  *[16/01/2024]*
+- "Hence why I’m above sac and lev. I’ve never been in a Miriam bowl"  *[14/12/2023]*
+- "Yeah. And some of them have literally never left the us before"  *[12/11/2023]*
+- "Luck benj. You drafted a banned player who had his ban overturned!!! That's luck dude.... unless you have an in with the Dallas court system"  *[11/09/2017]*
+- "Ahaha me too. I’m stick piling draft podcasts atm"  *[07/03/2019]*
+- "Fantastic as always. Reminder of the goat incident made me laugh"  *[02/09/2024]*
+- "oh shit. i forget ot take off the waiver for williams"  *[01/12/2021]*
+- "Also ally will appreciate having it for a few more seconds before it’s ripped away.... “best draft ever” my arse"  *[01/11/2017]*
+- "He’s banned!!!! The season long saga is over"  *[31/10/2017]*
+- "Ahahaha. The best video ever"  *[31/08/2021]*
+- "You have to drop someone to find a kicker space or drop the good kicker"  *[30/10/2019]*
+- "Why don’t we do a 18:00. Draft. Those Uk based players can stay for a brai after?"  *[30/08/2021]*
+- "Bet you never commented on my balls now hey?"  *[30/01/2018]*
+- "Fucking todd gurley. Wish I’d traded for bell"  *[25/12/2018]*
+- "You don't have to tell us which players. You just have to tell us that you've trade your waiver priority for him"  *[24/10/2017]*
+- "Just say the trade is x for y and waiver priority"  *[24/10/2017]*
+- "😂😂 the comment is world class"  *[23/09/2021]*
+- "I have my rota. When did we say we were drafting?"  *[23/07/2020]*
+- "Hilarious!! Lev with his tzittzit hanging out"  *[21/10/2020]*
+- "Ahaha that’s beyond ridiculous"  *[18/06/2021]*
+- "Have I put in the worst playoff performance on record?"  *[15/12/2025]*
+- "you've never autordrafted full stop"  *[14/08/2024]*
+- "Ok. So I want a top quality running back. I will trade pretty much any player to get one. Does anybody want to do business with me?"  *[13/09/2017]*
+- "Fantastic as always. Fucking cmc"  *[12/12/2024]*
+- "Amari cooper went through a monster phases the year he got traded to Dallas?"  *[08/11/2024]*
+- "Fournette our for breaking a team rule!!"  *[05/11/2017]*
+- "I thought that’s the eat me kitchen when someone fucks up?"  *[05/08/2024]*
+- "Miriam 3 times and have to pay for the next belt"  *[05/07/2019]*
+- "You should be crapping your pants about how you’re going to convince Elly to let you put the belt up in the kitchen"  *[04/11/2024]*
+- "No way! That’s the best thing I’ve ever heard"  *[03/12/2021]*
+- "No draft. Just pick who you think will be best each week"  *[02/01/2018]*
+- "Motion 9: 2016 season should be asterisked on the belt."  *[01/07/2019]*
+- "Ahaha this is very true. I didn’t hear that comment either"  *[31/12/2021]*
+- "i dont think we can swap positions in the draft. but i will swap pick if you make it worth my while"  *[31/08/2017]*
+- "So nu.. we picking draft order or not?"  *[31/08/2017]*
+- "The idea of a draft game sounds fun though"  *[29/12/2017]*
+- "The horrible irony that my best score if the season will lead to my heaviest loss of the season"  *[29/10/2017]*
+- "what is the amex to plancey gelt conversion?"  *[29/06/2020]*
+- "I will ensure it is used honestly"  *[29/06/2020]*
+- "I can’t believe you’ve done it again"  *[28/11/2024]*
+- "I have no gas... the delivery never came"  *[28/06/2020]*
+- "I’ve popped the champers in a+e"  *[27/12/2020]*
+- "Forget it. I’ll auto draft/ nip to the bog for 10"  *[27/12/2018]*
+- "Is that your best score of the season?"  *[27/10/2017]*
+- "I am happy to say that tonight’s Adams points go to Gaon"  *[27/09/2019]*
+
+## BENJY SANFORD — Snaff / King of the Miriam
+
+- "Motion 6: there is a 42 day period for the new Miriam to complete and deliver the belt to the new Plancey. I know this sounds hypocritical, but there really wasn’t any definition"  *[30/06/2019]*
+- "Worst year to auto means the worst year to draft?"  *[04/09/2023]*
+- "Note that although I’ll be punished by an unfit bunch of sods, the whole time for Miriam to do the Plancey belt was unregulated"  *[03/07/2019]*
+- "I mean I did a trade this year and the person I shipped off was immediately passed on. I didn’t know I was part of a three way trade. Is that fair? What if I was facing that third person?"  *[28/10/2021]*
+- "Confirming time for draft is 2pm New York, 7pm London and 9pm Israel?"  *[22/08/2019]*
+- "Another great write up. I’m taking bets as to what stupid shit will befall my team in week 17. Im close to ending up with more Miriam numbers at the end of my name than letters in itself"  *[28/12/2022]*
+- "Once they leave the trade partner’s roster it’s fair game. That person would have to keep them on their roster until the trade term time period runs out"  *[28/10/2021]*
+- "Has anyone been Miriam and Plancey?"  *[23/09/2024]*
+- "I propose that a Miriam forfeiture is a recorded call to Plancey on the subject of the group’s choosing"  *[21/11/2023]*
+- "I like staggered trades but I don't like this pre-emptive waiver thing"  *[21/10/2024]*
+- "Does this say that I have never won a week 10 matchup after 7 attempts?!"  *[14/11/2023]*
+- "I am with Polak FWIW. There's no on the day pick up FA post waivers for the one you don't want from waivers."  *[10/09/2025]*
+- "Ally is invariably finding a way to be fuming. But again, he would be if I traded for Darkwa"  *[05/12/2024]*
+- "Is this part 2 of the loan trade? 😂"  *[05/12/2023]*
+- "I said I’d auto draft. And auto draft I did. You’re laughing at the nfl app gods. They will smite you"  *[04/09/2023]*
+- "Think I might draft a kicker first"  *[04/09/2020]*
+- "But why doesn't include kickers in trade valuations? 🙃"  *[03/09/2024]*
+- "What do we need a draft for the prem league for? Isn’t it just like fantasy PFL app? Can select same players etc."  *[31/07/2022]*
+- "Am I not able to drop the name on the basis it’s not possible for me to be Miriam24?"  *[30/11/2023]*
+- "The belt is secure with the Plancey"  *[30/08/2023]*
+- "Current Miriam vs Miriam escape artist extraordinaire"  *[29/11/2022]*
+- "What time can we do on a Wednesday night champs?"  *[29/01/2026]*
+- "But ally could easily trade for that same outcome?"  *[28/10/2021]*
+- "If we can use the Olympic medals to determine Plancey and Miriam"  *[28/07/2024]*
+- "I presume this because he was a Steelers legend? I did a criminal background check and didn’t find anything nefarious/child related"  *[26/11/2019]*
+- "I’d have paid double that for Plancey and Miriam at least"  *[24/06/2020]*
+- "I am confident I will be in the Plancey?"  *[23/11/2021]*
+- "I.e. has a Miriam ever won the Plancey"  *[23/09/2024]*
+- "I have a pref for Wednesday 😂 does that work??"  *[23/02/2023]*
+- "Last time CMC was out scored by a kicker on the same team?"  *[22/10/2023]*
+- "We can always veto the trade"  *[21/11/2023]*
+- "It’s like West Brom away. Those guys just know how to play in the shittest conditions. You always lose"  *[20/12/2022]*
+- "Legend has it that if we all stand around David Newman’s grave and sing it at the stroke of midnight, Miriam will shed her hideous shell of a human and emerge as Paige Spiranac"  *[19/12/2022]*
+- "Henceforth making Plancey the loser and Miriam the winner."  *[19/12/2022]*
+- "Sold. Which night? And what is the best time to go nowadays?"  *[18/07/2023]*
+- "Happiest of birthdays to the elder of the group and owner of best job in the world (short of the person who has to rub oil into Kelly Brook’s breasts before a photo shoot)"  *[17/07/2020]*
+- "There should be an annual “nothing trade” award called the Darkwa Award. This certainly qualifies"  *[14/09/2025]*
+- "I have a question about sleeper and auto draft. Any differences between that and NFL? Can I ask it to pick certain positions in certain rounds etc. ?"  *[14/08/2024]*
+- "How is it the NFL app gave me a B on my draft and this group gave me Us (which I’m all too familiar with)?"  *[13/09/2020]*
+- "In a rather efficient pre US market trade, it has been decided that Gaon Inc and Sanford Ltd will trade assets"  *[07/12/2021]*
+- "The Aviv is the great social leveller. Planceys dining amongst Miriam’s. The great and the poor."  *[04/01/2024]*
+- "Miriam does like to be on top - and between the romantic Plancey sandwich"  *[03/07/2019]*
+- "Lev has been auto draft pick drafted"  *[03/07/2019]*
+- "The world is bigger than the Miriam bowl surely #prayformiriam"  *[03/01/2023]*
+- "Something tickles me about Rikishi Fattu with Plancey’s head on"  *[30/04/2021]*
+- "I am always inspecting the YouTube archives"  *[30/01/2020]*
+- "Some meaty kicker scores this week"  *[29/11/2020]*
+- "I’d rather later your time so I can squeeze in a cheeky brunch so I’m leaning towards 2pm US 7 UK 9 Israel. Confirming with the girl"  *[29/04/2021]*
+- "This was in relation to margin. I find the whole knee thing quite hilarious"  *[28/11/2023]*
+- "I don’t think it’s a cop out when both trade partners agree. That’s my thing. If two people are happy with it, what’s the beef"  *[28/10/2021]*
+- "As in someone else wants to trade for the man with the insurance?"  *[28/10/2021]*
+- "“And basically my friend fucked him” excellent"  *[28/02/2023]*
+- "I’d rather win the Plancey than spurs get second place. How about you?"  *[27/10/2019]*
+- "I make no comment. We are shite right now"  *[27/10/2019]*
+- "Why do I always get left like this on Monday nights"  *[26/11/2019]*
+- "So I can put some bullshit meeting in my calendar"  *[26/07/2019]*
+- "The problem is, the whole of the North Korean faithful believe they have won every single year. What will the supreme leader do differently if he goes all the way…"  *[25/12/2022]*
+- "I also own Trader Joe’s which is fitting"  *[25/11/2020]*
+- "are we having open league trade talks?"  *[24/11/2025]*
+- "Gaon - best performing picks from the first 3 rounds this year? Feels very muted"  *[24/11/2024]*
+
+## BENJY LEVEY — Autodraft Lev
+
+- "Likely my best score in weeeeeeks but not good enough playing the GOAT"  *[13/12/2020]*
+- "The season should never end!!?"  *[05/02/2023]*
+- "😂😂 probably stole it all leaving none for me"  *[31/12/2021]*
+- "whats going on in the bowls? im in cancun airport with the worlds shittest wifi - only messaging seems to work"  *[29/12/2024]*
+- "Literally why Twitter was invented 😂"  *[26/03/2021]*
+- "Who am I playing for the Miriam???"  *[24/11/2017]*
+- "Absolutely ridiculous from Hopkins"  *[16/11/2020]*
+- "North korea want to see the belt"  *[16/04/2023]*
+- "Should do draft pick order I’m guessing the date of the oldest unread message 😂"  *[15/12/2020]*
+- "The people of North Korea already have a podcast for the league ft the man himself. Unfortunately it’s blocked unless you have a North Korea vpn"  *[08/11/2020]*
+- "Waaah I was thinking of picking him up !!!"  *[07/12/2018]*
+- "Can we get my name engraved on the belt now? Would make life a lot less stressful"  *[04/09/2022]*
+- "Damnnnn! That’s why he was on my bench..! (Listened to the pod!)"  *[04/01/2022]*
+- "I can't believe I actually won a game! Woo"  *[03/10/2017]*
+- "The burgers are never nice!!"  *[01/10/2017]*
+- "I know my record speaks for itself but I don’t think my team is that bad!!"  *[30/10/2024]*
+- "Am I getting trade raped by jamie"  *[26/09/2017]*
+- "Except I think that just means I have a really shit bench"  *[25/09/2017]*
+- "Never seen that message before in my life"  *[24/12/2023]*
+- "If only the rest of my team wasn’t dogshit"  *[24/11/2023]*
+- "Ya 3am works fine for me. Probs the only times I can do in aug/sept tbh!!"  *[24/07/2022]*
+- "So is it possible for a kicker to get 35 points? Asking for a friend..."  *[23/11/2020]*
+- "I also normally eat half of Kiras too 😂"  *[23/10/2022]*
+- "Now he's a philosophiser..!!!"  *[23/10/2017]*
+- "I think it’s cos I’m custodian of the belt"  *[23/09/2019]*
+- "Holy moly my team smashed it"  *[20/12/2021]*
+- "First time for everything I guess!!"  *[20/12/2021]*
+- "Potential braii? We/I’ve had very few this season!"  *[20/11/2018]*
+- "As if it’s not be ruined enough already...!!!"  *[20/05/2020]*
+- "Not sure what’s going on but only now have I had a chance to get on the app - flying to Dubai! Are people choosing other players to slot in if the games later on in the week?"  *[19/12/2021]*
+- "I can’t see what anyone’s said lol"  *[18/10/2018]*
+- "Fuck in the end wasn't even close saul. You have me a beating."  *[18/09/2017]*
+- "I think I can buy 17.5  tickets 🤣"  *[17/09/2021]*
+- "Happy birthday gid! Hope you’ve got a good meal planned…!!"  *[17/07/2023]*
+- "I fucking hate the Monday night games"  *[13/12/2021]*
+- "How much do you hate it miriam?"  *[13/12/2020]*
+- "I’ve had my best players out for most the season tho"  *[11/11/2020]*
+- "It was! It was never going to last... Gaon got lucky"  *[10/03/2021]*
+- "🤦‍♂🤦‍♂ don’t remind me. I think they’ve literally all fallen off a cliff"  *[09/12/2018]*
+- "I want to know who the 17 viewers  are 😂"  *[08/11/2020]*
+- "Could be trade of the century...!"  *[07/12/2020]*
+- "My shit today has lasted a lot longer then usual"  *[07/12/2017]*
+- "Wasn’t it shit on the toilet walls? Ha"  *[07/11/2017]*
+- "I’ve always been a big fan of the 6pm games"  *[07/09/2025]*
+- "I’m famous Dan! Makes up for Avi Orenstein’s lack of JFFL post when we both made it in the top 10!"  *[05/12/2017]*
+- "My guys really shit the bed today"  *[04/12/2017]*
+- "I finally won a game! Wooooo!"  *[03/10/2017]*
+- "Seeing my belt disappear into the abyss…"  *[03/01/2023]*
+- "I actually can’t believe this happened"  *[02/10/2023]*
+- "I think a trophie would be better!!"  *[01/11/2017]*
+- "Never had one. Are they decent?"  *[01/10/2017]*

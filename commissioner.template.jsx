@@ -23,14 +23,7 @@ function teamLabel(k) {
   return (nm && nm !== handle) ? `${nm} · ${team}` : (team || k);
 }
 
-const LORE = `
-- Alastair won the 2025 title despite Benjy beating him twice in the regular season.
-- Dan won a game in Week 3 by 0.02 points and never lets anyone forget it.
-- Gideon put up 202.36 in Wk12 2025 — the highest score in league history — and still didn't make the final.
-- Benjy L went 0-14 in 2024. A perfect record of futility. The Borehamwood Spiral.
-`;
-
-const BUILT_AT = "2026-06-03T18:06:36.454Z";
+const BUILT_AT = __BUILT_AT__;
 
 function fmtBuiltAt(iso) {
   try {
@@ -40,19 +33,22 @@ function fmtBuiltAt(iso) {
   } catch(e) { return 'Updated recently'; }
 }
 
-const HISTORY_DATA = {"seasons":[{"season":"2023","name":"Borehamwood","champion":"saulgoat","standings":[{"manager":"drjkay","team":"Obi-Quan Kenobi","wins":10,"losses":4,"pf":1805.28,"high":154.7},{"manager":"joshjr11","team":"Denver Brochos","wins":10,"losses":4,"pf":1795.48,"high":179.48},{"manager":"saulgoat","team":"Saul","wins":7,"losses":7,"pf":1855.7,"high":189.76},{"manager":"sanfbe","team":"sanfbe","wins":7,"losses":7,"pf":1726.64,"high":180.98},{"manager":"allyl900","team":"allyl900","wins":6,"losses":8,"pf":1756.06,"high":151.4},{"manager":"dpol","team":"dpol","wins":6,"losses":8,"pf":1718.68,"high":173.18},{"manager":"GSac","team":"GSac","wins":6,"losses":8,"pf":1582.04,"high":146.14},{"manager":"benjlev","team":"benjlev","wins":4,"losses":10,"pf":1571.92,"high":144.1}],"games":[{"week":1,"playoff":false,"a":"dpol","b":"allyl900","pa":69,"pb":120.54,"ap":{"QB":12.5,"RB":17.9,"WR":16.2,"TE":3.4,"K":5,"DEF":14},"bp":{"QB":27.14,"RB":27.7,"WR":41.7,"TE":0,"K":13,"DEF":11}},{"week":1,"playoff":false,"a":"benjlev","b":"saulgoat","pa":116.34,"pb":146.08},{"week":1,"playoff":false,"a":"joshjr11","b":"sanfbe","pa":97.86,"pb":92.34},{"week":1,"playoff":false,"a":"drjkay","b":"GSac","pa":138.16,"pb":103.54},{"week":2,"playoff":false,"a":"benjlev","b":"sanfbe","pa":144.1,"pb":110.76},{"week":2,"playoff":false,"a":"dpol","b":"saulgoat","pa":111.02,"pb":82.48},{"week":2,"playoff":false,"a":"allyl900","b":"GSac","pa":105.66,"pb":110.14},{"week":2,"playoff":false,"a":"joshjr11","b":"drjkay","pa":179.48,"pb":138},{"week":3,"playoff":false,"a":"dpol","b":"sanfbe","pa":173.18,"pb":151.32,"ap":{"QB":19.88,"RB":65.9,"WR":58.9,"TE":12.5,"K":4,"DEF":12},"bp":{"QB":21.32,"RB":46.6,"WR":38.2,"TE":6.2,"K":7,"DEF":32}},{"week":3,"playoff":false,"a":"drjkay","b":"allyl900","pa":136.46,"pb":147.26},{"week":3,"playoff":false,"a":"saulgoat","b":"GSac","pa":125.18,"pb":111.26},{"week":3,"playoff":false,"a":"joshjr11","b":"benjlev","pa":109.28,"pb":130.88},{"week":4,"playoff":false,"a":"benjlev","b":"drjkay","pa":105.6,"pb":132.88},{"week":4,"playoff":false,"a":"joshjr11","b":"allyl900","pa":141.94,"pb":113.88},{"week":4,"playoff":false,"a":"dpol","b":"GSac","pa":99.36,"pb":123.6},{"week":4,"playoff":false,"a":"saulgoat","b":"sanfbe","pa":97.56,"pb":168.6},{"week":5,"playoff":false,"a":"joshjr11","b":"dpol","pa":54.84,"pb":159.32},{"week":5,"playoff":false,"a":"saulgoat","b":"drjkay","pa":189.76,"pb":76},{"week":5,"playoff":false,"a":"GSac","b":"sanfbe","pa":101.78,"pb":130.36},{"week":5,"playoff":false,"a":"benjlev","b":"allyl900","pa":89.84,"pb":113.32},{"week":6,"playoff":false,"a":"benjlev","b":"GSac","pa":130.94,"pb":102.12},{"week":6,"playoff":false,"a":"dpol","b":"drjkay","pa":120.3,"pb":128.18},{"week":6,"playoff":false,"a":"allyl900","b":"sanfbe","pa":102.98,"pb":114.96},{"week":6,"playoff":false,"a":"joshjr11","b":"saulgoat","pa":101.02,"pb":152.3},{"week":7,"playoff":false,"a":"saulgoat","b":"allyl900","pa":121.44,"pb":145.34},{"week":7,"playoff":false,"a":"benjlev","b":"dpol","pa":86.46,"pb":87.56},{"week":7,"playoff":false,"a":"joshjr11","b":"GSac","pa":128.98,"pb":94.18},{"week":7,"playoff":false,"a":"drjkay","b":"sanfbe","pa":132.66,"pb":94.3},{"week":8,"playoff":false,"a":"dpol","b":"sanfbe","pa":121.16,"pb":126.56},{"week":8,"playoff":false,"a":"benjlev","b":"drjkay","pa":86.6,"pb":122.92},{"week":8,"playoff":false,"a":"joshjr11","b":"saulgoat","pa":110.1,"pb":132.68},{"week":8,"playoff":false,"a":"allyl900","b":"GSac","pa":127.96,"pb":134.48},{"week":9,"playoff":false,"a":"benjlev","b":"dpol","pa":117,"pb":114.18},{"week":9,"playoff":false,"a":"saulgoat","b":"GSac","pa":127.82,"pb":123.48},{"week":9,"playoff":false,"a":"allyl900","b":"sanfbe","pa":92.52,"pb":100.12},{"week":9,"playoff":false,"a":"joshjr11","b":"drjkay","pa":120.66,"pb":89.54},{"week":10,"playoff":false,"a":"saulgoat","b":"allyl900","pa":134.18,"pb":142.86},{"week":10,"playoff":false,"a":"dpol","b":"drjkay","pa":131.34,"pb":146.02},{"week":10,"playoff":false,"a":"GSac","b":"sanfbe","pa":135.02,"pb":69.88},{"week":10,"playoff":false,"a":"joshjr11","b":"benjlev","pa":138.46,"pb":113.82},{"week":11,"playoff":false,"a":"benjlev","b":"allyl900","pa":78.68,"pb":130},{"week":11,"playoff":false,"a":"joshjr11","b":"dpol","pa":105.56,"pb":122.74},{"week":11,"playoff":false,"a":"saulgoat","b":"sanfbe","pa":116.54,"pb":126.7},{"week":11,"playoff":false,"a":"drjkay","b":"GSac","pa":154.7,"pb":109.56},{"week":12,"playoff":false,"a":"joshjr11","b":"GSac","pa":150.74,"pb":97.08},{"week":12,"playoff":false,"a":"saulgoat","b":"drjkay","pa":132.28,"pb":132.66},{"week":12,"playoff":false,"a":"dpol","b":"allyl900","pa":144.3,"pb":129.74},{"week":12,"playoff":false,"a":"benjlev","b":"sanfbe","pa":124.52,"pb":133.86},{"week":13,"playoff":false,"a":"benjlev","b":"GSac","pa":87,"pb":98.56},{"week":13,"playoff":false,"a":"dpol","b":"saulgoat","pa":106.04,"pb":137.18},{"week":13,"playoff":false,"a":"drjkay","b":"sanfbe","pa":125.18,"pb":118.36},{"week":13,"playoff":false,"a":"joshjr11","b":"allyl900","pa":168.56,"pb":151.4},{"week":14,"playoff":false,"a":"dpol","b":"GSac","pa":109.08,"pb":106.54},{"week":14,"playoff":false,"a":"benjlev","b":"saulgoat","pa":124.64,"pb":128.12},{"week":14,"playoff":false,"a":"joshjr11","b":"sanfbe","pa":140.74,"pb":125.42},{"week":14,"playoff":false,"a":"drjkay","b":"allyl900","pa":114.94,"pb":118.2},{"week":15,"playoff":true,"a":"allyl900","b":"sanfbe","pa":130.26,"pb":81.66},{"week":15,"playoff":true,"a":"dpol","b":"saulgoat","pa":88.12,"pb":113.32},{"week":15,"playoff":true,"a":"benjlev","b":"GSac","pa":91.1,"pb":107.24},{"week":16,"playoff":true,"a":"drjkay","b":"allyl900","pa":119.24,"pb":127.12},{"week":16,"playoff":true,"a":"joshjr11","b":"saulgoat","pa":97.42,"pb":118.3},{"week":16,"playoff":true,"a":"dpol","b":"sanfbe","pa":91.44,"pb":180.98},{"week":17,"playoff":true,"a":"saulgoat","b":"allyl900","pa":163.68,"pb":85.72},{"week":17,"playoff":true,"a":"joshjr11","b":"drjkay","pa":106.5,"pb":114.56}]},{"season":"2024","name":"Borehamwood","champion":"saulgoat","standings":[{"manager":"saulgoat","team":"Chase waddle waddle","wins":11,"losses":3,"pf":1903.3,"high":196.9},{"manager":"AlastairL","team":"Fourth and Goalda Meir","wins":10,"losses":4,"pf":1968.96,"high":178.94},{"manager":"dpol","team":"Plancey Neutral","wins":9,"losses":5,"pf":1732.22,"high":189},{"manager":"joshjr11","team":"Denver Brochos","wins":8,"losses":6,"pf":1713.02,"high":181.32},{"manager":"GSac","team":"War & Childbirth","wins":7,"losses":7,"pf":1758.44,"high":159.22},{"manager":"drjkay","team":"To infinity and Bijan","wins":6,"losses":8,"pf":1767.8,"high":213.46},{"manager":"sanfbe","team":"The Twinder Swindler","wins":5,"losses":9,"pf":1504.7,"high":144.4},{"manager":"benjlev","team":"benjlev","wins":0,"losses":14,"pf":1522.48,"high":142.9}],"games":[{"week":1,"playoff":false,"a":"dpol","b":"drjkay","pa":127.86,"pb":119.98},{"week":1,"playoff":false,"a":"saulgoat","b":"sanfbe","pa":115.76,"pb":108.38},{"week":1,"playoff":false,"a":"benjlev","b":"AlastairL","pa":108.34,"pb":138.28},{"week":1,"playoff":false,"a":"joshjr11","b":"GSac","pa":102.32,"pb":99.52},{"week":2,"playoff":false,"a":"dpol","b":"saulgoat","pa":146.7,"pb":113.1},{"week":2,"playoff":false,"a":"drjkay","b":"sanfbe","pa":153.24,"pb":88.96},{"week":2,"playoff":false,"a":"joshjr11","b":"AlastairL","pa":181.32,"pb":104.26},{"week":2,"playoff":false,"a":"benjlev","b":"GSac","pa":97.84,"pb":115.88},{"week":3,"playoff":false,"a":"dpol","b":"sanfbe","pa":92.36,"pb":126.04},{"week":3,"playoff":false,"a":"saulgoat","b":"drjkay","pa":121.02,"pb":109.58},{"week":3,"playoff":false,"a":"AlastairL","b":"GSac","pa":116.88,"pb":108.68},{"week":3,"playoff":false,"a":"joshjr11","b":"benjlev","pa":137.14,"pb":106.28},{"week":4,"playoff":false,"a":"dpol","b":"AlastairL","pa":142.08,"pb":138.32},{"week":4,"playoff":false,"a":"benjlev","b":"drjkay","pa":125,"pb":129.48},{"week":4,"playoff":false,"a":"joshjr11","b":"saulgoat","pa":109.32,"pb":118.9},{"week":4,"playoff":false,"a":"GSac","b":"sanfbe","pa":129.72,"pb":84.1},{"week":5,"playoff":false,"a":"benjlev","b":"dpol","pa":104.34,"pb":144.96},{"week":5,"playoff":false,"a":"drjkay","b":"AlastairL","pa":101.46,"pb":159.62},{"week":5,"playoff":false,"a":"saulgoat","b":"GSac","pa":137.24,"pb":159.22},{"week":5,"playoff":false,"a":"joshjr11","b":"sanfbe","pa":77.04,"pb":97.24},{"week":6,"playoff":false,"a":"joshjr11","b":"dpol","pa":109.86,"pb":118.3},{"week":6,"playoff":false,"a":"drjkay","b":"GSac","pa":160.76,"pb":135.62},{"week":6,"playoff":false,"a":"saulgoat","b":"AlastairL","pa":145.72,"pb":120.06},{"week":6,"playoff":false,"a":"benjlev","b":"sanfbe","pa":83.22,"pb":112.7},{"week":7,"playoff":false,"a":"dpol","b":"GSac","pa":98.66,"pb":145.04},{"week":7,"playoff":false,"a":"joshjr11","b":"drjkay","pa":119.66,"pb":116.9},{"week":7,"playoff":false,"a":"benjlev","b":"saulgoat","pa":109.06,"pb":119.3},{"week":7,"playoff":false,"a":"AlastairL","b":"sanfbe","pa":121.94,"pb":110.12},{"week":8,"playoff":false,"a":"dpol","b":"drjkay","pa":108.64,"pb":124.9},{"week":8,"playoff":false,"a":"saulgoat","b":"sanfbe","pa":135.44,"pb":98.42},{"week":8,"playoff":false,"a":"benjlev","b":"AlastairL","pa":104.38,"pb":163.96},{"week":8,"playoff":false,"a":"joshjr11","b":"GSac","pa":153.34,"pb":115.86},{"week":9,"playoff":false,"a":"dpol","b":"saulgoat","pa":128.4,"pb":101.22},{"week":9,"playoff":false,"a":"drjkay","b":"sanfbe","pa":142.5,"pb":144.4},{"week":9,"playoff":false,"a":"joshjr11","b":"AlastairL","pa":123,"pb":150.76},{"week":9,"playoff":false,"a":"benjlev","b":"GSac","pa":114.34,"pb":141.68},{"week":10,"playoff":false,"a":"dpol","b":"sanfbe","pa":107.4,"pb":91.5},{"week":10,"playoff":false,"a":"saulgoat","b":"drjkay","pa":134.44,"pb":130.24},{"week":10,"playoff":false,"a":"AlastairL","b":"GSac","pa":128.02,"pb":127.42},{"week":10,"playoff":false,"a":"joshjr11","b":"benjlev","pa":124.08,"pb":123.44},{"week":11,"playoff":false,"a":"dpol","b":"AlastairL","pa":86.38,"pb":178.94},{"week":11,"playoff":false,"a":"benjlev","b":"drjkay","pa":88.64,"pb":104.8},{"week":11,"playoff":false,"a":"joshjr11","b":"saulgoat","pa":150.34,"pb":196.9},{"week":11,"playoff":false,"a":"GSac","b":"sanfbe","pa":128.26,"pb":93.18},{"week":12,"playoff":false,"a":"benjlev","b":"dpol","pa":116.96,"pb":133.08},{"week":12,"playoff":false,"a":"drjkay","b":"AlastairL","pa":116.16,"pb":175.4},{"week":12,"playoff":false,"a":"saulgoat","b":"GSac","pa":162.92,"pb":106.62},{"week":12,"playoff":false,"a":"joshjr11","b":"sanfbe","pa":91.76,"pb":85.06},{"week":13,"playoff":false,"a":"joshjr11","b":"dpol","pa":112.52,"pb":170.18},{"week":13,"playoff":false,"a":"drjkay","b":"GSac","pa":152.2,"pb":110.78},{"week":13,"playoff":false,"a":"saulgoat","b":"AlastairL","pa":132.66,"pb":111.96},{"week":13,"playoff":false,"a":"benjlev","b":"sanfbe","pa":117.14,"pb":122.32},{"week":14,"playoff":false,"a":"dpol","b":"GSac","pa":127.22,"pb":134.14},{"week":14,"playoff":false,"a":"joshjr11","b":"drjkay","pa":121.32,"pb":105.6},{"week":14,"playoff":false,"a":"benjlev","b":"saulgoat","pa":123.5,"pb":168.68},{"week":14,"playoff":false,"a":"AlastairL","b":"sanfbe","pa":160.56,"pb":142.28},{"week":15,"playoff":true,"a":"joshjr11","b":"GSac","pa":130.3,"pb":127.04},{"week":15,"playoff":true,"a":"dpol","b":"drjkay","pa":189,"pb":116.68},{"week":15,"playoff":true,"a":"benjlev","b":"sanfbe","pa":119.76,"pb":137.78},{"week":16,"playoff":true,"a":"joshjr11","b":"saulgoat","pa":94.24,"pb":124.94},{"week":16,"playoff":true,"a":"dpol","b":"AlastairL","pa":141.88,"pb":176.68},{"week":16,"playoff":true,"a":"drjkay","b":"GSac","pa":192.72,"pb":111.9},{"week":17,"playoff":true,"a":"saulgoat","b":"AlastairL","pa":149.16,"pb":143.08},{"week":17,"playoff":true,"a":"benjlev","b":"sanfbe","pa":131.44,"pb":108.78}]},{"season":"2025","name":"Borehamwood","champion":"AlastairL","standings":[{"manager":"dpol","team":"Plancey Neutral","wins":11,"losses":3,"pf":1878.92,"high":186.44},{"manager":"AlastairL","team":"Fourth and Goalda Meir","wins":9,"losses":5,"pf":1828.36,"high":156.58},{"manager":"sanfbe","team":"J'Allen Plancey z'l","wins":8,"losses":6,"pf":1778.06,"high":163.6},{"manager":"saulgoat","team":"Love Thy Naber","wins":8,"losses":6,"pf":1689.66,"high":172.42},{"manager":"joshjr11","team":"Denver Brochos","wins":6,"losses":8,"pf":1818.96,"high":173.36},{"manager":"drjkay","team":"A rookie error","wins":6,"losses":8,"pf":1770.74,"high":169.02},{"manager":"GSac","team":"This One Really Hurts","wins":5,"losses":9,"pf":1786.8,"high":202.36},{"manager":"benjlev","team":"benjlev","wins":3,"losses":11,"pf":1562.56,"high":163.26}],"games":[{"week":1,"playoff":false,"a":"dpol","b":"drjkay","pa":107.02,"pb":99.74,"ap":{"QB":28.02,"RB":39.7,"WR":23.3,"TE":3,"K":7,"DEF":6},"bp":{"QB":8.84,"RB":19.2,"WR":45.7,"TE":10.5,"K":5.5,"DEF":10}},{"week":1,"playoff":false,"a":"saulgoat","b":"AlastairL","pa":88.72,"pb":95.08},{"week":1,"playoff":false,"a":"joshjr11","b":"benjlev","pa":91.32,"pb":163.26},{"week":1,"playoff":false,"a":"GSac","b":"sanfbe","pa":112.08,"pb":155.26},{"week":2,"playoff":false,"a":"dpol","b":"saulgoat","pa":138.08,"pb":137.6},{"week":2,"playoff":false,"a":"drjkay","b":"AlastairL","pa":126.08,"pb":133.88},{"week":2,"playoff":false,"a":"joshjr11","b":"GSac","pa":127.64,"pb":101.44},{"week":2,"playoff":false,"a":"benjlev","b":"sanfbe","pa":109.9,"pb":111.72},{"week":3,"playoff":false,"a":"dpol","b":"AlastairL","pa":131.86,"pb":131.84,"ap":{"QB":15.16,"RB":50,"WR":33.5,"TE":14.7,"K":9.5,"DEF":9},"bp":{"QB":14.04,"RB":54.7,"WR":43.7,"TE":7.8,"K":8.6,"DEF":3}},{"week":3,"playoff":false,"a":"saulgoat","b":"drjkay","pa":137.62,"pb":113.4},{"week":3,"playoff":false,"a":"joshjr11","b":"sanfbe","pa":90.18,"pb":135.02},{"week":3,"playoff":false,"a":"benjlev","b":"GSac","pa":96.92,"pb":115.04},{"week":4,"playoff":false,"a":"joshjr11","b":"dpol","pa":141.88,"pb":154.2},{"week":4,"playoff":false,"a":"benjlev","b":"drjkay","pa":88.98,"pb":169.02},{"week":4,"playoff":false,"a":"saulgoat","b":"GSac","pa":131.28,"pb":121.2},{"week":4,"playoff":false,"a":"AlastairL","b":"sanfbe","pa":140.52,"pb":151.26},{"week":5,"playoff":false,"a":"benjlev","b":"dpol","pa":135.16,"pb":136.42},{"week":5,"playoff":false,"a":"joshjr11","b":"drjkay","pa":145.72,"pb":102.04},{"week":5,"playoff":false,"a":"saulgoat","b":"sanfbe","pa":140.54,"pb":138.42},{"week":5,"playoff":false,"a":"AlastairL","b":"GSac","pa":127.72,"pb":121.5},{"week":6,"playoff":false,"a":"dpol","b":"GSac","pa":128.38,"pb":118.42},{"week":6,"playoff":false,"a":"drjkay","b":"sanfbe","pa":108.74,"pb":163.6},{"week":6,"playoff":false,"a":"joshjr11","b":"saulgoat","pa":137.16,"pb":106.96},{"week":6,"playoff":false,"a":"benjlev","b":"AlastairL","pa":103.54,"pb":115.04},{"week":7,"playoff":false,"a":"dpol","b":"sanfbe","pa":186.44,"pb":77.44,"ap":{"QB":32.24,"RB":52.2,"WR":77.9,"TE":14.3,"K":8.8,"DEF":1},"bp":{"QB":12.34,"RB":46.6,"WR":6.5,"TE":3,"K":2,"DEF":7}},{"week":7,"playoff":false,"a":"drjkay","b":"GSac","pa":118.16,"pb":192.04},{"week":7,"playoff":false,"a":"benjlev","b":"saulgoat","pa":79.32,"pb":86.94},{"week":7,"playoff":false,"a":"joshjr11","b":"AlastairL","pa":119.98,"pb":156.58},{"week":8,"playoff":false,"a":"dpol","b":"drjkay","pa":147.16,"pb":118.52},{"week":8,"playoff":false,"a":"saulgoat","b":"AlastairL","pa":108.88,"pb":123.88},{"week":8,"playoff":false,"a":"joshjr11","b":"benjlev","pa":146.48,"pb":154.34},{"week":8,"playoff":false,"a":"GSac","b":"sanfbe","pa":145.66,"pb":116.62},{"week":9,"playoff":false,"a":"dpol","b":"saulgoat","pa":79.9,"pb":120.92},{"week":9,"playoff":false,"a":"drjkay","b":"AlastairL","pa":119.1,"pb":154.96},{"week":9,"playoff":false,"a":"joshjr11","b":"GSac","pa":165.3,"pb":123.54},{"week":9,"playoff":false,"a":"benjlev","b":"sanfbe","pa":124.56,"pb":125.42},{"week":10,"playoff":false,"a":"dpol","b":"AlastairL","pa":127.7,"pb":148.7},{"week":10,"playoff":false,"a":"saulgoat","b":"drjkay","pa":145.5,"pb":146.6},{"week":10,"playoff":false,"a":"joshjr11","b":"sanfbe","pa":162.8,"pb":103.44},{"week":10,"playoff":false,"a":"benjlev","b":"GSac","pa":99.74,"pb":157.52},{"week":11,"playoff":false,"a":"joshjr11","b":"dpol","pa":114.54,"pb":116.44},{"week":11,"playoff":false,"a":"benjlev","b":"drjkay","pa":98.02,"pb":131.72},{"week":11,"playoff":false,"a":"saulgoat","b":"GSac","pa":128.96,"pb":67.9},{"week":11,"playoff":false,"a":"AlastairL","b":"sanfbe","pa":140.74,"pb":160.48},{"week":12,"playoff":false,"a":"benjlev","b":"dpol","pa":96.02,"pb":121.48},{"week":12,"playoff":false,"a":"joshjr11","b":"drjkay","pa":113.46,"pb":130.08},{"week":12,"playoff":false,"a":"saulgoat","b":"sanfbe","pa":105.12,"pb":95.82},{"week":12,"playoff":false,"a":"AlastairL","b":"GSac","pa":133.56,"pb":202.36},{"week":13,"playoff":false,"a":"dpol","b":"GSac","pa":157.44,"pb":100.2},{"week":13,"playoff":false,"a":"drjkay","b":"sanfbe","pa":141,"pb":88.52},{"week":13,"playoff":false,"a":"joshjr11","b":"saulgoat","pa":148.64,"pb":114.16},{"week":13,"playoff":false,"a":"benjlev","b":"AlastairL","pa":110.14,"pb":95.02},{"week":14,"playoff":false,"a":"dpol","b":"sanfbe","pa":146.4,"pb":155.04},{"week":14,"playoff":false,"a":"drjkay","b":"GSac","pa":146.54,"pb":107.9},{"week":14,"playoff":false,"a":"benjlev","b":"saulgoat","pa":102.66,"pb":136.46},{"week":14,"playoff":false,"a":"joshjr11","b":"AlastairL","pa":113.86,"pb":130.84},{"week":15,"playoff":true,"a":"joshjr11","b":"saulgoat","pa":143.2,"pb":172.42},{"week":15,"playoff":true,"a":"drjkay","b":"sanfbe","pa":94.94,"pb":160.82},{"week":15,"playoff":true,"a":"benjlev","b":"GSac","pa":98.9,"pb":107.4},{"week":16,"playoff":true,"a":"dpol","b":"sanfbe","pa":161.02,"pb":108.9},{"week":16,"playoff":true,"a":"saulgoat","b":"AlastairL","pa":113.46,"pb":130.5},{"week":16,"playoff":true,"a":"joshjr11","b":"drjkay","pa":173.36,"pb":116.02},{"week":17,"playoff":true,"a":"dpol","b":"AlastairL","pa":118.58,"pb":143.96},{"week":17,"playoff":true,"a":"saulgoat","b":"sanfbe","pa":76.78,"pb":143.58}]},{"season":"2026","name":"Borehamwood","champion":null,"standings":[{"manager":"joshjr11","team":"Denver Brochos","wins":0,"losses":0,"pf":0,"high":0},{"manager":"benjlev","team":"benjlev","wins":0,"losses":0,"pf":0,"high":0},{"manager":"dpol","team":"Plancey Neutral","wins":0,"losses":0,"pf":0,"high":0},{"manager":"saulgoat","team":"Love Thy Naber","wins":0,"losses":0,"pf":0,"high":0},{"manager":"drjkay","team":"A rookie error","wins":0,"losses":0,"pf":0,"high":0},{"manager":"AlastairL","team":"Fourth and Goalda Meir","wins":0,"losses":0,"pf":0,"high":0},{"manager":"GSac","team":"Jewish Mccaffrey","wins":0,"losses":0,"pf":0,"high":0},{"manager":"sanfbe","team":"J'Allen Plancey z'l","wins":0,"losses":0,"pf":0,"high":0}],"games":[]}]};
-
-const STATS_DATA = {"league":"Borehamwood","season":"2025","standings":[{"manager":"dpol","team":"Plancey Neutral","wins":11,"losses":3,"pf":1878.92,"pa":1696.02},{"manager":"AlastairL","team":"Fourth and Goalda Meir","wins":9,"losses":5,"pf":1828.36,"pa":1785.46},{"manager":"sanfbe","team":"J'Allen Plancey z'l","wins":8,"losses":6,"pf":1778.06,"pa":1854.68},{"manager":"saulgoat","team":"Love Thy Naber","wins":8,"losses":6,"pf":1689.66,"pa":1588.06},{"manager":"joshjr11","team":"Denver Brochos","wins":6,"losses":8,"pf":1818.96,"pa":1792.34},{"manager":"drjkay","team":"A rookie error","wins":6,"losses":8,"pf":1770.74,"pa":1824.38},{"manager":"GSac","team":"This One Really Hurts","wins":5,"losses":9,"pf":1786.8,"pa":1833.52},{"manager":"benjlev","team":"benjlev","wins":3,"losses":11,"pf":1562.56,"pa":1739.6}]};
-
-const ROSTERS_DATA = {"Denver Brochos (@joshjr11)":[{"id":"6770","name":"Joe Burrow","pos":"QB"},{"id":"7564","name":"Ja'Marr Chase","pos":"WR"},{"id":"8130","name":"Trey McBride","pos":"TE"},{"id":"9226","name":"De'Von Achane","pos":"RB"},{"id":"9224","name":"Chase Brown","pos":"RB"},{"id":"8112","name":"Drake London","pos":"WR"},{"id":"6794","name":"Justin Jefferson","pos":"WR"},{"id":"10229","name":"Rashee Rice","pos":"WR"},{"id":"11631","name":"Brian Thomas","pos":"WR"},{"id":"8144","name":"Chris Olave","pos":"WR"},{"id":"8183","name":"Brock Purdy","pos":"QB"},{"id":"4137","name":"James Conner","pos":"RB"},{"id":"7594","name":"Chuba Hubbard","pos":"RB"},{"id":"12474","name":"Woody Marks","pos":"RB"}],"benjlev (@benjlev)":[{"id":"4881","name":"Lamar Jackson","pos":"QB"},{"id":"4866","name":"Saquon Barkley","pos":"RB"},{"id":"3198","name":"Derrick Henry","pos":"RB"},{"id":"1466","name":"Travis Kelce","pos":"TE"},{"id":"3321","name":"Tyreek Hill","pos":"WR"},{"id":"8155","name":"Breece Hall","pos":"RB"},{"id":"11635","name":"Ladd McConkey","pos":"WR"},{"id":"7523","name":"Trevor Lawrence","pos":"QB"},{"id":"4199","name":"Aaron Jones","pos":"RB"},{"id":"4983","name":"DJ Moore","pos":"WR"},{"id":"8142","name":"Alec Pierce","pos":"WR"},{"id":"7611","name":"Rhamondre Stevenson","pos":"RB"},{"id":"9756","name":"Jordan Addison","pos":"WR"},{"id":"11638","name":"Ricky Pearsall","pos":"WR"}],"Plancey Neutral (@dpol)":[{"id":"6786","name":"CeeDee Lamb","pos":"WR"},{"id":"5859","name":"A.J. Brown","pos":"WR"},{"id":"4217","name":"George Kittle","pos":"TE"},{"id":"6813","name":"Jonathan Taylor","pos":"RB"},{"id":"9493","name":"Puka Nacua","pos":"WR"},{"id":"2216","name":"Mike Evans","pos":"WR"},{"id":"11584","name":"Bucky Irving","pos":"RB"},{"id":"11655","name":"Tyrone Tracy","pos":"RB"},{"id":"12481","name":"Cam Skattebo","pos":"RB"},{"id":"12507","name":"Omarion Hampton","pos":"RB"},{"id":"5947","name":"Jakobi Meyers","pos":"WR"},{"id":"8126","name":"Wan'Dale Robinson","pos":"WR"},{"id":"3214","name":"Hunter Henry","pos":"TE"}],"Love Thy Naber (@saulgoat)":[{"id":"11632","name":"Malik Nabers","pos":"WR"},{"id":"3163","name":"Jared Goff","pos":"QB"},{"id":"6801","name":"Tee Higgins","pos":"WR"},{"id":"7526","name":"Jaylen Waddle","pos":"WR"},{"id":"7543","name":"Travis Etienne","pos":"RB"},{"id":"7569","name":"Nico Collins","pos":"WR"},{"id":"11586","name":"Blake Corum","pos":"RB"},{"id":"11589","name":"Trey Benson","pos":"RB"},{"id":"12529","name":"TreVeyon Henderson","pos":"RB"},{"id":"7588","name":"Javonte Williams","pos":"RB"},{"id":"5045","name":"Courtland Sutton","pos":"WR"},{"id":"12506","name":"Harold Fannin","pos":"TE"}],"A rookie error (@drjkay)":[{"id":"3294","name":"Dak Prescott","pos":"QB"},{"id":"8137","name":"George Pickens","pos":"WR"},{"id":"9488","name":"Jaxon Smith-Njigba","pos":"WR"},{"id":"12526","name":"Tetairoa McMillan","pos":"WR"},{"id":"12512","name":"Quinshon Judkins","pos":"RB"},{"id":"12489","name":"RJ Harvey","pos":"RB"},{"id":"6806","name":"J.K. Dobbins","pos":"RB"},{"id":"6819","name":"Michael Pittman","pos":"WR"},{"id":"8228","name":"Jaylen Warren","pos":"RB"},{"id":"12514","name":"Emeka Egbuka","pos":"WR"},{"id":"9480","name":"Brenton Strange","pos":"TE"},{"id":"10236","name":"Dalton Kincaid","pos":"TE"},{"id":"7567","name":"Kenneth Gainwell","pos":"RB"},{"id":"12508","name":"Jaxson Dart","pos":"QB"}],"Fourth and Goalda Meir (@AlastairL)":[{"id":"4034","name":"Christian McCaffrey","pos":"RB"},{"id":"11564","name":"Drake Maye","pos":"QB"},{"id":"11604","name":"Brock Bowers","pos":"TE"},{"id":"7547","name":"Amon-Ra St. Brown","pos":"WR"},{"id":"8151","name":"Kenneth Walker","pos":"RB"},{"id":"8150","name":"Kyren Williams","pos":"RB"},{"id":"8148","name":"Jameson Williams","pos":"WR"},{"id":"8132","name":"Tyler Allgeier","pos":"RB"},{"id":"8154","name":"Brian Robinson","pos":"RB"},{"id":"6790","name":"D'Andre Swift","pos":"RB"},{"id":"7553","name":"Kyle Pitts","pos":"TE"},{"id":"12519","name":"Luther Burden","pos":"WR"},{"id":"2449","name":"Stefon Diggs","pos":"WR"},{"id":"421","name":"Matthew Stafford","pos":"QB"}],"This One Really Hurts (@GSac)":[{"id":"6904","name":"Jalen Hurts","pos":"QB"},{"id":"9221","name":"Jahmyr Gibbs","pos":"RB"},{"id":"8138","name":"James Cook","pos":"RB"},{"id":"12527","name":"Ashton Jeanty","pos":"RB"},{"id":"11620","name":"Rome Odunze","pos":"WR"},{"id":"7525","name":"DeVonta Smith","pos":"WR"},{"id":"2133","name":"Davante Adams","pos":"WR"},{"id":"8110","name":"Jake Ferguson","pos":"TE"},{"id":"8134","name":"Khalil Shakir","pos":"WR"},{"id":"9508","name":"Tyjae Spears","pos":"RB"},{"id":"8167","name":"Christian Watson","pos":"WR"},{"id":"12530","name":"Travis Hunter","pos":"WR"},{"id":"11579","name":"Audric Estime","pos":"RB"}],"J'Allen Plancey z'l (@sanfbe)":[{"id":"4984","name":"Josh Allen","pos":"QB"},{"id":"9509","name":"Bijan Robinson","pos":"RB"},{"id":"5850","name":"Josh Jacobs","pos":"RB"},{"id":"8146","name":"Garrett Wilson","pos":"WR"},{"id":"9997","name":"Zay Flowers","pos":"WR"},{"id":"9753","name":"Zach Charbonnet","pos":"RB"},{"id":"5846","name":"DK Metcalf","pos":"WR"},{"id":"10859","name":"Sam LaPorta","pos":"TE"},{"id":"5022","name":"Dallas Goedert","pos":"TE"},{"id":"7021","name":"Rico Dowdle","pos":"RB"},{"id":"10222","name":"Jayden Reed","pos":"WR"},{"id":"5872","name":"Deebo Samuel","pos":"WR"},{"id":"11627","name":"Troy Franklin","pos":"WR"},{"id":"12534","name":"Kyle Monangai","pos":"RB"}]};
-
-const TRADE_VALUES = [{"player":{"name":"Bijan Robinson","sleeperId":"9509","position":"RB"},"redraftValue":10517},{"player":{"name":"Jahmyr Gibbs","sleeperId":"9221","position":"RB"},"redraftValue":10404},{"player":{"name":"Ja'Marr Chase","sleeperId":"7564","position":"WR"},"redraftValue":9980},{"player":{"name":"Jaxon Smith-Njigba","sleeperId":"9488","position":"WR"},"redraftValue":8973},{"player":{"name":"Jonathan Taylor","sleeperId":"6813","position":"RB"},"redraftValue":8630},{"player":{"name":"Puka Nacua","sleeperId":"9493","position":"WR"},"redraftValue":8876},{"player":{"name":"Amon-Ra St. Brown","sleeperId":"7547","position":"WR"},"redraftValue":8578},{"player":{"name":"Justin Jefferson","sleeperId":"6794","position":"WR"},"redraftValue":8403},{"player":{"name":"De'Von Achane","sleeperId":"9226","position":"RB"},"redraftValue":8049},{"player":{"name":"Christian McCaffrey","sleeperId":"4034","position":"RB"},"redraftValue":7912},{"player":{"name":"Ashton Jeanty","sleeperId":"12527","position":"RB"},"redraftValue":7875},{"player":{"name":"James Cook","sleeperId":"8138","position":"RB"},"redraftValue":7727},{"player":{"name":"CeeDee Lamb","sleeperId":"6786","position":"WR"},"redraftValue":7725},{"player":{"name":"Omarion Hampton","sleeperId":"12507","position":"RB"},"redraftValue":6980},{"player":{"name":"Saquon Barkley","sleeperId":"4866","position":"RB"},"redraftValue":6850},{"player":{"name":"Trey McBride","sleeperId":"8130","position":"TE"},"redraftValue":7011},{"player":{"name":"Kenneth Walker","sleeperId":"8151","position":"RB"},"redraftValue":6016},{"player":{"name":"Drake London","sleeperId":"8112","position":"WR"},"redraftValue":6171},{"player":{"name":"Brock Bowers","sleeperId":"11604","position":"TE"},"redraftValue":6195},{"player":{"name":"Malik Nabers","sleeperId":"11632","position":"WR"},"redraftValue":6119},{"player":{"name":"Josh Allen","sleeperId":"4984","position":"QB"},"redraftValue":6014},{"player":{"name":"Derrick Henry","sleeperId":"3198","position":"RB"},"redraftValue":5842},{"player":{"name":"Chase Brown","sleeperId":"9224","position":"RB"},"redraftValue":5574},{"player":{"name":"Breece Hall","sleeperId":"8155","position":"RB"},"redraftValue":5506},{"player":{"name":"A.J. Brown","sleeperId":"5859","position":"WR"},"redraftValue":5190},{"player":{"name":"Nico Collins","sleeperId":"7569","position":"WR"},"redraftValue":5055},{"player":{"name":"Kyren Williams","sleeperId":"8150","position":"RB"},"redraftValue":4744},{"player":{"name":"Josh Jacobs","sleeperId":"5850","position":"RB"},"redraftValue":4352},{"player":{"name":"George Pickens","sleeperId":"8137","position":"WR"},"redraftValue":4495},{"player":{"name":"Javonte Williams","sleeperId":"7588","position":"RB"},"redraftValue":4238},{"player":{"name":"Travis Etienne","sleeperId":"7543","position":"RB"},"redraftValue":4144},{"player":{"name":"TreVeyon Henderson","sleeperId":"12529","position":"RB"},"redraftValue":4128},{"player":{"name":"Garrett Wilson","sleeperId":"8146","position":"WR"},"redraftValue":4200},{"player":{"name":"Tetairoa McMillan","sleeperId":"12526","position":"WR"},"redraftValue":4112},{"player":{"name":"Quinshon Judkins","sleeperId":"12512","position":"RB"},"redraftValue":3963},{"player":{"name":"Cam Skattebo","sleeperId":"12481","position":"RB"},"redraftValue":3724},{"player":{"name":"Chris Olave","sleeperId":"8144","position":"WR"},"redraftValue":3840},{"player":{"name":"DeVonta Smith","sleeperId":"7525","position":"WR"},"redraftValue":3834},{"player":{"name":"Emeka Egbuka","sleeperId":"12514","position":"WR"},"redraftValue":3670},{"player":{"name":"Bucky Irving","sleeperId":"11584","position":"RB"},"redraftValue":3412},{"player":{"name":"Lamar Jackson","sleeperId":"4881","position":"QB"},"redraftValue":3597},{"player":{"name":"Drake Maye","sleeperId":"11564","position":"QB"},"redraftValue":3435},{"player":{"name":"Tee Higgins","sleeperId":"6801","position":"WR"},"redraftValue":3352},{"player":{"name":"Joe Burrow","sleeperId":"6770","position":"QB"},"redraftValue":3296},{"player":{"name":"Ladd McConkey","sleeperId":"11635","position":"WR"},"redraftValue":3225},{"player":{"name":"Tyler Warren","sleeperId":"12518","position":"TE"},"redraftValue":3191},{"player":{"name":"Rashee Rice","sleeperId":"10229","position":"WR"},"redraftValue":3152},{"player":{"name":"Zay Flowers","sleeperId":"9997","position":"WR"},"redraftValue":3149},{"player":{"name":"Jaylen Waddle","sleeperId":"7526","position":"WR"},"redraftValue":3009},{"player":{"name":"Davante Adams","sleeperId":"2133","position":"WR"},"redraftValue":2849},{"player":{"name":"D'Andre Swift","sleeperId":"6790","position":"RB"},"redraftValue":2528},{"player":{"name":"Jayden Daniels","sleeperId":"11566","position":"QB"},"redraftValue":2646},{"player":{"name":"Rome Odunze","sleeperId":"11620","position":"WR"},"redraftValue":2554},{"player":{"name":"Patrick Mahomes","sleeperId":"4046","position":"QB"},"redraftValue":2431},{"player":{"name":"Caleb Williams","sleeperId":"11560","position":"QB"},"redraftValue":2397},{"player":{"name":"Mike Evans","sleeperId":"2216","position":"WR"},"redraftValue":2083},{"player":{"name":"DJ Moore","sleeperId":"4983","position":"WR"},"redraftValue":2052},{"player":{"name":"Chuba Hubbard","sleeperId":"7594","position":"RB"},"redraftValue":1953},{"player":{"name":"Jalen Hurts","sleeperId":"6904","position":"QB"},"redraftValue":1962},{"player":{"name":"Jameson Williams","sleeperId":"8148","position":"WR"},"redraftValue":1875},{"player":{"name":"Brian Thomas","sleeperId":"11631","position":"WR"},"redraftValue":1834},{"player":{"name":"George Kittle","sleeperId":"4217","position":"TE"},"redraftValue":1694},{"player":{"name":"Jaylen Warren","sleeperId":"8228","position":"RB"},"redraftValue":1595},{"player":{"name":"Rico Dowdle","sleeperId":"7021","position":"RB"},"redraftValue":1552},{"player":{"name":"Rhamondre Stevenson","sleeperId":"7611","position":"RB"},"redraftValue":1522},{"player":{"name":"Kyle Pitts","sleeperId":"7553","position":"TE"},"redraftValue":1513},{"player":{"name":"Sam LaPorta","sleeperId":"10859","position":"TE"},"redraftValue":1503},{"player":{"name":"DK Metcalf","sleeperId":"5846","position":"WR"},"redraftValue":1493},{"player":{"name":"RJ Harvey","sleeperId":"12489","position":"RB"},"redraftValue":1436},{"player":{"name":"Aaron Jones","sleeperId":"4199","position":"RB"},"redraftValue":1418},{"player":{"name":"Dak Prescott","sleeperId":"3294","position":"QB"},"redraftValue":1430},{"player":{"name":"Courtland Sutton","sleeperId":"5045","position":"WR"},"redraftValue":1342},{"player":{"name":"Trevor Lawrence","sleeperId":"7523","position":"QB"},"redraftValue":1338},{"player":{"name":"Travis Kelce","sleeperId":"1466","position":"TE"},"redraftValue":1315},{"player":{"name":"Zach Charbonnet","sleeperId":"9753","position":"RB"},"redraftValue":1247},{"player":{"name":"Christian Watson","sleeperId":"8167","position":"WR"},"redraftValue":1174},{"player":{"name":"J.K. Dobbins","sleeperId":"6806","position":"RB"},"redraftValue":1040},{"player":{"name":"Blake Corum","sleeperId":"11586","position":"RB"},"redraftValue":943},{"player":{"name":"Michael Pittman","sleeperId":"6819","position":"WR"},"redraftValue":974},{"player":{"name":"Alec Pierce","sleeperId":"8142","position":"WR"},"redraftValue":973},{"player":{"name":"Jaxson Dart","sleeperId":"12508","position":"QB"},"redraftValue":961},{"player":{"name":"Kyle Monangai","sleeperId":"12534","position":"RB"},"redraftValue":901},{"player":{"name":"Harold Fannin","sleeperId":"12506","position":"TE"},"redraftValue":849},{"player":{"name":"Brock Purdy","sleeperId":"8183","position":"QB"},"redraftValue":838},{"player":{"name":"Jordan Addison","sleeperId":"9756","position":"WR"},"redraftValue":803},{"player":{"name":"Jakobi Meyers","sleeperId":"5947","position":"WR"},"redraftValue":775},{"player":{"name":"Jordan Mason","sleeperId":"8408","position":"RB"},"redraftValue":650},{"player":{"name":"Tyler Allgeier","sleeperId":"8132","position":"RB"},"redraftValue":643},{"player":{"name":"Ricky Pearsall","sleeperId":"11638","position":"WR"},"redraftValue":636},{"player":{"name":"Stefon Diggs","sleeperId":"2449","position":"WR"},"redraftValue":633},{"player":{"name":"Jayden Reed","sleeperId":"10222","position":"WR"},"redraftValue":586},{"player":{"name":"Tyrone Tracy","sleeperId":"11655","position":"RB"},"redraftValue":542},{"player":{"name":"Wan'Dale Robinson","sleeperId":"8126","position":"WR"},"redraftValue":556},{"player":{"name":"Brian Robinson","sleeperId":"8154","position":"RB"},"redraftValue":520},{"player":{"name":"Matthew Stafford","sleeperId":"421","position":"QB"},"redraftValue":519},{"player":{"name":"Jake Ferguson","sleeperId":"8110","position":"TE"},"redraftValue":467},{"player":{"name":"Mark Andrews","sleeperId":"5012","position":"TE"},"redraftValue":446},{"player":{"name":"Jared Goff","sleeperId":"3163","position":"QB"},"redraftValue":441},{"player":{"name":"Dalton Kincaid","sleeperId":"10236","position":"TE"},"redraftValue":358},{"player":{"name":"Woody Marks","sleeperId":"12474","position":"RB"},"redraftValue":342},{"player":{"name":"Dallas Goedert","sleeperId":"5022","position":"TE"},"redraftValue":254},{"player":{"name":"Hunter Henry","sleeperId":"3214","position":"TE"},"redraftValue":219},{"player":{"name":"Tyjae Spears","sleeperId":"9508","position":"RB"},"redraftValue":209},{"player":{"name":"Khalil Shakir","sleeperId":"8134","position":"WR"},"redraftValue":211},{"player":{"name":"Kenneth Gainwell","sleeperId":"7567","position":"RB"},"redraftValue":1330},{"player":{"name":"James Conner","sleeperId":"4137","position":"RB"},"redraftValue":90},{"player":{"name":"Tyreek Hill","sleeperId":"3321","position":"WR"},"redraftValue":98},{"player":{"name":"Trey Benson","sleeperId":"11589","position":"RB"},"redraftValue":39},{"player":{"name":"Luther Burden","sleeperId":"12519","position":"WR"},"redraftValue":1913},{"player":{"name":"Travis Hunter","sleeperId":"12530","position":"WR"},"redraftValue":326},{"player":{"name":"Deebo Samuel","sleeperId":"5872","position":"WR"},"redraftValue":300}];
+const HISTORY_DATA = __HISTORY__;
+const STATS_DATA = __STATS__;
+const ROSTERS_DATA = __ROSTERS__;
+const TRADE_VALUES = __TRADES__;
 
 const REPO = 'alastairlivingston-sudo/sleeper-league-app-3';
 const PAGES_BASE = 'https://alastairlivingston-sudo.github.io/' + REPO.split('/')[1];
+
 const DATA_SOURCES = [
   { history: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/history.json', stats: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/stats.json', rosters: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/rosters.json', trades: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/fc-values.json' },
   { history: PAGES_BASE + '/data/history.json', stats: PAGES_BASE + '/data/stats.json', rosters: PAGES_BASE + '/data/rosters.json', trades: PAGES_BASE + '/data/fc-values.json' },
+];
+
+const LORE_SOURCES = [
+  { master: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/lore/master.json', archive: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/lore/archive-index.json', quotes: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/lore/quotes-index.json' },
+  { master: PAGES_BASE + '/lore/master.json', archive: PAGES_BASE + '/lore/archive-index.json', quotes: PAGES_BASE + '/lore/quotes-index.json' },
 ];
 
 const T = {
@@ -196,6 +192,85 @@ function useLeagueData() {
   return data;
 }
 
+function useLore(active) {
+  const [lore, setLore] = useState({ master: '', archive: [], quotes: [], ready: false });
+  const fetchedRef = useRef(false);
+  useEffect(function() {
+    if (!active || fetchedRef.current) return;
+    fetchedRef.current = true;
+    let cancelled = false;
+    (async function() {
+      for (let i = 0; i < LORE_SOURCES.length; i++) {
+        try {
+          const urls = LORE_SOURCES[i];
+          const [mData, aData, qData] = await Promise.all([
+            fetch(urls.master).then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); }),
+            fetch(urls.archive).then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); }),
+            fetch(urls.quotes).then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); }),
+          ]);
+          if (!cancelled) setLore({ master: mData.text || '', archive: aData || [], quotes: qData || [], ready: true });
+          return;
+        } catch(e) { /* try next source */ }
+      }
+    })();
+    return function() { cancelled = true; };
+  }, [active]);
+  return lore;
+}
+
+function retrieveLore(query, archive, quotes) {
+  const MAX = 3500;
+  if (!query || (!archive.length && !quotes.length)) return '';
+  const STOP = new Set(['the','a','an','is','are','was','were','be','been','have','has','had','do','does','did','will','would','could','should','may','might','can','and','but','or','not','so','yet','no','only','than','too','very','just','now','for','with','about','from','into','before','after','out','over','under','then','once','in','on','at','by','of','to','up','down','off','me','my','we','our','you','your','he','his','she','her','it','its','they','them','their','what','which','who','this','that','these','those','some','any','all','when','where','how','why']);
+  const tokens = query.toLowerCase().replace(/[^a-z0-9 ]/g, ' ').split(/\s+/).filter(function(t) { return t.length > 2 && !STOP.has(t); });
+  if (!tokens.length) return '';
+
+  const PMAP = {
+    dan:'Daniel Polak', daniel:'Daniel Polak', polak:'Daniel Polak', commissioner:'Daniel Polak',
+    saul:'Saul Freedman', freedman:'Saul Freedman', goat:'Saul Freedman',
+    alastair:'Alastair Livingston', ally:'Alastair Livingston', livingston:'Alastair Livingston',
+    gideon:'Gideon Sakofsky', sac:'Gideon Sakofsky', sakofsky:'Gideon Sakofsky',
+    josh:'Josh Gaon', gaon:'Josh Gaon', trader:'Josh Gaon',
+    jamie:'Jamie Kay', kay:'Jamie Kay', doctor:'Jamie Kay',
+    lev:'Benjy Levey', levey:'Benjy Levey', autodraft:'Benjy Levey',
+    sanford:'Benjy Sanford', snaff:'Benjy Sanford', darkwa:'Benjy Sanford',
+  };
+  const mentioned = new Set();
+  tokens.forEach(function(t) { if (PMAP[t]) mentioned.add(PMAP[t]); });
+
+  const parts = [];
+
+  // Matching quote lines for mentioned people
+  if (quotes.length && mentioned.size) {
+    quotes.forEach(function(chunk) {
+      if (mentioned.has(chunk.person)) {
+        const sample = (chunk.lines || []).slice(0, 10).join('\n');
+        if (sample) parts.push('QUOTES — ' + chunk.person + ':\n' + sample);
+      }
+    });
+  }
+
+  // Score archive chunks
+  if (archive.length) {
+    const yearMatch = query.match(/\b(201[7-9]|202[0-6])\b/);
+    const scored = archive.map(function(chunk) {
+      const haystack = (chunk.title + ' ' + chunk.text).toLowerCase();
+      let score = tokens.reduce(function(s, t) { return s + (haystack.split(t).length - 1); }, 0);
+      if (yearMatch && String(chunk.year) === yearMatch[1]) score += 8;
+      mentioned.forEach(function(nm) {
+        score += (haystack.split(nm.split(' ')[0].toLowerCase()).length - 1) * 2;
+      });
+      return { chunk: chunk, score: score };
+    });
+    scored.sort(function(a, b) { return b.score - a.score; });
+    scored.slice(0, 2).forEach(function(x) {
+      if (x.score > 1) parts.push('ARCHIVE — ' + x.chunk.title + ':\n' + x.chunk.text.slice(0, 1800));
+    });
+  }
+
+  return parts.join('\n\n---\n\n').slice(0, MAX);
+}
+
 function useViewport() {
   const [keyboardOpen, setKb] = useState(false);
   useEffect(function() {
@@ -264,7 +339,7 @@ function MarkdownMessage(props) {
 }
 
 function ChatTab(props) {
-  const { systemPrompt, chips, placeholder, errorMsg, intro } = props;
+  const { systemPrompt, chips, placeholder, errorMsg, intro, buildContext } = props;
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -287,7 +362,9 @@ function ChatTab(props) {
     setMessages(next); setInput(''); setLoading(true);
     if (taRef.current) taRef.current.style.height = 'auto';
     try {
-      const reply = await claudeCall(next.filter(function(m) { return m.role === 'user' || m.role === 'assistant'; }), systemPrompt);
+      const extra = buildContext ? buildContext(t) : '';
+      const fullPrompt = extra ? systemPrompt + '\n\n--- RETRIEVED LORE ---\n' + extra : systemPrompt;
+      const reply = await claudeCall(next.filter(function(m) { return m.role === 'user' || m.role === 'assistant'; }), fullPrompt);
       setMessages(function(p) { return p.concat([{ role: 'assistant', content: reply }]); });
     } catch (e) {
       const txt = (e && e.message === 'MODEL_ERROR') ? 'Model hiccup — try again.' : errorMsg;
@@ -337,24 +414,58 @@ function ChatTab(props) {
 }
 
 function StatsTab(props) {
-  const { historyData, statsData } = props;
+  const { historyData, statsData, loreMaster } = props;
   const analytics = useMemo(function() { return computeAnalytics(historyData); }, [historyData]);
+  const loreCtx = loreMaster
+    ? '\n\nLEAGUE CONTEXT (names, champions, glossary — for resolving names only, NOT for inventing stats):\n' + loreMaster.slice(0, 2500)
+    : '';
   const sp = 'You are the statistician for the Borehamwood Plancy League. Answer ONLY from the data below — never invent numbers.\n\n'
     + 'NAMES: always use real NAME not Sleeper handle. TWO BENJYS: benjlev=Lev, sanfbe=Sanford when both appear. Alastair\'s allyl900 account is the same person.\n\n'
     + 'ANSWER FORMAT: 1) ONE short sentence on method. 2) GitHub Markdown table for any ranking. 3) At most ONE closing sentence. No preamble.\n\n'
-    + 'METRICS: allPlay, allPlayWinPct, expectedWins, luck (positive=lucky, negative=unlucky), consistencySD, avgScore, high, low, pf, pa, record.\n\n'
-    + 'ANALYTICS:\n' + JSON.stringify(analytics) + '\n\nRAW HISTORY:\n' + JSON.stringify(historyData) + '\n\nCURRENT SEASON:\n' + JSON.stringify(statsData);
+    + 'METRICS: allPlay, allPlayWinPct, expectedWins, luck (positive=lucky, negative=unlucky), consistencySD, avgScore, high, low, pf, pa, record.'
+    + loreCtx
+    + '\n\nANALYTICS:\n' + JSON.stringify(analytics) + '\n\nRAW HISTORY:\n' + JSON.stringify(historyData) + '\n\nCURRENT SEASON:\n' + JSON.stringify(statsData);
   return <ChatTab systemPrompt={sp} chips={['Unluckiest manager ever?', 'All-play standings', 'Most consistent?', 'Closest game ever?']} placeholder="Ask about luck, all-play, records, H2H…" errorMsg="Something went wrong — try again." intro="The record book — all-play records, luck ratings, consistency. Ask who's been unluckiest, the all-play standings, or any head-to-head." />;
 }
 
 function BanterTab(props) {
-  const { historyData } = props;
-  const sp = 'You are the resident wind-up merchant of the Borehamwood Plancy League. Bone-dry British banter, mock gravity, never cruel. Punchy (3-5 sentences). Never invent a statistic.\n\n'
-    + 'ALWAYS use real NAMES. NAME MAP: ' + JSON.stringify(NAMES) + '\n'
-    + 'TWO BENJYS: benjlev=Lev, sanfbe=Sanford when both mentioned. allyl900 is Alastair.\n\n'
-    + 'Alastair won 2025 despite Benjy (Sanford) beating him twice in the regular season. Dan won Wk3 2025 by 0.02 pts. Gideon posted 202.36 in Wk12 2025 (all-time high) and missed the final. Benjy Lev went 0-14 in 2024.\n\n'
-    + 'LORE:\n' + LORE + '\n\nHISTORY:\n' + JSON.stringify(historyData);
-  return <ChatTab systemPrompt={sp} chips={['Roast the 2025 champion', 'Most cursed manager?', "This week's smack bulletin"]} placeholder="Start some trouble…" errorMsg="Blimey — give it another go." intro="Pull up a chair. Ask for a roast, a smack-talk bulletin, or just stir the pot." />;
+  const { historyData, lore } = props;
+
+  const banterPrompt = useMemo(function() {
+    const rule = [
+      '══ PRIME DIRECTIVE ══',
+      'You are the resident wind-up merchant of the Borehamwood Plancy League.',
+      'OPERATING RULE: Speak in [MYTH] tone (ESPN mock-grandeur, bone-dry British wit, mock gravity). Anchor all claims to [FACT]. Quote verbatim lines marked [REAL] when they fit.',
+      'NEVER present [MYTH] as literal fact. NEVER invent statistics. Never be cruel — mockery is the love language.',
+      'Canon tags: [REAL]=verbatim from WhatsApp chat; [MYTH]=satirical Plancey Post invention; [FACT]=verified league history; [EVENT]=specific match-day moment.',
+      'Style: punchy 3-5 sentences. Lean on Jewish/Borehamwood texture. Sign off big beats with "a hearty hearty mazel tov."',
+      '',
+      '══ LORE MASTER ══',
+    ].join('\n');
+
+    if (lore.master) return rule + '\n' + lore.master;
+
+    // Fallback when lore files haven't loaded yet
+    return rule + '\nChampions (most recent first): Alastair Livingston 2025 (first legit Plancey — beat Polak in final), Saul Freedman 2024+2023+2021+2017 (4 belts, the GOAT), Benjy Levey 2022, Jamie Kay 2020, Josh Gaon 2019, Gideon Sakofsky 2018, Alastair Livingston inaugural (asterisked).'
+      + '\nThe Miriam = wooden spoon. Sanford = king of the Miriam. Lev = autodraft legend ("Does it auto-draft automatically?"). Dan = Commissioner/narrator. Gideon lives in Israel (4am watches). The Plancey = championship belt named after Rabbi Alan Plancey.'
+      + '\nTWO BENJYS: benjlev=Lev, sanfbe=Sanford. allyl900=Alastair.'
+      + '\nNAME MAP: ' + JSON.stringify(NAMES)
+      + '\n\nHISTORY:\n' + JSON.stringify(historyData);
+  }, [lore.master, historyData]);
+
+  function buildContext(query) {
+    if (!lore.ready) return '';
+    return retrieveLore(query, lore.archive, lore.quotes);
+  }
+
+  return <ChatTab
+    systemPrompt={banterPrompt}
+    buildContext={buildContext}
+    chips={['Roast the 2025 champion', 'Most cursed manager?', "This week's smack bulletin", 'Roast Lev']}
+    placeholder="Start some trouble…"
+    errorMsg="Blimey — give it another go."
+    intro="Pull up a chair. Ask for a roast, a smack-talk bulletin, or just stir the pot."
+  />;
 }
 
 function normalizeName(str) { return str.toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' ').trim(); }
@@ -417,7 +528,7 @@ function TradeGrader(props) {
     const gap = Math.abs(tA - tB), gapPct = (gap / Math.max(tA, tB, 1)) * 100;
     const winner = gapPct < 5 ? 'even' : tA > tB ? 'A' : 'B';
     const tier = gapPct < 5 ? 'DEAD EVEN' : gapPct < 12 ? 'SLIGHT EDGE' : gapPct < 25 ? 'CLEAR WINNER' : 'LOPSIDED';
-    const icon = gapPct < 5 ? '\u2696\uFE0F' : gapPct < 12 ? '\uD83D\uDCCA' : gapPct < 25 ? '\uD83C\uDFC6' : '\uD83D\uDEA8';
+    const icon = gapPct < 5 ? '⚖️' : gapPct < 12 ? '📊' : gapPct < 25 ? '🏆' : '🚨';
     let addOns = [];
     if (winner !== 'even') {
       const wTeam = winner === 'A' ? teamA : teamB;
@@ -463,7 +574,7 @@ function TradeGrader(props) {
       <div style={{ borderBottom: '1px solid ' + T.border, background: T.panel }}>
         <button onClick={function() { setShowWaiver(function(v) { return !v; }); }} style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '11px 15px', background: 'none', border: 'none', color: T.dim, cursor: 'pointer', fontSize: 12.5, fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase' }}>
           <span>Waiver Wire <span style={{ color: T.faint, fontSize: 11, fontWeight: 400 }}>(top available by position)</span></span>
-          <span style={{ fontSize: 10, color: T.faint }}>{showWaiver ? '\u25b2 hide' : '\u25bc show'}</span>
+          <span style={{ fontSize: 10, color: T.faint }}>{showWaiver ? '▲ hide' : '▼ show'}</span>
         </button>
         {showWaiver && (
           <div style={{ padding: '0 13px 13px', display: 'flex', flexWrap: 'wrap', gap: 8 }}>
@@ -541,7 +652,7 @@ function TradeGrader(props) {
                     {cfg.players.length ? cfg.players.map(function(p, i) {
                       return (
                         <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px 0', borderBottom: '1px solid ' + T.border, fontSize: 13.5 }}>
-                          <span style={{ color: p.found ? T.text : T.amber }}>{p.found ? p.officialName : p.input + ' \u26a0'}</span>
+                          <span style={{ color: p.found ? T.text : T.amber }}>{p.found ? p.officialName : p.input + ' ⚠'}</span>
                           <span style={{ color: p.found ? T.dim : T.amber, fontSize: 12.5, marginLeft: 8, fontWeight: 700 }}>{p.found ? p.value.toLocaleString() : 'no match'}</span>
                         </div>
                       );
@@ -578,7 +689,7 @@ function TradeGrader(props) {
             )}
 
             <button onClick={getVerdict} disabled={vLoading} style={{ width: '100%', background: T.panel, border: '1px solid ' + T.amber, color: T.amber, borderRadius: 11, padding: '13px 20px', fontSize: 13.5, fontWeight: 700, letterSpacing: '0.5px', textTransform: 'uppercase', cursor: vLoading ? 'default' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9, opacity: vLoading ? 0.7 : 1 }}>
-              {vLoading ? <span style={spin} /> : "\uD83C\uDF99"} The Commissioner's Verdict
+              {vLoading ? <span style={spin} /> : "🎙"} The Commissioner's Verdict
             </button>
 
             {(verdict || vError) && (
@@ -626,15 +737,16 @@ const CSS = `
 `;
 
 const TABS = [
-  { id: 'stats', icon: '\uD83D\uDCCA', label: 'STATS' },
-  { id: 'banter', icon: '\uD83C\uDF99', label: 'BANTER' },
-  { id: 'trade', icon: '\u2696\uFE0F', label: 'TRADES' },
+  { id: 'stats', icon: '📊', label: 'STATS' },
+  { id: 'banter', icon: '🎙', label: 'BANTER' },
+  { id: 'trade', icon: '⚖️', label: 'TRADES' },
 ];
 
 export default function App() {
   const [tab, setTab] = useState('stats');
   const { history, stats, rosters, trades, live } = useLeagueData();
   const { keyboardOpen } = useViewport();
+  const lore = useLore(tab === 'banter');
 
   useEffect(function() {
     if (document.getElementById('plaincy-css')) return;
@@ -660,8 +772,8 @@ export default function App() {
       </div>
 
       <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-        {tab === 'stats' && <StatsTab historyData={history} statsData={stats} />}
-        {tab === 'banter' && <BanterTab historyData={history} />}
+        {tab === 'stats' && <StatsTab historyData={history} statsData={stats} loreMaster={lore.master} />}
+        {tab === 'banter' && <BanterTab historyData={history} lore={lore} />}
         {tab === 'trade' && <TradeGrader rostersData={rosters} tradeValues={trades} />}
       </div>
 

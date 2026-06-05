@@ -7,8 +7,9 @@
     "fetch-rosters": "node scripts/fetch-rosters.js",
     "fetch-stats":   "node scripts/fetch-stats.js",
     "fetch-trades":  "node scripts/fetch-trades.js",
-    "build":         "node scripts/build-artifact.js",
-    "refresh":       "node scripts/fetch-history.js && node scripts/fetch-rosters.js && node scripts/fetch-stats.js && node scripts/fetch-trades.js && node scripts/build-artifact.js"
+    "build-lore":    "node scripts/build-lore.js",
+    "build":         "node scripts/build-lore.js && node scripts/build-artifact.js",
+    "refresh":       "node scripts/fetch-history.js && node scripts/fetch-rosters.js && node scripts/fetch-stats.js && node scripts/fetch-trades.js && node scripts/build-lore.js && node scripts/build-artifact.js"
   },
   "engines": {
     "node": ">=20"
