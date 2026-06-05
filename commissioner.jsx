@@ -23,7 +23,7 @@ function teamLabel(k) {
   return (nm && nm !== handle) ? `${nm} · ${team}` : (team || k);
 }
 
-const BUILT_AT = "2026-06-05T14:27:31.659Z";
+const BUILT_AT = "2026-06-05T15:09:08.750Z";
 
 function fmtBuiltAt(iso) {
   try {
@@ -558,6 +558,24 @@ function ChatTab(props) {
   );
 }
 
+function slimAlltime(d) {
+  if (!d) return d;
+  // weeklyScores (raw per-game scores) and h2hBySeason (covered by deterministic query layer)
+  // are excluded to keep the system prompt within the artifact runtime's prompt budget.
+  // records games have player-name arrays stripped — scores and teams are sufficient for narration.
+  function stripGame(g) {
+    if (!g || typeof g !== 'object') return g;
+    const { as, bs, ab, bb, ...rest } = g;
+    return rest;
+  }
+  const records = {};
+  for (const [k, v] of Object.entries(d.records || {})) {
+    records[k] = Array.isArray(v) ? v.map(stripGame) : stripGame(v);
+  }
+  const { weeklyScores, h2hBySeason, records: _r, ...rest } = d;
+  return { ...rest, records };
+}
+
 function StatsTab(props) {
   const { historyData, statsData, alltimeData, transactionsData, loreMaster } = props;
   const analytics = useMemo(function() { return computeAnalytics(historyData); }, [historyData]);
@@ -582,11 +600,11 @@ function StatsTab(props) {
     + '  luckScores[manager]: [{season, actualWins, expectedWins, luckScore}] — luck per season\n'
     + '  positionalStrengths[manager][season]: {QB, RB, WR, TE, K, DEF, games} — avg pts by position per game\n'
     + '  benchWasteTop: top 20 games with most bench pts left on field\n'
-    + '  h2hBySeason[season][managerA][managerB]: {wins, losses, pf, pa} — H2H within a single season\n\n'
+    + '  h2hBySeason: use the deterministic query layer (ask with "H2H in 2023" etc.) — not included in prompt to save space\n\n'
     + 'TRADE DATA: transactions array has every completed trade: {season, week, managerA, managerB, aReceives[], bReceives[]}. Use for trade history questions.'
     + loreCtx
     + '\n\nANALYTICS (all-play, luck, consistency — pre-computed):\n' + JSON.stringify(analytics)
-    + '\n\nALL-TIME RECORDS, H2H MATRIX, NEMESIS/BUNNY (pre-computed, authoritative):\n' + JSON.stringify(alltimeData)
+    + '\n\nALL-TIME RECORDS, H2H MATRIX, NEMESIS/BUNNY (pre-computed, authoritative):\n' + JSON.stringify(slimAlltime(alltimeData))
     + '\n\nTRADE HISTORY:\n' + JSON.stringify(transactionsData)
     + '\n\nCURRENT SEASON SUMMARY:\n' + JSON.stringify({ league: statsData && statsData.league, season: statsData && statsData.season, standings: statsData && statsData.standings, headToHead: statsData && statsData.headToHead, extremes: statsData && statsData.extremes });
 
