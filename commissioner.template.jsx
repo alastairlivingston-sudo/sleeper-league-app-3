@@ -366,7 +366,8 @@ function ChatTab(props) {
     try {
       const extra = buildContext ? buildContext(t) : '';
       const fullPrompt = extra ? systemPrompt + '\n\n--- RETRIEVED LORE ---\n' + extra : systemPrompt;
-      const reply = await claudeCall(next.filter(function(m) { return m.role === 'user' || m.role === 'assistant'; }), fullPrompt);
+      const raw = await claudeCall(next.filter(function(m) { return m.role === 'user' || m.role === 'assistant'; }), fullPrompt);
+      const reply = raw.replace(/\[(FACT|MYTH|REAL|EVENT)\]/g, '').replace(/  +/g, ' ').trim();
       setMessages(function(p) { return p.concat([{ role: 'assistant', content: reply }]); });
     } catch (e) {
       const txt = (e && e.message === 'MODEL_ERROR') ? 'Model hiccup — try again.' : errorMsg;
@@ -433,33 +434,40 @@ function StatsTab(props) {
     + '\n\nTRADE HISTORY:\n' + JSON.stringify(transactionsData)
     + '\n\nRAW HISTORY:\n' + JSON.stringify(historyData)
     + '\n\nCURRENT SEASON:\n' + JSON.stringify(statsData);
-  return <ChatTab systemPrompt={sp} chips={['Unluckiest manager ever?', 'All-play standings', 'Most consistent?', 'Closest game ever?']} placeholder="Ask about luck, all-play, records, H2H…" errorMsg="Something went wrong — try again." intro="The record book — all-play records, luck ratings, consistency. Ask who's been unluckiest, the all-play standings, or any head-to-head." />;
+  return <ChatTab systemPrompt={sp} chips={['Unluckiest manager ever?', 'All-play standings', 'Most consistent?', 'Closest game ever?']} placeholder="Message…" errorMsg="Something went wrong — try again." intro="The record book — all-play records, luck ratings, consistency. Ask who's been unluckiest, the all-play standings, or any head-to-head." />;
 }
 
 function BanterTab(props) {
-  const { historyData, lore } = props;
+  const { historyData, statsData, alltimeData, lore } = props;
 
   const banterPrompt = useMemo(function() {
     const rule = [
       '══ PRIME DIRECTIVE ══',
       'You are the resident wind-up merchant of the Borehamwood Plancy League.',
-      'OPERATING RULE: Speak in [MYTH] tone (ESPN mock-grandeur, bone-dry British wit, mock gravity). Anchor all claims to [FACT]. Quote verbatim lines marked [REAL] when they fit.',
-      'NEVER present [MYTH] as literal fact. NEVER invent statistics. Never be cruel — mockery is the love language.',
-      'Canon tags: [REAL]=verbatim from WhatsApp chat; [MYTH]=satirical Plancey Post invention; [FACT]=verified league history; [EVENT]=specific match-day moment.',
-      'Style: punchy 3-5 sentences. Lean on Jewish/Borehamwood texture. Sign off big beats with "a hearty hearty mazel tov."',
+      'STYLE: ESPN mock-grandeur, bone-dry British wit, mock gravity. Punchy 3-5 sentences. Lean on Jewish/Borehamwood texture. Sign off big beats with "a hearty hearty mazel tov."',
+      'Never be cruel — mockery is the love language. Never invent statistics.',
+      '',
+      'CRITICAL OUTPUT RULE: NEVER print tag labels like [FACT], [MYTH], [REAL], or [EVENT] in your response. These are internal reasoning cues only — your output must read as natural chat, no square-bracket annotations of any kind.',
+      '',
+      'VERIFICATION RULE: Before stating any league result, score, record, or season outcome, verify it against RAW HISTORY and CURRENT SEASON below. If the event predates our data (pre-2023), you may reference it but must treat it as unverified lore rather than confirmed fact. Never contradict the data.',
       '',
       '══ LORE MASTER ══',
     ].join('\n');
 
-    if (lore.master) return rule + '\n' + lore.master;
+    const dataSection = '\n\n══ VERIFIED DATA (check all facts here first) ══'
+      + '\n\nRAW HISTORY:\n' + JSON.stringify(historyData)
+      + '\n\nCURRENT SEASON:\n' + JSON.stringify(statsData)
+      + '\n\nALL-TIME RECORDS:\n' + JSON.stringify(alltimeData);
+
+    if (lore.master) return rule + '\n' + lore.master + dataSection;
 
     // Fallback when lore files haven't loaded yet
     return rule + '\nChampions (most recent first): Alastair Livingston 2025 (first legit Plancey — beat Polak in final), Saul Freedman 2024+2023+2021+2017 (4 belts, the GOAT), Benjy Levey 2022, Jamie Kay 2020, Josh Gaon 2019, Gideon Sakofsky 2018, Alastair Livingston inaugural (asterisked).'
       + '\nThe Miriam = wooden spoon. Sanford = king of the Miriam. Lev = autodraft legend ("Does it auto-draft automatically?"). Dan = Commissioner/narrator. Gideon lives in Israel (4am watches). The Plancey = championship belt named after Rabbi Alan Plancey.'
       + '\nTWO BENJYS: benjlev=Lev, sanfbe=Sanford. allyl900=Alastair.'
       + '\nNAME MAP: ' + JSON.stringify(NAMES)
-      + '\n\nHISTORY:\n' + JSON.stringify(historyData);
-  }, [lore.master, historyData]);
+      + dataSection;
+  }, [lore.master, historyData, statsData, alltimeData]);
 
   function buildContext(query) {
     if (!lore.ready) return '';
@@ -470,7 +478,7 @@ function BanterTab(props) {
     systemPrompt={banterPrompt}
     buildContext={buildContext}
     chips={['Roast the 2025 champion', 'Most cursed manager?', "This week's smack bulletin", 'Roast Lev']}
-    placeholder="Start some trouble…"
+    placeholder="Message…"
     errorMsg="Blimey — give it another go."
     intro="Pull up a chair. Ask for a roast, a smack-talk bulletin, or just stir the pot."
   />;
@@ -781,7 +789,7 @@ export default function App() {
 
       <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
         {tab === 'stats' && <StatsTab historyData={history} statsData={stats} alltimeData={alltime} transactionsData={transactions} loreMaster={lore.master} />}
-        {tab === 'banter' && <BanterTab historyData={history} lore={lore} />}
+        {tab === 'banter' && <BanterTab historyData={history} statsData={stats} alltimeData={alltime} lore={lore} />}
         {tab === 'trade' && <TradeGrader rostersData={rosters} tradeValues={trades} />}
       </div>
 
