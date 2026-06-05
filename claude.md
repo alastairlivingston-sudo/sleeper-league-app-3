@@ -38,6 +38,26 @@ analyst and resident wind-up merchant.
 beat @dpol 143.96-118.58 in the final. If fetched data contradicts these known facts, the script/parse is
 wrong — investigate, don't "correct" the data to fit.
 
+## Logged upcoming changes (not yet implemented)
+
+### Banter bot — fact verification against data
+The banter bot is hallucinating league facts (e.g. claiming Alastair beat Saul in 2025 when the data
+shows otherwise). Fix: inject the same structured data the Stats tab uses (history.json, stats.json,
+alltime.json) into the Banter system prompt, with a hard rule that any factual claim about a result,
+score, record, or season outcome MUST be verified against that data first. The bot may still riff on
+pre-2023 history (not in our dataset) but should flag it as unverified rather than state it as fact.
+
+### Banter bot — remove canon tag labels from output
+The [FACT], [MYTH], [REAL], [EVENT] tags appear verbatim in responses, making them feel robotic.
+These are internal tone/sourcing instructions for the model, not meant to be printed. Fix: add an
+explicit rule to the system prompt that these tags must NEVER appear in the output — they are for
+the model's internal reasoning only. Alternatively post-process the response to strip [ALL_CAPS_TAGS].
+
+### Mobile UI — remove placeholder text from chat inputs
+On mobile, the suggested placeholder text inside the chat input wraps onto two lines, breaking the
+layout. Fix: remove the `placeholder` attribute entirely from the ChatTab <input> element (or set it
+to a single short word like "Message…"). The chip buttons already serve as suggested prompts.
+
 ## Automation
 .github/workflows/refresh.yml runs all three scripts on a weekly cron (Tuesday 11:00 UTC) + manual
 workflow_dispatch, and commits public/data/*.json back to the repo. The artifact picks up changes
