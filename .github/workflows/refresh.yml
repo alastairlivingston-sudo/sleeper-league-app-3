@@ -33,6 +33,16 @@ jobs:
       - name: Fetch trade values (FantasyCalc, trimmed)
         run: node scripts/fetch-trades.js
 
+      - name: Fetch transaction history (Sleeper trades)
+        run: node scripts/fetch-transactions.js
+
+      # Build derived data tables
+      - name: Build lore index
+        run: node scripts/build-lore.js
+
+      - name: Build all-time aggregates
+        run: node scripts/build-alltime.js
+
       # Rebuild self-contained artifact with fresh inlined data
       - name: Build commissioner.jsx
         run: node scripts/build-artifact.js
@@ -50,6 +60,6 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/data/*.json docs/.nojekyll commissioner.jsx
+          git add docs/data/*.json docs/lore/*.json docs/.nojekyll commissioner.jsx
           git diff --cached --quiet || git commit -m "chore: refresh league data + rebuild artifact [skip ci]"
           git push

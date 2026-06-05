@@ -573,6 +573,16 @@ function StatsTab(props) {
     + 'NAMES: always use real NAME not Sleeper handle. TWO BENJYS: benjlev=Lev, sanfbe=Sanford when both appear. Alastair\'s allyl900 account is the same person.\n\n'
     + 'ANSWER FORMAT: 1) ONE short sentence on method. 2) GitHub Markdown table for any ranking. 3) At most ONE closing sentence. No preamble.\n\n'
     + 'METRICS: allPlay, allPlayWinPct, expectedWins, luck (positive=lucky, negative=unlucky), consistencySD, avgScore, high, low, pf, pa, record. nemesis=worst H2H opponent, bunny=best H2H opponent (both pre-computed, symmetric — trust them).\n\n'
+    + 'EXTENDED TABLES IN alltime.json — use these for deeper questions:\n'
+    + '  consistencyStats[manager].allTime: {avg, stdDev, high, low, games} — all-time scoring consistency\n'
+    + '  consistencyStats[manager].perSeason[year]: same breakdown per season\n'
+    + '  personalRecords[manager]: {highWeek, lowWeek, biggestWin, biggestLoss} — personal scoring milestones\n'
+    + '  playoffRecords[manager]: {wins, losses, pf, pa, appearances} — playoff-only record\n'
+    + '  seasonalTrends[manager]: [{season, pf, wins, losses, ppg, rank}] — season-by-season performance\n'
+    + '  luckScores[manager]: [{season, actualWins, expectedWins, luckScore}] — luck per season\n'
+    + '  positionalStrengths[manager][season]: {QB, RB, WR, TE, K, DEF, games} — avg pts by position per game\n'
+    + '  benchWasteTop: top 20 games with most bench pts left on field\n'
+    + '  h2hBySeason[season][managerA][managerB]: {wins, losses, pf, pa} — H2H within a single season\n\n'
     + 'TRADE DATA: transactions array has every completed trade: {season, week, managerA, managerB, aReceives[], bReceives[]}. Use for trade history questions.'
     + loreCtx
     + '\n\nANALYTICS (all-play, luck, consistency — pre-computed):\n' + JSON.stringify(analytics)
@@ -589,7 +599,7 @@ function StatsTab(props) {
     } catch (e) { return ''; }
   }
 
-  return <ChatTab systemPrompt={sp} buildContext={buildContext} chips={['Unluckiest manager ever?', 'All-play standings', 'Most consistent?', 'Closest game ever?']} placeholder="Message…" errorMsg="Something went wrong — try again." intro="The record book — all-play records, luck ratings, consistency. Ask who's been unluckiest, the all-play standings, or any head-to-head." />;
+  return <ChatTab systemPrompt={sp} buildContext={buildContext} chips={['Unluckiest manager?', 'Best playoff record?', 'Most consistent scorer?', 'Biggest bench disasters?']} placeholder="Message…" errorMsg="Something went wrong — try again." intro="The record book — career records, luck ratings, playoff history, consistency. Ask about personal bests, positional strengths, or any head-to-head." />;
 }
 
 function BanterTab(props) {
