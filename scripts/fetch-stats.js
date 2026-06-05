@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-// Fetches current-season standings, head-to-heads, and extremes; writes stats.json
+// Fetches current-season standings, head-to-heads, extremes, and per-game
+// positional breakdowns (ap/bp: QB/RB/WR/TE/K/DEF) + starter lists (as/bs).
 
 const fs = require("fs");
 const path = require("path");
@@ -12,6 +13,47 @@ async function get(url) {
   const res = await fetch(url);
   if (!res.ok) throw new Error(`HTTP ${res.status} ${url}`);
   return res.json();
+}
+
+// Build sleeperId → {pos, name} map
+async function buildPosMap() {
+  console.log("Fetching /players/nfl for position data...");
+  const players = await get(`${BASE}/players/nfl`);
+  const pos = {};
+  for (const [id, p] of Object.entries(players)) {
+    const fp = p.fantasy_positions?.[0] || p.position;
+    let posStr = null;
+    if (fp === "QB") posStr = "QB";
+    else if (fp === "RB" || fp === "FB") posStr = "RB";
+    else if (fp === "WR") posStr = "WR";
+    else if (fp === "TE") posStr = "TE";
+    else if (fp === "K")  posStr = "K";
+    if (posStr) pos[id] = { pos: posStr, name: p.full_name || null };
+  }
+  return pos;
+}
+
+function posPoints(entry, posMap) {
+  const totals = {};
+  const starters = entry.starters || [];
+  const pts = entry.players_points || {};
+  for (const pid of starters) {
+    const pos = posMap[pid]?.pos || (pid === "DEF" ? "DEF" : null);
+    if (!pos) continue;
+    totals[pos] = Math.round(((totals[pos] || 0) + (pts[pid] || 0)) * 100) / 100;
+  }
+  return totals;
+}
+
+function starterList(entry, posMap) {
+  const starters = entry.starters || [];
+  const pts = entry.players_points || {};
+  return starters.map((pid) => {
+    let n, pos;
+    if (pid === "DEF") { n = "DEF"; pos = "DEF"; }
+    else { const m = posMap[pid]; if (!m) return null; n = m.name || pid; pos = m.pos; }
+    return { n, pos, pts: Math.round((pts[pid] || 0) * 100) / 100 };
+  }).filter(Boolean);
 }
 
 async function findActiveLeague() {
@@ -52,9 +94,10 @@ async function main() {
   const leagueId = league.league_id;
   const playoffWeekStart = league.settings?.playoff_week_start || 15;
 
-  const [users, rosters] = await Promise.all([
+  const [users, rosters, posMap] = await Promise.all([
     get(`${BASE}/league/${leagueId}/users`),
     get(`${BASE}/league/${leagueId}/rosters`),
+    buildPosMap(),
   ]);
 
   const userMap = {};
@@ -103,7 +146,13 @@ async function main() {
       const bUid = rosterOwner[y.roster_id];
       const aName = userMap[aUid]?.name || String(x.roster_id);
       const bName = userMap[bUid]?.name || String(y.roster_id);
-      games.push({ week, playoff, a: aName, b: bName, pa: x.points || 0, pb: y.points || 0 });
+      games.push({
+        week, playoff,
+        a: aName, b: bName,
+        pa: x.points || 0, pb: y.points || 0,
+        ap: posPoints(x, posMap), bp: posPoints(y, posMap),
+        as: starterList(x, posMap), bs: starterList(y, posMap),
+      });
 
       if (!playoff) {
         if (!h2h[aName]) h2h[aName] = {};
@@ -153,6 +202,7 @@ async function main() {
     season: league.season,
     standings: standingsArr,
     headToHead: h2h,
+    games,
     extremes: {
       closestGame: closest,
       biggestBlowout: blowout,
