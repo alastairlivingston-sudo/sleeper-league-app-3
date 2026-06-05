@@ -6,136 +6,63 @@
 
 const { useState, useEffect, useRef, useMemo } = React;
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// NAMES ← real names, used EVERYWHERE instead of Sleeper handles.
-// Fill in the blanks (currently fall back to the handle).
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Duplicate accounts → one canonical manager (old handle = same person).
-// allyl900 was Alastair's 2023 account before switching to AlastairL.
 const ALIAS = { allyl900: 'AlastairL' };
 function canonical(handle) {
   const c = String(handle || '').replace(/^@/, '').trim();
   return ALIAS[c] || c;
 }
-
-const NAMES = {
-  AlastairL: 'Alastair',
-  dpol:      'Dan',
-  saulgoat:  'Saul',
-  sanfbe:    'Benjy',
-  joshjr11:  'Josh',
-  drjkay:    'Jamie',
-  GSac:      'Gideon',
-  benjlev:   'Benjy',
-};
-// Two managers are both "Benjy". Disambiguate to these ONLY when both
-// are referenced together; otherwise plain "Benjy" is fine.
-const DISAMBIG = { benjlev: 'Lev', sanfbe: 'Sanford' };
-
-// Everyday name (handles aliased + Benjy-collision both → "Benjy")
-function displayName(handle) {
-  const c = canonical(handle);
-  return NAMES[c] || c;
-}
-// Unambiguous name — Lev / Sanford for the two Benjys
-function distinctName(handle) {
-  const c = canonical(handle);
-  return DISAMBIG[c] || NAMES[c] || c;
-}
-// "Team Name (@handle)" → "Alastair · Team Name"
-function teamLabel(rosterKey) {
-  const m = String(rosterKey).match(/\(@([^)]+)\)/);
+const NAMES = { AlastairL:'Alastair', dpol:'Dan', saulgoat:'Saul', sanfbe:'Benjy', joshjr11:'Josh', drjkay:'Jamie', GSac:'Gideon', benjlev:'Benjy' };
+const DISAMBIG = { benjlev:'Lev', sanfbe:'Sanford' };
+function displayName(h) { const c = canonical(h); return NAMES[c] || c; }
+function distinctName(h) { const c = canonical(h); return DISAMBIG[c] || NAMES[c] || c; }
+function teamLabel(k) {
+  const m = String(k).match(/\(@([^)]+)\)/);
   const handle = m ? m[1] : null;
-  const team = String(rosterKey).replace(/\s*\(@[^)]+\)\s*$/, '').trim();
+  const team = String(k).replace(/\s*\(@[^)]+\)\s*$/, '').trim();
   const nm = handle ? displayName(handle) : null;
-  if (nm && nm !== handle) return `${nm} · ${team}`;
-  return team || rosterKey;
+  return (nm && nm !== handle) ? `${nm} · ${team}` : (team || k);
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// LORE ← FILL THIS IN BEFORE SHARING
-// Fed directly to the Banter tab system prompt.
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const LORE = `
-(Replace this block with your league lore before publishing.)
-
-Suggestions:
 - Alastair won the 2025 title despite Benjy beating him twice in the regular season.
 - Dan won a game in Week 3 by 0.02 points and never lets anyone forget it.
 - Gideon put up 202.36 in Wk12 2025 — the highest score in league history — and still didn't make the final.
 - Benjy L went 0-14 in 2024. A perfect record of futility. The Borehamwood Spiral.
-- Add your own: nicknames, draft regrets, waiver crimes, feuds, superstitions...
 `;
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// DATA — the FULL data (incl. per-game individual player stats) lives in
-// docs/data/*.json and is fetched at runtime so this file stays static.
-// The inlined constants below are a TRIMMED offline fallback (player-level
-// arrays stripped by build-artifact.js) used only if the fetch is blocked.
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const BUILT_AT     = __BUILT_AT__;  // ISO string injected by build-artifact.js
-const HISTORY_DATA = __HISTORY__;
-const STATS_DATA   = __STATS__;
-const ROSTERS_DATA = __ROSTERS__;
-const TRADE_VALUES = __TRADES__;
+const BUILT_AT = "2026-06-03T18:06:36.454Z";
 
-// Runtime data sources, tried in order. JSDelivr serves GitHub files with
-// CORS headers (works inside the artifact sandbox); GitHub Pages is backup.
-const REPO = 'alastairlivingston-sudo/sleeper-league-app-3';
-const PAGES = 'https://alastairlivingston-sudo.github.io/' + REPO.split('/')[1];
-const DATA_SOURCES = [
-  {
-    history: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/history.json',
-    stats:   'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/stats.json',
-    rosters: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/rosters.json',
-    trades:  'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/fc-values.json',
-  },
-  {
-    history: PAGES + '/data/history.json',
-    stats:   PAGES + '/data/stats.json',
-    rosters: PAGES + '/data/rosters.json',
-    trades:  PAGES + '/data/fc-values.json',
-  },
-];
-
-// Format the build timestamp for display: "Updated 3 Jun 2025"
 function fmtBuiltAt(iso) {
   try {
     const d = new Date(iso);
-    return 'Updated ' + d.getDate() + ' ' + ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()] + ' ' + d.getFullYear();
-  } catch { return 'Updated recently'; }
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return 'Updated ' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+  } catch(e) { return 'Updated recently'; }
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// THEME — midnight navy + electric indigo + amber (Linear/Sleeper-inspired)
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const T = {
-  bg:       '#090d18',
-  panel:    '#0f1625',
-  panel2:   '#141e32',
-  raised:   '#1a2640',
-  border:   '#24344e',
-  borderHi: '#304260',
-  text:     '#e8f1ff',
-  dim:      '#6e8db0',
-  faint:    '#3d5470',
-  indigo:   '#6366f1',   // primary interactive
-  indigoDk: '#4f46e5',
-  green:    '#10b981',   // wins
-  amber:    '#f59e0b',   // scores / gold
-  blue:     '#60a5fa',   // side A in trades
-  red:      '#f87171',   // errors / side B
-};
-// Single system-font stack at heavy weight — SF Pro Display on iOS,
-// Segoe UI Black on Windows, Roboto Black on Android. No Impact.
-const FH = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif";
-const FB = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif";
+const HISTORY_DATA = {"seasons":[{"season":"2023","name":"Borehamwood","champion":"saulgoat","standings":[{"manager":"drjkay","team":"Obi-Quan Kenobi","wins":10,"losses":4,"pf":1805.28,"high":154.7},{"manager":"joshjr11","team":"Denver Brochos","wins":10,"losses":4,"pf":1795.48,"high":179.48},{"manager":"saulgoat","team":"Saul","wins":7,"losses":7,"pf":1855.7,"high":189.76},{"manager":"sanfbe","team":"sanfbe","wins":7,"losses":7,"pf":1726.64,"high":180.98},{"manager":"allyl900","team":"allyl900","wins":6,"losses":8,"pf":1756.06,"high":151.4},{"manager":"dpol","team":"dpol","wins":6,"losses":8,"pf":1718.68,"high":173.18},{"manager":"GSac","team":"GSac","wins":6,"losses":8,"pf":1582.04,"high":146.14},{"manager":"benjlev","team":"benjlev","wins":4,"losses":10,"pf":1571.92,"high":144.1}],"games":[{"week":1,"playoff":false,"a":"dpol","b":"allyl900","pa":69,"pb":120.54,"ap":{"QB":12.5,"RB":17.9,"WR":16.2,"TE":3.4,"K":5,"DEF":14},"bp":{"QB":27.14,"RB":27.7,"WR":41.7,"TE":0,"K":13,"DEF":11}},{"week":1,"playoff":false,"a":"benjlev","b":"saulgoat","pa":116.34,"pb":146.08},{"week":1,"playoff":false,"a":"joshjr11","b":"sanfbe","pa":97.86,"pb":92.34},{"week":1,"playoff":false,"a":"drjkay","b":"GSac","pa":138.16,"pb":103.54},{"week":2,"playoff":false,"a":"benjlev","b":"sanfbe","pa":144.1,"pb":110.76},{"week":2,"playoff":false,"a":"dpol","b":"saulgoat","pa":111.02,"pb":82.48},{"week":2,"playoff":false,"a":"allyl900","b":"GSac","pa":105.66,"pb":110.14},{"week":2,"playoff":false,"a":"joshjr11","b":"drjkay","pa":179.48,"pb":138},{"week":3,"playoff":false,"a":"dpol","b":"sanfbe","pa":173.18,"pb":151.32,"ap":{"QB":19.88,"RB":65.9,"WR":58.9,"TE":12.5,"K":4,"DEF":12},"bp":{"QB":21.32,"RB":46.6,"WR":38.2,"TE":6.2,"K":7,"DEF":32}},{"week":3,"playoff":false,"a":"drjkay","b":"allyl900","pa":136.46,"pb":147.26},{"week":3,"playoff":false,"a":"saulgoat","b":"GSac","pa":125.18,"pb":111.26},{"week":3,"playoff":false,"a":"joshjr11","b":"benjlev","pa":109.28,"pb":130.88},{"week":4,"playoff":false,"a":"benjlev","b":"drjkay","pa":105.6,"pb":132.88},{"week":4,"playoff":false,"a":"joshjr11","b":"allyl900","pa":141.94,"pb":113.88},{"week":4,"playoff":false,"a":"dpol","b":"GSac","pa":99.36,"pb":123.6},{"week":4,"playoff":false,"a":"saulgoat","b":"sanfbe","pa":97.56,"pb":168.6},{"week":5,"playoff":false,"a":"joshjr11","b":"dpol","pa":54.84,"pb":159.32},{"week":5,"playoff":false,"a":"saulgoat","b":"drjkay","pa":189.76,"pb":76},{"week":5,"playoff":false,"a":"GSac","b":"sanfbe","pa":101.78,"pb":130.36},{"week":5,"playoff":false,"a":"benjlev","b":"allyl900","pa":89.84,"pb":113.32},{"week":6,"playoff":false,"a":"benjlev","b":"GSac","pa":130.94,"pb":102.12},{"week":6,"playoff":false,"a":"dpol","b":"drjkay","pa":120.3,"pb":128.18},{"week":6,"playoff":false,"a":"allyl900","b":"sanfbe","pa":102.98,"pb":114.96},{"week":6,"playoff":false,"a":"joshjr11","b":"saulgoat","pa":101.02,"pb":152.3},{"week":7,"playoff":false,"a":"saulgoat","b":"allyl900","pa":121.44,"pb":145.34},{"week":7,"playoff":false,"a":"benjlev","b":"dpol","pa":86.46,"pb":87.56},{"week":7,"playoff":false,"a":"joshjr11","b":"GSac","pa":128.98,"pb":94.18},{"week":7,"playoff":false,"a":"drjkay","b":"sanfbe","pa":132.66,"pb":94.3},{"week":8,"playoff":false,"a":"dpol","b":"sanfbe","pa":121.16,"pb":126.56},{"week":8,"playoff":false,"a":"benjlev","b":"drjkay","pa":86.6,"pb":122.92},{"week":8,"playoff":false,"a":"joshjr11","b":"saulgoat","pa":110.1,"pb":132.68},{"week":8,"playoff":false,"a":"allyl900","b":"GSac","pa":127.96,"pb":134.48},{"week":9,"playoff":false,"a":"benjlev","b":"dpol","pa":117,"pb":114.18},{"week":9,"playoff":false,"a":"saulgoat","b":"GSac","pa":127.82,"pb":123.48},{"week":9,"playoff":false,"a":"allyl900","b":"sanfbe","pa":92.52,"pb":100.12},{"week":9,"playoff":false,"a":"joshjr11","b":"drjkay","pa":120.66,"pb":89.54},{"week":10,"playoff":false,"a":"saulgoat","b":"allyl900","pa":134.18,"pb":142.86},{"week":10,"playoff":false,"a":"dpol","b":"drjkay","pa":131.34,"pb":146.02},{"week":10,"playoff":false,"a":"GSac","b":"sanfbe","pa":135.02,"pb":69.88},{"week":10,"playoff":false,"a":"joshjr11","b":"benjlev","pa":138.46,"pb":113.82},{"week":11,"playoff":false,"a":"benjlev","b":"allyl900","pa":78.68,"pb":130},{"week":11,"playoff":false,"a":"joshjr11","b":"dpol","pa":105.56,"pb":122.74},{"week":11,"playoff":false,"a":"saulgoat","b":"sanfbe","pa":116.54,"pb":126.7},{"week":11,"playoff":false,"a":"drjkay","b":"GSac","pa":154.7,"pb":109.56},{"week":12,"playoff":false,"a":"joshjr11","b":"GSac","pa":150.74,"pb":97.08},{"week":12,"playoff":false,"a":"saulgoat","b":"drjkay","pa":132.28,"pb":132.66},{"week":12,"playoff":false,"a":"dpol","b":"allyl900","pa":144.3,"pb":129.74},{"week":12,"playoff":false,"a":"benjlev","b":"sanfbe","pa":124.52,"pb":133.86},{"week":13,"playoff":false,"a":"benjlev","b":"GSac","pa":87,"pb":98.56},{"week":13,"playoff":false,"a":"dpol","b":"saulgoat","pa":106.04,"pb":137.18},{"week":13,"playoff":false,"a":"drjkay","b":"sanfbe","pa":125.18,"pb":118.36},{"week":13,"playoff":false,"a":"joshjr11","b":"allyl900","pa":168.56,"pb":151.4},{"week":14,"playoff":false,"a":"dpol","b":"GSac","pa":109.08,"pb":106.54},{"week":14,"playoff":false,"a":"benjlev","b":"saulgoat","pa":124.64,"pb":128.12},{"week":14,"playoff":false,"a":"joshjr11","b":"sanfbe","pa":140.74,"pb":125.42},{"week":14,"playoff":false,"a":"drjkay","b":"allyl900","pa":114.94,"pb":118.2},{"week":15,"playoff":true,"a":"allyl900","b":"sanfbe","pa":130.26,"pb":81.66},{"week":15,"playoff":true,"a":"dpol","b":"saulgoat","pa":88.12,"pb":113.32},{"week":15,"playoff":true,"a":"benjlev","b":"GSac","pa":91.1,"pb":107.24},{"week":16,"playoff":true,"a":"drjkay","b":"allyl900","pa":119.24,"pb":127.12},{"week":16,"playoff":true,"a":"joshjr11","b":"saulgoat","pa":97.42,"pb":118.3},{"week":16,"playoff":true,"a":"dpol","b":"sanfbe","pa":91.44,"pb":180.98},{"week":17,"playoff":true,"a":"saulgoat","b":"allyl900","pa":163.68,"pb":85.72},{"week":17,"playoff":true,"a":"joshjr11","b":"drjkay","pa":106.5,"pb":114.56}]},{"season":"2024","name":"Borehamwood","champion":"saulgoat","standings":[{"manager":"saulgoat","team":"Chase waddle waddle","wins":11,"losses":3,"pf":1903.3,"high":196.9},{"manager":"AlastairL","team":"Fourth and Goalda Meir","wins":10,"losses":4,"pf":1968.96,"high":178.94},{"manager":"dpol","team":"Plancey Neutral","wins":9,"losses":5,"pf":1732.22,"high":189},{"manager":"joshjr11","team":"Denver Brochos","wins":8,"losses":6,"pf":1713.02,"high":181.32},{"manager":"GSac","team":"War & Childbirth","wins":7,"losses":7,"pf":1758.44,"high":159.22},{"manager":"drjkay","team":"To infinity and Bijan","wins":6,"losses":8,"pf":1767.8,"high":213.46},{"manager":"sanfbe","team":"The Twinder Swindler","wins":5,"losses":9,"pf":1504.7,"high":144.4},{"manager":"benjlev","team":"benjlev","wins":0,"losses":14,"pf":1522.48,"high":142.9}],"games":[{"week":1,"playoff":false,"a":"dpol","b":"drjkay","pa":127.86,"pb":119.98},{"week":1,"playoff":false,"a":"saulgoat","b":"sanfbe","pa":115.76,"pb":108.38},{"week":1,"playoff":false,"a":"benjlev","b":"AlastairL","pa":108.34,"pb":138.28},{"week":1,"playoff":false,"a":"joshjr11","b":"GSac","pa":102.32,"pb":99.52},{"week":2,"playoff":false,"a":"dpol","b":"saulgoat","pa":146.7,"pb":113.1},{"week":2,"playoff":false,"a":"drjkay","b":"sanfbe","pa":153.24,"pb":88.96},{"week":2,"playoff":false,"a":"joshjr11","b":"AlastairL","pa":181.32,"pb":104.26},{"week":2,"playoff":false,"a":"benjlev","b":"GSac","pa":97.84,"pb":115.88},{"week":3,"playoff":false,"a":"dpol","b":"sanfbe","pa":92.36,"pb":126.04},{"week":3,"playoff":false,"a":"saulgoat","b":"drjkay","pa":121.02,"pb":109.58},{"week":3,"playoff":false,"a":"AlastairL","b":"GSac","pa":116.88,"pb":108.68},{"week":3,"playoff":false,"a":"joshjr11","b":"benjlev","pa":137.14,"pb":106.28},{"week":4,"playoff":false,"a":"dpol","b":"AlastairL","pa":142.08,"pb":138.32},{"week":4,"playoff":false,"a":"benjlev","b":"drjkay","pa":125,"pb":129.48},{"week":4,"playoff":false,"a":"joshjr11","b":"saulgoat","pa":109.32,"pb":118.9},{"week":4,"playoff":false,"a":"GSac","b":"sanfbe","pa":129.72,"pb":84.1},{"week":5,"playoff":false,"a":"benjlev","b":"dpol","pa":104.34,"pb":144.96},{"week":5,"playoff":false,"a":"drjkay","b":"AlastairL","pa":101.46,"pb":159.62},{"week":5,"playoff":false,"a":"saulgoat","b":"GSac","pa":137.24,"pb":159.22},{"week":5,"playoff":false,"a":"joshjr11","b":"sanfbe","pa":77.04,"pb":97.24},{"week":6,"playoff":false,"a":"joshjr11","b":"dpol","pa":109.86,"pb":118.3},{"week":6,"playoff":false,"a":"drjkay","b":"GSac","pa":160.76,"pb":135.62},{"week":6,"playoff":false,"a":"saulgoat","b":"AlastairL","pa":145.72,"pb":120.06},{"week":6,"playoff":false,"a":"benjlev","b":"sanfbe","pa":83.22,"pb":112.7},{"week":7,"playoff":false,"a":"dpol","b":"GSac","pa":98.66,"pb":145.04},{"week":7,"playoff":false,"a":"joshjr11","b":"drjkay","pa":119.66,"pb":116.9},{"week":7,"playoff":false,"a":"benjlev","b":"saulgoat","pa":109.06,"pb":119.3},{"week":7,"playoff":false,"a":"AlastairL","b":"sanfbe","pa":121.94,"pb":110.12},{"week":8,"playoff":false,"a":"dpol","b":"drjkay","pa":108.64,"pb":124.9},{"week":8,"playoff":false,"a":"saulgoat","b":"sanfbe","pa":135.44,"pb":98.42},{"week":8,"playoff":false,"a":"benjlev","b":"AlastairL","pa":104.38,"pb":163.96},{"week":8,"playoff":false,"a":"joshjr11","b":"GSac","pa":153.34,"pb":115.86},{"week":9,"playoff":false,"a":"dpol","b":"saulgoat","pa":128.4,"pb":101.22},{"week":9,"playoff":false,"a":"drjkay","b":"sanfbe","pa":142.5,"pb":144.4},{"week":9,"playoff":false,"a":"joshjr11","b":"AlastairL","pa":123,"pb":150.76},{"week":9,"playoff":false,"a":"benjlev","b":"GSac","pa":114.34,"pb":141.68},{"week":10,"playoff":false,"a":"dpol","b":"sanfbe","pa":107.4,"pb":91.5},{"week":10,"playoff":false,"a":"saulgoat","b":"drjkay","pa":134.44,"pb":130.24},{"week":10,"playoff":false,"a":"AlastairL","b":"GSac","pa":128.02,"pb":127.42},{"week":10,"playoff":false,"a":"joshjr11","b":"benjlev","pa":124.08,"pb":123.44},{"week":11,"playoff":false,"a":"dpol","b":"AlastairL","pa":86.38,"pb":178.94},{"week":11,"playoff":false,"a":"benjlev","b":"drjkay","pa":88.64,"pb":104.8},{"week":11,"playoff":false,"a":"joshjr11","b":"saulgoat","pa":150.34,"pb":196.9},{"week":11,"playoff":false,"a":"GSac","b":"sanfbe","pa":128.26,"pb":93.18},{"week":12,"playoff":false,"a":"benjlev","b":"dpol","pa":116.96,"pb":133.08},{"week":12,"playoff":false,"a":"drjkay","b":"AlastairL","pa":116.16,"pb":175.4},{"week":12,"playoff":false,"a":"saulgoat","b":"GSac","pa":162.92,"pb":106.62},{"week":12,"playoff":false,"a":"joshjr11","b":"sanfbe","pa":91.76,"pb":85.06},{"week":13,"playoff":false,"a":"joshjr11","b":"dpol","pa":112.52,"pb":170.18},{"week":13,"playoff":false,"a":"drjkay","b":"GSac","pa":152.2,"pb":110.78},{"week":13,"playoff":false,"a":"saulgoat","b":"AlastairL","pa":132.66,"pb":111.96},{"week":13,"playoff":false,"a":"benjlev","b":"sanfbe","pa":117.14,"pb":122.32},{"week":14,"playoff":false,"a":"dpol","b":"GSac","pa":127.22,"pb":134.14},{"week":14,"playoff":false,"a":"joshjr11","b":"drjkay","pa":121.32,"pb":105.6},{"week":14,"playoff":false,"a":"benjlev","b":"saulgoat","pa":123.5,"pb":168.68},{"week":14,"playoff":false,"a":"AlastairL","b":"sanfbe","pa":160.56,"pb":142.28},{"week":15,"playoff":true,"a":"joshjr11","b":"GSac","pa":130.3,"pb":127.04},{"week":15,"playoff":true,"a":"dpol","b":"drjkay","pa":189,"pb":116.68},{"week":15,"playoff":true,"a":"benjlev","b":"sanfbe","pa":119.76,"pb":137.78},{"week":16,"playoff":true,"a":"joshjr11","b":"saulgoat","pa":94.24,"pb":124.94},{"week":16,"playoff":true,"a":"dpol","b":"AlastairL","pa":141.88,"pb":176.68},{"week":16,"playoff":true,"a":"drjkay","b":"GSac","pa":192.72,"pb":111.9},{"week":17,"playoff":true,"a":"saulgoat","b":"AlastairL","pa":149.16,"pb":143.08},{"week":17,"playoff":true,"a":"benjlev","b":"sanfbe","pa":131.44,"pb":108.78}]},{"season":"2025","name":"Borehamwood","champion":"AlastairL","standings":[{"manager":"dpol","team":"Plancey Neutral","wins":11,"losses":3,"pf":1878.92,"high":186.44},{"manager":"AlastairL","team":"Fourth and Goalda Meir","wins":9,"losses":5,"pf":1828.36,"high":156.58},{"manager":"sanfbe","team":"J'Allen Plancey z'l","wins":8,"losses":6,"pf":1778.06,"high":163.6},{"manager":"saulgoat","team":"Love Thy Naber","wins":8,"losses":6,"pf":1689.66,"high":172.42},{"manager":"joshjr11","team":"Denver Brochos","wins":6,"losses":8,"pf":1818.96,"high":173.36},{"manager":"drjkay","team":"A rookie error","wins":6,"losses":8,"pf":1770.74,"high":169.02},{"manager":"GSac","team":"This One Really Hurts","wins":5,"losses":9,"pf":1786.8,"high":202.36},{"manager":"benjlev","team":"benjlev","wins":3,"losses":11,"pf":1562.56,"high":163.26}],"games":[{"week":1,"playoff":false,"a":"dpol","b":"drjkay","pa":107.02,"pb":99.74,"ap":{"QB":28.02,"RB":39.7,"WR":23.3,"TE":3,"K":7,"DEF":6},"bp":{"QB":8.84,"RB":19.2,"WR":45.7,"TE":10.5,"K":5.5,"DEF":10}},{"week":1,"playoff":false,"a":"saulgoat","b":"AlastairL","pa":88.72,"pb":95.08},{"week":1,"playoff":false,"a":"joshjr11","b":"benjlev","pa":91.32,"pb":163.26},{"week":1,"playoff":false,"a":"GSac","b":"sanfbe","pa":112.08,"pb":155.26},{"week":2,"playoff":false,"a":"dpol","b":"saulgoat","pa":138.08,"pb":137.6},{"week":2,"playoff":false,"a":"drjkay","b":"AlastairL","pa":126.08,"pb":133.88},{"week":2,"playoff":false,"a":"joshjr11","b":"GSac","pa":127.64,"pb":101.44},{"week":2,"playoff":false,"a":"benjlev","b":"sanfbe","pa":109.9,"pb":111.72},{"week":3,"playoff":false,"a":"dpol","b":"AlastairL","pa":131.86,"pb":131.84,"ap":{"QB":15.16,"RB":50,"WR":33.5,"TE":14.7,"K":9.5,"DEF":9},"bp":{"QB":14.04,"RB":54.7,"WR":43.7,"TE":7.8,"K":8.6,"DEF":3}},{"week":3,"playoff":false,"a":"saulgoat","b":"drjkay","pa":137.62,"pb":113.4},{"week":3,"playoff":false,"a":"joshjr11","b":"sanfbe","pa":90.18,"pb":135.02},{"week":3,"playoff":false,"a":"benjlev","b":"GSac","pa":96.92,"pb":115.04},{"week":4,"playoff":false,"a":"joshjr11","b":"dpol","pa":141.88,"pb":154.2},{"week":4,"playoff":false,"a":"benjlev","b":"drjkay","pa":88.98,"pb":169.02},{"week":4,"playoff":false,"a":"saulgoat","b":"GSac","pa":131.28,"pb":121.2},{"week":4,"playoff":false,"a":"AlastairL","b":"sanfbe","pa":140.52,"pb":151.26},{"week":5,"playoff":false,"a":"benjlev","b":"dpol","pa":135.16,"pb":136.42},{"week":5,"playoff":false,"a":"joshjr11","b":"drjkay","pa":145.72,"pb":102.04},{"week":5,"playoff":false,"a":"saulgoat","b":"sanfbe","pa":140.54,"pb":138.42},{"week":5,"playoff":false,"a":"AlastairL","b":"GSac","pa":127.72,"pb":121.5},{"week":6,"playoff":false,"a":"dpol","b":"GSac","pa":128.38,"pb":118.42},{"week":6,"playoff":false,"a":"drjkay","b":"sanfbe","pa":108.74,"pb":163.6},{"week":6,"playoff":false,"a":"joshjr11","b":"saulgoat","pa":137.16,"pb":106.96},{"week":6,"playoff":false,"a":"benjlev","b":"AlastairL","pa":103.54,"pb":115.04},{"week":7,"playoff":false,"a":"dpol","b":"sanfbe","pa":186.44,"pb":77.44,"ap":{"QB":32.24,"RB":52.2,"WR":77.9,"TE":14.3,"K":8.8,"DEF":1},"bp":{"QB":12.34,"RB":46.6,"WR":6.5,"TE":3,"K":2,"DEF":7}},{"week":7,"playoff":false,"a":"drjkay","b":"GSac","pa":118.16,"pb":192.04},{"week":7,"playoff":false,"a":"benjlev","b":"saulgoat","pa":79.32,"pb":86.94},{"week":7,"playoff":false,"a":"joshjr11","b":"AlastairL","pa":119.98,"pb":156.58},{"week":8,"playoff":false,"a":"dpol","b":"drjkay","pa":147.16,"pb":118.52},{"week":8,"playoff":false,"a":"saulgoat","b":"AlastairL","pa":108.88,"pb":123.88},{"week":8,"playoff":false,"a":"joshjr11","b":"benjlev","pa":146.48,"pb":154.34},{"week":8,"playoff":false,"a":"GSac","b":"sanfbe","pa":145.66,"pb":116.62},{"week":9,"playoff":false,"a":"dpol","b":"saulgoat","pa":79.9,"pb":120.92},{"week":9,"playoff":false,"a":"drjkay","b":"AlastairL","pa":119.1,"pb":154.96},{"week":9,"playoff":false,"a":"joshjr11","b":"GSac","pa":165.3,"pb":123.54},{"week":9,"playoff":false,"a":"benjlev","b":"sanfbe","pa":124.56,"pb":125.42},{"week":10,"playoff":false,"a":"dpol","b":"AlastairL","pa":127.7,"pb":148.7},{"week":10,"playoff":false,"a":"saulgoat","b":"drjkay","pa":145.5,"pb":146.6},{"week":10,"playoff":false,"a":"joshjr11","b":"sanfbe","pa":162.8,"pb":103.44},{"week":10,"playoff":false,"a":"benjlev","b":"GSac","pa":99.74,"pb":157.52},{"week":11,"playoff":false,"a":"joshjr11","b":"dpol","pa":114.54,"pb":116.44},{"week":11,"playoff":false,"a":"benjlev","b":"drjkay","pa":98.02,"pb":131.72},{"week":11,"playoff":false,"a":"saulgoat","b":"GSac","pa":128.96,"pb":67.9},{"week":11,"playoff":false,"a":"AlastairL","b":"sanfbe","pa":140.74,"pb":160.48},{"week":12,"playoff":false,"a":"benjlev","b":"dpol","pa":96.02,"pb":121.48},{"week":12,"playoff":false,"a":"joshjr11","b":"drjkay","pa":113.46,"pb":130.08},{"week":12,"playoff":false,"a":"saulgoat","b":"sanfbe","pa":105.12,"pb":95.82},{"week":12,"playoff":false,"a":"AlastairL","b":"GSac","pa":133.56,"pb":202.36},{"week":13,"playoff":false,"a":"dpol","b":"GSac","pa":157.44,"pb":100.2},{"week":13,"playoff":false,"a":"drjkay","b":"sanfbe","pa":141,"pb":88.52},{"week":13,"playoff":false,"a":"joshjr11","b":"saulgoat","pa":148.64,"pb":114.16},{"week":13,"playoff":false,"a":"benjlev","b":"AlastairL","pa":110.14,"pb":95.02},{"week":14,"playoff":false,"a":"dpol","b":"sanfbe","pa":146.4,"pb":155.04},{"week":14,"playoff":false,"a":"drjkay","b":"GSac","pa":146.54,"pb":107.9},{"week":14,"playoff":false,"a":"benjlev","b":"saulgoat","pa":102.66,"pb":136.46},{"week":14,"playoff":false,"a":"joshjr11","b":"AlastairL","pa":113.86,"pb":130.84},{"week":15,"playoff":true,"a":"joshjr11","b":"saulgoat","pa":143.2,"pb":172.42},{"week":15,"playoff":true,"a":"drjkay","b":"sanfbe","pa":94.94,"pb":160.82},{"week":15,"playoff":true,"a":"benjlev","b":"GSac","pa":98.9,"pb":107.4},{"week":16,"playoff":true,"a":"dpol","b":"sanfbe","pa":161.02,"pb":108.9},{"week":16,"playoff":true,"a":"saulgoat","b":"AlastairL","pa":113.46,"pb":130.5},{"week":16,"playoff":true,"a":"joshjr11","b":"drjkay","pa":173.36,"pb":116.02},{"week":17,"playoff":true,"a":"dpol","b":"AlastairL","pa":118.58,"pb":143.96},{"week":17,"playoff":true,"a":"saulgoat","b":"sanfbe","pa":76.78,"pb":143.58}]},{"season":"2026","name":"Borehamwood","champion":null,"standings":[{"manager":"joshjr11","team":"Denver Brochos","wins":0,"losses":0,"pf":0,"high":0},{"manager":"benjlev","team":"benjlev","wins":0,"losses":0,"pf":0,"high":0},{"manager":"dpol","team":"Plancey Neutral","wins":0,"losses":0,"pf":0,"high":0},{"manager":"saulgoat","team":"Love Thy Naber","wins":0,"losses":0,"pf":0,"high":0},{"manager":"drjkay","team":"A rookie error","wins":0,"losses":0,"pf":0,"high":0},{"manager":"AlastairL","team":"Fourth and Goalda Meir","wins":0,"losses":0,"pf":0,"high":0},{"manager":"GSac","team":"Jewish Mccaffrey","wins":0,"losses":0,"pf":0,"high":0},{"manager":"sanfbe","team":"J'Allen Plancey z'l","wins":0,"losses":0,"pf":0,"high":0}],"games":[]}]};
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// CLAUDE CALL
-// window.claude.complete(prompt:string) → string (artifact runtime)
-// No API key — viewer's own Claude.ai session is used.
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const STATS_DATA = {"league":"Borehamwood","season":"2025","standings":[{"manager":"dpol","team":"Plancey Neutral","wins":11,"losses":3,"pf":1878.92,"pa":1696.02},{"manager":"AlastairL","team":"Fourth and Goalda Meir","wins":9,"losses":5,"pf":1828.36,"pa":1785.46},{"manager":"sanfbe","team":"J'Allen Plancey z'l","wins":8,"losses":6,"pf":1778.06,"pa":1854.68},{"manager":"saulgoat","team":"Love Thy Naber","wins":8,"losses":6,"pf":1689.66,"pa":1588.06},{"manager":"joshjr11","team":"Denver Brochos","wins":6,"losses":8,"pf":1818.96,"pa":1792.34},{"manager":"drjkay","team":"A rookie error","wins":6,"losses":8,"pf":1770.74,"pa":1824.38},{"manager":"GSac","team":"This One Really Hurts","wins":5,"losses":9,"pf":1786.8,"pa":1833.52},{"manager":"benjlev","team":"benjlev","wins":3,"losses":11,"pf":1562.56,"pa":1739.6}]};
+
+const ROSTERS_DATA = {"Denver Brochos (@joshjr11)":[{"id":"6770","name":"Joe Burrow","pos":"QB"},{"id":"7564","name":"Ja'Marr Chase","pos":"WR"},{"id":"8130","name":"Trey McBride","pos":"TE"},{"id":"9226","name":"De'Von Achane","pos":"RB"},{"id":"9224","name":"Chase Brown","pos":"RB"},{"id":"8112","name":"Drake London","pos":"WR"},{"id":"6794","name":"Justin Jefferson","pos":"WR"},{"id":"10229","name":"Rashee Rice","pos":"WR"},{"id":"11631","name":"Brian Thomas","pos":"WR"},{"id":"8144","name":"Chris Olave","pos":"WR"},{"id":"8183","name":"Brock Purdy","pos":"QB"},{"id":"4137","name":"James Conner","pos":"RB"},{"id":"7594","name":"Chuba Hubbard","pos":"RB"},{"id":"12474","name":"Woody Marks","pos":"RB"}],"benjlev (@benjlev)":[{"id":"4881","name":"Lamar Jackson","pos":"QB"},{"id":"4866","name":"Saquon Barkley","pos":"RB"},{"id":"3198","name":"Derrick Henry","pos":"RB"},{"id":"1466","name":"Travis Kelce","pos":"TE"},{"id":"3321","name":"Tyreek Hill","pos":"WR"},{"id":"8155","name":"Breece Hall","pos":"RB"},{"id":"11635","name":"Ladd McConkey","pos":"WR"},{"id":"7523","name":"Trevor Lawrence","pos":"QB"},{"id":"4199","name":"Aaron Jones","pos":"RB"},{"id":"4983","name":"DJ Moore","pos":"WR"},{"id":"8142","name":"Alec Pierce","pos":"WR"},{"id":"7611","name":"Rhamondre Stevenson","pos":"RB"},{"id":"9756","name":"Jordan Addison","pos":"WR"},{"id":"11638","name":"Ricky Pearsall","pos":"WR"}],"Plancey Neutral (@dpol)":[{"id":"6786","name":"CeeDee Lamb","pos":"WR"},{"id":"5859","name":"A.J. Brown","pos":"WR"},{"id":"4217","name":"George Kittle","pos":"TE"},{"id":"6813","name":"Jonathan Taylor","pos":"RB"},{"id":"9493","name":"Puka Nacua","pos":"WR"},{"id":"2216","name":"Mike Evans","pos":"WR"},{"id":"11584","name":"Bucky Irving","pos":"RB"},{"id":"11655","name":"Tyrone Tracy","pos":"RB"},{"id":"12481","name":"Cam Skattebo","pos":"RB"},{"id":"12507","name":"Omarion Hampton","pos":"RB"},{"id":"5947","name":"Jakobi Meyers","pos":"WR"},{"id":"8126","name":"Wan'Dale Robinson","pos":"WR"},{"id":"3214","name":"Hunter Henry","pos":"TE"}],"Love Thy Naber (@saulgoat)":[{"id":"11632","name":"Malik Nabers","pos":"WR"},{"id":"3163","name":"Jared Goff","pos":"QB"},{"id":"6801","name":"Tee Higgins","pos":"WR"},{"id":"7526","name":"Jaylen Waddle","pos":"WR"},{"id":"7543","name":"Travis Etienne","pos":"RB"},{"id":"7569","name":"Nico Collins","pos":"WR"},{"id":"11586","name":"Blake Corum","pos":"RB"},{"id":"11589","name":"Trey Benson","pos":"RB"},{"id":"12529","name":"TreVeyon Henderson","pos":"RB"},{"id":"7588","name":"Javonte Williams","pos":"RB"},{"id":"5045","name":"Courtland Sutton","pos":"WR"},{"id":"12506","name":"Harold Fannin","pos":"TE"}],"A rookie error (@drjkay)":[{"id":"3294","name":"Dak Prescott","pos":"QB"},{"id":"8137","name":"George Pickens","pos":"WR"},{"id":"9488","name":"Jaxon Smith-Njigba","pos":"WR"},{"id":"12526","name":"Tetairoa McMillan","pos":"WR"},{"id":"12512","name":"Quinshon Judkins","pos":"RB"},{"id":"12489","name":"RJ Harvey","pos":"RB"},{"id":"6806","name":"J.K. Dobbins","pos":"RB"},{"id":"6819","name":"Michael Pittman","pos":"WR"},{"id":"8228","name":"Jaylen Warren","pos":"RB"},{"id":"12514","name":"Emeka Egbuka","pos":"WR"},{"id":"9480","name":"Brenton Strange","pos":"TE"},{"id":"10236","name":"Dalton Kincaid","pos":"TE"},{"id":"7567","name":"Kenneth Gainwell","pos":"RB"},{"id":"12508","name":"Jaxson Dart","pos":"QB"}],"Fourth and Goalda Meir (@AlastairL)":[{"id":"4034","name":"Christian McCaffrey","pos":"RB"},{"id":"11564","name":"Drake Maye","pos":"QB"},{"id":"11604","name":"Brock Bowers","pos":"TE"},{"id":"7547","name":"Amon-Ra St. Brown","pos":"WR"},{"id":"8151","name":"Kenneth Walker","pos":"RB"},{"id":"8150","name":"Kyren Williams","pos":"RB"},{"id":"8148","name":"Jameson Williams","pos":"WR"},{"id":"8132","name":"Tyler Allgeier","pos":"RB"},{"id":"8154","name":"Brian Robinson","pos":"RB"},{"id":"6790","name":"D'Andre Swift","pos":"RB"},{"id":"7553","name":"Kyle Pitts","pos":"TE"},{"id":"12519","name":"Luther Burden","pos":"WR"},{"id":"2449","name":"Stefon Diggs","pos":"WR"},{"id":"421","name":"Matthew Stafford","pos":"QB"}],"This One Really Hurts (@GSac)":[{"id":"6904","name":"Jalen Hurts","pos":"QB"},{"id":"9221","name":"Jahmyr Gibbs","pos":"RB"},{"id":"8138","name":"James Cook","pos":"RB"},{"id":"12527","name":"Ashton Jeanty","pos":"RB"},{"id":"11620","name":"Rome Odunze","pos":"WR"},{"id":"7525","name":"DeVonta Smith","pos":"WR"},{"id":"2133","name":"Davante Adams","pos":"WR"},{"id":"8110","name":"Jake Ferguson","pos":"TE"},{"id":"8134","name":"Khalil Shakir","pos":"WR"},{"id":"9508","name":"Tyjae Spears","pos":"RB"},{"id":"8167","name":"Christian Watson","pos":"WR"},{"id":"12530","name":"Travis Hunter","pos":"WR"},{"id":"11579","name":"Audric Estime","pos":"RB"}],"J'Allen Plancey z'l (@sanfbe)":[{"id":"4984","name":"Josh Allen","pos":"QB"},{"id":"9509","name":"Bijan Robinson","pos":"RB"},{"id":"5850","name":"Josh Jacobs","pos":"RB"},{"id":"8146","name":"Garrett Wilson","pos":"WR"},{"id":"9997","name":"Zay Flowers","pos":"WR"},{"id":"9753","name":"Zach Charbonnet","pos":"RB"},{"id":"5846","name":"DK Metcalf","pos":"WR"},{"id":"10859","name":"Sam LaPorta","pos":"TE"},{"id":"5022","name":"Dallas Goedert","pos":"TE"},{"id":"7021","name":"Rico Dowdle","pos":"RB"},{"id":"10222","name":"Jayden Reed","pos":"WR"},{"id":"5872","name":"Deebo Samuel","pos":"WR"},{"id":"11627","name":"Troy Franklin","pos":"WR"},{"id":"12534","name":"Kyle Monangai","pos":"RB"}]};
+
+const TRADE_VALUES = [{"player":{"name":"Bijan Robinson","sleeperId":"9509","position":"RB"},"redraftValue":10517},{"player":{"name":"Jahmyr Gibbs","sleeperId":"9221","position":"RB"},"redraftValue":10404},{"player":{"name":"Ja'Marr Chase","sleeperId":"7564","position":"WR"},"redraftValue":9980},{"player":{"name":"Jaxon Smith-Njigba","sleeperId":"9488","position":"WR"},"redraftValue":8973},{"player":{"name":"Jonathan Taylor","sleeperId":"6813","position":"RB"},"redraftValue":8630},{"player":{"name":"Puka Nacua","sleeperId":"9493","position":"WR"},"redraftValue":8876},{"player":{"name":"Amon-Ra St. Brown","sleeperId":"7547","position":"WR"},"redraftValue":8578},{"player":{"name":"Justin Jefferson","sleeperId":"6794","position":"WR"},"redraftValue":8403},{"player":{"name":"De'Von Achane","sleeperId":"9226","position":"RB"},"redraftValue":8049},{"player":{"name":"Christian McCaffrey","sleeperId":"4034","position":"RB"},"redraftValue":7912},{"player":{"name":"Ashton Jeanty","sleeperId":"12527","position":"RB"},"redraftValue":7875},{"player":{"name":"James Cook","sleeperId":"8138","position":"RB"},"redraftValue":7727},{"player":{"name":"CeeDee Lamb","sleeperId":"6786","position":"WR"},"redraftValue":7725},{"player":{"name":"Omarion Hampton","sleeperId":"12507","position":"RB"},"redraftValue":6980},{"player":{"name":"Saquon Barkley","sleeperId":"4866","position":"RB"},"redraftValue":6850},{"player":{"name":"Trey McBride","sleeperId":"8130","position":"TE"},"redraftValue":7011},{"player":{"name":"Kenneth Walker","sleeperId":"8151","position":"RB"},"redraftValue":6016},{"player":{"name":"Drake London","sleeperId":"8112","position":"WR"},"redraftValue":6171},{"player":{"name":"Brock Bowers","sleeperId":"11604","position":"TE"},"redraftValue":6195},{"player":{"name":"Malik Nabers","sleeperId":"11632","position":"WR"},"redraftValue":6119},{"player":{"name":"Josh Allen","sleeperId":"4984","position":"QB"},"redraftValue":6014},{"player":{"name":"Derrick Henry","sleeperId":"3198","position":"RB"},"redraftValue":5842},{"player":{"name":"Chase Brown","sleeperId":"9224","position":"RB"},"redraftValue":5574},{"player":{"name":"Breece Hall","sleeperId":"8155","position":"RB"},"redraftValue":5506},{"player":{"name":"A.J. Brown","sleeperId":"5859","position":"WR"},"redraftValue":5190},{"player":{"name":"Nico Collins","sleeperId":"7569","position":"WR"},"redraftValue":5055},{"player":{"name":"Kyren Williams","sleeperId":"8150","position":"RB"},"redraftValue":4744},{"player":{"name":"Josh Jacobs","sleeperId":"5850","position":"RB"},"redraftValue":4352},{"player":{"name":"George Pickens","sleeperId":"8137","position":"WR"},"redraftValue":4495},{"player":{"name":"Javonte Williams","sleeperId":"7588","position":"RB"},"redraftValue":4238},{"player":{"name":"Travis Etienne","sleeperId":"7543","position":"RB"},"redraftValue":4144},{"player":{"name":"TreVeyon Henderson","sleeperId":"12529","position":"RB"},"redraftValue":4128},{"player":{"name":"Garrett Wilson","sleeperId":"8146","position":"WR"},"redraftValue":4200},{"player":{"name":"Tetairoa McMillan","sleeperId":"12526","position":"WR"},"redraftValue":4112},{"player":{"name":"Quinshon Judkins","sleeperId":"12512","position":"RB"},"redraftValue":3963},{"player":{"name":"Cam Skattebo","sleeperId":"12481","position":"RB"},"redraftValue":3724},{"player":{"name":"Chris Olave","sleeperId":"8144","position":"WR"},"redraftValue":3840},{"player":{"name":"DeVonta Smith","sleeperId":"7525","position":"WR"},"redraftValue":3834},{"player":{"name":"Emeka Egbuka","sleeperId":"12514","position":"WR"},"redraftValue":3670},{"player":{"name":"Bucky Irving","sleeperId":"11584","position":"RB"},"redraftValue":3412},{"player":{"name":"Lamar Jackson","sleeperId":"4881","position":"QB"},"redraftValue":3597},{"player":{"name":"Drake Maye","sleeperId":"11564","position":"QB"},"redraftValue":3435},{"player":{"name":"Tee Higgins","sleeperId":"6801","position":"WR"},"redraftValue":3352},{"player":{"name":"Joe Burrow","sleeperId":"6770","position":"QB"},"redraftValue":3296},{"player":{"name":"Ladd McConkey","sleeperId":"11635","position":"WR"},"redraftValue":3225},{"player":{"name":"Tyler Warren","sleeperId":"12518","position":"TE"},"redraftValue":3191},{"player":{"name":"Rashee Rice","sleeperId":"10229","position":"WR"},"redraftValue":3152},{"player":{"name":"Zay Flowers","sleeperId":"9997","position":"WR"},"redraftValue":3149},{"player":{"name":"Jaylen Waddle","sleeperId":"7526","position":"WR"},"redraftValue":3009},{"player":{"name":"Davante Adams","sleeperId":"2133","position":"WR"},"redraftValue":2849},{"player":{"name":"D'Andre Swift","sleeperId":"6790","position":"RB"},"redraftValue":2528},{"player":{"name":"Jayden Daniels","sleeperId":"11566","position":"QB"},"redraftValue":2646},{"player":{"name":"Rome Odunze","sleeperId":"11620","position":"WR"},"redraftValue":2554},{"player":{"name":"Patrick Mahomes","sleeperId":"4046","position":"QB"},"redraftValue":2431},{"player":{"name":"Caleb Williams","sleeperId":"11560","position":"QB"},"redraftValue":2397},{"player":{"name":"Mike Evans","sleeperId":"2216","position":"WR"},"redraftValue":2083},{"player":{"name":"DJ Moore","sleeperId":"4983","position":"WR"},"redraftValue":2052},{"player":{"name":"Chuba Hubbard","sleeperId":"7594","position":"RB"},"redraftValue":1953},{"player":{"name":"Jalen Hurts","sleeperId":"6904","position":"QB"},"redraftValue":1962},{"player":{"name":"Jameson Williams","sleeperId":"8148","position":"WR"},"redraftValue":1875},{"player":{"name":"Brian Thomas","sleeperId":"11631","position":"WR"},"redraftValue":1834},{"player":{"name":"George Kittle","sleeperId":"4217","position":"TE"},"redraftValue":1694},{"player":{"name":"Jaylen Warren","sleeperId":"8228","position":"RB"},"redraftValue":1595},{"player":{"name":"Rico Dowdle","sleeperId":"7021","position":"RB"},"redraftValue":1552},{"player":{"name":"Rhamondre Stevenson","sleeperId":"7611","position":"RB"},"redraftValue":1522},{"player":{"name":"Kyle Pitts","sleeperId":"7553","position":"TE"},"redraftValue":1513},{"player":{"name":"Sam LaPorta","sleeperId":"10859","position":"TE"},"redraftValue":1503},{"player":{"name":"DK Metcalf","sleeperId":"5846","position":"WR"},"redraftValue":1493},{"player":{"name":"RJ Harvey","sleeperId":"12489","position":"RB"},"redraftValue":1436},{"player":{"name":"Aaron Jones","sleeperId":"4199","position":"RB"},"redraftValue":1418},{"player":{"name":"Dak Prescott","sleeperId":"3294","position":"QB"},"redraftValue":1430},{"player":{"name":"Courtland Sutton","sleeperId":"5045","position":"WR"},"redraftValue":1342},{"player":{"name":"Trevor Lawrence","sleeperId":"7523","position":"QB"},"redraftValue":1338},{"player":{"name":"Travis Kelce","sleeperId":"1466","position":"TE"},"redraftValue":1315},{"player":{"name":"Zach Charbonnet","sleeperId":"9753","position":"RB"},"redraftValue":1247},{"player":{"name":"Christian Watson","sleeperId":"8167","position":"WR"},"redraftValue":1174},{"player":{"name":"J.K. Dobbins","sleeperId":"6806","position":"RB"},"redraftValue":1040},{"player":{"name":"Blake Corum","sleeperId":"11586","position":"RB"},"redraftValue":943},{"player":{"name":"Michael Pittman","sleeperId":"6819","position":"WR"},"redraftValue":974},{"player":{"name":"Alec Pierce","sleeperId":"8142","position":"WR"},"redraftValue":973},{"player":{"name":"Jaxson Dart","sleeperId":"12508","position":"QB"},"redraftValue":961},{"player":{"name":"Kyle Monangai","sleeperId":"12534","position":"RB"},"redraftValue":901},{"player":{"name":"Harold Fannin","sleeperId":"12506","position":"TE"},"redraftValue":849},{"player":{"name":"Brock Purdy","sleeperId":"8183","position":"QB"},"redraftValue":838},{"player":{"name":"Jordan Addison","sleeperId":"9756","position":"WR"},"redraftValue":803},{"player":{"name":"Jakobi Meyers","sleeperId":"5947","position":"WR"},"redraftValue":775},{"player":{"name":"Jordan Mason","sleeperId":"8408","position":"RB"},"redraftValue":650},{"player":{"name":"Tyler Allgeier","sleeperId":"8132","position":"RB"},"redraftValue":643},{"player":{"name":"Ricky Pearsall","sleeperId":"11638","position":"WR"},"redraftValue":636},{"player":{"name":"Stefon Diggs","sleeperId":"2449","position":"WR"},"redraftValue":633},{"player":{"name":"Jayden Reed","sleeperId":"10222","position":"WR"},"redraftValue":586},{"player":{"name":"Tyrone Tracy","sleeperId":"11655","position":"RB"},"redraftValue":542},{"player":{"name":"Wan'Dale Robinson","sleeperId":"8126","position":"WR"},"redraftValue":556},{"player":{"name":"Brian Robinson","sleeperId":"8154","position":"RB"},"redraftValue":520},{"player":{"name":"Matthew Stafford","sleeperId":"421","position":"QB"},"redraftValue":519},{"player":{"name":"Jake Ferguson","sleeperId":"8110","position":"TE"},"redraftValue":467},{"player":{"name":"Mark Andrews","sleeperId":"5012","position":"TE"},"redraftValue":446},{"player":{"name":"Jared Goff","sleeperId":"3163","position":"QB"},"redraftValue":441},{"player":{"name":"Dalton Kincaid","sleeperId":"10236","position":"TE"},"redraftValue":358},{"player":{"name":"Woody Marks","sleeperId":"12474","position":"RB"},"redraftValue":342},{"player":{"name":"Dallas Goedert","sleeperId":"5022","position":"TE"},"redraftValue":254},{"player":{"name":"Hunter Henry","sleeperId":"3214","position":"TE"},"redraftValue":219},{"player":{"name":"Tyjae Spears","sleeperId":"9508","position":"RB"},"redraftValue":209},{"player":{"name":"Khalil Shakir","sleeperId":"8134","position":"WR"},"redraftValue":211},{"player":{"name":"Kenneth Gainwell","sleeperId":"7567","position":"RB"},"redraftValue":1330},{"player":{"name":"James Conner","sleeperId":"4137","position":"RB"},"redraftValue":90},{"player":{"name":"Tyreek Hill","sleeperId":"3321","position":"WR"},"redraftValue":98},{"player":{"name":"Trey Benson","sleeperId":"11589","position":"RB"},"redraftValue":39},{"player":{"name":"Luther Burden","sleeperId":"12519","position":"WR"},"redraftValue":1913},{"player":{"name":"Travis Hunter","sleeperId":"12530","position":"WR"},"redraftValue":326},{"player":{"name":"Deebo Samuel","sleeperId":"5872","position":"WR"},"redraftValue":300}];
+
+const REPO = 'alastairlivingston-sudo/sleeper-league-app-3';
+const PAGES_BASE = 'https://alastairlivingston-sudo.github.io/' + REPO.split('/')[1];
+const DATA_SOURCES = [
+  { history: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/history.json', stats: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/stats.json', rosters: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/rosters.json', trades: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/fc-values.json' },
+  { history: PAGES_BASE + '/data/history.json', stats: PAGES_BASE + '/data/stats.json', rosters: PAGES_BASE + '/data/rosters.json', trades: PAGES_BASE + '/data/fc-values.json' },
+];
+
+const T = {
+  bg: '#090d18', panel: '#0f1625', panel2: '#141e32', raised: '#1a2640',
+  border: '#24344e', borderHi: '#304260', text: '#e8f1ff', dim: '#6e8db0',
+  faint: '#3d5470', indigo: '#6366f1', indigoDk: '#4f46e5',
+  green: '#10b981', amber: '#f59e0b', blue: '#60a5fa', red: '#f87171',
+};
+const FF = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif";
+
 async function claudeCall(messages, systemPrompt) {
   const runtime = typeof window !== 'undefined' ? window.claude : null;
   if (!runtime || typeof runtime.complete !== 'function') {
@@ -143,204 +70,169 @@ async function claudeCall(messages, systemPrompt) {
   }
   const convo = messages.slice(-20)
     .filter(m => m.role === 'user' || m.role === 'assistant')
-    .map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`)
+    .map(m => (m.role === 'user' ? 'User' : 'Assistant') + ': ' + m.content)
     .join('\n\n');
-  const prompt = `${systemPrompt}\n\n${convo}\n\nAssistant:`;
+  const prompt = systemPrompt + '\n\n' + convo + '\n\nAssistant:';
   try {
     const res = await runtime.complete(prompt);
     if (typeof res === 'string') return res;
-    if (res?.content?.[0]?.text) return res.content[0].text;
-    if (typeof res?.completion === 'string') return res.completion;
+    if (res && res.content && res.content[0] && res.content[0].text) return res.content[0].text;
+    if (typeof res.completion === 'string') return res.completion;
     return String(res);
   } catch (e) {
-    const msg = String(e?.message || e);
-    if (/model/i.test(msg) || /404/.test(msg) || e?.status === 404) throw new Error('MODEL_ERROR');
+    const msg = String(e && e.message ? e.message : e);
+    if (/model/i.test(msg) || /404/.test(msg)) throw new Error('MODEL_ERROR');
     throw e;
   }
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// ADVANCED ANALYTICS — precomputed so the AI never has to guess.
-// Methods are standard fantasy analytics (ESPN / FantasyPros / 4for4):
-//   • all-play (all-vs-all) record: each week, score vs EVERY other team
-//   • expected wins  = allPlayWin% × games
-//   • luck           = actual wins − expected wins  (neg = unlucky)
-//   • consistency    = std-dev of weekly scores (low = steady)
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function r1(n) { return Math.round(n * 10) / 10; }
 function r2(n) { return Math.round(n * 100) / 100; }
 function stdev(arr) {
   if (arr.length < 2) return 0;
-  const m = arr.reduce((a, b) => a + b, 0) / arr.length;
-  const v = arr.reduce((a, b) => a + (b - m) * (b - m), 0) / arr.length;
-  return Math.sqrt(v);
+  const m = arr.reduce(function(a, b) { return a + b; }, 0) / arr.length;
+  return Math.sqrt(arr.reduce(function(a, b) { return a + (b - m) * (b - m); }, 0) / arr.length);
 }
-
-function blankRow(handle) {
-  return { handle, w: 0, l: 0, t: 0, pf: 0, pa: 0, scores: [], apW: 0, apL: 0, apT: 0 };
-}
-
+function blankRow(h) { return { handle: h, w: 0, l: 0, t: 0, pf: 0, pa: 0, scores: [], apW: 0, apL: 0, apT: 0 }; }
 function finalizeRow(m) {
-  const games   = m.w + m.l + m.t;
-  const apGames = m.apW + m.apL + m.apT;
-  const apPct   = apGames ? m.apW / apGames : 0;
-  const expW    = apPct * games;
-  const avg     = m.scores.length ? m.scores.reduce((a, b) => a + b, 0) / m.scores.length : 0;
+  const games = m.w + m.l + m.t;
+  const apG = m.apW + m.apL + m.apT;
+  const apPct = apG ? m.apW / apG : 0;
+  const expW = apPct * games;
+  const avg = m.scores.length ? m.scores.reduce(function(a,b){return a+b;},0) / m.scores.length : 0;
   return {
-    name:          displayName(m.handle),
-    alias:         distinctName(m.handle), // disambiguated (Lev/Sanford) for the two Benjys
-    handle:        m.handle,
-    record:        `${m.w}-${m.l}${m.t ? '-' + m.t : ''}`,
-    wins:          m.w,
-    losses:        m.l,
-    pf:            r2(m.pf),
-    pa:            r2(m.pa),
-    avgScore:      r1(avg),
-    consistencySD: r1(stdev(m.scores)),
-    high:          m.scores.length ? r2(Math.max(...m.scores)) : 0,
-    low:           m.scores.length ? r2(Math.min(...m.scores)) : 0,
-    allPlay:       `${m.apW}-${m.apL}${m.apT ? '-' + m.apT : ''}`,
-    allPlayWinPct: r1(apPct * 100),
-    expectedWins:  r1(expW),
-    luck:          r1(m.w - expW), // + lucky, − unlucky
+    name: displayName(m.handle), alias: distinctName(m.handle), handle: m.handle,
+    record: m.w + '-' + m.l + (m.t ? '-' + m.t : ''),
+    wins: m.w, losses: m.l, pf: r2(m.pf), pa: r2(m.pa),
+    avgScore: r1(avg), consistencySD: r1(stdev(m.scores)),
+    high: m.scores.length ? r2(Math.max.apply(null, m.scores)) : 0,
+    low: m.scores.length ? r2(Math.min.apply(null, m.scores)) : 0,
+    allPlay: m.apW + '-' + m.apL + (m.apT ? '-' + m.apT : ''),
+    allPlayWinPct: r1(apPct * 100), expectedWins: r1(expW), luck: r1(m.w - expW),
   };
 }
-
 function computeAnalytics(history) {
-  const seasons = history?.seasons || [];
+  const seasons = (history && history.seasons) ? history.seasons : [];
   const perSeason = [];
   const allAcc = {};
-
-  for (const s of seasons) {
+  for (let si = 0; si < seasons.length; si++) {
+    const s = seasons[si];
     const acc = {};
     const weeks = {};
-    for (const g of (s.games || [])) {
-      if (g.playoff) continue;
-      if (!(g.pa > 0 || g.pb > 0)) continue; // skip unplayed
-      (weeks[g.week] = weeks[g.week] || []).push(g);
+    const games = s.games || [];
+    for (let gi = 0; gi < games.length; gi++) {
+      const g = games[gi];
+      if (g.playoff || !(g.pa > 0 || g.pb > 0)) continue;
+      if (!weeks[g.week]) weeks[g.week] = [];
+      weeks[g.week].push(g);
     }
-
-    for (const games of Object.values(weeks)) {
-      const board = []; // [handle, score] for every team this week
-      for (const g of games) {
+    const weekKeys = Object.keys(weeks);
+    for (let wi = 0; wi < weekKeys.length; wi++) {
+      const wgames = weeks[weekKeys[wi]];
+      const board = [];
+      for (let gi = 0; gi < wgames.length; gi++) {
+        const g = wgames[gi];
         const ha = canonical(g.a), hb = canonical(g.b);
-        const A = (acc[ha] = acc[ha] || blankRow(ha));
-        const B = (acc[hb] = acc[hb] || blankRow(hb));
+        if (!acc[ha]) acc[ha] = blankRow(ha);
+        if (!acc[hb]) acc[hb] = blankRow(hb);
+        const A = acc[ha], B = acc[hb];
         A.pf += g.pa; A.pa += g.pb; A.scores.push(g.pa);
         B.pf += g.pb; B.pa += g.pa; B.scores.push(g.pb);
-        if (g.pa > g.pb) { A.w++; B.l++; }
-        else if (g.pb > g.pa) { B.w++; A.l++; }
-        else { A.t++; B.t++; }
+        if (g.pa > g.pb) { A.w++; B.l++; } else if (g.pb > g.pa) { B.w++; A.l++; } else { A.t++; B.t++; }
         board.push([ha, g.pa], [hb, g.pb]);
       }
-      // all-play: each team vs every other team's score this week
-      for (const [h, sc] of board) {
+      for (let ai = 0; ai < board.length; ai++) {
+        const h = board[ai][0], sc = board[ai][1];
         const a = acc[h];
-        for (const [h2, sc2] of board) {
+        for (let bi = 0; bi < board.length; bi++) {
+          const h2 = board[bi][0], sc2 = board[bi][1];
           if (h2 === h) continue;
-          if (sc > sc2) a.apW++;
-          else if (sc < sc2) a.apL++;
-          else a.apT++;
+          if (sc > sc2) a.apW++; else if (sc < sc2) a.apL++; else a.apT++;
         }
       }
     }
-
     const rows = Object.values(acc);
     if (rows.length) {
       perSeason.push({
-        season:   s.season,
+        season: s.season,
         champion: s.champion ? displayName(s.champion) : null,
-        managers: rows.map(finalizeRow).sort((a, b) => b.wins - a.wins || b.pf - a.pf),
+        managers: rows.map(finalizeRow).sort(function(a,b){ return b.wins - a.wins || b.pf - a.pf; }),
       });
     }
-
-    for (const m of rows) {
-      const t = (allAcc[m.handle] = allAcc[m.handle] || blankRow(m.handle));
+    for (let ri = 0; ri < rows.length; ri++) {
+      const m = rows[ri];
+      if (!allAcc[m.handle]) allAcc[m.handle] = blankRow(m.handle);
+      const t = allAcc[m.handle];
       t.w += m.w; t.l += m.l; t.t += m.t; t.pf += m.pf; t.pa += m.pa;
       t.apW += m.apW; t.apL += m.apL; t.apT += m.apT;
-      t.scores.push(...m.scores);
+      for (let si2 = 0; si2 < m.scores.length; si2++) t.scores.push(m.scores[si2]);
     }
   }
-
-  const allTime = Object.values(allAcc).map(finalizeRow)
-    .sort((a, b) => b.wins - a.wins || b.pf - a.pf);
-  return { perSeason, allTime };
+  const allTime = Object.values(allAcc).map(finalizeRow).sort(function(a,b){ return b.wins - a.wins || b.pf - a.pf; });
+  return { perSeason: perSeason, allTime: allTime };
 }
 
-// Fetch the full data files at runtime; fall back to the trimmed inline
-// snapshot if every source is unreachable. `live` is true once the full
-// (player-level) data has loaded.
 function useLeagueData() {
-  const [data, setData] = useState({
-    history: HISTORY_DATA, stats: STATS_DATA,
-    rosters: ROSTERS_DATA, trades: TRADE_VALUES, live: false,
-  });
-  useEffect(() => {
+  const [data, setData] = useState({ history: HISTORY_DATA, stats: STATS_DATA, rosters: ROSTERS_DATA, trades: TRADE_VALUES, live: false });
+  useEffect(function() {
     let cancelled = false;
-    (async () => {
-      for (const urls of DATA_SOURCES) {
+    (async function() {
+      for (let i = 0; i < DATA_SOURCES.length; i++) {
         try {
-          const [history, stats, rosters, trades] = await Promise.all(
-            Object.values(urls).map(url =>
-              fetch(url).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
-            )
-          );
-          if (!cancelled) setData({ history, stats, rosters, trades, live: true });
-          return; // first working source wins
-        } catch { /* try next source */ }
+          const urls = DATA_SOURCES[i];
+          const keys = Object.keys(urls);
+          const fetched = await Promise.all(keys.map(function(k) {
+            return fetch(urls[k]).then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); });
+          }));
+          const result = { live: true };
+          keys.forEach(function(k, idx) { result[k] = fetched[idx]; });
+          if (!cancelled) setData(result);
+          return;
+        } catch (e) { /* try next */ }
       }
     })();
-    return () => { cancelled = true; };
+    return function() { cancelled = true; };
   }, []);
   return data;
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// VIEWPORT HOOK — keeps the app sized to the *visible* area so the
-// mobile keyboard doesn't compress everything, and signals when the
-// keyboard is open so we can hide the bottom nav.
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function useViewport() {
   const [keyboardOpen, setKb] = useState(false);
-  useEffect(() => {
+  useEffect(function() {
     const vv = window.visualViewport;
-    const apply = () => {
+    function apply() {
       const h = vv ? vv.height : window.innerHeight;
       document.documentElement.style.setProperty('--app-h', h + 'px');
       setKb((window.innerHeight - h) > 120);
-    };
+    }
     apply();
     if (vv) { vv.addEventListener('resize', apply); vv.addEventListener('scroll', apply); }
     window.addEventListener('resize', apply);
     window.addEventListener('orientationchange', apply);
-    return () => {
+    return function() {
       if (vv) { vv.removeEventListener('resize', apply); vv.removeEventListener('scroll', apply); }
       window.removeEventListener('resize', apply);
       window.removeEventListener('orientationchange', apply);
     };
   }, []);
-  return { keyboardOpen };
+  return { keyboardOpen: keyboardOpen };
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// MARKDOWN — lightweight renderer for tables + **bold** so the
-// statistician can answer in clean tabular format.
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function renderInline(str, kb) {
-  return str.split(/(\*\*[^*]+\*\*)/g).map((p, i) => {
-    if (/^\*\*[^*]+\*\*$/.test(p)) return <strong key={kb + '-' + i}>{p.slice(2, -2)}</strong>;
-    return <span key={kb + '-' + i}>{p}</span>;
+  return str.split(/(\*\*[^*]+\*\*)/g).map(function(p, i) {
+    if (/^\*\*[^*]+\*\*$/.test(p)) return React.createElement('strong', { key: kb + '-' + i }, p.slice(2, -2));
+    return React.createElement('span', { key: kb + '-' + i }, p);
   });
 }
 function splitRow(line) {
-  return line.replace(/^\s*\|/, '').replace(/\|\s*$/, '').split('|').map(c => c.trim());
+  return line.replace(/^\s*\|/, '').replace(/\|\s*$/, '').split('|').map(function(c) { return c.trim(); });
 }
-function MarkdownMessage({ text }) {
-  const lines = String(text || '').split('\n');
+function MarkdownMessage(props) {
+  const lines = String(props.text || '').split('\n');
   const out = [];
   let i = 0, key = 0;
-  const isRow = l => /^\s*\|.*\|\s*$/.test(l);
-  const isSep = l => /^\s*\|[\s:|-]+\|\s*$/.test(l);
+  function isRow(l) { return /^\s*\|.*\|\s*$/.test(l); }
+  function isSep(l) { return /^\s*\|[\s:|-]+\|\s*$/.test(l); }
   while (i < lines.length) {
     const line = lines[i];
     if (isRow(line) && i + 1 < lines.length && isSep(lines[i + 1])) {
@@ -348,259 +240,139 @@ function MarkdownMessage({ text }) {
       i += 2;
       const rows = [];
       while (i < lines.length && isRow(lines[i]) && !isSep(lines[i])) { rows.push(splitRow(lines[i])); i++; }
-      out.push(
-        <div key={key++} style={{ overflowX: 'auto', margin: '8px 0' }}>
-          <table className="md-table">
-            <thead><tr>{header.map((h, j) => <th key={j}>{renderInline(h, 'h' + j)}</th>)}</tr></thead>
-            <tbody>{rows.map((r, ri) => <tr key={ri}>{r.map((c, ci) => <td key={ci}>{renderInline(c, ri + '-' + ci)}</td>)}</tr>)}</tbody>
-          </table>
-        </div>
+      const tbl = React.createElement('div', { key: key++, style: { overflowX: 'auto', margin: '8px 0' } },
+        React.createElement('table', { className: 'md-table' },
+          React.createElement('thead', null, React.createElement('tr', null, header.map(function(h, j) { return React.createElement('th', { key: j }, renderInline(h, 'h' + j)); }))),
+          React.createElement('tbody', null, rows.map(function(r, ri) { return React.createElement('tr', { key: ri }, r.map(function(c, ci) { return React.createElement('td', { key: ci }, renderInline(c, ri + '-' + ci)); })); }))
+        )
       );
+      out.push(tbl);
       continue;
     }
     if (line.trim() === '') { i++; continue; }
     const para = [];
-    while (i < lines.length && lines[i].trim() !== '' && !(isRow(lines[i]) && i + 1 < lines.length && isSep(lines[i + 1]))) {
-      para.push(lines[i]); i++;
+    while (i < lines.length && lines[i].trim() !== '' && !(isRow(lines[i]) && i + 1 < lines.length && isSep(lines[i + 1]))) { para.push(lines[i]); i++; }
+    const children = [];
+    for (let li = 0; li < para.length; li++) {
+      const inlined = renderInline(para[li], key + '-' + li);
+      inlined.forEach(function(el) { children.push(el); });
+      if (li < para.length - 1) children.push(React.createElement('br', { key: 'br-' + li }));
     }
-    out.push(
-      <p key={key++} style={{ margin: '0 0 7px', lineHeight: 1.55 }}>
-        {para.map((l, li) => <React.Fragment key={li}>{renderInline(l, key + '-' + li)}{li < para.length - 1 ? <br /> : null}</React.Fragment>)}
-      </p>
-    );
+    out.push(React.createElement('p', { key: key++, style: { margin: '0 0 7px', lineHeight: 1.55 } }, children));
   }
-  return <>{out}</>;
+  return React.createElement(React.Fragment, null, out);
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// SHARED CHAT COMPONENT
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function ChatTab({ systemPrompt, chips, placeholder, errorMsg, intro }) {
+function ChatTab(props) {
+  const { systemPrompt, chips, placeholder, errorMsg, intro } = props;
   const [messages, setMessages] = useState([]);
-  const [input, setInput]       = useState('');
-  const [loading, setLoading]   = useState(false);
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
   const bottomRef = useRef(null);
-  const taRef     = useRef(null);
+  const taRef = useRef(null);
 
-  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages, loading]);
+  useEffect(function() { if (bottomRef.current) bottomRef.current.scrollIntoView({ behavior: 'smooth' }); }, [messages, loading]);
 
-  const autoResize = () => {
-    const ta = taRef.current; if (!ta) return;
+  function autoResize() {
+    const ta = taRef.current;
+    if (!ta) return;
     ta.style.height = 'auto';
     ta.style.height = Math.min(ta.scrollHeight, 120) + 'px';
-  };
+  }
 
-  const send = async (text) => {
+  async function send(text) {
     const t = (text || input).trim();
     if (!t || loading) return;
-    const next = [...messages, { role: 'user', content: t }];
+    const next = messages.concat([{ role: 'user', content: t }]);
     setMessages(next); setInput(''); setLoading(true);
     if (taRef.current) taRef.current.style.height = 'auto';
     try {
-      const reply = await claudeCall(next.filter(m => m.role === 'user' || m.role === 'assistant'), systemPrompt);
-      setMessages(p => [...p, { role: 'assistant', content: reply }]);
+      const reply = await claudeCall(next.filter(function(m) { return m.role === 'user' || m.role === 'assistant'; }), systemPrompt);
+      setMessages(function(p) { return p.concat([{ role: 'assistant', content: reply }]); });
     } catch (e) {
-      const txt = e?.message === 'MODEL_ERROR' ? 'Model hiccup — try again.' : errorMsg;
-      setMessages(p => [...p, { role: 'error', content: txt }]);
+      const txt = (e && e.message === 'MODEL_ERROR') ? 'Model hiccup — try again.' : errorMsg;
+      setMessages(function(p) { return p.concat([{ role: 'error', content: txt }]); });
     } finally { setLoading(false); }
-  };
+  }
+
+  const bubUser = { alignSelf: 'flex-end', background: 'linear-gradient(135deg,#6366f1,#4f46e5)', color: '#fff', borderRadius: '18px 18px 4px 18px', padding: '11px 15px', maxWidth: '82%', fontSize: 15, lineHeight: 1.5, whiteSpace: 'pre-wrap', boxShadow: '0 3px 14px rgba(99,102,241,0.3)' };
+  const bubAsst = { alignSelf: 'flex-start', background: '#141e32', color: '#e8f1ff', border: '1px solid #24344e', borderLeft: '3px solid #6366f1', borderRadius: '4px 18px 18px 18px', padding: '12px 15px', maxWidth: '88%', fontSize: 15, lineHeight: 1.6 };
+  const bubErr  = { alignSelf: 'flex-start', background: '#141e32', color: '#f59e0b', border: '1px solid #24344e', borderLeft: '3px solid #f59e0b', borderRadius: '4px 18px 18px 18px', padding: '12px 15px', maxWidth: '88%', fontSize: 15, whiteSpace: 'pre-wrap' };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: T.bg }}>
-      {/* Chips */}
-      <div style={{ display: 'flex', gap: 8, padding: '10px 14px', borderBottom: `1px solid ${T.border}`, overflowX: 'auto', flexShrink: 0, background: T.panel }}>
-        {chips.map((c, i) => (
-          <button key={i} className="chip" onClick={() => send(c)} disabled={loading}>{c}</button>
-        ))}
+      <div style={{ display: 'flex', gap: 8, padding: '10px 14px', borderBottom: '1px solid ' + T.border, overflowX: 'auto', flexShrink: 0, background: T.panel }}>
+        {chips.map(function(c, i) {
+          return <button key={i} className="chip" onClick={function() { send(c); }} disabled={loading}>{c}</button>;
+        })}
       </div>
-
-      {/* Messages */}
       <div style={{ flexGrow: 1, overflowY: 'auto', padding: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
         {messages.length === 0 && !loading && (
           <div style={{ margin: 'auto', textAlign: 'center', color: T.faint, fontSize: 14, maxWidth: 300, lineHeight: 1.7, padding: '20px 8px' }}>{intro}</div>
         )}
-        {messages.map((m, i) => (
-          m.role === 'assistant'
-            ? <div key={i} className="msg-in bubble-assistant md"><MarkdownMessage text={m.content} /></div>
-            : <div key={i} className={`msg-in bubble-${m.role}`}>{m.content}</div>
-        ))}
-        {loading && <div className="bubble-assistant"><span className="ld" /><span className="ld" /><span className="ld" /></div>}
+        {messages.map(function(m, i) {
+          if (m.role === 'assistant') return <div key={i} style={bubAsst}><MarkdownMessage text={m.content} /></div>;
+          if (m.role === 'error') return <div key={i} style={bubErr}>{m.content}</div>;
+          return <div key={i} style={bubUser}>{m.content}</div>;
+        })}
+        {loading && (
+          <div style={bubAsst}>
+            <span className="ld" /><span className="ld" /><span className="ld" />
+          </div>
+        )}
         <div ref={bottomRef} />
       </div>
-
-      {/* Input */}
-      <div style={{ display: 'flex', gap: 8, padding: '10px 12px', borderTop: `1px solid ${T.border}`, background: T.panel, flexShrink: 0 }}>
-        <textarea
-          ref={taRef} rows={1} value={input}
-          onChange={e => setInput(e.target.value)}
+      <div style={{ display: 'flex', gap: 8, padding: '10px 12px', borderTop: '1px solid ' + T.border, background: T.panel, flexShrink: 0 }}>
+        <textarea ref={taRef} rows={1} value={input}
+          onChange={function(e) { setInput(e.target.value); }}
           onInput={autoResize}
-          onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }}
+          onKeyDown={function(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }}
           placeholder={placeholder}
-          style={{ flex: 1, background: T.raised, color: T.text, border: `1px solid ${T.borderHi}`, borderRadius: 11, padding: '12px 13px', fontSize: 16, resize: 'none', outline: 'none', lineHeight: 1.4 }}
+          style={{ flex: 1, background: T.raised, color: T.text, border: '1px solid ' + T.borderHi, borderRadius: 11, padding: '12px 13px', fontSize: 16, resize: 'none', outline: 'none', lineHeight: 1.4 }}
         />
-        <button onClick={() => send()} disabled={loading || !input.trim()} className="send-btn" style={{ opacity: loading || !input.trim() ? 0.4 : 1 }}>SEND</button>
+        <button onClick={function() { send(); }} disabled={loading || !input.trim()} className="send-btn" style={{ opacity: (loading || !input.trim()) ? 0.4 : 1 }}>SEND</button>
       </div>
     </div>
   );
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// STATS TAB
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function StatsTab({ historyData, statsData }) {
-  const analytics = useMemo(() => computeAnalytics(historyData), [historyData]);
-
-  // Individual-player data (as/bs) only loads with the full fetched dataset.
-  const hasPlayerData = useMemo(
-    () => (historyData?.seasons || []).some(s => (s.games || []).some(g => Array.isArray(g.as) && g.as.length)),
-    [historyData]
-  );
-
-  const playerNote = hasPlayerData
-    ? `- For individual player questions (top WR scorer, best single performance) → use RAW HISTORY games[].as / games[].bs.`
-    : `- Individual player-level data is still loading; if asked about a specific player's points, say that detail is loading and to try again in a moment — do NOT guess.`;
-
-  const systemPrompt = `You are the statistician for the Borehamwood Plancy League. Answer ONLY from the data below — never invent numbers.
-
-NAMES: always refer to managers by their real NAME (in the data), never their Sleeper handle.
-TWO BENJYS: two managers are both called Benjy. In any table or any sentence where BOTH appear, use the "alias" field to disambiguate them (Lev = benjlev, Sanford = sanfbe). When only one is referenced, plain "Benjy" is fine. The all-time/2023 record for Alastair already includes his old allyl900 account — treat it as one person.
-
-ANSWER FORMAT — follow exactly:
-1. ONE short sentence naming the method you used. If 2–3 valid methods exist you may briefly note them and say which you picked. NEVER describe, list, or explain methods you rejected. No "I considered… but…". No working-out.
-2. The answer itself as a GitHub-style Markdown table (| Col | Col |\\n|---|---|\\n| … |). Use a table for ANY ranking, comparison, leaderboard, or multi-row answer. Rank rows sensibly (best first).
-3. At most ONE closing sentence of insight. Then stop.
-Keep it tight. No preamble like "Great question".
-
-PRECOMPUTED ADVANCED METRICS (use these directly — do NOT recompute):
-- allPlay: record if played EVERY other team every week (all-vs-all). The truest measure of how good a team actually was.
-- allPlayWinPct: all-play win %.
-- expectedWins: allPlayWinPct × games.
-- luck: actualWins − expectedWins. POSITIVE = LUCKY. NEGATIVE = UNLUCKY. Use this for "luckiest"/"unluckiest".
-- consistencySD: std-dev of weekly scores. LOW = consistent, HIGH = boom-or-bust.
-- avgScore, high, low, pf, pa, record.
-
-GUIDANCE:
-- "Unluckiest" → most NEGATIVE luck.
-- "Best team that missed out" → strong allPlayWinPct but poor actual record.
-- "Most consistent" → lowest consistencySD.
-${playerNote}
-
-RAW HISTORY game schema:
-  a/b = manager handle. pa/pb = total team points.
-  ap/bp = positional totals e.g. {QB:18.5, WR:42.3, RB:28.1, TE:9.4, K:11.2, DEF:8}.
-  as/bs = individual starter performances: [{n:"Player Name", pos:"WR", pts:32.5}, ...] sorted pts desc.
-  Use as/bs to answer "who scored X points", "top WR scorer", "best individual performance" etc.
-
-ANALYTICS (per season + all-time):
-${JSON.stringify(analytics)}
-
-RAW HISTORY — all games[]:
-${JSON.stringify(historyData)}
-
-CURRENT SEASON STATS:
-${JSON.stringify(statsData)}`;
-
-  return (
-    <ChatTab
-      systemPrompt={systemPrompt}
-      chips={['Unluckiest manager ever?', 'All-play standings', 'Most consistent?', 'Closest game ever?']}
-      placeholder="Ask about luck, all-play, records, H2H…"
-      errorMsg="Something went wrong — try again."
-      intro="The record book — now with all-play records, luck ratings and consistency. Ask who's been unluckiest, the all-play standings, or any head-to-head."
-    />
-  );
+function StatsTab(props) {
+  const { historyData, statsData } = props;
+  const analytics = useMemo(function() { return computeAnalytics(historyData); }, [historyData]);
+  const sp = 'You are the statistician for the Borehamwood Plancy League. Answer ONLY from the data below — never invent numbers.\n\n'
+    + 'NAMES: always use real NAME not Sleeper handle. TWO BENJYS: benjlev=Lev, sanfbe=Sanford when both appear. Alastair\'s allyl900 account is the same person.\n\n'
+    + 'ANSWER FORMAT: 1) ONE short sentence on method. 2) GitHub Markdown table for any ranking. 3) At most ONE closing sentence. No preamble.\n\n'
+    + 'METRICS: allPlay, allPlayWinPct, expectedWins, luck (positive=lucky, negative=unlucky), consistencySD, avgScore, high, low, pf, pa, record.\n\n'
+    + 'ANALYTICS:\n' + JSON.stringify(analytics) + '\n\nRAW HISTORY:\n' + JSON.stringify(historyData) + '\n\nCURRENT SEASON:\n' + JSON.stringify(statsData);
+  return <ChatTab systemPrompt={sp} chips={['Unluckiest manager ever?', 'All-play standings', 'Most consistent?', 'Closest game ever?']} placeholder="Ask about luck, all-play, records, H2H…" errorMsg="Something went wrong — try again." intro="The record book — all-play records, luck ratings, consistency. Ask who's been unluckiest, the all-play standings, or any head-to-head." />;
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// BANTER TAB
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const LEAGUE_FACTS = `Borehamwood Plancy League. 1-QB redraft, WR/RB/TE flex, half-PPR, 8 teams. 2023–2025 complete.
-2025 champion: Alastair (Fourth and Goalda Meir), beat Dan 143.96-118.58 in the final.
-Dan won Wk3 2025 by 0.02 pts — the most celebrated marginal win in league history — then lost the final by 25.
-Gideon posted 202.36 in Wk12 2025 (league all-time high) and still didn't make the final.
-Benjy/Sanford (sanfbe) is Alastair's bogey team — beat him twice in 2025 regular season.
-Managers: Alastair, Dan, Saul, Josh, Jamie, Gideon, and TWO Benjys (Lev=benjlev, Sanford=sanfbe).`;
-
-function BanterTab({ historyData }) {
-  const systemPrompt = `You are the resident wind-up merchant of the Borehamwood Plancy League. Voice: bone-dry British banter, mock gravity, never cruel. Keep replies punchy (3-5 sentences). Never invent a statistic.
-
-ALWAYS use people's real NAMES, never Sleeper handles.
-NAME MAP (handle → name): ${JSON.stringify(NAMES)}
-TWO BENJYS: benjlev and sanfbe are both "Benjy". When mentioning both together, call them Lev (benjlev) and Sanford (sanfbe). allyl900 is Alastair's old account — same person as AlastairL.
-
-${LEAGUE_FACTS}
-
-LORE:
-${LORE}
-
-HISTORY:
-${JSON.stringify(historyData)}`;
-
-  return (
-    <ChatTab
-      systemPrompt={systemPrompt}
-      chips={['Roast the 2025 champion', 'Most cursed manager?', "This week's smack bulletin"]}
-      placeholder="Start some trouble…"
-      errorMsg="Blimey — give it another go."
-      intro="Pull up a chair. Ask for a roast, a smack-talk bulletin, or just stir the pot."
-    />
-  );
+function BanterTab(props) {
+  const { historyData } = props;
+  const sp = 'You are the resident wind-up merchant of the Borehamwood Plancy League. Bone-dry British banter, mock gravity, never cruel. Punchy (3-5 sentences). Never invent a statistic.\n\n'
+    + 'ALWAYS use real NAMES. NAME MAP: ' + JSON.stringify(NAMES) + '\n'
+    + 'TWO BENJYS: benjlev=Lev, sanfbe=Sanford when both mentioned. allyl900 is Alastair.\n\n'
+    + 'Alastair won 2025 despite Benjy (Sanford) beating him twice in the regular season. Dan won Wk3 2025 by 0.02 pts. Gideon posted 202.36 in Wk12 2025 (all-time high) and missed the final. Benjy Lev went 0-14 in 2024.\n\n'
+    + 'LORE:\n' + LORE + '\n\nHISTORY:\n' + JSON.stringify(historyData);
+  return <ChatTab systemPrompt={sp} chips={['Roast the 2025 champion', 'Most cursed manager?', "This week's smack bulletin"]} placeholder="Start some trouble…" errorMsg="Blimey — give it another go." intro="Pull up a chair. Ask for a roast, a smack-talk bulletin, or just stir the pot." />;
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// TRADE GRADER — module-level helpers (hoisted to prevent remount)
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function TradePanel({ side, label, team, setTeam, text, setText, teamOpts }) {
-  const accent = side === 'A' ? T.blue : T.indigo;
-  return (
-    <div style={{ background: T.panel, border: `1px solid ${T.border}`, borderTop: `3px solid ${accent}`, borderRadius: '4px 4px 12px 12px', padding: 13, flex: 1, minWidth: 0 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 9 }}>
-        <span style={{ background: accent, color: '#fff', fontFamily: FH, fontWeight: 700, fontSize: 12, width: 20, height: 20, borderRadius: 5, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{side}</span>
-        <span style={{ color: T.dim, fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em' }}>{label}</span>
-      </div>
-      <select value={team} onChange={e => setTeam(e.target.value)}
-        style={{ background: T.raised, color: T.text, border: `1px solid ${T.borderHi}`, borderRadius: 8, padding: 10, width: '100%', marginBottom: 8, fontSize: 16 }}>
-        {teamOpts}
-      </select>
-      <textarea value={text} onChange={e => setText(e.target.value)}
-        placeholder={"One player per line\ne.g. Ja'Marr Chase"}
-        style={{ background: T.raised, color: T.text, border: `1px solid ${T.borderHi}`, borderRadius: 8, padding: 11, width: '100%', minHeight: 92, fontSize: 16, resize: 'vertical', boxSizing: 'border-box', lineHeight: 1.5 }} />
-    </div>
-  );
-}
+function normalizeName(str) { return str.toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' ').trim(); }
 
-function PlayerRow({ p }) {
-  return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px 0', borderBottom: `1px solid ${T.border}`, fontSize: 13.5 }}>
-      <span style={{ color: p.found ? T.text : T.amber }}>{p.found ? p.officialName : `${p.input} ⚠`}</span>
-      <span style={{ color: p.found ? T.dim : T.amber, fontSize: 12.5, marginLeft: 8, fontWeight: 700 }}>
-        {p.found ? p.value.toLocaleString() : 'no match'}
-      </span>
-    </div>
-  );
-}
-
-function normalizeName(str) {
-  return str.toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' ').trim();
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// TRADE GRADER
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function TradeGrader({ rostersData, tradeValues }) {
-  const teamKeys = useMemo(() => Object.keys(rostersData || {}), [rostersData]);
-
-  const [teamA, setTeamA]           = useState(teamKeys[0] || '');
-  const [teamB, setTeamB]           = useState(teamKeys[1] || '');
-  const [sideAText, setSideAText]   = useState('');
-  const [sideBText, setSideBText]   = useState('');
-  const [result, setResult]         = useState(null);
-  const [verdict, setVerdict]       = useState(null);
-  const [verdictLoading, setVL]     = useState(false);
-  const [verdictError, setVE]       = useState(false);
+function TradeGrader(props) {
+  const { rostersData, tradeValues } = props;
+  const teamKeys = useMemo(function() { return Object.keys(rostersData || {}); }, [rostersData]);
+  const [teamA, setTeamA] = useState(teamKeys[0] || '');
+  const [teamB, setTeamB] = useState(teamKeys[1] || '');
+  const [sideAText, setSideAText] = useState('');
+  const [sideBText, setSideBText] = useState('');
+  const [result, setResult] = useState(null);
+  const [verdict, setVerdict] = useState(null);
+  const [vLoading, setVL] = useState(false);
+  const [vError, setVE] = useState(false);
   const [showWaiver, setShowWaiver] = useState(true);
 
-  useEffect(() => {
+  useEffect(function() {
     if (document.getElementById('tg-spin')) return;
     const s = document.createElement('style');
     s.id = 'tg-spin';
@@ -608,114 +380,107 @@ function TradeGrader({ rostersData, tradeValues }) {
     document.head.appendChild(s);
   }, []);
 
-  const { idMap, nameMap } = useMemo(() => {
+  const { idMap, nameMap } = useMemo(function() {
     const id = new Map(), nm = new Map();
-    for (const { player, redraftValue } of (tradeValues || [])) {
-      const val = redraftValue || 0;
-      if (player.sleeperId) id.set(player.sleeperId, { value: val, officialName: player.name, position: player.position });
-      nm.set(normalizeName(player.name), { value: val, sleeperId: player.sleeperId, officialName: player.name, position: player.position });
-    }
+    (tradeValues || []).forEach(function(item) {
+      const p = item.player, val = item.redraftValue || 0;
+      if (p.sleeperId) id.set(p.sleeperId, { value: val, officialName: p.name, position: p.position });
+      nm.set(normalizeName(p.name), { value: val, sleeperId: p.sleeperId, officialName: p.name, position: p.position });
+    });
     return { idMap: id, nameMap: nm };
-  }, []);
+  }, [tradeValues]);
 
-  const waiverByPos = useMemo(() => {
-    const rostered = new Set(Object.values(rostersData || {}).flatMap(team => team.map(p => p.id)));
-    const avail = (tradeValues || []).filter(x => x.player.sleeperId && !rostered.has(x.player.sleeperId));
+  const waiverByPos = useMemo(function() {
+    const rostered = new Set(Object.values(rostersData || {}).reduce(function(acc, team) { return acc.concat(team.map(function(p) { return p.id; })); }, []));
+    const avail = (tradeValues || []).filter(function(x) { return x.player.sleeperId && !rostered.has(x.player.sleeperId); });
     const byPos = {};
-    for (const p of avail) {
+    avail.forEach(function(p) {
       const pos = p.player.position;
       if (!byPos[pos]) byPos[pos] = [];
       if (byPos[pos].length < 5) byPos[pos].push(p);
-    }
+    });
     return byPos;
-  }, []);
+  }, [rostersData, tradeValues]);
 
-  function lookupPlayer(inputText) {
-    const n = normalizeName(inputText);
-    if (nameMap.has(n)) { const e = nameMap.get(n); return { found: true, value: e.value, officialName: e.officialName, position: e.position, sleeperId: e.sleeperId }; }
-    for (const [key, e] of nameMap) {
-      if (key.includes(n) || n.includes(key)) return { found: true, value: e.value, officialName: e.officialName, position: e.position, sleeperId: e.sleeperId };
-    }
-    return { found: false, value: 0, officialName: inputText, position: null };
+  function lookupPlayer(txt) {
+    const n = normalizeName(txt);
+    if (nameMap.has(n)) { const e = nameMap.get(n); return { found: true, value: e.value, officialName: e.officialName, position: e.position }; }
+    for (const [k, e] of nameMap) { if (k.includes(n) || n.includes(k)) return { found: true, value: e.value, officialName: e.officialName, position: e.position }; }
+    return { found: false, value: 0, officialName: txt, position: null };
   }
 
   function gradeTrade() {
-    const parse = txt => txt.split('\n').map(l => l.trim()).filter(Boolean).map(line => ({ input: line, ...lookupPlayer(line) }));
+    function parse(txt) { return txt.split('\n').map(function(l) { return l.trim(); }).filter(Boolean).map(function(line) { return Object.assign({ input: line }, lookupPlayer(line)); }); }
     const sA = parse(sideAText), sB = parse(sideBText);
-    const tA = sA.reduce((s, p) => s + p.value, 0), tB = sB.reduce((s, p) => s + p.value, 0);
+    const tA = sA.reduce(function(s, p) { return s + p.value; }, 0);
+    const tB = sB.reduce(function(s, p) { return s + p.value; }, 0);
     const gap = Math.abs(tA - tB), gapPct = (gap / Math.max(tA, tB, 1)) * 100;
     const winner = gapPct < 5 ? 'even' : tA > tB ? 'A' : 'B';
-    const tier   = gapPct < 5 ? 'DEAD EVEN' : gapPct < 12 ? 'SLIGHT EDGE' : gapPct < 25 ? 'CLEAR WINNER' : 'LOPSIDED';
-    const icon   = gapPct < 5 ? '⚖️' : gapPct < 12 ? '📊' : gapPct < 25 ? '🏆' : '🚨';
-
+    const tier = gapPct < 5 ? 'DEAD EVEN' : gapPct < 12 ? 'SLIGHT EDGE' : gapPct < 25 ? 'CLEAR WINNER' : 'LOPSIDED';
+    const icon = gapPct < 5 ? '\u2696\uFE0F' : gapPct < 12 ? '\uD83D\uDCCA' : gapPct < 25 ? '\uD83C\uDFC6' : '\uD83D\uDEA8';
     let addOns = [];
     if (winner !== 'even') {
       const wTeam = winner === 'A' ? teamA : teamB;
       const wSide = winner === 'A' ? sA : sB;
-      const exclude = new Set(wSide.map(p => p.officialName));
+      const exclude = new Set(wSide.map(function(p) { return p.officialName; }));
       addOns = ((rostersData || {})[wTeam] || [])
-        .map(rp => ({ name: idMap.get(rp.id)?.officialName || rp.name, value: idMap.get(rp.id)?.value || 0, id: rp.id }))
-        .filter(rp => !exclude.has(rp.name) && rp.value > 0)
-        .sort((a, b) => Math.abs(a.value - gap) - Math.abs(b.value - gap))
+        .map(function(rp) { return { name: idMap.has(rp.id) ? idMap.get(rp.id).officialName : rp.name, value: idMap.has(rp.id) ? idMap.get(rp.id).value : 0 }; })
+        .filter(function(rp) { return !exclude.has(rp.name) && rp.value > 0; })
+        .sort(function(a, b) { return Math.abs(a.value - gap) - Math.abs(b.value - gap); })
         .slice(0, 3);
     }
-
-    const positions = new Set([...sA, ...sB].map(p => p.position).filter(Boolean));
+    const positions = new Set(sA.concat(sB).map(function(p) { return p.position; }).filter(Boolean));
     const waiverContext = {};
-    for (const pos of positions) waiverContext[pos] = (waiverByPos[pos] || []).slice(0, 3);
-
-    setResult({ sA, sB, tA, tB, winner, tier, icon, gap, gapPct, addOns, waiverContext });
+    positions.forEach(function(pos) { waiverContext[pos] = (waiverByPos[pos] || []).slice(0, 3); });
+    setResult({ sA: sA, sB: sB, tA: tA, tB: tB, winner: winner, tier: tier, icon: icon, gap: gap, gapPct: gapPct, addOns: addOns, waiverContext: waiverContext });
     setVerdict(null); setVE(false);
   }
 
   async function getVerdict() {
     if (!result) return;
     setVL(true); setVE(false); setVerdict(null);
-    const { sA, sB, tA, tB, winner, tier, gap, gapPct, addOns } = result;
-    const sys = "You are the wind-up merchant of the Borehamwood Plancy League. Quick, funny verdict in 2-4 sentences. Bone-dry British banter, mock gravity. Refer to managers by real name, not team name. Numbers are computed — do NOT recalculate.";
-    const marginStr = winner === 'even' ? 'Even.' : ('Side ' + winner + ' wins by ' + gap.toFixed(0) + ' (' + gapPct.toFixed(0) + '%).');
-    const addOnStr  = addOns.length ? ' Suggested add-on: ' + addOns.map(a => a.name).join(' or ') + '.' : '';
-    const sideAStr  = sA.map(p => p.officialName + '(' + p.value + ')').join(', ');
-    const sideBStr  = sB.map(p => p.officialName + '(' + p.value + ')').join(', ');
-    const msg = 'Trade:\nSide A (' + teamLabel(teamA) + ') gives: ' + sideAStr + ' — Total ' + tA +
-                '\nSide B (' + teamLabel(teamB) + ') gives: ' + sideBStr + ' — Total ' + tB +
-                '\nVerdict: ' + tier + '. ' + marginStr + addOnStr;
+    const sys = "You are the wind-up merchant of the Borehamwood Plancy League. Quick funny verdict in 2-4 sentences. Bone-dry British banter. Use real names not team names. Numbers are computed — do NOT recalculate.";
+    const margin = result.winner === 'even' ? 'Even.' : ('Side ' + result.winner + ' wins by ' + result.gap.toFixed(0) + ' (' + result.gapPct.toFixed(0) + '%)');
+    const addOnStr = result.addOns.length ? ' Suggested add-on: ' + result.addOns.map(function(a) { return a.name; }).join(' or ') + '.' : '';
+    const sAStr = result.sA.map(function(p) { return p.officialName + '(' + p.value + ')'; }).join(', ');
+    const sBStr = result.sB.map(function(p) { return p.officialName + '(' + p.value + ')'; }).join(', ');
+    const msg = 'Trade:\nSide A (' + teamLabel(teamA) + ') gives: ' + sAStr + ' — Total ' + result.tA + '\nSide B (' + teamLabel(teamB) + ') gives: ' + sBStr + ' — Total ' + result.tB + '\nVerdict: ' + result.tier + '. ' + margin + addOnStr;
     try {
-      const rr = await claudeCall([{ role: 'user', content: msg }], sys);
-      setVerdict(rr);
-    } catch { setVE(true); }
+      const r = await claudeCall([{ role: 'user', content: msg }], sys);
+      setVerdict(r);
+    } catch (e) { setVE(true); }
     finally { setVL(false); }
   }
 
-  const teamOpts = teamKeys.map(k => <option key={k} value={k}>{teamLabel(k)}</option>);
-  const winA = result?.winner === 'A', winB = result?.winner === 'B';
-  const POSColors = { QB: '#ff7a1a', RB: '#1ed47f', WR: '#3d9bff', TE: '#a855f7', K: '#888', DEF: '#c44' };
-  const spin = { width: 14, height: 14, border: `2px solid ${T.amber}`, borderTopColor: 'transparent', borderRadius: '50%', display: 'inline-block', animation: 'tg-spin 0.8s linear infinite' };
+  const teamOpts = teamKeys.map(function(k) { return <option key={k} value={k}>{teamLabel(k)}</option>; });
+  const winA = result && result.winner === 'A';
+  const winB = result && result.winner === 'B';
+  const POSColors = { QB: '#ff7a1a', RB: '#10b981', WR: '#60a5fa', TE: '#a855f7', K: '#888', DEF: '#c44' };
+  const spin = { width: 14, height: 14, border: '2px solid ' + T.amber, borderTopColor: 'transparent', borderRadius: '50%', display: 'inline-block', animation: 'tg-spin 0.8s linear infinite' };
 
   return (
     <div style={{ background: T.bg, color: T.text, overflowY: 'auto', height: '100%', boxSizing: 'border-box' }}>
-
-      {/* Waiver Wire Snapshot */}
-      <div style={{ borderBottom: `1px solid ${T.border}`, background: T.panel }}>
-        <button onClick={() => setShowWaiver(v => !v)}
-          style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '11px 15px', background: 'none', border: 'none', color: T.dim, cursor: 'pointer', fontSize: 12.5, fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase' }}>
-          <span>📋  Waiver Wire  <span style={{ color: T.faint, fontSize: 11, fontWeight: 400 }}>(top available by position)</span></span>
-          <span style={{ fontSize: 10, color: T.faint }}>{showWaiver ? '▲ hide' : '▼ show'}</span>
+      <div style={{ borderBottom: '1px solid ' + T.border, background: T.panel }}>
+        <button onClick={function() { setShowWaiver(function(v) { return !v; }); }} style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '11px 15px', background: 'none', border: 'none', color: T.dim, cursor: 'pointer', fontSize: 12.5, fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase' }}>
+          <span>Waiver Wire <span style={{ color: T.faint, fontSize: 11, fontWeight: 400 }}>(top available by position)</span></span>
+          <span style={{ fontSize: 10, color: T.faint }}>{showWaiver ? '\u25b2 hide' : '\u25bc show'}</span>
         </button>
         {showWaiver && (
           <div style={{ padding: '0 13px 13px', display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-            {['QB', 'RB', 'WR', 'TE'].map(pos => {
+            {['QB', 'RB', 'WR', 'TE'].map(function(pos) {
               const players = waiverByPos[pos] || [];
               if (!players.length) return null;
               return (
-                <div key={pos} style={{ background: T.raised, border: `1px solid ${T.border}`, borderTop: `2px solid ${POSColors[pos] || T.border}`, borderRadius: '3px 3px 9px 9px', padding: '9px 11px', minWidth: 120, flex: '1 1 120px', maxWidth: 170 }}>
+                <div key={pos} style={{ background: T.raised, border: '1px solid ' + T.border, borderTop: '2px solid ' + (POSColors[pos] || T.border), borderRadius: '3px 3px 9px 9px', padding: '9px 11px', minWidth: 120, flex: '1 1 120px', maxWidth: 170 }}>
                   <div style={{ color: POSColors[pos] || T.dim, fontSize: 10.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>{pos}</div>
-                  {players.map((p, i) => (
-                    <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12.5, padding: '3px 0', borderBottom: i < players.length - 1 ? `1px solid ${T.border}` : 'none' }}>
-                      <span style={{ color: T.text }}>{p.player.name}</span>
-                      <span style={{ color: T.dim, fontFamily: FH, fontSize: 11.5 }}>{p.redraftValue.toLocaleString()}</span>
-                    </div>
-                  ))}
+                  {players.map(function(p, i) {
+                    return (
+                      <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12.5, padding: '3px 0', borderBottom: i < players.length - 1 ? '1px solid ' + T.border : 'none' }}>
+                        <span style={{ color: T.text }}>{p.player.name}</span>
+                        <span style={{ color: T.dim, fontSize: 11.5 }}>{p.redraftValue.toLocaleString()}</span>
+                      </div>
+                    );
+                  })}
                 </div>
               );
             })}
@@ -723,91 +488,102 @@ function TradeGrader({ rostersData, tradeValues }) {
         )}
       </div>
 
-      {/* Trade inputs */}
       <div style={{ padding: 15 }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 11 }}>
-          <TradePanel side="A" label="Side A gives up" team={teamA} setTeam={setTeamA} text={sideAText} setText={setSideAText} teamOpts={teamOpts} />
-          <TradePanel side="B" label="Side B gives up" team={teamB} setTeam={setTeamB} text={sideBText} setText={setSideBText} teamOpts={teamOpts} />
+          {[{ side: 'A', team: teamA, setTeam: setTeamA, text: sideAText, setText: setSideAText, accent: T.blue },
+            { side: 'B', team: teamB, setTeam: setTeamB, text: sideBText, setText: setSideBText, accent: T.indigo }].map(function(cfg) {
+            return (
+              <div key={cfg.side} style={{ background: T.panel, border: '1px solid ' + T.border, borderTop: '3px solid ' + cfg.accent, borderRadius: '4px 4px 12px 12px', padding: 13, flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 9 }}>
+                  <span style={{ background: cfg.accent, color: '#fff', fontWeight: 700, fontSize: 12, width: 20, height: 20, borderRadius: 5, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{cfg.side}</span>
+                  <span style={{ color: T.dim, fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em' }}>{'Side ' + cfg.side + ' gives up'}</span>
+                </div>
+                <select value={cfg.team} onChange={function(e) { cfg.setTeam(e.target.value); }} style={{ background: T.raised, color: T.text, border: '1px solid ' + T.borderHi, borderRadius: 8, padding: 10, width: '100%', marginBottom: 8, fontSize: 16 }}>
+                  {teamOpts}
+                </select>
+                <textarea value={cfg.text} onChange={function(e) { cfg.setText(e.target.value); }} placeholder={"One player per line\ne.g. Ja'Marr Chase"} style={{ background: T.raised, color: T.text, border: '1px solid ' + T.borderHi, borderRadius: 8, padding: 11, width: '100%', minHeight: 92, fontSize: 16, resize: 'vertical', boxSizing: 'border-box', lineHeight: 1.5 }} />
+              </div>
+            );
+          })}
         </div>
 
-        <button onClick={gradeTrade} disabled={!sideAText.trim() && !sideBText.trim()}
-          style={{ width: '100%', background: (!sideAText.trim() && !sideBText.trim()) ? T.raised : `linear-gradient(135deg,${T.indigo},${T.indigoDk})`, color: (!sideAText.trim() && !sideBText.trim()) ? T.faint : '#fff', border: 'none', borderRadius: 12, padding: 15, fontSize: 15, fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase', cursor: (!sideAText.trim() && !sideBText.trim()) ? 'default' : 'pointer', marginTop: 12, boxShadow: (!sideAText.trim() && !sideBText.trim()) ? 'none' : '0 4px 18px rgba(99,102,241,0.35)' }}>
+        <button onClick={gradeTrade} disabled={!sideAText.trim() && !sideBText.trim()} style={{ width: '100%', background: (!sideAText.trim() && !sideBText.trim()) ? T.raised : 'linear-gradient(135deg,' + T.indigo + ',' + T.indigoDk + ')', color: (!sideAText.trim() && !sideBText.trim()) ? T.faint : '#fff', border: 'none', borderRadius: 12, padding: 15, fontSize: 15, fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase', cursor: 'pointer', marginTop: 12 }}>
           Grade This Trade
         </button>
 
         {result && (
-          <div className="msg-in" style={{ marginTop: 16 }}>
-            {/* Scoreboard */}
-            <div style={{ background: T.panel, border: `1px solid ${T.border}`, borderRadius: 14, overflow: 'hidden', marginBottom: 12 }}>
-              <div style={{ display: 'flex', alignItems: 'stretch' }}>
-                <div style={{ flex: 1, padding: '15px 10px', textAlign: 'center', background: winA ? 'rgba(30,212,127,0.08)' : 'transparent', borderRight: `1px solid ${T.border}` }}>
-                  <div style={{ fontSize: 10, color: T.faint, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4, fontFamily: FH }}>SIDE A</div>
-                  <div style={{ fontFamily: FH, fontWeight: 700, fontSize: 32, color: winA ? T.green : T.text, lineHeight: 1 }}>{result.tA.toLocaleString()}</div>
-                  {winA && <div style={{ fontSize: 10, color: T.green, fontWeight: 700, marginTop: 3, textTransform: 'uppercase', letterSpacing: '0.05em' }}>▲ WINS</div>}
+          <div style={{ marginTop: 16 }}>
+            <div style={{ background: T.panel, border: '1px solid ' + T.border, borderRadius: 14, overflow: 'hidden', marginBottom: 12 }}>
+              <div style={{ display: 'flex' }}>
+                <div style={{ flex: 1, padding: '15px 10px', textAlign: 'center', background: winA ? 'rgba(16,185,129,0.08)' : 'transparent', borderRight: '1px solid ' + T.border }}>
+                  <div style={{ fontSize: 10, color: T.faint, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>SIDE A</div>
+                  <div style={{ fontWeight: 700, fontSize: 32, color: winA ? T.green : T.text, lineHeight: 1 }}>{result.tA.toLocaleString()}</div>
+                  {winA && <div style={{ fontSize: 10, color: T.green, fontWeight: 700, marginTop: 3, textTransform: 'uppercase' }}>▲ WINS</div>}
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0 12px', minWidth: 92 }}>
-                  <div style={{ fontSize: 22 }}>{result.icon}</div>
-                  <div style={{ fontWeight: 800, fontSize: 12.5, color: T.amber, letterSpacing: '0.04em', textAlign: 'center', lineHeight: 1.1, marginTop: 3 }}>{result.tier}</div>
-                  {result.winner !== 'even' && <div style={{ fontSize: 10.5, color: T.dim, marginTop: 3 }}>by {result.gap.toLocaleString()} ({result.gapPct.toFixed(0)}%)</div>}
+                <div style={{ flex: 1, padding: '15px 10px', textAlign: 'center', background: winB ? 'rgba(16,185,129,0.08)' : 'transparent', borderLeft: '1px solid ' + T.border }}>
+                  <div style={{ fontSize: 10, color: T.faint, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>SIDE B</div>
+                  <div style={{ fontWeight: 700, fontSize: 32, color: winB ? T.green : T.text, lineHeight: 1 }}>{result.tB.toLocaleString()}</div>
+                  {winB && <div style={{ fontSize: 10, color: T.green, fontWeight: 700, marginTop: 3, textTransform: 'uppercase' }}>▲ WINS</div>}
                 </div>
-                <div style={{ flex: 1, padding: '15px 10px', textAlign: 'center', background: winB ? 'rgba(30,212,127,0.08)' : 'transparent', borderLeft: `1px solid ${T.border}` }}>
-                  <div style={{ fontSize: 10, color: T.faint, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4, fontFamily: FH }}>SIDE B</div>
-                  <div style={{ fontFamily: FH, fontWeight: 700, fontSize: 32, color: winB ? T.green : T.text, lineHeight: 1 }}>{result.tB.toLocaleString()}</div>
-                  {winB && <div style={{ fontSize: 10, color: T.green, fontWeight: 700, marginTop: 3, textTransform: 'uppercase', letterSpacing: '0.05em' }}>▲ WINS</div>}
-                </div>
+              </div>
+              <div style={{ textAlign: 'center', padding: '10px 0', borderTop: '1px solid ' + T.border, background: T.panel2 }}>
+                <span style={{ fontSize: 20 }}>{result.icon}</span>
+                <span style={{ fontWeight: 800, fontSize: 12.5, color: T.amber, letterSpacing: '0.04em', marginLeft: 8 }}>{result.tier}</span>
+                {result.winner !== 'even' && <span style={{ fontSize: 10.5, color: T.dim, marginLeft: 8 }}>{'by ' + result.gap.toLocaleString() + ' (' + result.gapPct.toFixed(0) + '%)'}</span>}
               </div>
             </div>
 
-            {/* Player breakdown */}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 11, marginBottom: 12 }}>
-              {[{ side: 'A', players: result.sA, team: teamA, accent: T.blue }, { side: 'B', players: result.sB, team: teamB, accent: T.indigo }].map(({ side, players, team, accent }) => (
-                <div key={side} style={{ flex: 1, minWidth: 140, background: T.panel, border: `1px solid ${T.border}`, borderRadius: 11, padding: '11px 13px' }}>
-                  <div style={{ color: accent, fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6, fontFamily: FH }}>{teamLabel(team) || `Side ${side}`} gives</div>
-                  {players.length ? players.map((p, i) => <PlayerRow key={i} p={p} />) : <div style={{ color: T.faint, fontSize: 12 }}>—</div>}
-                </div>
-              ))}
+              {[{ side: 'A', players: result.sA, team: teamA, accent: T.blue }, { side: 'B', players: result.sB, team: teamB, accent: T.indigo }].map(function(cfg) {
+                return (
+                  <div key={cfg.side} style={{ flex: 1, minWidth: 140, background: T.panel, border: '1px solid ' + T.border, borderRadius: 11, padding: '11px 13px' }}>
+                    <div style={{ color: cfg.accent, fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>{teamLabel(cfg.team) + ' gives'}</div>
+                    {cfg.players.length ? cfg.players.map(function(p, i) {
+                      return (
+                        <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px 0', borderBottom: '1px solid ' + T.border, fontSize: 13.5 }}>
+                          <span style={{ color: p.found ? T.text : T.amber }}>{p.found ? p.officialName : p.input + ' \u26a0'}</span>
+                          <span style={{ color: p.found ? T.dim : T.amber, fontSize: 12.5, marginLeft: 8, fontWeight: 700 }}>{p.found ? p.value.toLocaleString() : 'no match'}</span>
+                        </div>
+                      );
+                    }) : <div style={{ color: T.faint, fontSize: 12 }}>—</div>}
+                  </div>
+                );
+              })}
             </div>
 
-            {/* Add-ons */}
             {result.winner !== 'even' && result.addOns.length > 0 && (
-              <div style={{ background: T.panel, border: `1px solid ${T.border}`, borderLeft: `3px solid ${T.amber}`, borderRadius: '4px 11px 11px 4px', padding: '11px 13px', marginBottom: 12 }}>
-                <div style={{ color: T.amber, fontSize: 11, marginBottom: 6, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>To balance, {teamLabel(result.winner === 'A' ? teamA : teamB)} could add</div>
-                {result.addOns.map((a, i) => (
-                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13.5, padding: '3px 0' }}>
-                    <span>{a.name}</span><span style={{ color: T.dim, fontFamily: FH }}>{a.value.toLocaleString()}</span>
-                  </div>
-                ))}
+              <div style={{ background: T.panel, border: '1px solid ' + T.border, borderLeft: '3px solid ' + T.amber, borderRadius: '4px 11px 11px 4px', padding: '11px 13px', marginBottom: 12 }}>
+                <div style={{ color: T.amber, fontSize: 11, marginBottom: 6, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{'To balance, ' + teamLabel(result.winner === 'A' ? teamA : teamB) + ' could add'}</div>
+                {result.addOns.map(function(a, i) {
+                  return <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13.5, padding: '3px 0' }}><span>{a.name}</span><span style={{ color: T.dim }}>{a.value.toLocaleString()}</span></div>;
+                })}
               </div>
             )}
 
-            {/* Waiver context */}
             {Object.keys(result.waiverContext).length > 0 && (
-              <div style={{ background: T.panel, border: `1px solid ${T.border}`, borderRadius: 11, padding: '11px 13px', marginBottom: 12 }}>
-                <div style={{ color: T.dim, fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8, fontFamily: FH }}>Waiver alternatives for traded positions</div>
-                {Object.entries(result.waiverContext).map(([pos, players]) => (
-                  <div key={pos} style={{ marginBottom: 8 }}>
-                    <span style={{ color: POSColors[pos] || T.dim, fontSize: 11, fontWeight: 700, textTransform: 'uppercase', fontFamily: FH }}>{pos}: </span>
-                    {players.map((p, i) => (
-                      <span key={i} style={{ fontSize: 13, color: T.text }}>
-                        {p.player.name} <span style={{ color: T.dim, fontFamily: FH, fontSize: 12 }}>({p.redraftValue.toLocaleString()})</span>
-                        {i < players.length - 1 ? <span style={{ color: T.faint }}> · </span> : ''}
-                      </span>
-                    ))}
-                  </div>
-                ))}
+              <div style={{ background: T.panel, border: '1px solid ' + T.border, borderRadius: 11, padding: '11px 13px', marginBottom: 12 }}>
+                <div style={{ color: T.dim, fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>Waiver alternatives for traded positions</div>
+                {Object.keys(result.waiverContext).map(function(pos) {
+                  const players = result.waiverContext[pos];
+                  return (
+                    <div key={pos} style={{ marginBottom: 8 }}>
+                      <span style={{ color: POSColors[pos] || T.dim, fontSize: 11, fontWeight: 700, textTransform: 'uppercase' }}>{pos + ': '}</span>
+                      {players.map(function(p, i) {
+                        return <span key={i} style={{ fontSize: 13, color: T.text }}>{p.player.name + ' '}<span style={{ color: T.dim, fontSize: 12 }}>{'(' + p.redraftValue.toLocaleString() + ')'}</span>{i < players.length - 1 ? <span style={{ color: T.faint }}> · </span> : ''}</span>;
+                      })}
+                    </div>
+                  );
+                })}
               </div>
             )}
 
-            {/* Commissioner's Verdict */}
-            <button onClick={getVerdict} disabled={verdictLoading}
-              style={{ width: '100%', background: T.panel, border: `1px solid ${T.amber}`, color: T.amber, borderRadius: 11, padding: '13px 20px', fontSize: 13.5, fontWeight: 700, letterSpacing: '0.5px', textTransform: 'uppercase', cursor: verdictLoading ? 'default' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9, opacity: verdictLoading ? 0.7 : 1 }}>
-              {verdictLoading ? <span style={spin} /> : '🎙'}
-              The Commissioner's Verdict
+            <button onClick={getVerdict} disabled={vLoading} style={{ width: '100%', background: T.panel, border: '1px solid ' + T.amber, color: T.amber, borderRadius: 11, padding: '13px 20px', fontSize: 13.5, fontWeight: 700, letterSpacing: '0.5px', textTransform: 'uppercase', cursor: vLoading ? 'default' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9, opacity: vLoading ? 0.7 : 1 }}>
+              {vLoading ? <span style={spin} /> : "\uD83C\uDF99"} The Commissioner's Verdict
             </button>
 
-            {(verdict || verdictError) && (
-              <div className="msg-in" style={{ background: T.panel2, border: `1px solid ${verdictError ? T.amber : T.border}`, borderLeft: `3px solid ${verdictError ? T.amber : T.indigo}`, borderRadius: '4px 12px 12px 4px', padding: 14, color: verdictError ? T.amber : T.text, marginTop: 10, fontSize: 14, lineHeight: 1.6 }}>
-                {verdictError ? 'The Commissioner is unavailable — give it another go.' : <MarkdownMessage text={verdict} />}
+            {(verdict || vError) && (
+              <div style={{ background: T.panel2, border: '1px solid ' + (vError ? T.amber : T.border), borderLeft: '3px solid ' + (vError ? T.amber : T.indigo), borderRadius: '4px 12px 12px 4px', padding: 14, color: vError ? T.amber : T.text, marginTop: 10, fontSize: 14, lineHeight: 1.6 }}>
+                {vError ? 'The Commissioner is unavailable — give it another go.' : <MarkdownMessage text={verdict} />}
               </div>
             )}
           </div>
@@ -817,110 +593,42 @@ function TradeGrader({ rostersData, tradeValues }) {
   );
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// GLOBAL CSS + APP SHELL
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const CSS = `
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { height: 100%; }
-  body { background: #090d18; -webkit-font-smoothing: antialiased; overflow: hidden; }
-
-  ::-webkit-scrollbar { width: 5px; height: 5px; }
-  ::-webkit-scrollbar-thumb { background: #24344e; border-radius: 3px; }
-
-  @keyframes ld-pulse { 0%,80%,100%{opacity:.2;transform:scale(.7)} 40%{opacity:1;transform:scale(1)} }
-  .ld { display:inline-block; width:7px; height:7px; background:#6366f1; border-radius:50%; margin:0 2px; animation:ld-pulse 1.4s infinite ease-in-out both; }
-  .ld:nth-child(2){animation-delay:.2s} .ld:nth-child(3){animation-delay:.4s}
-
-  @keyframes fadeUp { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
-  .msg-in { animation: fadeUp .2s ease both; }
-
-  .bubble-user {
-    align-self:flex-end;
-    background:linear-gradient(135deg,#6366f1,#4f46e5);
-    color:#fff; border-radius:18px 18px 4px 18px;
-    padding:11px 15px; max-width:82%; font-size:15px; line-height:1.5;
-    white-space:pre-wrap; box-shadow:0 3px 14px rgba(99,102,241,0.3);
-  }
-  .bubble-assistant {
-    align-self:flex-start;
-    background:#141e32; color:#e8f1ff;
-    border:1px solid #24344e; border-left:3px solid #6366f1;
-    border-radius:4px 18px 18px 18px; padding:12px 15px; max-width:88%;
-    font-size:15px; line-height:1.6; white-space:pre-wrap;
-    box-shadow:0 2px 10px rgba(0,0,0,0.4);
-  }
-  .bubble-assistant.md { white-space:normal; }
-  .bubble-assistant.md p:last-child { margin-bottom:0; }
-  .bubble-error {
-    align-self:flex-start;
-    background:#141e32; color:#f59e0b;
-    border:1px solid #24344e; border-left:3px solid #f59e0b;
-    border-radius:4px 18px 18px 18px; padding:12px 15px; max-width:88%;
-    font-size:15px; white-space:pre-wrap;
-  }
-
-  .md-table { border-collapse:collapse; width:100%; font-size:13px; background:#0f1625; border-radius:10px; overflow:hidden; }
-  .md-table th {
-    text-align:left; padding:9px 12px; background:#090d18;
-    color:#f59e0b; font-weight:800; text-transform:uppercase;
-    font-size:10.5px; letter-spacing:0.07em; border-bottom:1px solid #24344e; white-space:nowrap;
-  }
-  .md-table td { padding:8px 12px; border-bottom:1px solid #1a2640; color:#e8f1ff; }
-  .md-table td:first-child { font-weight:600; }
-  .md-table tr:last-child td { border-bottom:none; }
-  .md-table tbody tr:nth-child(even) td { background:rgba(99,102,241,0.04); }
-  .md-table tbody tr:hover td { background:rgba(99,102,241,0.08); }
-
-  .chip {
-    background:#1a2640; border:1px solid #304260; color:#e8f1ff;
-    border-radius:20px; padding:8px 15px; font-size:13px; font-weight:600;
-    cursor:pointer; white-space:nowrap; flex-shrink:0;
-    transition:border-color .15s, background .15s, color .15s;
-  }
-  .chip:hover:not(:disabled) { border-color:#6366f1; background:#232e50; color:#fff; }
-  .chip:disabled { opacity:0.4; cursor:default; }
-
-  .send-btn {
-    background:linear-gradient(135deg,#6366f1,#4f46e5); color:#fff; border:none;
-    border-radius:12px; padding:0 18px; font-weight:700; font-size:12.5px;
-    letter-spacing:0.8px; text-transform:uppercase; cursor:pointer; align-self:stretch;
-    flex-shrink:0; transition:opacity .12s; box-shadow:0 2px 10px rgba(99,102,241,0.3);
-  }
-  .send-btn:disabled { background:#1a2640; color:#3d5470; cursor:default; box-shadow:none; }
-
-  .nav-btn {
-    flex:1; display:flex; flex-direction:column; align-items:center; gap:3px;
-    padding:10px 4px; background:transparent; border:none; cursor:pointer;
-    transition:color .12s; position:relative;
-  }
-  .nav-btn .nav-ico { font-size:20px; transition:transform .15s, filter .15s; }
-  .nav-btn.active .nav-ico { transform:translateY(-1px); }
-  .nav-btn:not(.active) .nav-ico { filter:grayscale(0.7) opacity(0.5); }
-  .nav-lab { font-size:10px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; }
-
-  .plaincy-app {
-    display:flex; flex-direction:column;
-    height:var(--app-h, 100dvh);
-    width:100%; max-width:560px; margin:0 auto;
-    background:#090d18; overflow:hidden; box-shadow:0 0 80px rgba(0,0,0,0.7);
-  }
-  @media(min-width:640px) {
-    .plaincy-app { max-width:780px; }
-    .bubble-assistant, .bubble-error { max-width:78%; }
-    .bubble-user { max-width:70%; }
-  }
-
-  button { font-family:inherit; }
-  textarea, select, input { font-family:inherit; font-size:16px; }
-  textarea:focus, select:focus { border-color:#304260; outline:none; }
-  select option { background:#141e32; color:#e8f1ff; }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{background:#090d18;-webkit-font-smoothing:antialiased;overflow:hidden;}
+  ::-webkit-scrollbar{width:5px;height:5px;}
+  ::-webkit-scrollbar-thumb{background:#24344e;border-radius:3px;}
+  @keyframes ld-pulse{0%,80%,100%{opacity:.2;transform:scale(.7)}40%{opacity:1;transform:scale(1)}}
+  .ld{display:inline-block;width:7px;height:7px;background:#6366f1;border-radius:50%;margin:0 2px;animation:ld-pulse 1.4s infinite ease-in-out both;}
+  .ld:nth-child(2){animation-delay:.2s}.ld:nth-child(3){animation-delay:.4s}
+  .md-table{border-collapse:collapse;width:100%;font-size:13px;background:#0f1625;border-radius:10px;overflow:hidden;}
+  .md-table th{text-align:left;padding:9px 12px;background:#090d18;color:#f59e0b;font-weight:800;text-transform:uppercase;font-size:10.5px;letter-spacing:0.07em;border-bottom:1px solid #24344e;white-space:nowrap;}
+  .md-table td{padding:8px 12px;border-bottom:1px solid #1a2640;color:#e8f1ff;}
+  .md-table td:first-child{font-weight:600;}
+  .md-table tr:last-child td{border-bottom:none;}
+  .md-table tbody tr:nth-child(even) td{background:rgba(99,102,241,0.04);}
+  .chip{background:#1a2640;border:1px solid #304260;color:#e8f1ff;border-radius:20px;padding:8px 15px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:border-color .15s,background .15s;}
+  .chip:hover:not(:disabled){border-color:#6366f1;background:#232e50;}
+  .chip:disabled{opacity:0.4;cursor:default;}
+  .send-btn{background:linear-gradient(135deg,#6366f1,#4f46e5);color:#fff;border:none;border-radius:12px;padding:0 18px;font-weight:700;font-size:12.5px;letter-spacing:0.8px;text-transform:uppercase;cursor:pointer;align-self:stretch;flex-shrink:0;}
+  .send-btn:disabled{background:#1a2640;color:#3d5470;cursor:default;}
+  .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px;background:transparent;border:none;cursor:pointer;position:relative;}
+  .nav-btn .nav-ico{font-size:20px;}
+  .nav-btn:not(.active) .nav-ico{filter:grayscale(0.7) opacity(0.5);}
+  .nav-lab{font-size:10px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;}
+  .plaincy-app{display:flex;flex-direction:column;height:var(--app-h,100dvh);width:100%;max-width:560px;margin:0 auto;background:#090d18;overflow:hidden;}
+  @media(min-width:640px){.plaincy-app{max-width:780px;}}
+  button{font-family:inherit;}
+  textarea,select{font-family:inherit;font-size:16px;}
+  textarea:focus,select:focus{outline:none;}
+  select option{background:#141e32;color:#e8f1ff;}
 `;
 
 const TABS = [
-  { id: 'stats',  icon: '📊', label: 'STATS'  },
-  { id: 'banter', icon: '🎙', label: 'BANTER' },
-  { id: 'trade',  icon: '⚖️', label: 'TRADES' },
+  { id: 'stats', icon: '\uD83D\uDCCA', label: 'STATS' },
+  { id: 'banter', icon: '\uD83C\uDF99', label: 'BANTER' },
+  { id: 'trade', icon: '\u2696\uFE0F', label: 'TRADES' },
 ];
 
 export default function App() {
@@ -928,7 +636,7 @@ export default function App() {
   const { history, stats, rosters, trades, live } = useLeagueData();
   const { keyboardOpen } = useViewport();
 
-  useEffect(() => {
+  useEffect(function() {
     if (document.getElementById('plaincy-css')) return;
     const el = document.createElement('style');
     el.id = 'plaincy-css';
@@ -938,43 +646,31 @@ export default function App() {
 
   return (
     <div className="plaincy-app">
-      {/* Top accent stripe — indigo to amber */}
-      <div style={{ height: 3, background: `linear-gradient(90deg,${T.indigo} 0%,${T.amber} 60%,${T.indigo} 100%)`, flexShrink: 0 }} />
-
-      {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 13, padding: '12px 16px', background: T.panel, borderBottom: `1px solid ${T.border}`, flexShrink: 0 }}>
-        {/* Logo mark */}
-        <div style={{ width: 40, height: 40, borderRadius: 12, background: `linear-gradient(135deg,${T.indigo},${T.indigoDk})`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: 22, color: '#fff', boxShadow: `0 3px 14px rgba(99,102,241,0.45)`, flexShrink: 0, letterSpacing: '-1px' }}>P</div>
+      <div style={{ height: 3, background: 'linear-gradient(90deg,#6366f1 0%,#f59e0b 60%,#6366f1 100%)', flexShrink: 0 }} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: 13, padding: '12px 16px', background: T.panel, borderBottom: '1px solid ' + T.border, flexShrink: 0 }}>
+        <div style={{ width: 40, height: 40, borderRadius: 12, background: 'linear-gradient(135deg,#6366f1,#4f46e5)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: 22, color: '#fff', flexShrink: 0 }}>P</div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontWeight: 900, fontSize: 22, color: T.text, letterSpacing: '-0.5px', lineHeight: 1 }}>
-            Pl<span style={{ color: T.indigo }}>AI</span>ncy
-          </div>
-          <div style={{ fontSize: 11, color: T.dim, marginTop: 2, letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 600 }}>
-            Borehamwood Plancy League
-          </div>
+          <div style={{ fontWeight: 900, fontSize: 22, color: T.text, letterSpacing: '-0.5px', lineHeight: 1 }}>Pl<span style={{ color: T.indigo }}>AI</span>ncy</div>
+          <div style={{ fontSize: 11, color: T.dim, marginTop: 2, letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 600 }}>Borehamwood Plancy League</div>
         </div>
-        {/* Build date badge — a subtle dot turns green once full data loads */}
-        <div style={{ fontSize: 10.5, color: T.dim, border: `1px solid ${T.border}`, borderRadius: 6, padding: '4px 9px', whiteSpace: 'nowrap', flexShrink: 0, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 5 }}>
-          <span style={{ width: 6, height: 6, borderRadius: '50%', background: live ? T.green : T.faint, display: 'inline-block', transition: 'background .3s' }} />
+        <div style={{ fontSize: 10.5, color: T.dim, border: '1px solid ' + T.border, borderRadius: 6, padding: '4px 9px', whiteSpace: 'nowrap', flexShrink: 0, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 5 }}>
+          <span style={{ width: 6, height: 6, borderRadius: '50%', background: live ? T.green : T.faint, display: 'inline-block' }} />
           {fmtBuiltAt(BUILT_AT)}
         </div>
       </div>
 
-      {/* Content */}
       <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-        {tab === 'stats'  && <StatsTab  historyData={history} statsData={stats} />}
+        {tab === 'stats' && <StatsTab historyData={history} statsData={stats} />}
         {tab === 'banter' && <BanterTab historyData={history} />}
-        {tab === 'trade'  && <TradeGrader rostersData={rosters} tradeValues={trades} />}
+        {tab === 'trade' && <TradeGrader rostersData={rosters} tradeValues={trades} />}
       </div>
 
-      {/* Bottom tab bar — hidden while keyboard is open */}
       {!keyboardOpen && (
-        <nav style={{ display: 'flex', background: T.panel, borderTop: `1px solid ${T.border}`, flexShrink: 0, paddingBottom: 'env(safe-area-inset-bottom)' }}>
-          {TABS.map(t => {
+        <nav style={{ display: 'flex', background: T.panel, borderTop: '1px solid ' + T.border, flexShrink: 0, paddingBottom: 'env(safe-area-inset-bottom)' }}>
+          {TABS.map(function(t) {
             const active = tab === t.id;
             return (
-              <button key={t.id} onClick={() => setTab(t.id)} className={`nav-btn${active ? ' active' : ''}`}
-                style={{ color: active ? T.text : T.faint }}>
+              <button key={t.id} onClick={function() { setTab(t.id); }} className={'nav-btn' + (active ? ' active' : '')} style={{ color: active ? T.text : T.faint }}>
                 {active && <span style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 36, height: 3, borderRadius: '0 0 4px 4px', background: T.indigo }} />}
                 <span className="nav-ico">{t.icon}</span>
                 <span className="nav-lab">{t.label}</span>
