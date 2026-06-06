@@ -110,3 +110,24 @@ commissioner.template.jsx is the build source; build-artifact.js inlines data an
 commissioner.jsx. The template must use the direct API claudeCall (already updated). When
 doing significant architecture changes to commissioner.jsx, mirror them back to the template
 so the next daily refresh doesn't clobber the fix.
+
+### Self-refresh: live-fetch so you paste the artifact only ONCE
+Inlined data alone means re-pasting the whole artifact into the claude.ai chat after every
+data refresh. To avoid that, the artifact fetches the latest JSON on every open:
+- useLeagueData() fetches history/rosters/fc-values/alltime from jsDelivr (CDN) first, then
+  GitHub Pages as fallback; both send `access-control-allow-origin: *`, so no CORS issue.
+- The inlined constants remain the OFFLINE FALLBACK (initial useState value + silent catch),
+  so the app still works if both sources are unreachable.
+- jsDelivr serves `cache-control: max-age=604800` (7-day browser cache). Append a daily
+  cache-buster `?v=YYYY-MM-DD` so a returning user pulls fresh data each calendar day, matching
+  the once-daily Action — without hammering origin on every open.
+- alltime.json has richer field names ({opponent,wins,losses,appearances}) than the compact
+  ALLTIME_SUMMARY the prompt wants ({opp,w,l,apps}); buildAlltimeSummary() maps fetched → compact
+  and returns the inlined fallback if the shape is missing.
+- Net result: code changes still need a re-paste; DATA changes do not.
+
+### Where the app actually runs / multi-device
+The artifact lives inside its claude.ai chat — open that chat on any device (incl. the iPad
+claude.ai app) to use it. It is NOT a standalone hosted site: the keyless model call only works
+because claude.ai proxies it. Hosting on GitHub Pages/Vercel would require a serverless proxy
+holding a real ANTHROPIC_API_KEY (server-side) and would incur per-call cost.

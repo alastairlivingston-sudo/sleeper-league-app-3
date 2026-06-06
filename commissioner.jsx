@@ -48,6 +48,55 @@ const ROSTERS_DATA = {"Denver Brochos (@joshjr11)":[{"id":"7564","name":"Ja'Marr
 
 const TRADE_VALUES = [{"player":{"name":"Bijan Robinson","sleeperId":"9509","position":"RB"},"redraftValue":10455},{"player":{"name":"Jahmyr Gibbs","sleeperId":"9221","position":"RB"},"redraftValue":10362},{"player":{"name":"Ja'Marr Chase","sleeperId":"7564","position":"WR"},"redraftValue":9823},{"player":{"name":"Jaxon Smith-Njigba","sleeperId":"9488","position":"WR"},"redraftValue":9008},{"player":{"name":"Puka Nacua","sleeperId":"9493","position":"WR"},"redraftValue":8951},{"player":{"name":"Jonathan Taylor","sleeperId":"6813","position":"RB"},"redraftValue":8795},{"player":{"name":"Amon-Ra St. Brown","sleeperId":"7547","position":"WR"},"redraftValue":8762},{"player":{"name":"Justin Jefferson","sleeperId":"6794","position":"WR"},"redraftValue":8421},{"player":{"name":"James Cook","sleeperId":"8138","position":"RB"},"redraftValue":7968},{"player":{"name":"De'Von Achane","sleeperId":"9226","position":"RB"},"redraftValue":7909},{"player":{"name":"Christian McCaffrey","sleeperId":"4034","position":"RB"},"redraftValue":7902},{"player":{"name":"Ashton Jeanty","sleeperId":"12527","position":"RB"},"redraftValue":7886},{"player":{"name":"CeeDee Lamb","sleeperId":"6786","position":"WR"},"redraftValue":7944},{"player":{"name":"Trey McBride","sleeperId":"8130","position":"TE"},"redraftValue":7034},{"player":{"name":"Omarion Hampton","sleeperId":"12507","position":"RB"},"redraftValue":7100},{"player":{"name":"Saquon Barkley","sleeperId":"4866","position":"RB"},"redraftValue":6866},{"player":{"name":"Josh Allen","sleeperId":"4984","position":"QB"},"redraftValue":6083},{"player":{"name":"Brock Bowers","sleeperId":"11604","position":"TE"},"redraftValue":6245},{"player":{"name":"Drake London","sleeperId":"8112","position":"WR"},"redraftValue":6015},{"player":{"name":"Kenneth Walker","sleeperId":"8151","position":"RB"},"redraftValue":5978},{"player":{"name":"Derrick Henry","sleeperId":"3198","position":"RB"},"redraftValue":5853},{"player":{"name":"Malik Nabers","sleeperId":"11632","position":"WR"},"redraftValue":5749},{"player":{"name":"Chase Brown","sleeperId":"9224","position":"RB"},"redraftValue":5604},{"player":{"name":"Breece Hall","sleeperId":"8155","position":"RB"},"redraftValue":5618},{"player":{"name":"A.J. Brown","sleeperId":"5859","position":"WR"},"redraftValue":5046},{"player":{"name":"Nico Collins","sleeperId":"7569","position":"WR"},"redraftValue":4819},{"player":{"name":"Kyren Williams","sleeperId":"8150","position":"RB"},"redraftValue":4785},{"player":{"name":"George Pickens","sleeperId":"8137","position":"WR"},"redraftValue":4630},{"player":{"name":"Garrett Wilson","sleeperId":"8146","position":"WR"},"redraftValue":4368},{"player":{"name":"Josh Jacobs","sleeperId":"5850","position":"RB"},"redraftValue":4368},{"player":{"name":"Tetairoa McMillan","sleeperId":"12526","position":"WR"},"redraftValue":4232},{"player":{"name":"Travis Etienne","sleeperId":"7543","position":"RB"},"redraftValue":4262},{"player":{"name":"Quinshon Judkins","sleeperId":"12512","position":"RB"},"redraftValue":4246},{"player":{"name":"DeVonta Smith","sleeperId":"7525","position":"WR"},"redraftValue":4074},{"player":{"name":"TreVeyon Henderson","sleeperId":"12529","position":"RB"},"redraftValue":4070},{"player":{"name":"Javonte Williams","sleeperId":"7588","position":"RB"},"redraftValue":4137},{"player":{"name":"Cam Skattebo","sleeperId":"12481","position":"RB"},"redraftValue":3806},{"player":{"name":"Emeka Egbuka","sleeperId":"12514","position":"WR"},"redraftValue":3781},{"player":{"name":"Chris Olave","sleeperId":"8144","position":"WR"},"redraftValue":3864},{"player":{"name":"Bucky Irving","sleeperId":"11584","position":"RB"},"redraftValue":3602},{"player":{"name":"Tee Higgins","sleeperId":"6801","position":"WR"},"redraftValue":3398},{"player":{"name":"Drake Maye","sleeperId":"11564","position":"QB"},"redraftValue":3427},{"player":{"name":"Lamar Jackson","sleeperId":"4881","position":"QB"},"redraftValue":3500},{"player":{"name":"Joe Burrow","sleeperId":"6770","position":"QB"},"redraftValue":3262},{"player":{"name":"Rashee Rice","sleeperId":"10229","position":"WR"},"redraftValue":3240},{"player":{"name":"Ladd McConkey","sleeperId":"11635","position":"WR"},"redraftValue":3165},{"player":{"name":"Jaylen Waddle","sleeperId":"7526","position":"WR"},"redraftValue":2966},{"player":{"name":"Zay Flowers","sleeperId":"9997","position":"WR"},"redraftValue":2703},{"player":{"name":"Rome Odunze","sleeperId":"11620","position":"WR"},"redraftValue":2643},{"player":{"name":"Davante Adams","sleeperId":"2133","position":"WR"},"redraftValue":2574},{"player":{"name":"D'Andre Swift","sleeperId":"6790","position":"RB"},"redraftValue":2394},{"player":{"name":"Patrick Mahomes","sleeperId":"4046","position":"QB"},"redraftValue":2357},{"player":{"name":"Mike Evans","sleeperId":"2216","position":"WR"},"redraftValue":2348},{"player":{"name":"Brian Thomas","sleeperId":"11631","position":"WR"},"redraftValue":2171},{"player":{"name":"DJ Moore","sleeperId":"4983","position":"WR"},"redraftValue":2104},{"player":{"name":"Terry McLaurin","sleeperId":"5927","position":"WR"},"redraftValue":2013},{"player":{"name":"Chuba Hubbard","sleeperId":"7594","position":"RB"},"redraftValue":1999},{"player":{"name":"Jalen Hurts","sleeperId":"6904","position":"QB"},"redraftValue":1906},{"player":{"name":"Luther Burden","sleeperId":"12519","position":"WR"},"redraftValue":1870},{"player":{"name":"Jameson Williams","sleeperId":"8148","position":"WR"},"redraftValue":1843},{"player":{"name":"Jaylen Warren","sleeperId":"8228","position":"RB"},"redraftValue":1833},{"player":{"name":"Rico Dowdle","sleeperId":"7021","position":"RB"},"redraftValue":1646},{"player":{"name":"Kyle Pitts","sleeperId":"7553","position":"TE"},"redraftValue":1577},{"player":{"name":"Sam LaPorta","sleeperId":"10859","position":"TE"},"redraftValue":1532},{"player":{"name":"Rhamondre Stevenson","sleeperId":"7611","position":"RB"},"redraftValue":1524},{"player":{"name":"George Kittle","sleeperId":"4217","position":"TE"},"redraftValue":1608},{"player":{"name":"RJ Harvey","sleeperId":"12489","position":"RB"},"redraftValue":1480},{"player":{"name":"DK Metcalf","sleeperId":"5846","position":"WR"},"redraftValue":1474},{"player":{"name":"Trevor Lawrence","sleeperId":"7523","position":"QB"},"redraftValue":1408},{"player":{"name":"Dak Prescott","sleeperId":"3294","position":"QB"},"redraftValue":1345},{"player":{"name":"Aaron Jones","sleeperId":"4199","position":"RB"},"redraftValue":1304},{"player":{"name":"Travis Kelce","sleeperId":"1466","position":"TE"},"redraftValue":1281},{"player":{"name":"Zach Charbonnet","sleeperId":"9753","position":"RB"},"redraftValue":1288},{"player":{"name":"Alvin Kamara","sleeperId":"4035","position":"RB"},"redraftValue":1238},{"player":{"name":"Christian Watson","sleeperId":"8167","position":"WR"},"redraftValue":1184},{"player":{"name":"Kenneth Gainwell","sleeperId":"7567","position":"RB"},"redraftValue":1153},{"player":{"name":"J.K. Dobbins","sleeperId":"6806","position":"RB"},"redraftValue":1142},{"player":{"name":"Courtland Sutton","sleeperId":"5045","position":"WR"},"redraftValue":1123},{"player":{"name":"Jaxson Dart","sleeperId":"12508","position":"QB"},"redraftValue":1028},{"player":{"name":"Alec Pierce","sleeperId":"8142","position":"WR"},"redraftValue":1086},{"player":{"name":"Blake Corum","sleeperId":"11586","position":"RB"},"redraftValue":1008},{"player":{"name":"Kyle Monangai","sleeperId":"12534","position":"RB"},"redraftValue":982},{"player":{"name":"Michael Wilson","sleeperId":"10232","position":"WR"},"redraftValue":946},{"player":{"name":"Michael Pittman","sleeperId":"6819","position":"WR"},"redraftValue":926},{"player":{"name":"Harold Fannin","sleeperId":"12506","position":"TE"},"redraftValue":889},{"player":{"name":"Jakobi Meyers","sleeperId":"5947","position":"WR"},"redraftValue":787},{"player":{"name":"Jordan Addison","sleeperId":"9756","position":"WR"},"redraftValue":766},{"player":{"name":"Jordan Mason","sleeperId":"8408","position":"RB"},"redraftValue":731},{"player":{"name":"Brock Purdy","sleeperId":"8183","position":"QB"},"redraftValue":751},{"player":{"name":"Tyrone Tracy","sleeperId":"11655","position":"RB"},"redraftValue":616},{"player":{"name":"Ricky Pearsall","sleeperId":"11638","position":"WR"},"redraftValue":601},{"player":{"name":"Tyler Allgeier","sleeperId":"8132","position":"RB"},"redraftValue":580},{"player":{"name":"Jayden Reed","sleeperId":"10222","position":"WR"},"redraftValue":552},{"player":{"name":"Brian Robinson","sleeperId":"8154","position":"RB"},"redraftValue":526},{"player":{"name":"Wan'Dale Robinson","sleeperId":"8126","position":"WR"},"redraftValue":515},{"player":{"name":"Stefon Diggs","sleeperId":"2449","position":"WR"},"redraftValue":494},{"player":{"name":"Dallas Goedert","sleeperId":"5022","position":"TE"},"redraftValue":360},{"player":{"name":"Dalton Kincaid","sleeperId":"10236","position":"TE"},"redraftValue":360},{"player":{"name":"Woody Marks","sleeperId":"12474","position":"RB"},"redraftValue":332},{"player":{"name":"Jake Ferguson","sleeperId":"8110","position":"TE"},"redraftValue":280},{"player":{"name":"Tyjae Spears","sleeperId":"9508","position":"RB"},"redraftValue":246},{"player":{"name":"Brenton Strange","sleeperId":"9480","position":"TE"},"redraftValue":120},{"player":{"name":"Khalil Shakir","sleeperId":"8134","position":"WR"},"redraftValue":179},{"player":{"name":"Jauan Jennings","sleeperId":"7049","position":"WR"},"redraftValue":159},{"player":{"name":"Tyreek Hill","sleeperId":"3321","position":"WR"},"redraftValue":136},{"player":{"name":"Kayshon Boutte","sleeperId":"9504","position":"WR"},"redraftValue":59},{"player":{"name":"Trey Benson","sleeperId":"11589","position":"RB"},"redraftValue":75},{"player":{"name":"Devin Neal","sleeperId":"12476","position":"RB"},"redraftValue":99},{"player":{"name":"James Conner","sleeperId":"4137","position":"RB"},"redraftValue":66},{"player":{"name":"Juwan Johnson","sleeperId":"7002","position":"TE"},"redraftValue":68},{"player":{"name":"Jaylen Wright","sleeperId":"11643","position":"RB"},"redraftValue":127},{"player":{"name":"Travis Hunter","sleeperId":"12530","position":"WR"},"redraftValue":318},{"player":{"name":"Colby Parkinson","sleeperId":"6865","position":"TE"},"redraftValue":200},{"player":{"name":"Troy Franklin","sleeperId":"11627","position":"WR"},"redraftValue":120},{"player":{"name":"Michael Carter","sleeperId":"7607","position":"RB"},"redraftValue":50}];
 
+// ── Live data fetch ───────────────────────────────────────────────────────────
+// The inlined data above is the offline fallback. On every open we pull the latest
+// JSON the daily GitHub Action publishes, so the app self-refreshes — paste once,
+// never re-paste for a data update. Both sources have CORS; jsDelivr first, Pages
+// as fallback. Falls back silently to the inlined data if both are unreachable.
+const REPO = "alastairlivingston-sudo/sleeper-league-app-3";
+const CDN = "https://cdn.jsdelivr.net/gh/" + REPO + "@main/docs/data/";
+const PAGES = "https://" + REPO.split("/")[0] + ".github.io/" + REPO.split("/")[1] + "/data/";
+const DATA_SOURCES = [
+  { history: CDN + "history.json", rosters: CDN + "rosters.json", trades: CDN + "fc-values.json", alltime: CDN + "alltime.json" },
+  { history: PAGES + "history.json", rosters: PAGES + "rosters.json", trades: PAGES + "fc-values.json", alltime: PAGES + "alltime.json" },
+];
+// jsDelivr sets a 7-day browser cache; the daily bucket busts it so a returning
+// user pulls fresh data each calendar day (the Action publishes once daily at 08:00 UTC).
+const BUST = "?v=" + new Date().toISOString().slice(0, 10);
+
+// The prompts expect a compact ALLTIME_SUMMARY subset; map the rich alltime.json
+// into it. Returns the inlined fallback if the fetched shape is missing.
+function buildAlltimeSummary(d) {
+  if (!d || !d.nemesis) return ALLTIME_SUMMARY;
+  const pick = (obj, fn) => Object.keys(obj || {}).reduce((o, k) => { o[k] = fn(obj[k]); return o; }, {});
+  return {
+    nemesis: pick(d.nemesis, v => ({ opp: v.opponent, w: v.wins, l: v.losses })),
+    bunny: pick(d.bunny, v => ({ opp: v.opponent, w: v.wins, l: v.losses })),
+    playoffRecords: pick(d.playoffRecords, v => ({ w: v.wins, l: v.losses, apps: v.appearances })),
+  };
+}
+
+function useLeagueData() {
+  const [data, setData] = useState({ history: HISTORY_DATA, rosters: ROSTERS_DATA, trades: TRADE_VALUES, alltime: null, live: false });
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      for (const urls of DATA_SOURCES) {
+        try {
+          const keys = Object.keys(urls);
+          const got = await Promise.all(keys.map(k => fetch(urls[k] + BUST).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })));
+          const result = { live: true };
+          keys.forEach((k, i) => { result[k] = got[i]; });
+          if (!cancelled) setData(result);
+          return;
+        } catch (e) { /* try next source */ }
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+  return data;
+}
+
 // ── Analytics ─────────────────────────────────────────────────────────────────
 function r2(n) { return Math.round(n * 100) / 100; }
 function r1(n) { return Math.round(n * 10) / 10; }
@@ -376,9 +425,9 @@ function ChatTab({ systemPrompt, chips, placeholder, errorMsg, intro, buildConte
 }
 
 // ── StatsTab ──────────────────────────────────────────────────────────────────
-function StatsTab() {
-  const analytics = useMemo(() => computeAnalytics(HISTORY_DATA), []);
-  const games = useMemo(() => flattenGames(HISTORY_DATA), []);
+function StatsTab({ historyData, alltimeSummary }) {
+  const analytics = useMemo(() => computeAnalytics(historyData), [historyData]);
+  const games = useMemo(() => flattenGames(historyData), [historyData]);
   const sp = "You are the statistician for the Borehamwood Plancy League.\n"
     + "Answer ONLY from provided data — never invent numbers.\n"
     + "TWO BENJYS: benjlev=Lev, sanfbe=Sanford.\n"
@@ -386,7 +435,7 @@ function StatsTab() {
     + "METRICS: allPlay, allPlayWinPct, expectedWins, luck (positive=lucky), consistencySD, avgScore, high, low, pf, pa, record. nemesis=worst H2H, bunny=best H2H.\n\n"
     + "Champions: Alastair 2025, Saul 2024+2023, Benjy Levey 2022, Jamie 2020, Josh 2019, Gideon 2018.\n\n"
     + "ANALYTICS:\n" + JSON.stringify(analytics)
-    + "\n\nALL-TIME SUMMARY:\n" + JSON.stringify(ALLTIME_SUMMARY);
+    + "\n\nALL-TIME SUMMARY:\n" + JSON.stringify(alltimeSummary);
 
   async function buildContext(query) {
     try {
@@ -407,7 +456,7 @@ function StatsTab() {
 }
 
 // ── BanterTab ─────────────────────────────────────────────────────────────────
-function BanterTab() {
+function BanterTab({ historyData }) {
   const sp = "You are the wind-up merchant of the Borehamwood Plancy League.\n"
     + "Style: bone-dry British wit, mock-ESPN grandeur, punchy 3-5 sentences. Jewish/Borehamwood texture.\n"
     + "Sign off big roasts with \"a hearty hearty mazel tov.\"\n"
@@ -417,7 +466,7 @@ function BanterTab() {
     + "Champions: Alastair 2025, Saul 2024+2023, Benjy Levey 2022, Jamie 2020, Josh 2019, Gideon 2018.\n"
     + "The Miriam=wooden spoon. Lev=autodraft legend. The Plancey=championship belt.\n\n"
     + "SEASON STANDINGS:\n" + JSON.stringify(
-        HISTORY_DATA.seasons.map(s => ({ season:s.season, champion:s.champion, standings:s.standings }))
+        historyData.seasons.map(s => ({ season:s.season, champion:s.champion, standings:s.standings }))
       );
 
   return (
@@ -431,8 +480,8 @@ function BanterTab() {
 }
 
 // ── TradeGrader ───────────────────────────────────────────────────────────────
-function TradeGrader() {
-  const teamKeys = useMemo(() => Object.keys(ROSTERS_DATA), []);
+function TradeGrader({ rostersData, tradeValues }) {
+  const teamKeys = useMemo(() => Object.keys(rostersData), [rostersData]);
   const [teamA, setTeamA] = useState(teamKeys[0] || "");
   const [teamB, setTeamB] = useState(teamKeys[1] || "");
   const [sideAText, setSideAText] = useState("");
@@ -445,21 +494,21 @@ function TradeGrader() {
 
   const { idMap, nameMap } = useMemo(() => {
     const id = new Map(), nm = new Map();
-    TRADE_VALUES.forEach(item => {
+    tradeValues.forEach(item => {
       const p = item.player, val = item.redraftValue || 0;
       if (p.sleeperId) id.set(p.sleeperId, { value:val, officialName:p.name, position:p.position });
       nm.set(p.name.toLowerCase().replace(/[^a-z0-9 ]/g,"").replace(/\s+/g," ").trim(), { value:val, officialName:p.name, position:p.position });
     });
     return { idMap:id, nameMap:nm };
-  }, []);
+  }, [tradeValues]);
 
   const waiverByPos = useMemo(() => {
-    const rostered = new Set(Object.values(ROSTERS_DATA).reduce((acc, team) => acc.concat(team.map(p => p.id)), []));
-    const avail = TRADE_VALUES.filter(x => x.player.sleeperId && !rostered.has(x.player.sleeperId));
+    const rostered = new Set(Object.values(rostersData).reduce((acc, team) => acc.concat(team.map(p => p.id)), []));
+    const avail = tradeValues.filter(x => x.player.sleeperId && !rostered.has(x.player.sleeperId));
     const byPos = {};
     avail.forEach(p => { const pos = p.player.position; if (!byPos[pos]) byPos[pos] = []; if (byPos[pos].length < 5) byPos[pos].push(p); });
     return byPos;
-  }, []);
+  }, [rostersData, tradeValues]);
 
   function lookupPlayer(txt) {
     const n = txt.toLowerCase().replace(/[^a-z0-9 ]/g,"").replace(/\s+/g," ").trim();
@@ -481,7 +530,7 @@ function TradeGrader() {
       const wTeam = winner === "A" ? teamA : teamB;
       const wSide = winner === "A" ? sA : sB;
       const exclude = new Set(wSide.map(p => p.officialName));
-      addOns = (ROSTERS_DATA[wTeam] || [])
+      addOns = (rostersData[wTeam] || [])
         .map(rp => ({ name: idMap.has(rp.id) ? idMap.get(rp.id).officialName : rp.name, value: idMap.has(rp.id) ? idMap.get(rp.id).value : 0 }))
         .filter(rp => !exclude.has(rp.name) && rp.value > 0)
         .sort((a,b) => Math.abs(a.value - gap) - Math.abs(b.value - gap))
@@ -661,6 +710,8 @@ const TABS = [{ id:"stats", icon:"📊", label:"STATS" }, { id:"banter", icon:"�
 function App() {
   const [tab, setTab] = useState("stats");
   const { keyboardOpen } = useViewport();
+  const { history, rosters, trades, alltime, live } = useLeagueData();
+  const alltimeSummary = useMemo(() => buildAlltimeSummary(alltime), [alltime]);
 
   useEffect(() => {
     if (document.getElementById("plaincy-css")) return;
@@ -682,15 +733,15 @@ function App() {
           <div style={{ fontSize:11, color:T.dim, marginTop:2, letterSpacing:"0.08em", textTransform:"uppercase", fontWeight:600 }}>Borehamwood Plancy League</div>
         </div>
         <div style={{ fontSize:10.5, color:T.dim, border:"1px solid "+T.border, borderRadius:6, padding:"4px 9px", whiteSpace:"nowrap", flexShrink:0, fontWeight:600, display:"flex", alignItems:"center", gap:5 }}>
-          <span style={{ width:6, height:6, borderRadius:"50%", background:T.green, display:"inline-block" }} />
+          <span style={{ width:6, height:6, borderRadius:"50%", background: live ? T.green : T.faint, display:"inline-block" }} />
           {fmtBuiltAt(BUILT_AT)}
         </div>
       </div>
 
       <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column" }}>
-        {tab === "stats" && <StatsTab />}
-        {tab === "banter" && <BanterTab />}
-        {tab === "trade" && <TradeGrader />}
+        {tab === "stats" && <StatsTab historyData={history} alltimeSummary={alltimeSummary} />}
+        {tab === "banter" && <BanterTab historyData={history} />}
+        {tab === "trade" && <TradeGrader rostersData={rosters} tradeValues={trades} />}
       </div>
 
       {!keyboardOpen && (
