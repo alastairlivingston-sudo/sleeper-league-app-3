@@ -62,3 +62,51 @@ automatically because it fetches the raw files live.
 ## Build/run
 npm i papaparse
 node scripts/fetch-history.js && node scripts/fetch-rosters.js && node scripts/fetch-stats.js
+
+## Claude artifact runtime — hard lessons
+
+### Use the Anthropic Messages API directly, never window.claude.complete()
+In Claude.ai artifacts, `fetch('https://api.anthropic.com/v1/messages', {...})` is proxied
+automatically — no API key required. This is the ONLY correct way to call the model from
+an artifact. `window.claude.complete()` must never be used because:
+1. It concatenates system prompt + conversation into a single string (legacy completion style),
+   losing the system/messages boundary the model expects.
+2. It has an invisible, undocumented prompt-budget limit (experimentally ~30–35 KB total).
+   When exceeded it silently truncates, causing the model to report "all data tables are empty
+   or null" — extremely hard to debug because the UI still renders correctly.
+3. The direct API gives standard, predictable behaviour with a real 200 K-token context window.
+
+```js
+// CORRECT — direct Messages API, proxied by Claude.ai, no key needed
+const res = await fetch('https://api.anthropic.com/v1/messages', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    model: 'claude-sonnet-4-20250514',
+    max_tokens: 1000,
+    system: systemPrompt,
+    messages: messages.filter(m => m.role==='user'||m.role==='assistant')
+                      .map(m => ({ role: m.role, content: m.content })),
+  }),
+});
+```
+
+### Keep system prompts lean (target < 20 KB)
+Even with the direct API, a bloated system prompt slows every call and risks context pressure.
+- Put only what the model needs for NARRATION in the prompt; use the deterministic query layer
+  (flattenGames / runStatQuery) for any numeric lookup the model would otherwise hallucinate.
+- Do NOT include raw weekly score arrays, full H2H-by-season tables, or per-game player lists —
+  these are large and the model doesn't need them to answer typical questions.
+- A hand-crafted ALLTIME_SUMMARY (nemesis, bunny, playoffRecords) is far better than dumping
+  the entire alltime.json. The working artifact prompt is ~5 KB; the broken one was ~66 KB.
+
+### Keep inlined data minimal
+- Strip fields the model never reads: positional breakdowns (ap/bp per game), per-game player
+  arrays (as/bs/ab/bb), high-score-per-game from standings. These add tens of KB for zero value.
+- history.json games only need: week, playoff, a, b, pa, pb.
+
+### Template vs hand-crafted artifact
+commissioner.template.jsx is the build source; build-artifact.js inlines data and writes
+commissioner.jsx. The template must use the direct API claudeCall (already updated). When
+doing significant architecture changes to commissioner.jsx, mirror them back to the template
+so the next daily refresh doesn't clobber the fix.

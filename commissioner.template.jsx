@@ -61,27 +61,27 @@ const T = {
 };
 const FF = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif";
 
+// In Claude.ai artifacts, fetch to the Anthropic API is proxied automatically —
+// no API key required. Using the Messages API directly gives proper system/messages
+// separation and avoids the hidden prompt-budget limits of window.claude.complete().
 async function claudeCall(messages, systemPrompt) {
-  const runtime = typeof window !== 'undefined' ? window.claude : null;
-  if (!runtime || typeof runtime.complete !== 'function') {
-    throw new Error('Open this artifact on Claude.ai to use AI features.');
-  }
-  const convo = messages.slice(-20)
-    .filter(m => m.role === 'user' || m.role === 'assistant')
-    .map(m => (m.role === 'user' ? 'User' : 'Assistant') + ': ' + m.content)
-    .join('\n\n');
-  const prompt = systemPrompt + '\n\n' + convo + '\n\nAssistant:';
-  try {
-    const res = await runtime.complete(prompt);
-    if (typeof res === 'string') return res;
-    if (res && res.content && res.content[0] && res.content[0].text) return res.content[0].text;
-    if (typeof res.completion === 'string') return res.completion;
-    return String(res);
-  } catch (e) {
-    const msg = String(e && e.message ? e.message : e);
-    if (/model/i.test(msg) || /404/.test(msg)) throw new Error('MODEL_ERROR');
-    throw e;
-  }
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1000,
+      system: systemPrompt,
+      messages: messages
+        .filter(function(m) { return m.role === 'user' || m.role === 'assistant'; })
+        .map(function(m) { return { role: m.role, content: m.content }; }),
+    }),
+  });
+  if (!res.ok) throw new Error('API ' + res.status);
+  const data = await res.json();
+  const text = (data.content || []).filter(function(b) { return b.type === 'text'; }).map(function(b) { return b.text; }).join('');
+  if (!text) throw new Error('Empty response');
+  return text;
 }
 
 function r1(n) { return Math.round(n * 10) / 10; }
