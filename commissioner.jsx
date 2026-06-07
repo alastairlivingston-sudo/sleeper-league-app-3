@@ -23,7 +23,7 @@ function teamLabel(k) {
   return (nm && nm !== handle) ? `${nm} · ${team}` : (team || k);
 }
 
-const BUILT_AT = "2026-06-05T15:09:08.750Z";
+const BUILT_AT = "2026-06-07T08:28:27.459Z";
 
 function fmtBuiltAt(iso) {
   try {
@@ -52,6 +52,9 @@ const LORE_SOURCES = [
   { master: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/lore/master.json', archive: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/lore/archive-index.json', quotes: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/lore/quotes-index.json' },
   { master: PAGES_BASE + '/lore/master.json', archive: PAGES_BASE + '/lore/archive-index.json', quotes: PAGES_BASE + '/lore/quotes-index.json' },
 ];
+// jsDelivr sets a 7-day browser cache; append a daily buster so a returning
+// user pulls fresh data each calendar day (the Action publishes once daily).
+const BUST = '?v=' + new Date().toISOString().slice(0, 10);
 
 const T = {
   bg: '#090d18', panel: '#0f1625', panel2: '#141e32', raised: '#1a2640',
@@ -322,7 +325,7 @@ function useLeagueData() {
           const urls = DATA_SOURCES[i];
           const keys = Object.keys(urls);
           const fetched = await Promise.all(keys.map(function(k) {
-            return fetch(urls[k]).then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); });
+            return fetch(urls[k] + BUST).then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); });
           }));
           const result = { live: true };
           keys.forEach(function(k, idx) { result[k] = fetched[idx]; });
@@ -348,9 +351,9 @@ function useLore(active) {
         try {
           const urls = LORE_SOURCES[i];
           const [mData, aData, qData] = await Promise.all([
-            fetch(urls.master).then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); }),
-            fetch(urls.archive).then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); }),
-            fetch(urls.quotes).then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); }),
+            fetch(urls.master + BUST).then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); }),
+            fetch(urls.archive + BUST).then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); }),
+            fetch(urls.quotes + BUST).then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); }),
           ]);
           if (!cancelled) setLore({ master: mData.text || '', archive: aData || [], quotes: qData || [], ready: true });
           return;
