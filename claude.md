@@ -7,7 +7,11 @@ this repo) fetches those JSON files live to power "The Commissioner" — the lea
 analyst and resident wind-up merchant.
 
 ## Hard rules (do not violate)
-1. The Sleeper API has NO CORS headers. It is only ever called from Node scripts here — never from a browser.
+1. The Sleeper API now sends `access-control-allow-origin: *`, so it CAN be called from a browser.
+   The weekly DATA PIPELINE (history/stats/rosters JSON) still runs only in the Node scripts here —
+   that contract is unchanged. The exception is the artifact's live "SCORES" tab, which calls Sleeper
+   (state/nfl, user, leagues, league users/rosters/matchups) directly at runtime for spoiler-safe live
+   scores. ESPN's keyless scoreboard is also CORS-enabled if a future feature needs the NFL schedule.
 2. No API keys anywhere. Sleeper and FantasyCalc are public and keyless. Never commit a secret.
 3. Verify, never fabricate. Scripts emit only real fetched data. If something can't be fetched, log it and
    skip — do not invent values.
