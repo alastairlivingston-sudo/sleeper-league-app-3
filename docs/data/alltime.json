@@ -6,7 +6,7 @@
       "losses": 16,
       "ties": 0,
       "pf": 5448.66,
-      "pa": 0,
+      "pa": 5027.96,
       "seasons": 4,
       "championships": 2,
       "playoffAppearances": 3,
@@ -18,7 +18,7 @@
       "losses": 16,
       "ties": 0,
       "pf": 5329.82,
-      "pa": 0,
+      "pa": 5051.1,
       "seasons": 4,
       "championships": 0,
       "playoffAppearances": 3,
@@ -30,7 +30,7 @@
       "losses": 17,
       "ties": 0,
       "pf": 5553.38,
-      "pa": 0,
+      "pa": 5235,
       "seasons": 4,
       "championships": 1,
       "playoffAppearances": 3,
@@ -42,7 +42,7 @@
       "losses": 18,
       "ties": 0,
       "pf": 5327.46,
-      "pa": 0,
+      "pa": 5222.72,
       "seasons": 4,
       "championships": 0,
       "playoffAppearances": 3,
@@ -54,7 +54,7 @@
       "losses": 20,
       "ties": 0,
       "pf": 5343.82,
-      "pa": 0,
+      "pa": 5368.68,
       "seasons": 4,
       "championships": 0,
       "playoffAppearances": 3,
@@ -66,7 +66,7 @@
       "losses": 22,
       "ties": 0,
       "pf": 5009.4,
-      "pa": 0,
+      "pa": 5256.12,
       "seasons": 4,
       "championships": 0,
       "playoffAppearances": 3,
@@ -78,7 +78,7 @@
       "losses": 24,
       "ties": 0,
       "pf": 5127.28,
-      "pa": 0,
+      "pa": 5307.66,
       "seasons": 4,
       "championships": 0,
       "playoffAppearances": 3,
@@ -90,7 +90,7 @@
       "losses": 35,
       "ties": 0,
       "pf": 4656.96,
-      "pa": 0,
+      "pa": 5327.54,
       "seasons": 4,
       "championships": 0,
       "playoffAppearances": 3,
@@ -5575,5 +5575,8 @@
       "week": 15,
       "benchPts": 77.5
     }
-  ]
+  ],
+  "meta": {
+    "generated": "2026-07-13T14:57:33.624Z"
+  }
 }

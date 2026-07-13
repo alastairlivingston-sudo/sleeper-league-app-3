@@ -10,8 +10,9 @@
     "fetch-transactions": "node scripts/fetch-transactions.js",
     "build-lore":         "node scripts/build-lore.js",
     "build-alltime":      "node scripts/build-alltime.js",
+    "validate":           "node scripts/validate.js",
     "build":              "node scripts/build-lore.js && node scripts/build-alltime.js && node scripts/build-artifact.js",
-    "refresh":            "node scripts/fetch-history.js && node scripts/fetch-rosters.js && node scripts/fetch-stats.js && node scripts/fetch-trades.js && node scripts/fetch-transactions.js && node scripts/build-lore.js && node scripts/build-alltime.js && node scripts/build-artifact.js"
+    "refresh":            "node scripts/fetch-history.js && node scripts/fetch-rosters.js && node scripts/fetch-stats.js && node scripts/fetch-trades.js && node scripts/fetch-transactions.js && node scripts/build-lore.js && node scripts/build-alltime.js && node scripts/build-artifact.js && node scripts/validate.js"
   },
   "engines": {
     "node": ">=20"

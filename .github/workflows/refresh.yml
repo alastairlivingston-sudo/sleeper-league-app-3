@@ -47,6 +47,11 @@ jobs:
       - name: Build commissioner.jsx
         run: node scripts/build-artifact.js
 
+      # Validate the data contract before publishing — a failure aborts the
+      # commit so structurally-wrong data (e.g. a truncated season) is never pushed
+      - name: Validate generated data
+        run: node scripts/validate.js --fresh
+
       # Enable GitHub Pages (idempotent — safe to run every week)
       - name: Enable GitHub Pages
         run: |

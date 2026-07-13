@@ -151,6 +151,7 @@ async function fetchSeason(leagueId, posMap) {
         wins:    s.wins    || 0,
         losses:  s.losses  || 0,
         pf:      parseFloat((s.fpts || 0) + "." + String(s.fpts_decimal || 0).padStart(2, "0")),
+        pa:      parseFloat((s.fpts_against || 0) + "." + String(s.fpts_against_decimal || 0).padStart(2, "0")),
         high:    0,
       };
     })
@@ -246,7 +247,7 @@ async function main() {
   }
 
   fs.mkdirSync(path.dirname(OUT), { recursive: true });
-  fs.writeFileSync(OUT, JSON.stringify({ seasons }, null, 2));
+  fs.writeFileSync(OUT, JSON.stringify({ seasons, meta: { generated: new Date().toISOString() } }, null, 2));
   console.log(`Wrote ${OUT} — ${seasons.length} season(s): ${seasons.map((s) => s.season).join(", ")}`);
 }
 

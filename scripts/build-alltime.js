@@ -411,6 +411,7 @@ fs.writeFileSync(OUT, JSON.stringify({
   luckScores,
   positionalStrengths,
   benchWasteTop: benchWasteTopN,
+  meta: { generated: new Date().toISOString() },
 }, null, 2));
 
 console.log(`Wrote ${OUT}`);

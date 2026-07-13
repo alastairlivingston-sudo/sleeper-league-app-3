@@ -51,7 +51,7 @@ function posPoints(entry, posMap) {
   const starters = entry.starters || [];
   const pts = entry.players_points || {};
   for (const pid of starters) {
-    const pos = posMap[pid]?.pos || (pid === "DEF" ? "DEF" : null);
+    const pos = posMap[pid]?.pos || (/^[A-Z]{2,3}$/.test(pid) ? "DEF" : null);
     if (!pos) continue;
     totals[pos] = Math.round(((totals[pos] || 0) + (pts[pid] || 0)) * 100) / 100;
   }
@@ -235,6 +235,7 @@ async function main() {
       biggestBlowout: blowout,
       highestScoringGame: highWeek,
     },
+    meta: { generated: new Date().toISOString() },
   };
 
   fs.mkdirSync(path.dirname(OUT), { recursive: true });

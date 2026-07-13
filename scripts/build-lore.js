@@ -17,7 +17,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 
 // ── 1. master.json ────────────────────────────────────────────────────────────
 const masterText = fs.readFileSync(path.join(LORE, 'lore-master.md'), 'utf8');
-fs.writeFileSync(path.join(OUT_DIR, 'master.json'), JSON.stringify({ text: masterText }));
+fs.writeFileSync(path.join(OUT_DIR, 'master.json'), JSON.stringify({ text: masterText, meta: { generated: new Date().toISOString() } }));
 console.log('master.json —', Math.round(Buffer.byteLength(masterText) / 1024), 'KB text');
 
 // ── 2. archive-index.json ─────────────────────────────────────────────────────
