@@ -3,31 +3,11 @@
 // Each game now includes positional point breakdowns (ap/bp: QB/RB/WR/TE/K/DEF).
 // Season auto-detected from /state/nfl — no hardcoded year needed.
 
-const fs = require("fs");
 const path = require("path");
+const L = require("./lib");
+const { BASE, get, posPoints, starterList, benchList, writeJson } = L;
 
-const BASE     = "https://api.sleeper.app/v1";
-const USERNAME = "AlastairL";
-const OUT      = path.join(__dirname, "../docs/data/history.json");
-
-async function get(url) {
-  let lastErr = null;
-  for (let attempt = 0; attempt < 4; attempt++) {
-    if (attempt > 0) await new Promise((r) => setTimeout(r, Math.pow(2, attempt) * 1000)); // 2s, 4s, 8s
-    try {
-      const res = await fetch(url);
-      if (res.status === 404) { const err = new Error(`HTTP 404 ${url}`); err.notFound = true; throw err; }
-      if (res.status === 429 || res.status >= 500) { lastErr = new Error(`HTTP ${res.status} ${url}`); continue; }
-      if (!res.ok) throw new Error(`HTTP ${res.status} ${url}`);
-      return await res.json();
-    } catch (e) {
-      if (e.notFound) throw e;                                 // definitive — surface to caller
-      if (e.message && e.message.startsWith("HTTP ")) throw e; // non-retryable 4xx
-      lastErr = e;                                             // network error — retry
-    }
-  }
-  throw lastErr;
-}
+const OUT = path.join(__dirname, "../docs/data/history.json");
 
 async function getCurrentSeason() {
   const state = await get(`${BASE}/state/nfl`);
@@ -35,79 +15,10 @@ async function getCurrentSeason() {
 }
 
 async function findLeague(season) {
-  const user    = await get(`${BASE}/user/${USERNAME}`);
-  const leagues = await get(`${BASE}/user/${user.user_id}/leagues/nfl/${season}`);
-  const league  = leagues.find((l) => /borehamwood|plancy/i.test(l.name));
+  const userId  = await L.getUserId();
+  const league  = await L.findLeague(userId, season);
   if (!league) throw new Error(`Plancy league not found for season ${season}`);
   return league;
-}
-
-// Build sleeperId → {pos, name} map (fetched once for all seasons)
-async function buildPosMap() {
-  console.log("Fetching /players/nfl for position + name data...");
-  const players = await get(`${BASE}/players/nfl`);
-  const pos = {};
-  for (const [id, p] of Object.entries(players)) {
-    if (!p) continue;
-    const fp = p.fantasy_positions?.[0] || p.position;
-    let posStr = null;
-    if (fp === "QB") posStr = "QB";
-    else if (fp === "RB" || fp === "FB") posStr = "RB";
-    else if (fp === "WR") posStr = "WR";
-    else if (fp === "TE") posStr = "TE";
-    else if (fp === "K")  posStr = "K";
-    if (posStr) pos[id] = { pos: posStr, name: p.full_name || null };
-  }
-  return pos;
-}
-
-function playerPos(pid, posMap) {
-  if (/^[A-Z]{2,3}$/.test(pid)) return "DEF"; // team defenses e.g. "NE", "LAR"
-  return posMap[pid]?.pos || null;
-}
-
-function posPoints(entry, posMap) {
-  const result  = {};
-  const starters = entry.starters || [];
-  const pts      = entry.players_points || {};
-  for (const pid of starters) {
-    const pos   = playerPos(pid, posMap);
-    if (!pos) continue;
-    const score = pts[pid] || 0;
-    result[pos] = Math.round(((result[pos] || 0) + score) * 100) / 100;
-  }
-  return result; // only non-zero positions present
-}
-
-// Individual starter performances: [{n, pos, pts}] sorted by pts desc
-function starterList(entry, posMap) {
-  const starters = entry.starters || [];
-  const pts      = entry.players_points || {};
-  const result   = [];
-  for (const pid of starters) {
-    let n, pos;
-    if (/^[A-Z]{2,3}$/.test(pid)) { n = pid; pos = "DEF"; }
-    else { const m = posMap[pid]; if (!m) continue; n = m.name || pid; pos = m.pos; }
-    const score = pts[pid] || 0;
-    result.push({ n, pos, pts: Math.round(score * 100) / 100 });
-  }
-  return result.sort((a, b) => b.pts - a.pts);
-}
-
-// Bench player performances: [{n, pos, pts}] — rostered but not started
-function benchList(entry, posMap) {
-  const starters = new Set(entry.starters || []);
-  const all      = entry.players || [];
-  const pts      = entry.players_points || {};
-  const result   = [];
-  for (const pid of all) {
-    if (starters.has(pid)) continue;
-    if (/^[A-Z]{2,3}$/.test(pid)) continue; // skip DEF on bench
-    const m = posMap[pid];
-    if (!m) continue;
-    result.push({ n: m.name || pid, pos: m.pos, pts: Math.round((pts[pid] || 0) * 100) / 100 });
-  }
-  return result.sort((a, b) => b.pts - a.pts);
 }
 
 async function fetchAllMatchups(leagueId) {
@@ -184,7 +95,7 @@ async function fetchSeason(leagueId, posMap) {
 
   // Games with positional breakdown
   const games      = [];
-  const playoffWk  = league.settings?.playoff_week_start || matchups.length - 2;
+  const playoffWk  = L.playoffWeekStart(league);
   for (let wi = 0; wi < matchups.length; wi++) {
     const weekNum = wi + 1;
     const playoff = weekNum >= playoffWk;
@@ -233,7 +144,8 @@ async function main() {
     startLeague = await findLeague(prev);
   }
 
-  const posMap  = await buildPosMap();
+  console.log("Fetching /players/nfl for position + name data...");
+  const posMap  = L.skillPosMap(await L.getPlayers());
   const seasons = [];
   let leagueId  = startLeague.league_id;
 
@@ -246,8 +158,7 @@ async function main() {
     if (leagueId === "0" || leagueId === 0) leagueId = null;
   }
 
-  fs.mkdirSync(path.dirname(OUT), { recursive: true });
-  fs.writeFileSync(OUT, JSON.stringify({ seasons, meta: { generated: new Date().toISOString() } }, null, 2));
+  writeJson(OUT, { seasons });
   console.log(`Wrote ${OUT} — ${seasons.length} season(s): ${seasons.map((s) => s.season).join(", ")}`);
 }
 

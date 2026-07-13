@@ -1,0 +1,17 @@
+{
+  "username": "AlastairL",
+  "leagueNameRegex": "borehamwood|plancy",
+  "teams": 8,
+  "aliases": { "allyl900": "AlastairL" },
+  "names": {
+    "AlastairL": "Alastair",
+    "dpol": "Dan",
+    "saulgoat": "Saul",
+    "sanfbe": "Benjy",
+    "joshjr11": "Josh",
+    "drjkay": "Jamie",
+    "GSac": "Gideon",
+    "benjlev": "Benjy"
+  },
+  "disambig": { "benjlev": "Lev", "sanfbe": "Sanford" }
+}

@@ -12,8 +12,9 @@ const HISTORY = path.join(__dirname, "../docs/data/history.json");
 const OUT     = path.join(__dirname, "../docs/data/alltime.json");
 
 // Merge alternate Sleeper handles for the same person (Alastair's old account).
-// MUST stay in sync with canonical() in commissioner.template.jsx.
-const ALIAS = { allyl900: "AlastairL" };
+// Aliases come from league-config.json, the single source of truth shared with
+// the artifact (injected into the template's canonical() at build time).
+const ALIAS = JSON.parse(fs.readFileSync(path.join(__dirname, "../league-config.json"), "utf8")).aliases || {};
 function canon(h) { const c = String(h || "").replace(/^@/, "").trim(); return ALIAS[c] || c; }
 
 const { seasons } = JSON.parse(fs.readFileSync(HISTORY, "utf8"));

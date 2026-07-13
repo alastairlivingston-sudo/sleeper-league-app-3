@@ -1,46 +1,20 @@
 #!/usr/bin/env node
 // Fetches current rosters per team and writes rosters.json
 
-const fs = require("fs");
 const path = require("path");
+const L = require("./lib");
+const { BASE, get, writeJson } = L;
 
-const BASE = "https://api.sleeper.app/v1";
-const USERNAME = "AlastairL";
 const OUT = path.join(__dirname, "../docs/data/rosters.json");
 
-async function get(url) {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`HTTP ${res.status} ${url}`);
-  return res.json();
-}
-
-async function findActiveLeague() {
-  const state  = await get(`${BASE}/state/nfl`);
-  const season = state.season;
-  const user   = await get(`${BASE}/user/${USERNAME}`);
-
-  for (const yr of [season, String(parseInt(season) - 1)]) {
-    const leagues = await get(`${BASE}/user/${user.user_id}/leagues/nfl/${yr}`);
-    const league  = leagues.find((l) => /borehamwood|plancy/i.test(l.name));
-    if (!league) continue;
-
-    // Check if this league has rostered players yet (skip empty pre-draft leagues)
-    const rosters = await get(`${BASE}/league/${league.league_id}/rosters`);
-    const hasPlayers = rosters.some((r) => (r.players || []).length > 0);
-    if (hasPlayers) { console.log(`Using ${yr} season for rosters`); return league; }
-    console.log(`${yr} season exists but no players rostered yet — trying previous year`);
-  }
-  throw new Error("No Plancy league with rostered players found");
-}
-
 async function main() {
-  const league = await findActiveLeague();
+  const league = await L.findActiveLeague("players");
   const leagueId = league.league_id;
 
   const [users, rosters, players] = await Promise.all([
     get(`${BASE}/league/${leagueId}/users`),
     get(`${BASE}/league/${leagueId}/rosters`),
-    get(`${BASE}/players/nfl`),
+    L.getPlayers(),
   ]);
 
   const userMap = {};
@@ -75,8 +49,7 @@ async function main() {
     result[key] = playerList;
   }
 
-  fs.mkdirSync(path.dirname(OUT), { recursive: true });
-  fs.writeFileSync(OUT, JSON.stringify(result, null, 2));
+  writeJson(OUT, result, { stampMeta: false }); // team-keyed map — no meta sibling key
   console.log(`Wrote ${OUT} — ${Object.keys(result).length} team(s)`);
 }
 

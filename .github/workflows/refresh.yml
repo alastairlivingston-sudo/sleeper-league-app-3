@@ -9,9 +9,7 @@ jobs:
   fetch:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
-      pages: write      # needed to enable/deploy GitHub Pages
-      id-token: write   # needed for Pages OIDC deploy
+      contents: write     # commit refreshed data back to the repo
 
     steps:
       - uses: actions/checkout@v4
@@ -30,11 +28,11 @@ jobs:
       - name: Fetch stats (most recent season with games)
         run: node scripts/fetch-stats.js
 
-      - name: Fetch trade values (FantasyCalc, trimmed)
-        run: node scripts/fetch-trades.js
+      - name: Fetch FantasyCalc trade values (trimmed)
+        run: node scripts/fetch-fc-values.js
 
-      - name: Fetch transaction history (Sleeper trades)
-        run: node scripts/fetch-transactions.js
+      - name: Fetch trade history (Sleeper trades)
+        run: node scripts/fetch-trades.js
 
       # Build derived data tables
       - name: Build lore index
@@ -48,23 +46,33 @@ jobs:
         run: node scripts/build-artifact.js
 
       # Validate the data contract before publishing — a failure aborts the
-      # commit so structurally-wrong data (e.g. a truncated season) is never pushed
+      # run so structurally-wrong data (e.g. a truncated season) is never pushed
       - name: Validate generated data
         run: node scripts/validate.js --fresh
 
-      # Enable GitHub Pages (idempotent — safe to run every week)
-      - name: Enable GitHub Pages
+      # Only commit when real data changed. Every run rewrites meta.generated /
+      # BUILT_AT timestamps, so ignore those lines — otherwise the off-season
+      # would commit daily no-op churn (this repo had 55 such commits).
+      - name: Detect real data changes
+        id: changes
         run: |
-          curl -s -o /dev/null -w "%{http_code}" -X PUT \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/repos/${{ github.repository }}/pages" \
-            -d '{"source":{"branch":"main","path":"/docs"}}' || true
+          if git diff -- docs/ \
+               | grep -E '^[+-]' \
+               | grep -vE '^(\+\+\+|---)' \
+               | grep -v '"generated"' \
+               | grep -q .; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Real data changes detected — will commit."
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Only timestamps changed — skipping commit."
+          fi
 
       - name: Commit updated data and artifact
+        if: steps.changes.outputs.changed == 'true'
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add docs/data/*.json docs/lore/*.json docs/.nojekyll commissioner.jsx
-          git diff --cached --quiet || git commit -m "chore: refresh league data + rebuild artifact [skip ci]"
+          git commit -m "chore: refresh league data + rebuild artifact [skip ci]"
           git push
