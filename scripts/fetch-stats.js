@@ -10,9 +10,22 @@ const USERNAME = "AlastairL";
 const OUT = path.join(__dirname, "../docs/data/stats.json");
 
 async function get(url) {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`HTTP ${res.status} ${url}`);
-  return res.json();
+  let lastErr = null;
+  for (let attempt = 0; attempt < 4; attempt++) {
+    if (attempt > 0) await new Promise((r) => setTimeout(r, Math.pow(2, attempt) * 1000)); // 2s, 4s, 8s
+    try {
+      const res = await fetch(url);
+      if (res.status === 404) { const err = new Error(`HTTP 404 ${url}`); err.notFound = true; throw err; }
+      if (res.status === 429 || res.status >= 500) { lastErr = new Error(`HTTP ${res.status} ${url}`); continue; }
+      if (!res.ok) throw new Error(`HTTP ${res.status} ${url}`);
+      return await res.json();
+    } catch (e) {
+      if (e.notFound) throw e;                                 // definitive — surface to caller
+      if (e.message && e.message.startsWith("HTTP ")) throw e; // non-retryable 4xx
+      lastErr = e;                                             // network error — retry
+    }
+  }
+  throw lastErr;
 }
 
 // Build sleeperId → {pos, name} map
@@ -97,9 +110,7 @@ async function fetchAllMatchups(leagueId, playoffWeekStart) {
       const week = await get(`${BASE}/league/${leagueId}/matchups/${w}`);
       if (!week || week.length === 0) break;
       all.push({ week: w, entries: week, playoff: w >= playoffWeekStart });
-    } catch {
-      break;
-    }
+    } catch (e) { if (e.notFound) break; throw e; }
   }
   return all;
 }

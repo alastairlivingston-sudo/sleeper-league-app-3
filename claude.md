@@ -86,7 +86,7 @@ const res = await fetch('https://api.anthropic.com/v1/messages', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
-    model: 'claude-sonnet-4-20250514',
+    model: 'claude-sonnet-5',
     max_tokens: 1000,
     system: systemPrompt,
     messages: messages.filter(m => m.role==='user'||m.role==='assistant')

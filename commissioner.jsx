@@ -23,7 +23,7 @@ function teamLabel(k) {
   return (nm && nm !== handle) ? `${nm} · ${team}` : (team || k);
 }
 
-const BUILT_AT = "2026-07-12T09:49:16.707Z";
+const BUILT_AT = "2026-07-13T08:11:40.282Z";
 
 function fmtBuiltAt(iso) {
   try {
@@ -67,24 +67,57 @@ const FF = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',
 // In Claude.ai artifacts, fetch to the Anthropic API is proxied automatically —
 // no API key required. Using the Messages API directly gives proper system/messages
 // separation and avoids the hidden prompt-budget limits of window.claude.complete().
+// Model fallback chain — bare aliases only, NEVER date-pinned IDs (a pinned
+// Sonnet 4 ID retired and killed every AI feature). Probed once per session.
+const MODELS = ['claude-sonnet-5', 'claude-sonnet-4-5', 'claude-haiku-4-5'];
+let modelIdx = 0;
+
 async function claudeCall(messages, systemPrompt) {
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 1000,
-      system: systemPrompt,
-      messages: messages
-        .filter(function(m) { return m.role === 'user' || m.role === 'assistant'; })
-        .map(function(m) { return { role: m.role, content: m.content }; }),
-    }),
+  const body = (model) => JSON.stringify({
+    model,
+    max_tokens: 2000,
+    system: systemPrompt,
+    messages: messages
+      .filter(function(m) { return m.role === 'user' || m.role === 'assistant'; })
+      .map(function(m) { return { role: m.role, content: m.content }; }),
   });
-  if (!res.ok) throw new Error('API ' + res.status);
-  const data = await res.json();
-  const text = (data.content || []).filter(function(b) { return b.type === 'text'; }).map(function(b) { return b.text; }).join('');
-  if (!text) throw new Error('Empty response');
-  return text;
+  let lastErr = null;
+  while (modelIdx < MODELS.length) {
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const ctrl = new AbortController();
+      const timer = setTimeout(function() { ctrl.abort(); }, 60000);
+      try {
+        const res = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: body(MODELS[modelIdx]),
+          signal: ctrl.signal,
+        });
+        if (res.status === 404) { lastErr = new Error('MODEL_ERROR'); break; } // next model
+        if (res.status === 429 || res.status >= 500) {
+          lastErr = new Error('API ' + res.status);
+          const ra = parseInt(res.headers.get('retry-after') || '0', 10);
+          await new Promise(function(r) { setTimeout(r, ra > 0 ? ra * 1000 : (attempt + 1) * 2000); });
+          continue; // retry same model
+        }
+        if (!res.ok) throw new Error('API ' + res.status);
+        const data = await res.json();
+        const text = (data.content || []).filter(function(b) { return b.type === 'text'; }).map(function(b) { return b.text; }).join('');
+        if (!text) throw new Error('Empty response');
+        return text;
+      } catch (e) {
+        if (e.message === 'MODEL_ERROR') break;
+        lastErr = e;
+        if (e.name === 'AbortError') continue; // timeout → retry
+        throw e; // real network/4xx error — surface it
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+    if (lastErr && lastErr.message === 'MODEL_ERROR') { modelIdx++; lastErr = null; continue; }
+    break; // retries exhausted on a live model
+  }
+  throw modelIdx >= MODELS.length ? new Error('MODEL_ERROR') : (lastErr || new Error('API failed'));
 }
 
 function r1(n) { return Math.round(n * 10) / 10; }

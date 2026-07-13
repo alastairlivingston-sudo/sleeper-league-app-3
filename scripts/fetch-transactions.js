@@ -12,9 +12,22 @@ const USERNAME = "AlastairL";
 const OUT      = path.join(__dirname, "../docs/data/transactions.json");
 
 async function get(url) {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`HTTP ${res.status} ${url}`);
-  return res.json();
+  let lastErr = null;
+  for (let attempt = 0; attempt < 4; attempt++) {
+    if (attempt > 0) await new Promise((r) => setTimeout(r, Math.pow(2, attempt) * 1000)); // 2s, 4s, 8s
+    try {
+      const res = await fetch(url);
+      if (res.status === 404) { const err = new Error(`HTTP 404 ${url}`); err.notFound = true; throw err; }
+      if (res.status === 429 || res.status >= 500) { lastErr = new Error(`HTTP ${res.status} ${url}`); continue; }
+      if (!res.ok) throw new Error(`HTTP ${res.status} ${url}`);
+      return await res.json();
+    } catch (e) {
+      if (e.notFound) throw e;                                 // definitive — surface to caller
+      if (e.message && e.message.startsWith("HTTP ")) throw e; // non-retryable 4xx
+      lastErr = e;                                             // network error — retry
+    }
+  }
+  throw lastErr;
 }
 
 async function buildPosMap() {
@@ -38,7 +51,7 @@ async function fetchSeasonTrades(leagueId, season, userMap, rosterOwner, posMap)
     let txns;
     try {
       txns = await get(`${BASE}/league/${leagueId}/transactions/${w}`);
-    } catch { break; }
+    } catch (e) { if (e.notFound) break; throw e; }
     if (!txns || txns.length === 0) continue;
 
     for (const tx of txns) {
@@ -50,10 +63,9 @@ async function fetchSeasonTrades(leagueId, season, userMap, rosterOwner, posMap)
       const managerA = userMap[rosterOwner[ridA]] || String(ridA);
       const managerB = userMap[rosterOwner[ridB]] || String(ridB);
 
-      // Players traded: adds[rosterIdString] = [playerIds]
-      const adds = tx.adds || {};
-      const aReceives = Object.entries(adds).filter(([rid]) => Number(rid) === ridA).flatMap(([, ids]) => ids);
-      const bReceives = Object.entries(adds).filter(([rid]) => Number(rid) === ridB).flatMap(([, ids]) => ids);
+      const adds = tx.adds || {}; // { playerId: receivingRosterId }
+      const aReceives = Object.entries(adds).filter(([, rid]) => rid === ridA).map(([pid]) => pid);
+      const bReceives = Object.entries(adds).filter(([, rid]) => rid === ridB).map(([pid]) => pid);
 
       // Draft picks: draft_picks array with {owner_id, previous_owner_id, ...}
       const picks = tx.draft_picks || [];

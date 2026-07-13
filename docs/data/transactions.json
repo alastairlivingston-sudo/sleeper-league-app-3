@@ -4,72 +4,242 @@
     "week": 2,
     "managerA": "drjkay",
     "managerB": "sanfbe",
-    "aReceives": [],
-    "bReceives": []
+    "aReceives": [
+      {
+        "name": "Christian McCaffrey",
+        "pos": "RB"
+      },
+      {
+        "name": "George Kittle",
+        "pos": "TE"
+      }
+    ],
+    "bReceives": [
+      {
+        "name": "DeVonta Smith",
+        "pos": "WR"
+      },
+      {
+        "name": "Kyren Williams",
+        "pos": "RB"
+      }
+    ]
   },
   {
     "season": "2024",
     "week": 3,
     "managerA": "joshjr11",
     "managerB": "drjkay",
-    "aReceives": [],
-    "bReceives": []
+    "aReceives": [
+      {
+        "name": "Deebo Samuel",
+        "pos": "WR"
+      },
+      {
+        "name": "Dalton Kincaid",
+        "pos": "TE"
+      }
+    ],
+    "bReceives": [
+      {
+        "name": "Chris Godwin",
+        "pos": "WR"
+      },
+      {
+        "name": "Zamir White",
+        "pos": "RB"
+      }
+    ]
   },
   {
     "season": "2024",
     "week": 3,
     "managerA": "drjkay",
     "managerB": "GSac",
-    "aReceives": [],
-    "bReceives": []
+    "aReceives": [
+      {
+        "name": "Kenneth Walker",
+        "pos": "RB"
+      },
+      {
+        "name": "Xavier Worthy",
+        "pos": "WR"
+      }
+    ],
+    "bReceives": [
+      {
+        "name": "Jordan Mason",
+        "pos": "RB"
+      },
+      {
+        "name": "Rashid Shaheed",
+        "pos": "WR"
+      }
+    ]
   },
   {
     "season": "2024",
     "week": 5,
     "managerA": "dpol",
     "managerB": "GSac",
-    "aReceives": [],
-    "bReceives": []
+    "aReceives": [
+      {
+        "name": "Davante Adams",
+        "pos": "WR"
+      },
+      {
+        "name": "Jordan Mason",
+        "pos": "RB"
+      }
+    ],
+    "bReceives": [
+      {
+        "name": "Tony Pollard",
+        "pos": "RB"
+      },
+      {
+        "name": "D'Andre Swift",
+        "pos": "RB"
+      }
+    ]
   },
   {
     "season": "2024",
     "week": 9,
     "managerA": "dpol",
     "managerB": "GSac",
-    "aReceives": [],
-    "bReceives": []
+    "aReceives": [
+      {
+        "name": "Lamar Jackson",
+        "pos": "QB"
+      },
+      {
+        "name": "Terry McLaurin",
+        "pos": "WR"
+      },
+      {
+        "name": "Tony Pollard",
+        "pos": "RB"
+      }
+    ],
+    "bReceives": [
+      {
+        "name": "Alvin Kamara",
+        "pos": "RB"
+      },
+      {
+        "name": "Sam Darnold",
+        "pos": "QB"
+      },
+      {
+        "name": "Garrett Wilson",
+        "pos": "WR"
+      }
+    ]
   },
   {
     "season": "2024",
     "week": 11,
     "managerA": "joshjr11",
     "managerB": "drjkay",
-    "aReceives": [],
-    "bReceives": []
+    "aReceives": [
+      {
+        "name": "Kenneth Walker",
+        "pos": "RB"
+      },
+      {
+        "name": "Jayden Reed",
+        "pos": "WR"
+      }
+    ],
+    "bReceives": [
+      {
+        "name": "DK Metcalf",
+        "pos": "WR"
+      },
+      {
+        "name": "James Cook",
+        "pos": "RB"
+      }
+    ]
   },
   {
     "season": "2024",
     "week": 14,
     "managerA": "drjkay",
     "managerB": "GSac",
-    "aReceives": [],
-    "bReceives": []
+    "aReceives": [
+      {
+        "name": "Tee Higgins",
+        "pos": "WR"
+      },
+      {
+        "name": "Jonathan Taylor",
+        "pos": "RB"
+      }
+    ],
+    "bReceives": [
+      {
+        "name": "Calvin Ridley",
+        "pos": "WR"
+      },
+      {
+        "name": "De'Von Achane",
+        "pos": "RB"
+      }
+    ]
   },
   {
     "season": "2024",
     "week": 14,
     "managerA": "benjlev",
     "managerB": "dpol",
-    "aReceives": [],
-    "bReceives": []
+    "aReceives": [
+      {
+        "name": "Tyreek Hill",
+        "pos": "WR"
+      },
+      {
+        "name": "Tony Pollard",
+        "pos": "RB"
+      }
+    ],
+    "bReceives": [
+      {
+        "name": "George Pickens",
+        "pos": "WR"
+      },
+      {
+        "name": "Brock Bowers",
+        "pos": "TE"
+      }
+    ]
   },
   {
     "season": "2024",
     "week": 14,
     "managerA": "joshjr11",
     "managerB": "sanfbe",
-    "aReceives": [],
-    "bReceives": []
+    "aReceives": [
+      {
+        "name": "DeVonta Smith",
+        "pos": "WR"
+      },
+      {
+        "name": "Rhamondre Stevenson",
+        "pos": "RB"
+      }
+    ],
+    "bReceives": [
+      {
+        "name": "Deebo Samuel",
+        "pos": "WR"
+      },
+      {
+        "name": "Rico Dowdle",
+        "pos": "RB"
+      }
+    ]
   },
   {
     "season": "2025",
@@ -77,102 +247,295 @@
     "managerA": "joshjr11",
     "managerB": "sanfbe",
     "aReceives": [],
-    "bReceives": []
+    "bReceives": [
+      {
+        "name": "Cedric Tillman",
+        "pos": "WR"
+      }
+    ]
   },
   {
     "season": "2025",
     "week": 4,
     "managerA": "joshjr11",
     "managerB": "GSac",
-    "aReceives": [],
-    "bReceives": []
+    "aReceives": [
+      {
+        "name": "Tony Pollard",
+        "pos": "RB"
+      },
+      {
+        "name": "Brian Thomas",
+        "pos": "WR"
+      }
+    ],
+    "bReceives": [
+      {
+        "name": "DeVonta Smith",
+        "pos": "WR"
+      },
+      {
+        "name": "Javonte Williams",
+        "pos": "RB"
+      }
+    ]
   },
   {
     "season": "2025",
     "week": 6,
     "managerA": "drjkay",
     "managerB": "sanfbe",
-    "aReceives": [],
-    "bReceives": []
+    "aReceives": [
+      {
+        "name": "J.K. Dobbins",
+        "pos": "RB"
+      }
+    ],
+    "bReceives": [
+      {
+        "name": "DK Metcalf",
+        "pos": "WR"
+      }
+    ]
   },
   {
     "season": "2025",
     "week": 6,
     "managerA": "dpol",
     "managerB": "GSac",
-    "aReceives": [],
-    "bReceives": []
+    "aReceives": [
+      {
+        "name": "Alvin Kamara",
+        "pos": "RB"
+      },
+      {
+        "name": "CeeDee Lamb",
+        "pos": "WR"
+      },
+      {
+        "name": "Tucker Kraft",
+        "pos": "TE"
+      },
+      {
+        "name": "Quentin Johnston",
+        "pos": "WR"
+      }
+    ],
+    "bReceives": [
+      {
+        "name": "Davante Adams",
+        "pos": "WR"
+      },
+      {
+        "name": "Jake Ferguson",
+        "pos": "TE"
+      },
+      {
+        "name": "Ashton Jeanty",
+        "pos": "RB"
+      }
+    ]
   },
   {
     "season": "2025",
     "week": 8,
     "managerA": "joshjr11",
     "managerB": "drjkay",
-    "aReceives": [],
-    "bReceives": []
+    "aReceives": [
+      {
+        "name": "Justin Jefferson",
+        "pos": "WR"
+      }
+    ],
+    "bReceives": [
+      {
+        "name": "Emeka Egbuka",
+        "pos": "WR"
+      }
+    ]
   },
   {
     "season": "2025",
     "week": 8,
     "managerA": "joshjr11",
     "managerB": "drjkay",
-    "aReceives": [],
-    "bReceives": []
+    "aReceives": [
+      {
+        "name": "Michael Carter",
+        "pos": "RB"
+      },
+      {
+        "name": "Chase Brown",
+        "pos": "RB"
+      }
+    ],
+    "bReceives": [
+      {
+        "name": "Tetairoa McMillan",
+        "pos": "WR"
+      },
+      {
+        "name": "Jacory Croskey-Merritt",
+        "pos": "RB"
+      }
+    ]
   },
   {
     "season": "2025",
     "week": 10,
     "managerA": "AlastairL",
     "managerB": "GSac",
-    "aReceives": [],
-    "bReceives": []
+    "aReceives": [
+      {
+        "name": "Khalil Shakir",
+        "pos": "WR"
+      }
+    ],
+    "bReceives": [
+      {
+        "name": "Cam Little",
+        "pos": "K"
+      }
+    ]
   },
   {
     "season": "2025",
     "week": 10,
     "managerA": "dpol",
     "managerB": "sanfbe",
-    "aReceives": [],
-    "bReceives": []
+    "aReceives": [
+      {
+        "name": "Jaylen Warren",
+        "pos": "RB"
+      }
+    ],
+    "bReceives": [
+      {
+        "name": "Zay Flowers",
+        "pos": "WR"
+      }
+    ]
   },
   {
     "season": "2025",
     "week": 11,
     "managerA": "dpol",
     "managerB": "drjkay",
-    "aReceives": [],
-    "bReceives": []
+    "aReceives": [
+      {
+        "name": "Omarion Hampton",
+        "pos": "RB"
+      }
+    ],
+    "bReceives": [
+      {
+        "name": "Jaylen Warren",
+        "pos": "RB"
+      }
+    ]
   },
   {
     "season": "2025",
     "week": 12,
     "managerA": "dpol",
     "managerB": "GSac",
-    "aReceives": [],
-    "bReceives": []
+    "aReceives": [
+      {
+        "name": "Jonathan Taylor",
+        "pos": "RB"
+      },
+      {
+        "name": "Juwan Johnson",
+        "pos": "TE"
+      },
+      {
+        "name": "Javonte Williams",
+        "pos": "RB"
+      }
+    ],
+    "bReceives": [
+      {
+        "name": "Jauan Jennings",
+        "pos": "WR"
+      },
+      {
+        "name": "James Cook",
+        "pos": "RB"
+      },
+      {
+        "name": "Jahmyr Gibbs",
+        "pos": "RB"
+      }
+    ]
   },
   {
     "season": "2025",
     "week": 13,
     "managerA": "dpol",
     "managerB": "drjkay",
-    "aReceives": [],
-    "bReceives": []
+    "aReceives": [
+      {
+        "name": "George Kittle",
+        "pos": "TE"
+      },
+      {
+        "name": "Puka Nacua",
+        "pos": "WR"
+      }
+    ],
+    "bReceives": [
+      {
+        "name": "Jaxon Smith-Njigba",
+        "pos": "WR"
+      },
+      {
+        "name": "Oronde Gadsden",
+        "pos": "TE"
+      }
+    ]
   },
   {
     "season": "2025",
     "week": 13,
     "managerA": "dpol",
     "managerB": "GSac",
-    "aReceives": [],
-    "bReceives": []
+    "aReceives": [
+      {
+        "name": "Mike Evans",
+        "pos": "WR"
+      },
+      {
+        "name": "Wan'Dale Robinson",
+        "pos": "WR"
+      }
+    ],
+    "bReceives": [
+      {
+        "name": "Christian Watson",
+        "pos": "WR"
+      },
+      {
+        "name": "Tampa Bay Buccaneers",
+        "pos": "DEF"
+      }
+    ]
   },
   {
     "season": "2025",
     "week": 13,
     "managerA": "dpol",
     "managerB": "saulgoat",
-    "aReceives": [],
-    "bReceives": []
+    "aReceives": [
+      {
+        "name": "Bucky Irving",
+        "pos": "RB"
+      }
+    ],
+    "bReceives": [
+      {
+        "name": "Javonte Williams",
+        "pos": "RB"
+      }
+    ]
   }
 ]
