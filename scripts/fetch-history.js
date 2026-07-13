@@ -7,7 +7,8 @@ const path = require("path");
 const L = require("./lib");
 const { BASE, get, posPoints, starterList, benchList, writeJson } = L;
 
-const OUT = path.join(__dirname, "../docs/data/history.json");
+const OUT         = path.join(__dirname, "../docs/data/history.json");
+const OUT_DETAILS = path.join(__dirname, "../docs/data/history-details.json");
 
 async function getCurrentSeason() {
   const state = await get(`${BASE}/state/nfl`);
@@ -158,8 +159,25 @@ async function main() {
     if (leagueId === "0" || leagueId === 0) leagueId = null;
   }
 
-  writeJson(OUT, { seasons });
-  console.log(`Wrote ${OUT} — ${seasons.length} season(s): ${seasons.map((s) => s.season).join(", ")}`);
+  // Full detail (per-game positional/starter/bench arrays) → history-details.json,
+  // read only by build-alltime.js. The artifact fetches the lean history.json.
+  writeJson(OUT_DETAILS, { seasons });
+
+  // Lean history.json: everything the artifact's query engine needs
+  // (week/playoff/a/b/pa/pb) plus standings + champion. Drops the bulky per-game
+  // ap/bp/as/bs/ab/bb arrays — the artifact never reads them (bench/positional
+  // answers arrive precomputed via alltime.json).
+  const lean = {
+    seasons: seasons.map((s) => ({
+      season: s.season,
+      name: s.name,
+      champion: s.champion,
+      standings: s.standings,
+      games: (s.games || []).map((g) => ({ week: g.week, playoff: g.playoff, a: g.a, b: g.b, pa: g.pa, pb: g.pb })),
+    })),
+  };
+  writeJson(OUT, lean);
+  console.log(`Wrote ${OUT} + ${OUT_DETAILS} — ${seasons.length} season(s): ${seasons.map((s) => s.season).join(", ")}`);
 }
 
 main().catch((e) => { console.error(e); process.exit(1); });

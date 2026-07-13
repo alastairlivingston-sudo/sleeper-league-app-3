@@ -5,6 +5,9 @@
 // ╚══════════════════════════════════════════════════════════════╝
 
 const { useState, useEffect, useRef, useMemo } = React;
+const DEBUG = false; // set true to log system-prompt sizes to the console
+// Single position→colour map (was duplicated as POSColors + POS_TINT).
+const POS_COLORS = { QB: '#ff7a1a', RB: '#10b981', WR: '#60a5fa', TE: '#a855f7', K: '#94a3b8', DEF: '#f87171', FLEX: '#f59e0b' };
 
 const ALIAS = { allyl900: 'AlastairL' };
 function canonical(handle) {
@@ -257,7 +260,7 @@ function runStatQuery(spec, games) {
     }
     rows.forEach(function(r) { r.pf = Math.round(r.pf * 100) / 100; r.pa = Math.round(r.pa * 100) / 100; r.winPct = r.games ? Math.round(r.wins / r.games * 1000) / 1000 : 0; });
     rows.sort(function(x, y) { return x.manager.localeCompare(y.manager) || y.games - x.games; });
-    return { type: 'headToHead', rows: rows };
+    return { type: 'headToHead', rows: rows.slice(0, 25) };
   }
 
   if (spec.type === 'totals') {
@@ -281,7 +284,7 @@ function runStatQuery(spec, games) {
       r.winPct = r.games ? Math.round(r.wins / r.games * 1000) / 1000 : 0;
     });
     rows.sort(function(x, y) { return y.wins - x.wins || y.pf - x.pf; });
-    return { type: 'totals', rows: rows };
+    return { type: 'totals', rows: rows.slice(0, 25) };
   }
 
   if (spec.type === 'gameList') {
@@ -318,16 +321,28 @@ async function planStatQuery(query, messages) {
     '  "sortBy": "margin"|"high"|"low"|"combined",  // gameList only',
     '  "order": "desc"|"asc",      // gameList only',
     '  "limit": 10 }               // gameList only',
+    'headToHead with exactly two managers = the record between that pair. With three or more managers = each listed manager\'s record against ALL opponents. Omit "managers" for the whole league.',
     'Rules: head-to-head / nemesis / "who beats whom" -> headToHead. Records/standings/win totals/points -> totals. "biggest/closest/highest game" -> gameList. If the question is not a numeric data lookup (opinion, definition, lore) -> {"type":"none"}.',
   ].join('\n');
   try {
-    const raw = await claudeCall(messages.slice(-3), planner);
-    const m = raw.match(/\{[\s\S]*\}/);
-    if (!m) return { type: 'none' };
-    return JSON.parse(m[0]);
+    const raw = await claudeCall(messages.slice(-6), planner);
+    return parseSpec(raw);
   } catch (e) {
     return { type: 'none' };
   }
+}
+
+// Tolerant JSON extraction: whole reply → outermost braces → first {...} match.
+function parseSpec(raw) {
+  if (!raw) return { type: 'none' };
+  try { return JSON.parse(raw.trim()); } catch (e) { /* not bare JSON */ }
+  const first = raw.indexOf('{'), last = raw.lastIndexOf('}');
+  if (first !== -1 && last > first) {
+    try { return JSON.parse(raw.slice(first, last + 1)); } catch (e) { /* fall through */ }
+  }
+  const m = raw.match(/\{[\s\S]*\}/);
+  if (m) { try { return JSON.parse(m[0]); } catch (e) { /* fall through */ } }
+  return { type: 'none' };
 }
 
 // Renders a query result into a deterministic context block the narrator reads.
@@ -612,6 +627,18 @@ function slimAlltime(d) {
   return { ...rest, records };
 }
 
+// Per-season champion + condensed standings (no games) — for the banter prompt.
+function slimHistory(d) {
+  const seasons = (d && d.seasons) ? d.seasons : [];
+  return seasons.map(function(s) {
+    return {
+      season: s.season,
+      champion: s.champion ? distinctName(s.champion) : null,
+      standings: (s.standings || []).map(function(r) { return { manager: distinctName(r.manager), wins: r.wins, losses: r.losses, pf: r.pf }; }),
+    };
+  });
+}
+
 function StatsTab(props) {
   const { historyData, statsData, alltimeData, transactionsData, loreMaster } = props;
   const analytics = useMemo(function() { return computeAnalytics(historyData); }, [historyData]);
@@ -645,9 +672,12 @@ function StatsTab(props) {
     + '\n\nCURRENT SEASON SUMMARY:\n' + JSON.stringify({ league: statsData && statsData.league, season: statsData && statsData.season, standings: statsData && statsData.standings, headToHead: statsData && statsData.headToHead, extremes: statsData && statsData.extremes });
 
   // buildContext: deterministic query layer. Plan → execute in JS → inject result.
-  async function buildContext(query) {
+  // Plans from the running conversation (not just the latest line) so follow-ups
+  // like "and in 2024?" resolve their referents.
+  async function buildContext(query, conversation) {
     try {
-      const spec = await planStatQuery(query, [{ role: 'user', content: query }]);
+      const convo = (conversation && conversation.length) ? conversation : [{ role: 'user', content: query }];
+      const spec = await planStatQuery(query, convo);
       const result = runStatQuery(spec, games);
       return formatQueryResult(spec, result);
     } catch (e) { return ''; }
@@ -673,10 +703,15 @@ function BanterTab(props) {
       '══ LORE MASTER ══',
     ].join('\n');
 
+    // Slim summaries only — raw JSON dumps blew the prompt budget (the repo's
+    // own <20 KB rule). Champions + standings, all-time records, current-season
+    // standings/extremes are enough to verify any claim the bot makes.
+    const statsSummary = statsData ? { league: statsData.league, season: statsData.season, standings: statsData.standings, extremes: statsData.extremes } : null;
     const dataSection = '\n\n══ VERIFIED DATA (check all facts here first) ══'
-      + '\n\nRAW HISTORY:\n' + JSON.stringify(historyData)
-      + '\n\nCURRENT SEASON:\n' + JSON.stringify(statsData)
-      + '\n\nALL-TIME RECORDS:\n' + JSON.stringify(alltimeData);
+      + '\n\nSEASON HISTORY (champions + standings):\n' + JSON.stringify(slimHistory(historyData))
+      + '\n\nCURRENT SEASON:\n' + JSON.stringify(statsSummary)
+      + '\n\nALL-TIME RECORDS:\n' + JSON.stringify(slimAlltime(alltimeData));
+    if (DEBUG) console.log('banter prompt bytes:', (rule + (lore.master || '') + dataSection).length);
 
     if (lore.master) return rule + '\n' + lore.master + dataSection;
 
@@ -751,8 +786,17 @@ function TradeGrader(props) {
 
   function lookupPlayer(txt) {
     const n = normalizeName(txt);
-    if (nameMap.has(n)) { const e = nameMap.get(n); return { found: true, value: e.value, officialName: e.officialName, position: e.position }; }
-    for (const [k, e] of nameMap) { if (k.includes(n) || n.includes(k)) return { found: true, value: e.value, officialName: e.officialName, position: e.position }; }
+    const hit = function(e) { return { found: true, value: e.value, officialName: e.officialName, position: e.position }; };
+    // 1) exact
+    if (nameMap.has(n)) return hit(nameMap.get(n));
+    if (n.length < 2) return { found: false, value: 0, officialName: txt, position: null };
+    // 2) prefix match (only for reasonably specific input) — "josh alle" -> "josh allen"
+    if (n.length >= 4) { for (const [k, e] of nameMap) { if (k.startsWith(n)) return hit(e); } }
+    // 3) all input tokens present in the name — "allen josh" -> "josh allen"
+    const toks = n.split(' ').filter(Boolean);
+    for (const [k, e] of nameMap) {
+      if (toks.every(function(t) { return k.indexOf(t) !== -1; })) return hit(e);
+    }
     return { found: false, value: 0, officialName: txt, position: null };
   }
 
@@ -802,7 +846,6 @@ function TradeGrader(props) {
   const teamOpts = teamKeys.map(function(k) { return <option key={k} value={k}>{teamLabel(k)}</option>; });
   const winA = result && result.winner === 'A';
   const winB = result && result.winner === 'B';
-  const POSColors = { QB: '#ff7a1a', RB: '#10b981', WR: '#60a5fa', TE: '#a855f7', K: '#888', DEF: '#c44' };
   const spin = { width: 14, height: 14, border: '2px solid ' + T.amber, borderTopColor: 'transparent', borderRadius: '50%', display: 'inline-block', animation: 'tg-spin 0.8s linear infinite' };
 
   return (
@@ -818,8 +861,8 @@ function TradeGrader(props) {
               const players = waiverByPos[pos] || [];
               if (!players.length) return null;
               return (
-                <div key={pos} style={{ background: T.raised, border: '1px solid ' + T.border, borderTop: '2px solid ' + (POSColors[pos] || T.border), borderRadius: '3px 3px 9px 9px', padding: '9px 11px', minWidth: 120, flex: '1 1 120px', maxWidth: 170 }}>
-                  <div style={{ color: POSColors[pos] || T.dim, fontSize: 10.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>{pos}</div>
+                <div key={pos} style={{ background: T.raised, border: '1px solid ' + T.border, borderTop: '2px solid ' + (POS_COLORS[pos] || T.border), borderRadius: '3px 3px 9px 9px', padding: '9px 11px', minWidth: 120, flex: '1 1 120px', maxWidth: 170 }}>
+                  <div style={{ color: POS_COLORS[pos] || T.dim, fontSize: 10.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>{pos}</div>
                   {players.map(function(p, i) {
                     return (
                       <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12.5, padding: '3px 0', borderBottom: i < players.length - 1 ? '1px solid ' + T.border : 'none' }}>
@@ -914,7 +957,7 @@ function TradeGrader(props) {
                   const players = result.waiverContext[pos];
                   return (
                     <div key={pos} style={{ marginBottom: 8 }}>
-                      <span style={{ color: POSColors[pos] || T.dim, fontSize: 11, fontWeight: 700, textTransform: 'uppercase' }}>{pos + ': '}</span>
+                      <span style={{ color: POS_COLORS[pos] || T.dim, fontSize: 11, fontWeight: 700, textTransform: 'uppercase' }}>{pos + ': '}</span>
                       {players.map(function(p, i) {
                         return <span key={i} style={{ fontSize: 13, color: T.text }}>{p.player.name + ' '}<span style={{ color: T.dim, fontSize: 12 }}>{'(' + p.redraftValue.toLocaleString() + ')'}</span>{i < players.length - 1 ? <span style={{ color: T.faint }}> · </span> : ''}</span>;
                       })}
@@ -969,7 +1012,6 @@ async function sget(url) {
 
 function fmtPts(n) { return (Math.round((n || 0) * 100) / 100).toFixed(2); }
 
-const POS_TINT = { QB: '#ff7a1a', RB: '#10b981', WR: '#60a5fa', TE: '#a855f7', K: '#94a3b8', DEF: '#f87171', FLEX: '#f59e0b' };
 
 function LiveTab(props) {
   const { rostersData } = props;
@@ -1191,7 +1233,7 @@ function LiveTab(props) {
                 {rows.map(function(row) {
                   const key = entry.roster_id + ':' + row.i;
                   const isOpen = !!revealed[key];
-                  const tint = POS_TINT[row.slot] || T.dim;
+                  const tint = POS_COLORS[row.slot] || T.dim;
                   if (row.empty) {
                     return (
                       <div key={row.i} style={{ display: 'flex', alignItems: 'center', gap: 9, padding: '7px 0', borderBottom: '1px solid ' + T.border }}>
@@ -1290,9 +1332,19 @@ export default function App() {
       </div>
 
       <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-        {tab === 'stats' && <StatsTab historyData={history} statsData={stats} alltimeData={alltime} transactionsData={transactions} loreMaster={lore.master} />}
-        {tab === 'banter' && <BanterTab historyData={history} statsData={stats} alltimeData={alltime} lore={lore} />}
-        {tab === 'trade' && <TradeGrader rostersData={rosters} tradeValues={trades} />}
+        {/* Stats / Banter / Trade stay MOUNTED (toggle display) so chat history and
+            trade inputs survive tab switches — storage APIs throw in the artifact
+            sandbox, so keep-alive is the only option. Live mounts on demand: it
+            fetches Sleeper on mount and is spoiler-safe, so a fresh mount is correct. */}
+        <div style={{ display: tab === 'stats' ? 'flex' : 'none', flex: 1, minHeight: 0, flexDirection: 'column' }}>
+          <StatsTab historyData={history} statsData={stats} alltimeData={alltime} transactionsData={transactions} loreMaster={lore.master} />
+        </div>
+        <div style={{ display: tab === 'banter' ? 'flex' : 'none', flex: 1, minHeight: 0, flexDirection: 'column' }}>
+          <BanterTab historyData={history} statsData={stats} alltimeData={alltime} lore={lore} />
+        </div>
+        <div style={{ display: tab === 'trade' ? 'flex' : 'none', flex: 1, minHeight: 0, flexDirection: 'column' }}>
+          <TradeGrader rostersData={rosters} tradeValues={trades} />
+        </div>
         {tab === 'live' && <LiveTab rostersData={rosters} />}
       </div>
 

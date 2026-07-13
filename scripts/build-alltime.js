@@ -8,7 +8,12 @@
 const fs   = require("fs");
 const path = require("path");
 
-const HISTORY = path.join(__dirname, "../docs/data/history.json");
+// Read the FULL detail file (per-game positional/bench arrays) — the served
+// history.json is lean and lacks them. Falls back to history.json if details
+// are absent (e.g. a partial local run).
+const HISTORY = fs.existsSync(path.join(__dirname, "../docs/data/history-details.json"))
+  ? path.join(__dirname, "../docs/data/history-details.json")
+  : path.join(__dirname, "../docs/data/history.json");
 const OUT     = path.join(__dirname, "../docs/data/alltime.json");
 
 // Merge alternate Sleeper handles for the same person (Alastair's old account).

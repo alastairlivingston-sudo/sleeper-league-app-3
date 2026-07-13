@@ -10,22 +10,10 @@ const ROOT = path.join(__dirname, "..");
 const SRC  = path.join(ROOT, "commissioner.template.jsx");
 const OUT  = path.join(ROOT, "commissioner.jsx");
 
-// Strip per-game player name arrays (as/bs/ab/bb) from the INLINED fallback.
-// The app always fetches full history.json at runtime; the inlined copy is
-// only used offline, so we keep it small by dropping the bulky player lists.
-function trimHistory(raw) {
-  if (!raw || !Array.isArray(raw.seasons)) return raw;
-  return {
-    ...raw,
-    seasons: raw.seasons.map(s => ({
-      ...s,
-      games: (s.games || []).map(({ as, bs, ab, bb, ...rest }) => rest),
-    })),
-  };
-}
-
 const DATA = {
-  __HISTORY__:      { file: path.join(ROOT, "docs/data/history.json"), transform: trimHistory },
+  // history.json is already lean (produced without the per-game player arrays);
+  // it is the offline fallback verbatim.
+  __HISTORY__:      { file: path.join(ROOT, "docs/data/history.json") },
   __STATS__:        { file: path.join(ROOT, "docs/data/stats.json") },
   __ROSTERS__:      { file: path.join(ROOT, "docs/data/rosters.json") },
   __TRADES__:       { file: path.join(ROOT, "docs/data/fc-values.json") },

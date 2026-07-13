@@ -131,12 +131,15 @@ async function main() {
     if (!highWeek || high > Math.max(highWeek.pa, highWeek.pb)) highWeek = g;
   }
 
+  // NB: the per-game `games` array (heavy: as/bs/ab/bb) is intentionally NOT
+  // serialised — the artifact only reads standings/headToHead/extremes, and the
+  // full game list lives in history.json. `games` is still used above to derive
+  // headToHead + extremes.
   const out = {
     league: league.name,
     season: league.season,
     standings: standingsArr,
     headToHead: h2h,
-    games,
     extremes: {
       closestGame: closest,
       biggestBlowout: blowout,

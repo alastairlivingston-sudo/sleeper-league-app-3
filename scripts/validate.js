@@ -96,6 +96,18 @@ for (const s of history.seasons || []) {
   }
 }
 
+// history-details.json (full per-game arrays, read by build-alltime) must carry
+// exactly the same games as the lean history.json — guards the split.
+const detailsPath = path.join(DATA, "history-details.json");
+if (fs.existsSync(detailsPath)) {
+  const details = readJson(detailsPath);
+  const countGames = (h) => (h.seasons || []).reduce((n, s) => n + (s.games || []).length, 0);
+  check(countGames(details) === countGames(history), "history.details.count",
+    `history-details game count ${countGames(details)} != history ${countGames(history)}`);
+  check(details.meta && details.meta.generated, "history.details.meta",
+    "history-details.json missing meta.generated");
+}
+
 const playedSeasons = (history.seasons || []).filter((s) => (s.games || []).length > 0);
 const latest = playedSeasons[playedSeasons.length - 1];
 
