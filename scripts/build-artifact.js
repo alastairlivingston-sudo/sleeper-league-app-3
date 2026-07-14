@@ -19,6 +19,7 @@ const DATA = {
   __TRADES__:       { file: path.join(ROOT, "docs/data/fc-values.json") },
   __ALLTIME__:      { file: path.join(ROOT, "docs/data/alltime.json") },
   __TRANSACTIONS__: { file: path.join(ROOT, "docs/data/transactions.json"), optional: true },
+  __PLAYERS__:      { file: path.join(ROOT, "docs/data/player-scores.json"), optional: true },
 };
 
 const SCALARS = {

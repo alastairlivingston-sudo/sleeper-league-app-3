@@ -1,0 +1,8552 @@
+[
+  {
+    "player": "Josh Allen",
+    "pos": "QB",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 16,
+    "pts": 414.62,
+    "best": 48.68,
+    "avg": 25.91
+  },
+  {
+    "player": "Josh Allen",
+    "pos": "QB",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 15,
+    "pts": 367.88,
+    "best": 51.88,
+    "avg": 24.53
+  },
+  {
+    "player": "Josh Allen",
+    "pos": "QB",
+    "manager": "sanfbe",
+    "season": "2023",
+    "games": 15,
+    "pts": 348.42,
+    "best": 39.66,
+    "avg": 23.23
+  },
+  {
+    "player": "Christian McCaffrey",
+    "pos": "RB",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 15,
+    "pts": 341.7,
+    "best": 35.6,
+    "avg": 22.78
+  },
+  {
+    "player": "Saquon Barkley",
+    "pos": "RB",
+    "manager": "AlastairL",
+    "season": "2024",
+    "games": 15,
+    "pts": 330.4,
+    "best": 44.2,
+    "avg": 22.03
+  },
+  {
+    "player": "Bijan Robinson",
+    "pos": "RB",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 16,
+    "pts": 325.5,
+    "best": 37.4,
+    "avg": 20.34
+  },
+  {
+    "player": "Christian McCaffrey",
+    "pos": "RB",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 15,
+    "pts": 318.6,
+    "best": 45.2,
+    "avg": 21.24
+  },
+  {
+    "player": "Jalen Hurts",
+    "pos": "QB",
+    "manager": "dpol",
+    "season": "2023",
+    "games": 14,
+    "pts": 318.14,
+    "best": 34.5,
+    "avg": 22.72
+  },
+  {
+    "player": "Patrick Mahomes",
+    "pos": "QB",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 13,
+    "pts": 316.12,
+    "best": 37.48,
+    "avg": 24.32
+  },
+  {
+    "player": "Jalen Hurts",
+    "pos": "QB",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 15,
+    "pts": 315.12,
+    "best": 35.14,
+    "avg": 21.01
+  },
+  {
+    "player": "Jalen Hurts",
+    "pos": "QB",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 14,
+    "pts": 314.76,
+    "best": 35.04,
+    "avg": 22.48
+  },
+  {
+    "player": "Ja'Marr Chase",
+    "pos": "WR",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 15,
+    "pts": 305,
+    "best": 49.9,
+    "avg": 20.33
+  },
+  {
+    "player": "Derrick Henry",
+    "pos": "RB",
+    "manager": "AlastairL",
+    "season": "2024",
+    "games": 15,
+    "pts": 291.1,
+    "best": 34.4,
+    "avg": 19.41
+  },
+  {
+    "player": "De'Von Achane",
+    "pos": "RB",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 15,
+    "pts": 276.6,
+    "best": 37.5,
+    "avg": 18.44
+  },
+  {
+    "player": "Jahmyr Gibbs",
+    "pos": "RB",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 15,
+    "pts": 267.5,
+    "best": 30,
+    "avg": 17.83
+  },
+  {
+    "player": "Jonathan Taylor",
+    "pos": "RB",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 10,
+    "pts": 258.9,
+    "best": 48.1,
+    "avg": 25.89
+  },
+  {
+    "player": "Bijan Robinson",
+    "pos": "RB",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 15,
+    "pts": 257.6,
+    "best": 27.9,
+    "avg": 17.17
+  },
+  {
+    "player": "Patrick Mahomes",
+    "pos": "QB",
+    "manager": "benjlev",
+    "season": "2023",
+    "games": 14,
+    "pts": 251.52,
+    "best": 33.86,
+    "avg": 17.97
+  },
+  {
+    "player": "Drake Maye",
+    "pos": "QB",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 10,
+    "pts": 242.66,
+    "best": 33.24,
+    "avg": 24.27
+  },
+  {
+    "player": "Amon-Ra St. Brown",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 15,
+    "pts": 231.98,
+    "best": 33.2,
+    "avg": 15.47
+  },
+  {
+    "player": "A.J. Brown",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2023",
+    "games": 15,
+    "pts": 229.9,
+    "best": 34,
+    "avg": 15.33
+  },
+  {
+    "player": "Josh Jacobs",
+    "pos": "RB",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 13,
+    "pts": 228.2,
+    "best": 28.6,
+    "avg": 17.55
+  },
+  {
+    "player": "Justin Jefferson",
+    "pos": "WR",
+    "manager": "benjlev",
+    "season": "2024",
+    "games": 15,
+    "pts": 227.68,
+    "best": 28.7,
+    "avg": 15.18
+  },
+  {
+    "player": "Tua Tagovailoa",
+    "pos": "QB",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 13,
+    "pts": 227.08,
+    "best": 28.36,
+    "avg": 17.47
+  },
+  {
+    "player": "Lamar Jackson",
+    "pos": "QB",
+    "manager": "benjlev",
+    "season": "2025",
+    "games": 11,
+    "pts": 225.7,
+    "best": 34.3,
+    "avg": 20.52
+  },
+  {
+    "player": "Keenan Allen",
+    "pos": "WR",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 13,
+    "pts": 224.86,
+    "best": 36.46,
+    "avg": 17.3
+  },
+  {
+    "player": "Trey McBride",
+    "pos": "TE",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 15,
+    "pts": 224.3,
+    "best": 31.4,
+    "avg": 14.95
+  },
+  {
+    "player": "Kyren Williams",
+    "pos": "RB",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 14,
+    "pts": 222.8,
+    "best": 30.6,
+    "avg": 15.91
+  },
+  {
+    "player": "Justin Herbert",
+    "pos": "QB",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 12,
+    "pts": 220.28,
+    "best": 29.3,
+    "avg": 18.36
+  },
+  {
+    "player": "Josh Jacobs",
+    "pos": "RB",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 15,
+    "pts": 219.1,
+    "best": 29.7,
+    "avg": 14.61
+  },
+  {
+    "player": "Jaxon Smith-Njigba",
+    "pos": "WR",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 12,
+    "pts": 218.3,
+    "best": 33.1,
+    "avg": 18.19
+  },
+  {
+    "player": "Travis Etienne",
+    "pos": "RB",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 15,
+    "pts": 214.5,
+    "best": 30,
+    "avg": 14.3
+  },
+  {
+    "player": "Kyren Williams",
+    "pos": "RB",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 15,
+    "pts": 214.4,
+    "best": 27.1,
+    "avg": 14.29
+  },
+  {
+    "player": "Amon-Ra St. Brown",
+    "pos": "WR",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 15,
+    "pts": 211.2,
+    "best": 34.7,
+    "avg": 14.08
+  },
+  {
+    "player": "Joe Mixon",
+    "pos": "RB",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 12,
+    "pts": 211.1,
+    "best": 34.3,
+    "avg": 17.59
+  },
+  {
+    "player": "Ja'Marr Chase",
+    "pos": "WR",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 14,
+    "pts": 210,
+    "best": 30.1,
+    "avg": 15
+  },
+  {
+    "player": "Jahmyr Gibbs",
+    "pos": "RB",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 14,
+    "pts": 207.1,
+    "best": 27.4,
+    "avg": 14.79
+  },
+  {
+    "player": "George Pickens",
+    "pos": "WR",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 13,
+    "pts": 203.6,
+    "best": 29.4,
+    "avg": 15.66
+  },
+  {
+    "player": "Ja'Marr Chase",
+    "pos": "WR",
+    "manager": "dpol",
+    "season": "2023",
+    "games": 15,
+    "pts": 203.22,
+    "best": 44.7,
+    "avg": 13.55
+  },
+  {
+    "player": "Stefon Diggs",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2023",
+    "games": 15,
+    "pts": 203,
+    "best": 33,
+    "avg": 13.53
+  },
+  {
+    "player": "Lamar Jackson",
+    "pos": "QB",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 8,
+    "pts": 202.06,
+    "best": 34.44,
+    "avg": 25.26
+  },
+  {
+    "player": "Dak Prescott",
+    "pos": "QB",
+    "manager": "joshjr11",
+    "season": "2023",
+    "games": 9,
+    "pts": 199.74,
+    "best": 37.86,
+    "avg": 22.19
+  },
+  {
+    "player": "CeeDee Lamb",
+    "pos": "WR",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 9,
+    "pts": 199.1,
+    "best": 34,
+    "avg": 22.12
+  },
+  {
+    "player": "Bijan Robinson",
+    "pos": "RB",
+    "manager": "joshjr11",
+    "season": "2023",
+    "games": 15,
+    "pts": 194.8,
+    "best": 25.8,
+    "avg": 12.99
+  },
+  {
+    "player": "Puka Nacua",
+    "pos": "WR",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 14,
+    "pts": 194.4,
+    "best": 28.5,
+    "avg": 13.89
+  },
+  {
+    "player": "Derrick Henry",
+    "pos": "RB",
+    "manager": "benjlev",
+    "season": "2025",
+    "games": 14,
+    "pts": 191,
+    "best": 28.7,
+    "avg": 13.64
+  },
+  {
+    "player": "CeeDee Lamb",
+    "pos": "WR",
+    "manager": "AlastairL",
+    "season": "2024",
+    "games": 14,
+    "pts": 190.8,
+    "best": 33.1,
+    "avg": 13.63
+  },
+  {
+    "player": "Nico Collins",
+    "pos": "WR",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 15,
+    "pts": 190.7,
+    "best": 22,
+    "avg": 12.71
+  },
+  {
+    "player": "Patrick Mahomes",
+    "pos": "QB",
+    "manager": "benjlev",
+    "season": "2024",
+    "games": 12,
+    "pts": 190.1,
+    "best": 28.76,
+    "avg": 15.84
+  },
+  {
+    "player": "Breece Hall",
+    "pos": "RB",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 14,
+    "pts": 189.9,
+    "best": 27.6,
+    "avg": 13.56
+  },
+  {
+    "player": "Tyreek Hill",
+    "pos": "WR",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 9,
+    "pts": 189.8,
+    "best": 39,
+    "avg": 21.09
+  },
+  {
+    "player": "Deebo Samuel",
+    "pos": "WR",
+    "manager": "joshjr11",
+    "season": "2023",
+    "games": 12,
+    "pts": 189,
+    "best": 33.8,
+    "avg": 15.75
+  },
+  {
+    "player": "Derrick Henry",
+    "pos": "RB",
+    "manager": "benjlev",
+    "season": "2023",
+    "games": 14,
+    "pts": 186.28,
+    "best": 24.5,
+    "avg": 13.31
+  },
+  {
+    "player": "Breece Hall",
+    "pos": "RB",
+    "manager": "sanfbe",
+    "season": "2023",
+    "games": 14,
+    "pts": 186.2,
+    "best": 37.1,
+    "avg": 13.3
+  },
+  {
+    "player": "Saquon Barkley",
+    "pos": "RB",
+    "manager": "benjlev",
+    "season": "2025",
+    "games": 14,
+    "pts": 185.8,
+    "best": 31.4,
+    "avg": 13.27
+  },
+  {
+    "player": "Jahmyr Gibbs",
+    "pos": "RB",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 10,
+    "pts": 185.1,
+    "best": 36.7,
+    "avg": 18.51
+  },
+  {
+    "player": "David Montgomery",
+    "pos": "RB",
+    "manager": "AlastairL",
+    "season": "2024",
+    "games": 12,
+    "pts": 183.22,
+    "best": 23,
+    "avg": 15.27
+  },
+  {
+    "player": "De'Von Achane",
+    "pos": "RB",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 12,
+    "pts": 183,
+    "best": 28.1,
+    "avg": 15.25
+  },
+  {
+    "player": "Puka Nacua",
+    "pos": "WR",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 11,
+    "pts": 180.2,
+    "best": 29.5,
+    "avg": 16.38
+  },
+  {
+    "player": "DeVonta Smith",
+    "pos": "WR",
+    "manager": "joshjr11",
+    "season": "2023",
+    "games": 15,
+    "pts": 179.6,
+    "best": 21.1,
+    "avg": 11.97
+  },
+  {
+    "player": "Brandon Aubrey",
+    "pos": "K",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 15,
+    "pts": 179,
+    "best": 21,
+    "avg": 11.93
+  },
+  {
+    "player": "James Conner",
+    "pos": "RB",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 10,
+    "pts": 177.3,
+    "best": 28.3,
+    "avg": 17.73
+  },
+  {
+    "player": "Aaron Jones",
+    "pos": "RB",
+    "manager": "benjlev",
+    "season": "2024",
+    "games": 14,
+    "pts": 176.2,
+    "best": 23.3,
+    "avg": 12.59
+  },
+  {
+    "player": "Brandon Aubrey",
+    "pos": "K",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 15,
+    "pts": 176,
+    "best": 25.7,
+    "avg": 11.73
+  },
+  {
+    "player": "Lamar Jackson",
+    "pos": "QB",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 7,
+    "pts": 175.92,
+    "best": 36.1,
+    "avg": 25.13
+  },
+  {
+    "player": "Travis Etienne",
+    "pos": "RB",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 12,
+    "pts": 174.7,
+    "best": 34.4,
+    "avg": 14.56
+  },
+  {
+    "player": "Kyren Williams",
+    "pos": "RB",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 9,
+    "pts": 174.6,
+    "best": 35.4,
+    "avg": 19.4
+  },
+  {
+    "player": "Drake London",
+    "pos": "WR",
+    "manager": "benjlev",
+    "season": "2024",
+    "games": 14,
+    "pts": 173.9,
+    "best": 27.4,
+    "avg": 12.42
+  },
+  {
+    "player": "Travis Kelce",
+    "pos": "TE",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 15,
+    "pts": 172.9,
+    "best": 29.9,
+    "avg": 11.53
+  },
+  {
+    "player": "James Cook",
+    "pos": "RB",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 10,
+    "pts": 172.3,
+    "best": 33.6,
+    "avg": 17.23
+  },
+  {
+    "player": "D'Andre Swift",
+    "pos": "RB",
+    "manager": "sanfbe",
+    "season": "2023",
+    "games": 14,
+    "pts": 168.8,
+    "best": 25.6,
+    "avg": 12.06
+  },
+  {
+    "player": "Tony Pollard",
+    "pos": "RB",
+    "manager": "joshjr11",
+    "season": "2023",
+    "games": 14,
+    "pts": 167.4,
+    "best": 21.2,
+    "avg": 11.96
+  },
+  {
+    "player": "George Kittle",
+    "pos": "TE",
+    "manager": "dpol",
+    "season": "2023",
+    "games": 15,
+    "pts": 166.3,
+    "best": 26.2,
+    "avg": 11.09
+  },
+  {
+    "player": "Joe Burrow",
+    "pos": "QB",
+    "manager": "AlastairL",
+    "season": "2024",
+    "games": 6,
+    "pts": 165.54,
+    "best": 36.98,
+    "avg": 27.59
+  },
+  {
+    "player": "Trey McBride",
+    "pos": "TE",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 14,
+    "pts": 165.1,
+    "best": 24.3,
+    "avg": 11.79
+  },
+  {
+    "player": "Mike Evans",
+    "pos": "WR",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 12,
+    "pts": 164.3,
+    "best": 32.4,
+    "avg": 13.69
+  },
+  {
+    "player": "A.J. Brown",
+    "pos": "WR",
+    "manager": "benjlev",
+    "season": "2024",
+    "games": 12,
+    "pts": 163.7,
+    "best": 21,
+    "avg": 13.64
+  },
+  {
+    "player": "Saquon Barkley",
+    "pos": "RB",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 11,
+    "pts": 163.5,
+    "best": 28,
+    "avg": 14.86
+  },
+  {
+    "player": "Josh Jacobs",
+    "pos": "RB",
+    "manager": "dpol",
+    "season": "2023",
+    "games": 13,
+    "pts": 162.6,
+    "best": 23.9,
+    "avg": 12.51
+  },
+  {
+    "player": "Brian Robinson",
+    "pos": "RB",
+    "manager": "benjlev",
+    "season": "2023",
+    "games": 13,
+    "pts": 161.5,
+    "best": 27.9,
+    "avg": 12.42
+  },
+  {
+    "player": "Dak Prescott",
+    "pos": "QB",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 7,
+    "pts": 158.98,
+    "best": 32.32,
+    "avg": 22.71
+  },
+  {
+    "player": "Davante Adams",
+    "pos": "WR",
+    "manager": "dpol",
+    "season": "2023",
+    "games": 14,
+    "pts": 158.1,
+    "best": 35.7,
+    "avg": 11.29
+  },
+  {
+    "player": "Nico Collins",
+    "pos": "WR",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 10,
+    "pts": 156.9,
+    "best": 27.1,
+    "avg": 15.69
+  },
+  {
+    "player": "Raheem Mostert",
+    "pos": "RB",
+    "manager": "dpol",
+    "season": "2023",
+    "games": 9,
+    "pts": 155.1,
+    "best": 41.7,
+    "avg": 17.23
+  },
+  {
+    "player": "Drake London",
+    "pos": "WR",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 10,
+    "pts": 151.2,
+    "best": 34.3,
+    "avg": 15.12
+  },
+  {
+    "player": "Rachaad White",
+    "pos": "RB",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 9,
+    "pts": 150,
+    "best": 25.9,
+    "avg": 16.67
+  },
+  {
+    "player": "Lamar Jackson",
+    "pos": "QB",
+    "manager": "joshjr11",
+    "season": "2023",
+    "games": 7,
+    "pts": 146.7,
+    "best": 33.88,
+    "avg": 20.96
+  },
+  {
+    "player": "T.J. Hockenson",
+    "pos": "TE",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 12,
+    "pts": 146.6,
+    "best": 24.9,
+    "avg": 12.22
+  },
+  {
+    "player": "Baker Mayfield",
+    "pos": "QB",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 8,
+    "pts": 146.42,
+    "best": 27,
+    "avg": 18.3
+  },
+  {
+    "player": "Travis Kelce",
+    "pos": "TE",
+    "manager": "benjlev",
+    "season": "2025",
+    "games": 14,
+    "pts": 145.3,
+    "best": 19.6,
+    "avg": 10.38
+  },
+  {
+    "player": "Chase Brown",
+    "pos": "RB",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 8,
+    "pts": 144.1,
+    "best": 30.9,
+    "avg": 18.01
+  },
+  {
+    "player": "TreVeyon Henderson",
+    "pos": "RB",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 11,
+    "pts": 143.9,
+    "best": 29.8,
+    "avg": 13.08
+  },
+  {
+    "player": "Jason Myers",
+    "pos": "K",
+    "manager": "benjlev",
+    "season": "2025",
+    "games": 10,
+    "pts": 143.4,
+    "best": 26.3,
+    "avg": 14.34
+  },
+  {
+    "player": "Garrett Wilson",
+    "pos": "WR",
+    "manager": "benjlev",
+    "season": "2023",
+    "games": 14,
+    "pts": 142.6,
+    "best": 15.6,
+    "avg": 10.19
+  },
+  {
+    "player": "Jayden Daniels",
+    "pos": "QB",
+    "manager": "AlastairL",
+    "season": "2024",
+    "games": 7,
+    "pts": 142.44,
+    "best": 30.4,
+    "avg": 20.35
+  },
+  {
+    "player": "Cooper Kupp",
+    "pos": "WR",
+    "manager": "AlastairL",
+    "season": "2024",
+    "games": 11,
+    "pts": 141.5,
+    "best": 25.6,
+    "avg": 12.86
+  },
+  {
+    "player": "Rico Dowdle",
+    "pos": "RB",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 10,
+    "pts": 141.1,
+    "best": 31.9,
+    "avg": 14.11
+  },
+  {
+    "player": "A.J. Brown",
+    "pos": "WR",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 12,
+    "pts": 141,
+    "best": 30.2,
+    "avg": 11.75
+  },
+  {
+    "player": "James Cook",
+    "pos": "RB",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 9,
+    "pts": 139.1,
+    "best": 28,
+    "avg": 15.46
+  },
+  {
+    "player": "Mike Evans",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 9,
+    "pts": 138.1,
+    "best": 25.7,
+    "avg": 15.34
+  },
+  {
+    "player": "Amon-Ra St. Brown",
+    "pos": "WR",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 8,
+    "pts": 137.9,
+    "best": 26.5,
+    "avg": 17.24
+  },
+  {
+    "player": "George Kittle",
+    "pos": "TE",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 10,
+    "pts": 137.5,
+    "best": 21.8,
+    "avg": 13.75
+  },
+  {
+    "player": "Chris Olave",
+    "pos": "WR",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 12,
+    "pts": 137.2,
+    "best": 18.8,
+    "avg": 11.43
+  },
+  {
+    "player": "Brandon Aiyuk",
+    "pos": "WR",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 9,
+    "pts": 135.6,
+    "best": 28.9,
+    "avg": 15.07
+  },
+  {
+    "player": "Jonathan Taylor",
+    "pos": "RB",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 10,
+    "pts": 135.2,
+    "best": 26,
+    "avg": 13.52
+  },
+  {
+    "player": "Chase Brown",
+    "pos": "RB",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 7,
+    "pts": 134.9,
+    "best": 24.8,
+    "avg": 19.27
+  },
+  {
+    "player": "Puka Nacua",
+    "pos": "WR",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 9,
+    "pts": 134.6,
+    "best": 35.8,
+    "avg": 14.96
+  },
+  {
+    "player": "DJ Moore",
+    "pos": "WR",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 12,
+    "pts": 134.5,
+    "best": 25,
+    "avg": 11.21
+  },
+  {
+    "player": "Brian Thomas",
+    "pos": "WR",
+    "manager": "AlastairL",
+    "season": "2024",
+    "games": 8,
+    "pts": 133.6,
+    "best": 23.7,
+    "avg": 16.7
+  },
+  {
+    "player": "Quinshon Judkins",
+    "pos": "RB",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 12,
+    "pts": 132.2,
+    "best": 26.4,
+    "avg": 11.02
+  },
+  {
+    "player": "Ladd McConkey",
+    "pos": "WR",
+    "manager": "benjlev",
+    "season": "2025",
+    "games": 14,
+    "pts": 132,
+    "best": 19.5,
+    "avg": 9.43
+  },
+  {
+    "player": "Kenneth Walker",
+    "pos": "RB",
+    "manager": "sanfbe",
+    "season": "2023",
+    "games": 10,
+    "pts": 129.1,
+    "best": 29.1,
+    "avg": 12.91
+  },
+  {
+    "player": "Davante Adams",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 9,
+    "pts": 128.2,
+    "best": 24,
+    "avg": 14.24
+  },
+  {
+    "player": "Alvin Kamara",
+    "pos": "RB",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 7,
+    "pts": 128,
+    "best": 43,
+    "avg": 18.29
+  },
+  {
+    "player": "Jayden Daniels",
+    "pos": "QB",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 6,
+    "pts": 127.56,
+    "best": 27.64,
+    "avg": 21.26
+  },
+  {
+    "player": "Rhamondre Stevenson",
+    "pos": "RB",
+    "manager": "benjlev",
+    "season": "2023",
+    "games": 12,
+    "pts": 126.7,
+    "best": 20.9,
+    "avg": 10.56
+  },
+  {
+    "player": "Brock Bowers",
+    "pos": "TE",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 10,
+    "pts": 126.6,
+    "best": 37.3,
+    "avg": 12.66
+  },
+  {
+    "player": "Breece Hall",
+    "pos": "RB",
+    "manager": "benjlev",
+    "season": "2025",
+    "games": 11,
+    "pts": 126.16,
+    "best": 33.86,
+    "avg": 11.47
+  },
+  {
+    "player": "Lamar Jackson",
+    "pos": "QB",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 7,
+    "pts": 125.6,
+    "best": 31.64,
+    "avg": 17.94
+  },
+  {
+    "player": "Calvin Ridley",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2023",
+    "games": 11,
+    "pts": 124.6,
+    "best": 27.6,
+    "avg": 11.33
+  },
+  {
+    "player": "DJ Moore",
+    "pos": "WR",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 9,
+    "pts": 123.8,
+    "best": 45,
+    "avg": 13.76
+  },
+  {
+    "player": "DK Metcalf",
+    "pos": "WR",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 11,
+    "pts": 123.7,
+    "best": 17.9,
+    "avg": 11.25
+  },
+  {
+    "player": "Rashee Rice",
+    "pos": "WR",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 8,
+    "pts": 123.6,
+    "best": 25.4,
+    "avg": 15.45
+  },
+  {
+    "player": "Zay Flowers",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 13,
+    "pts": 123.5,
+    "best": 27.2,
+    "avg": 9.5
+  },
+  {
+    "player": "Tee Higgins",
+    "pos": "WR",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 9,
+    "pts": 122.7,
+    "best": 29.6,
+    "avg": 13.63
+  },
+  {
+    "player": "Harrison Butker",
+    "pos": "K",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 15,
+    "pts": 122,
+    "best": 17,
+    "avg": 8.13
+  },
+  {
+    "player": "Travis Kelce",
+    "pos": "TE",
+    "manager": "benjlev",
+    "season": "2024",
+    "games": 14,
+    "pts": 121.4,
+    "best": 18.4,
+    "avg": 8.67
+  },
+  {
+    "player": "Brandon Aubrey",
+    "pos": "K",
+    "manager": "dpol",
+    "season": "2023",
+    "games": 12,
+    "pts": 121,
+    "best": 22,
+    "avg": 10.08
+  },
+  {
+    "player": "Tyler Warren",
+    "pos": "TE",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 12,
+    "pts": 121,
+    "best": 15.8,
+    "avg": 10.08
+  },
+  {
+    "player": "David Montgomery",
+    "pos": "RB",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 9,
+    "pts": 120.7,
+    "best": 19.9,
+    "avg": 13.41
+  },
+  {
+    "player": "Marvin Harrison",
+    "pos": "WR",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 13,
+    "pts": 120.6,
+    "best": 27,
+    "avg": 9.28
+  },
+  {
+    "player": "Malik Nabers",
+    "pos": "WR",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 9,
+    "pts": 120.3,
+    "best": 24.2,
+    "avg": 13.37
+  },
+  {
+    "player": "Ka'imi Fairbairn",
+    "pos": "K",
+    "manager": "AlastairL",
+    "season": "2024",
+    "games": 12,
+    "pts": 120,
+    "best": 16,
+    "avg": 10
+  },
+  {
+    "player": "Courtland Sutton",
+    "pos": "WR",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 10,
+    "pts": 118.2,
+    "best": 20.8,
+    "avg": 11.82
+  },
+  {
+    "player": "CeeDee Lamb",
+    "pos": "WR",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 9,
+    "pts": 118.2,
+    "best": 20.7,
+    "avg": 13.13
+  },
+  {
+    "player": "Jaylen Waddle",
+    "pos": "WR",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 11,
+    "pts": 117.72,
+    "best": 20,
+    "avg": 10.7
+  },
+  {
+    "player": "Joe Burrow",
+    "pos": "QB",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 6,
+    "pts": 116.92,
+    "best": 36.96,
+    "avg": 19.49
+  },
+  {
+    "player": "SEA",
+    "pos": "DEF",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 10,
+    "pts": 116,
+    "best": 30,
+    "avg": 11.6
+  },
+  {
+    "player": "James Cook",
+    "pos": "RB",
+    "manager": "joshjr11",
+    "season": "2023",
+    "games": 11,
+    "pts": 114,
+    "best": 17.9,
+    "avg": 10.36
+  },
+  {
+    "player": "Justin Tucker",
+    "pos": "K",
+    "manager": "joshjr11",
+    "season": "2023",
+    "games": 11,
+    "pts": 113,
+    "best": 19,
+    "avg": 10.27
+  },
+  {
+    "player": "Mark Andrews",
+    "pos": "TE",
+    "manager": "joshjr11",
+    "season": "2023",
+    "games": 10,
+    "pts": 112.9,
+    "best": 22.5,
+    "avg": 11.29
+  },
+  {
+    "player": "Jason Myers",
+    "pos": "K",
+    "manager": "benjlev",
+    "season": "2023",
+    "games": 12,
+    "pts": 112,
+    "best": 21,
+    "avg": 9.33
+  },
+  {
+    "player": "Austin Ekeler",
+    "pos": "RB",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 8,
+    "pts": 109.9,
+    "best": 24.4,
+    "avg": 13.74
+  },
+  {
+    "player": "Evan Engram",
+    "pos": "TE",
+    "manager": "benjlev",
+    "season": "2023",
+    "games": 11,
+    "pts": 109.8,
+    "best": 27,
+    "avg": 9.98
+  },
+  {
+    "player": "Amon-Ra St. Brown",
+    "pos": "WR",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 7,
+    "pts": 109.6,
+    "best": 22.6,
+    "avg": 15.66
+  },
+  {
+    "player": "Terry McLaurin",
+    "pos": "WR",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 7,
+    "pts": 109.5,
+    "best": 23.3,
+    "avg": 15.64
+  },
+  {
+    "player": "Tyreek Hill",
+    "pos": "WR",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 6,
+    "pts": 109.4,
+    "best": 29.8,
+    "avg": 18.23
+  },
+  {
+    "player": "Sam LaPorta",
+    "pos": "TE",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 13,
+    "pts": 108.7,
+    "best": 15.4,
+    "avg": 8.36
+  },
+  {
+    "player": "George Pickens",
+    "pos": "WR",
+    "manager": "benjlev",
+    "season": "2024",
+    "games": 11,
+    "pts": 108.3,
+    "best": 18,
+    "avg": 9.85
+  },
+  {
+    "player": "Justin Jefferson",
+    "pos": "WR",
+    "manager": "benjlev",
+    "season": "2023",
+    "games": 7,
+    "pts": 106.7,
+    "best": 24.4,
+    "avg": 15.24
+  },
+  {
+    "player": "D'Andre Swift",
+    "pos": "RB",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 8,
+    "pts": 106.7,
+    "best": 20.9,
+    "avg": 13.34
+  },
+  {
+    "player": "Chris Olave",
+    "pos": "WR",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 8,
+    "pts": 106.3,
+    "best": 31.8,
+    "avg": 13.29
+  },
+  {
+    "player": "BUF",
+    "pos": "DEF",
+    "manager": "sanfbe",
+    "season": "2023",
+    "games": 11,
+    "pts": 106,
+    "best": 32,
+    "avg": 9.64
+  },
+  {
+    "player": "Justin Fields",
+    "pos": "QB",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 6,
+    "pts": 105.74,
+    "best": 32.98,
+    "avg": 17.62
+  },
+  {
+    "player": "Tyreek Hill",
+    "pos": "WR",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 10,
+    "pts": 105.5,
+    "best": 22.5,
+    "avg": 10.55
+  },
+  {
+    "player": "SF",
+    "pos": "DEF",
+    "manager": "benjlev",
+    "season": "2023",
+    "games": 13,
+    "pts": 104,
+    "best": 16,
+    "avg": 8
+  },
+  {
+    "player": "Adam Thielen",
+    "pos": "WR",
+    "manager": "benjlev",
+    "season": "2023",
+    "games": 11,
+    "pts": 101.3,
+    "best": 23,
+    "avg": 9.21
+  },
+  {
+    "player": "Garrett Wilson",
+    "pos": "WR",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 8,
+    "pts": 101.3,
+    "best": 22.6,
+    "avg": 12.66
+  },
+  {
+    "player": "Jahmyr Gibbs",
+    "pos": "RB",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 4,
+    "pts": 101.3,
+    "best": 49.9,
+    "avg": 25.33
+  },
+  {
+    "player": "Kenneth Walker",
+    "pos": "RB",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 6,
+    "pts": 100.6,
+    "best": 31.6,
+    "avg": 16.77
+  },
+  {
+    "player": "J.K. Dobbins",
+    "pos": "RB",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 8,
+    "pts": 99.4,
+    "best": 19.6,
+    "avg": 12.43
+  },
+  {
+    "player": "Marvin Harrison",
+    "pos": "WR",
+    "manager": "benjlev",
+    "season": "2025",
+    "games": 9,
+    "pts": 98.6,
+    "best": 19.1,
+    "avg": 10.96
+  },
+  {
+    "player": "Stefon Diggs",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 8,
+    "pts": 98.42,
+    "best": 18.9,
+    "avg": 12.3
+  },
+  {
+    "player": "Tee Higgins",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 6,
+    "pts": 98.3,
+    "best": 25.3,
+    "avg": 16.38
+  },
+  {
+    "player": "Ashton Jeanty",
+    "pos": "RB",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 9,
+    "pts": 98,
+    "best": 20.8,
+    "avg": 10.89
+  },
+  {
+    "player": "Michael Wilson",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 6,
+    "pts": 97.1,
+    "best": 31.7,
+    "avg": 16.18
+  },
+  {
+    "player": "Deebo Samuel",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 11,
+    "pts": 96.9,
+    "best": 19.6,
+    "avg": 8.81
+  },
+  {
+    "player": "Isiah Pacheco",
+    "pos": "RB",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 7,
+    "pts": 96.6,
+    "best": 23.4,
+    "avg": 13.8
+  },
+  {
+    "player": "DK Metcalf",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 9,
+    "pts": 96.4,
+    "best": 18.3,
+    "avg": 10.71
+  },
+  {
+    "player": "Justin Tucker",
+    "pos": "K",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 11,
+    "pts": 96,
+    "best": 13,
+    "avg": 8.73
+  },
+  {
+    "player": "DeVonta Smith",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 9,
+    "pts": 94.2,
+    "best": 28.8,
+    "avg": 10.47
+  },
+  {
+    "player": "Rachaad White",
+    "pos": "RB",
+    "manager": "benjlev",
+    "season": "2024",
+    "games": 10,
+    "pts": 92.3,
+    "best": 16,
+    "avg": 9.23
+  },
+  {
+    "player": "David Njoku",
+    "pos": "TE",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 7,
+    "pts": 92,
+    "best": 21.7,
+    "avg": 13.14
+  },
+  {
+    "player": "Jordan Addison",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 5,
+    "pts": 91.4,
+    "best": 35.3,
+    "avg": 18.28
+  },
+  {
+    "player": "Mark Andrews",
+    "pos": "TE",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 8,
+    "pts": 90.9,
+    "best": 18.1,
+    "avg": 11.36
+  },
+  {
+    "player": "CLE",
+    "pos": "DEF",
+    "manager": "joshjr11",
+    "season": "2023",
+    "games": 9,
+    "pts": 90,
+    "best": 23,
+    "avg": 10
+  },
+  {
+    "player": "Stefon Diggs",
+    "pos": "WR",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 9,
+    "pts": 89.2,
+    "best": 19.1,
+    "avg": 9.91
+  },
+  {
+    "player": "Alvin Kamara",
+    "pos": "RB",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 6,
+    "pts": 88.1,
+    "best": 24.5,
+    "avg": 14.68
+  },
+  {
+    "player": "George Kittle",
+    "pos": "TE",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 8,
+    "pts": 87.8,
+    "best": 21.7,
+    "avg": 10.98
+  },
+  {
+    "player": "Courtland Sutton",
+    "pos": "WR",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 6,
+    "pts": 87.7,
+    "best": 25.7,
+    "avg": 14.62
+  },
+  {
+    "player": "Justin Jefferson",
+    "pos": "WR",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 7,
+    "pts": 87.1,
+    "best": 17.6,
+    "avg": 12.44
+  },
+  {
+    "player": "Jared Goff",
+    "pos": "QB",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 4,
+    "pts": 86.22,
+    "best": 32.46,
+    "avg": 21.56
+  },
+  {
+    "player": "Evan McPherson",
+    "pos": "K",
+    "manager": "benjlev",
+    "season": "2024",
+    "games": 11,
+    "pts": 86,
+    "best": 16,
+    "avg": 7.82
+  },
+  {
+    "player": "Puka Nacua",
+    "pos": "WR",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 3,
+    "pts": 85.9,
+    "best": 40.5,
+    "avg": 28.63
+  },
+  {
+    "player": "MIA",
+    "pos": "DEF",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 7,
+    "pts": 85,
+    "best": 24,
+    "avg": 12.14
+  },
+  {
+    "player": "Cameron Dicker",
+    "pos": "K",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 8,
+    "pts": 84.6,
+    "best": 16.2,
+    "avg": 10.58
+  },
+  {
+    "player": "Javonte Williams",
+    "pos": "RB",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 6,
+    "pts": 84.6,
+    "best": 26.4,
+    "avg": 14.1
+  },
+  {
+    "player": "DeVonta Smith",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 8,
+    "pts": 84.2,
+    "best": 17.5,
+    "avg": 10.53
+  },
+  {
+    "player": "Michael Pittman",
+    "pos": "WR",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 7,
+    "pts": 83.5,
+    "best": 19.5,
+    "avg": 11.93
+  },
+  {
+    "player": "Rome Odunze",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 10,
+    "pts": 83.1,
+    "best": 17.6,
+    "avg": 8.31
+  },
+  {
+    "player": "Bo Nix",
+    "pos": "QB",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 4,
+    "pts": 82.22,
+    "best": 28.78,
+    "avg": 20.56
+  },
+  {
+    "player": "Terry McLaurin",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 7,
+    "pts": 82.1,
+    "best": 20.3,
+    "avg": 11.73
+  },
+  {
+    "player": "PIT",
+    "pos": "DEF",
+    "manager": "AlastairL",
+    "season": "2024",
+    "games": 9,
+    "pts": 82,
+    "best": 15,
+    "avg": 9.11
+  },
+  {
+    "player": "Kareem Hunt",
+    "pos": "RB",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 6,
+    "pts": 82,
+    "best": 21.3,
+    "avg": 13.67
+  },
+  {
+    "player": "Garrett Wilson",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 7,
+    "pts": 81.5,
+    "best": 19.4,
+    "avg": 11.64
+  },
+  {
+    "player": "Jordan Addison",
+    "pos": "WR",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 6,
+    "pts": 81,
+    "best": 27.8,
+    "avg": 13.5
+  },
+  {
+    "player": "Davante Adams",
+    "pos": "WR",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 6,
+    "pts": 80,
+    "best": 21.4,
+    "avg": 13.33
+  },
+  {
+    "player": "Kyler Murray",
+    "pos": "QB",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 5,
+    "pts": 79.44,
+    "best": 28.54,
+    "avg": 15.89
+  },
+  {
+    "player": "Tyler Lockett",
+    "pos": "WR",
+    "manager": "joshjr11",
+    "season": "2023",
+    "games": 8,
+    "pts": 79.2,
+    "best": 21.9,
+    "avg": 9.9
+  },
+  {
+    "player": "Jake Bates",
+    "pos": "K",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 8,
+    "pts": 79.2,
+    "best": 18.1,
+    "avg": 9.9
+  },
+  {
+    "player": "Christian Kirk",
+    "pos": "WR",
+    "manager": "dpol",
+    "season": "2023",
+    "games": 8,
+    "pts": 78.1,
+    "best": 16,
+    "avg": 9.76
+  },
+  {
+    "player": "James Cook",
+    "pos": "RB",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 4,
+    "pts": 77.8,
+    "best": 30.1,
+    "avg": 19.45
+  },
+  {
+    "player": "Alvin Kamara",
+    "pos": "RB",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 6,
+    "pts": 77.2,
+    "best": 25.9,
+    "avg": 12.87
+  },
+  {
+    "player": "Tyler Bass",
+    "pos": "K",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 9,
+    "pts": 77,
+    "best": 15,
+    "avg": 8.56
+  },
+  {
+    "player": "RJ Harvey",
+    "pos": "RB",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 5,
+    "pts": 75.8,
+    "best": 20.1,
+    "avg": 15.16
+  },
+  {
+    "player": "Ladd McConkey",
+    "pos": "WR",
+    "manager": "AlastairL",
+    "season": "2024",
+    "games": 6,
+    "pts": 75.1,
+    "best": 25.4,
+    "avg": 12.52
+  },
+  {
+    "player": "Jayden Reed",
+    "pos": "WR",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 7,
+    "pts": 75,
+    "best": 23.6,
+    "avg": 10.71
+  },
+  {
+    "player": "Joe Burrow",
+    "pos": "QB",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 5,
+    "pts": 74.56,
+    "best": 22.32,
+    "avg": 14.91
+  },
+  {
+    "player": "James Cook",
+    "pos": "RB",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 4,
+    "pts": 74.3,
+    "best": 26.1,
+    "avg": 18.58
+  },
+  {
+    "player": "Chris Godwin",
+    "pos": "WR",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 5,
+    "pts": 73.3,
+    "best": 30,
+    "avg": 14.66
+  },
+  {
+    "player": "Michael Pittman",
+    "pos": "WR",
+    "manager": "joshjr11",
+    "season": "2023",
+    "games": 5,
+    "pts": 72.7,
+    "best": 22,
+    "avg": 14.54
+  },
+  {
+    "player": "CeeDee Lamb",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 6,
+    "pts": 72.6,
+    "best": 19.8,
+    "avg": 12.1
+  },
+  {
+    "player": "C.J. Stroud",
+    "pos": "QB",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 4,
+    "pts": 72.4,
+    "best": 23.5,
+    "avg": 18.1
+  },
+  {
+    "player": "Alvin Kamara",
+    "pos": "RB",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 4,
+    "pts": 72.3,
+    "best": 25,
+    "avg": 18.08
+  },
+  {
+    "player": "DeAndre Hopkins",
+    "pos": "WR",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 7,
+    "pts": 71.7,
+    "best": 21.9,
+    "avg": 10.24
+  },
+  {
+    "player": "Nico Collins",
+    "pos": "WR",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 6,
+    "pts": 71.5,
+    "best": 29.6,
+    "avg": 11.92
+  },
+  {
+    "player": "Baker Mayfield",
+    "pos": "QB",
+    "manager": "benjlev",
+    "season": "2025",
+    "games": 4,
+    "pts": 71.5,
+    "best": 30.66,
+    "avg": 17.88
+  },
+  {
+    "player": "Tyler Bass",
+    "pos": "K",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 10,
+    "pts": 71,
+    "best": 15,
+    "avg": 7.1
+  },
+  {
+    "player": "Joe Mixon",
+    "pos": "RB",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 5,
+    "pts": 70.8,
+    "best": 18.5,
+    "avg": 14.16
+  },
+  {
+    "player": "Justin Herbert",
+    "pos": "QB",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 4,
+    "pts": 70.54,
+    "best": 22.78,
+    "avg": 17.64
+  },
+  {
+    "player": "Brian Robinson",
+    "pos": "RB",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 7,
+    "pts": 70.4,
+    "best": 18.8,
+    "avg": 10.06
+  },
+  {
+    "player": "Jerry Jeudy",
+    "pos": "WR",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 4,
+    "pts": 70.2,
+    "best": 36,
+    "avg": 17.55
+  },
+  {
+    "player": "Jake Ferguson",
+    "pos": "TE",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 9,
+    "pts": 69.9,
+    "best": 18.4,
+    "avg": 7.77
+  },
+  {
+    "player": "Rhamondre Stevenson",
+    "pos": "RB",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 7,
+    "pts": 69.5,
+    "best": 19.9,
+    "avg": 9.93
+  },
+  {
+    "player": "D'Andre Swift",
+    "pos": "RB",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 6,
+    "pts": 69.5,
+    "best": 19.9,
+    "avg": 11.58
+  },
+  {
+    "player": "Amari Cooper",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 6,
+    "pts": 69.2,
+    "best": 22.4,
+    "avg": 11.53
+  },
+  {
+    "player": "Ashton Jeanty",
+    "pos": "RB",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 5,
+    "pts": 69.1,
+    "best": 32.5,
+    "avg": 13.82
+  },
+  {
+    "player": "Mike Evans",
+    "pos": "WR",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 5,
+    "pts": 68.6,
+    "best": 26.1,
+    "avg": 13.72
+  },
+  {
+    "player": "Sam LaPorta",
+    "pos": "TE",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 8,
+    "pts": 68.2,
+    "best": 17.7,
+    "avg": 8.53
+  },
+  {
+    "player": "Jameson Williams",
+    "pos": "WR",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 7,
+    "pts": 68.1,
+    "best": 20.9,
+    "avg": 9.73
+  },
+  {
+    "player": "PHI",
+    "pos": "DEF",
+    "manager": "dpol",
+    "season": "2023",
+    "games": 9,
+    "pts": 68,
+    "best": 14,
+    "avg": 7.56
+  },
+  {
+    "player": "Rashee Rice",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 6,
+    "pts": 67.2,
+    "best": 19.6,
+    "avg": 11.2
+  },
+  {
+    "player": "Rachaad White",
+    "pos": "RB",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 6,
+    "pts": 65.8,
+    "best": 21.1,
+    "avg": 10.97
+  },
+  {
+    "player": "Kenneth Walker",
+    "pos": "RB",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 8,
+    "pts": 65.5,
+    "best": 17.5,
+    "avg": 8.19
+  },
+  {
+    "player": "SF",
+    "pos": "DEF",
+    "manager": "benjlev",
+    "season": "2025",
+    "games": 13,
+    "pts": 65,
+    "best": 12,
+    "avg": 5
+  },
+  {
+    "player": "DK Metcalf",
+    "pos": "WR",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 6,
+    "pts": 64.4,
+    "best": 18.4,
+    "avg": 10.73
+  },
+  {
+    "player": "Dustin Hopkins",
+    "pos": "K",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 10,
+    "pts": 64,
+    "best": 14,
+    "avg": 6.4
+  },
+  {
+    "player": "Garrett Wilson",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 6,
+    "pts": 64,
+    "best": 25.5,
+    "avg": 10.67
+  },
+  {
+    "player": "Sam Darnold",
+    "pos": "QB",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 3,
+    "pts": 63.96,
+    "best": 34.58,
+    "avg": 21.32
+  },
+  {
+    "player": "Brock Bowers",
+    "pos": "TE",
+    "manager": "benjlev",
+    "season": "2024",
+    "games": 5,
+    "pts": 63.9,
+    "best": 25.2,
+    "avg": 12.78
+  },
+  {
+    "player": "Jonathan Taylor",
+    "pos": "RB",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 5,
+    "pts": 63.9,
+    "best": 15.9,
+    "avg": 12.78
+  },
+  {
+    "player": "Chris Boswell",
+    "pos": "K",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 7,
+    "pts": 63.5,
+    "best": 22,
+    "avg": 9.07
+  },
+  {
+    "player": "Jake Elliott",
+    "pos": "K",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 7,
+    "pts": 63,
+    "best": 18,
+    "avg": 9
+  },
+  {
+    "player": "Jonathan Taylor",
+    "pos": "RB",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 5,
+    "pts": 63,
+    "best": 19.5,
+    "avg": 12.6
+  },
+  {
+    "player": "Jaylen Waddle",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 6,
+    "pts": 62.7,
+    "best": 14.6,
+    "avg": 10.45
+  },
+  {
+    "player": "Bucky Irving",
+    "pos": "RB",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 4,
+    "pts": 62.5,
+    "best": 23,
+    "avg": 15.63
+  },
+  {
+    "player": "Jared Goff",
+    "pos": "QB",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 3,
+    "pts": 61.96,
+    "best": 26.12,
+    "avg": 20.65
+  },
+  {
+    "player": "Jaxon Smith-Njigba",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 5,
+    "pts": 61.7,
+    "best": 17.1,
+    "avg": 12.34
+  },
+  {
+    "player": "Matthew Stafford",
+    "pos": "QB",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 3,
+    "pts": 61.62,
+    "best": 29.24,
+    "avg": 20.54
+  },
+  {
+    "player": "Joe Mixon",
+    "pos": "RB",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 6,
+    "pts": 61,
+    "best": 13.5,
+    "avg": 10.17
+  },
+  {
+    "player": "De'Von Achane",
+    "pos": "RB",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 5,
+    "pts": 61,
+    "best": 21.7,
+    "avg": 12.2
+  },
+  {
+    "player": "KC",
+    "pos": "DEF",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 8,
+    "pts": 61,
+    "best": 14,
+    "avg": 7.63
+  },
+  {
+    "player": "Harrison Butker",
+    "pos": "K",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 6,
+    "pts": 61,
+    "best": 14,
+    "avg": 10.17
+  },
+  {
+    "player": "Javonte Williams",
+    "pos": "RB",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 5,
+    "pts": 61,
+    "best": 15.5,
+    "avg": 12.2
+  },
+  {
+    "player": "James Conner",
+    "pos": "RB",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 6,
+    "pts": 60.6,
+    "best": 18.6,
+    "avg": 10.1
+  },
+  {
+    "player": "Jaylen Waddle",
+    "pos": "WR",
+    "manager": "joshjr11",
+    "season": "2023",
+    "games": 6,
+    "pts": 60.3,
+    "best": 21.6,
+    "avg": 10.05
+  },
+  {
+    "player": "Joe Mixon",
+    "pos": "RB",
+    "manager": "sanfbe",
+    "season": "2023",
+    "games": 3,
+    "pts": 60.3,
+    "best": 26.7,
+    "avg": 20.1
+  },
+  {
+    "player": "Jake Bates",
+    "pos": "K",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 7,
+    "pts": 60.3,
+    "best": 14.6,
+    "avg": 8.61
+  },
+  {
+    "player": "Michael Pittman",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 5,
+    "pts": 60.2,
+    "best": 15.4,
+    "avg": 12.04
+  },
+  {
+    "player": "Tank Dell",
+    "pos": "WR",
+    "manager": "dpol",
+    "season": "2023",
+    "games": 5,
+    "pts": 60.1,
+    "best": 24.9,
+    "avg": 12.02
+  },
+  {
+    "player": "Amari Cooper",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2023",
+    "games": 3,
+    "pts": 60.1,
+    "best": 46,
+    "avg": 20.03
+  },
+  {
+    "player": "Justin Fields",
+    "pos": "QB",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 3,
+    "pts": 59.8,
+    "best": 24.72,
+    "avg": 19.93
+  },
+  {
+    "player": "Darnell Mooney",
+    "pos": "WR",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 6,
+    "pts": 59.1,
+    "best": 17.3,
+    "avg": 9.85
+  },
+  {
+    "player": "DAL",
+    "pos": "DEF",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 6,
+    "pts": 59,
+    "best": 21,
+    "avg": 9.83
+  },
+  {
+    "player": "Jake Bates",
+    "pos": "K",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 6,
+    "pts": 59,
+    "best": 12,
+    "avg": 9.83
+  },
+  {
+    "player": "Jaxon Smith-Njigba",
+    "pos": "WR",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 3,
+    "pts": 59,
+    "best": 24.6,
+    "avg": 19.67
+  },
+  {
+    "player": "Sam LaPorta",
+    "pos": "TE",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 7,
+    "pts": 58.4,
+    "best": 18.2,
+    "avg": 8.34
+  },
+  {
+    "player": "Tucker Kraft",
+    "pos": "TE",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 4,
+    "pts": 58.4,
+    "best": 29.8,
+    "avg": 14.6
+  },
+  {
+    "player": "Zay Flowers",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 5,
+    "pts": 58,
+    "best": 17.7,
+    "avg": 11.6
+  },
+  {
+    "player": "Cooper Kupp",
+    "pos": "WR",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 6,
+    "pts": 57.5,
+    "best": 21.1,
+    "avg": 9.58
+  },
+  {
+    "player": "Tucker Kraft",
+    "pos": "TE",
+    "manager": "AlastairL",
+    "season": "2024",
+    "games": 5,
+    "pts": 57,
+    "best": 22.8,
+    "avg": 11.4
+  },
+  {
+    "player": "Jordan Mason",
+    "pos": "RB",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 5,
+    "pts": 56.2,
+    "best": 23.6,
+    "avg": 11.24
+  },
+  {
+    "player": "Darren Waller",
+    "pos": "TE",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 7,
+    "pts": 55.6,
+    "best": 19.3,
+    "avg": 7.94
+  },
+  {
+    "player": "Kirk Cousins",
+    "pos": "QB",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 3,
+    "pts": 55.1,
+    "best": 25.68,
+    "avg": 18.37
+  },
+  {
+    "player": "De'Von Achane",
+    "pos": "RB",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 3,
+    "pts": 55,
+    "best": 28,
+    "avg": 18.33
+  },
+  {
+    "player": "Jauan Jennings",
+    "pos": "WR",
+    "manager": "AlastairL",
+    "season": "2024",
+    "games": 3,
+    "pts": 54.8,
+    "best": 24.5,
+    "avg": 18.27
+  },
+  {
+    "player": "David Njoku",
+    "pos": "TE",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 4,
+    "pts": 54.6,
+    "best": 24.1,
+    "avg": 13.65
+  },
+  {
+    "player": "Austin Seibert",
+    "pos": "K",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 4,
+    "pts": 54,
+    "best": 17,
+    "avg": 13.5
+  },
+  {
+    "player": "Justin Jefferson",
+    "pos": "WR",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 8,
+    "pts": 53,
+    "best": 13.7,
+    "avg": 6.63
+  },
+  {
+    "player": "Rashee Rice",
+    "pos": "WR",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 4,
+    "pts": 52.9,
+    "best": 23.1,
+    "avg": 13.23
+  },
+  {
+    "player": "Justin Herbert",
+    "pos": "QB",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 3,
+    "pts": 51.74,
+    "best": 31.7,
+    "avg": 17.25
+  },
+  {
+    "player": "Jordan Addison",
+    "pos": "WR",
+    "manager": "benjlev",
+    "season": "2025",
+    "games": 7,
+    "pts": 51.7,
+    "best": 12.6,
+    "avg": 7.39
+  },
+  {
+    "player": "Alexander Mattison",
+    "pos": "RB",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 5,
+    "pts": 51.6,
+    "best": 15,
+    "avg": 10.32
+  },
+  {
+    "player": "Raheem Mostert",
+    "pos": "RB",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 3,
+    "pts": 51.4,
+    "best": 22.5,
+    "avg": 17.13
+  },
+  {
+    "player": "Davante Adams",
+    "pos": "WR",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 4,
+    "pts": 51.1,
+    "best": 19.6,
+    "avg": 12.78
+  },
+  {
+    "player": "Tank Dell",
+    "pos": "WR",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 6,
+    "pts": 50.9,
+    "best": 15.6,
+    "avg": 8.48
+  },
+  {
+    "player": "Xavier Worthy",
+    "pos": "WR",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 7,
+    "pts": 50.9,
+    "best": 14.6,
+    "avg": 7.27
+  },
+  {
+    "player": "Caleb Williams",
+    "pos": "QB",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 2,
+    "pts": 50.9,
+    "best": 37.12,
+    "avg": 25.45
+  },
+  {
+    "player": "Tetairoa McMillan",
+    "pos": "WR",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 5,
+    "pts": 50.5,
+    "best": 16.4,
+    "avg": 10.1
+  },
+  {
+    "player": "Romeo Doubs",
+    "pos": "WR",
+    "manager": "benjlev",
+    "season": "2025",
+    "games": 8,
+    "pts": 50.3,
+    "best": 12.6,
+    "avg": 6.29
+  },
+  {
+    "player": "Kyle Pitts",
+    "pos": "TE",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 7,
+    "pts": 50.2,
+    "best": 12.3,
+    "avg": 7.17
+  },
+  {
+    "player": "Chris Boswell",
+    "pos": "K",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 5,
+    "pts": 50,
+    "best": 16,
+    "avg": 10
+  },
+  {
+    "player": "HOU",
+    "pos": "DEF",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 4,
+    "pts": 50,
+    "best": 14,
+    "avg": 12.5
+  },
+  {
+    "player": "Joe Burrow",
+    "pos": "QB",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 3,
+    "pts": 49.7,
+    "best": 25.36,
+    "avg": 16.57
+  },
+  {
+    "player": "Cam Little",
+    "pos": "K",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 5,
+    "pts": 49.5,
+    "best": 13.4,
+    "avg": 9.9
+  },
+  {
+    "player": "Jonathan Taylor",
+    "pos": "RB",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 2,
+    "pts": 49.4,
+    "best": 39.8,
+    "avg": 24.7
+  },
+  {
+    "player": "Jordan Love",
+    "pos": "QB",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 2,
+    "pts": 49.24,
+    "best": 32.28,
+    "avg": 24.62
+  },
+  {
+    "player": "Deebo Samuel",
+    "pos": "WR",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 7,
+    "pts": 49.1,
+    "best": 19.2,
+    "avg": 7.01
+  },
+  {
+    "player": "SF",
+    "pos": "DEF",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 5,
+    "pts": 49,
+    "best": 22,
+    "avg": 9.8
+  },
+  {
+    "player": "MIN",
+    "pos": "DEF",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 5,
+    "pts": 49,
+    "best": 31,
+    "avg": 9.8
+  },
+  {
+    "player": "Tyler Loop",
+    "pos": "K",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 6,
+    "pts": 48.8,
+    "best": 12.4,
+    "avg": 8.13
+  },
+  {
+    "player": "Jake Ferguson",
+    "pos": "TE",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 3,
+    "pts": 48.6,
+    "best": 20.4,
+    "avg": 16.2
+  },
+  {
+    "player": "Alvin Kamara",
+    "pos": "RB",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 5,
+    "pts": 48.5,
+    "best": 13,
+    "avg": 9.7
+  },
+  {
+    "player": "Jonathan Taylor",
+    "pos": "RB",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 3,
+    "pts": 48.3,
+    "best": 21.1,
+    "avg": 16.1
+  },
+  {
+    "player": "Jordan Love",
+    "pos": "QB",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 3,
+    "pts": 48.16,
+    "best": 25.62,
+    "avg": 16.05
+  },
+  {
+    "player": "DeAndre Hopkins",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 4,
+    "pts": 48.1,
+    "best": 24.6,
+    "avg": 12.03
+  },
+  {
+    "player": "Malik Nabers",
+    "pos": "WR",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 4,
+    "pts": 48.1,
+    "best": 33.2,
+    "avg": 12.03
+  },
+  {
+    "player": "T.J. Hockenson",
+    "pos": "TE",
+    "manager": "AlastairL",
+    "season": "2024",
+    "games": 6,
+    "pts": 47.9,
+    "best": 14.9,
+    "avg": 7.98
+  },
+  {
+    "player": "Jayden Reed",
+    "pos": "WR",
+    "manager": "benjlev",
+    "season": "2023",
+    "games": 5,
+    "pts": 47.3,
+    "best": 16.5,
+    "avg": 9.46
+  },
+  {
+    "player": "Emeka Egbuka",
+    "pos": "WR",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 4,
+    "pts": 47.1,
+    "best": 27.8,
+    "avg": 11.78
+  },
+  {
+    "player": "Brandon Aiyuk",
+    "pos": "WR",
+    "manager": "AlastairL",
+    "season": "2024",
+    "games": 6,
+    "pts": 46.1,
+    "best": 18.7,
+    "avg": 7.68
+  },
+  {
+    "player": "DAL",
+    "pos": "DEF",
+    "manager": "joshjr11",
+    "season": "2023",
+    "games": 5,
+    "pts": 46,
+    "best": 27,
+    "avg": 9.2
+  },
+  {
+    "player": "Alvin Kamara",
+    "pos": "RB",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 3,
+    "pts": 46,
+    "best": 17.2,
+    "avg": 15.33
+  },
+  {
+    "player": "Chuba Hubbard",
+    "pos": "RB",
+    "manager": "AlastairL",
+    "season": "2024",
+    "games": 2,
+    "pts": 46,
+    "best": 30.5,
+    "avg": 23
+  },
+  {
+    "player": "Younghoe Koo",
+    "pos": "K",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 6,
+    "pts": 46,
+    "best": 17,
+    "avg": 7.67
+  },
+  {
+    "player": "DEN",
+    "pos": "DEF",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 4,
+    "pts": 46,
+    "best": 20,
+    "avg": 11.5
+  },
+  {
+    "player": "Tee Higgins",
+    "pos": "WR",
+    "manager": "dpol",
+    "season": "2023",
+    "games": 5,
+    "pts": 45.9,
+    "best": 24.9,
+    "avg": 9.18
+  },
+  {
+    "player": "Zack Moss",
+    "pos": "RB",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 4,
+    "pts": 45.4,
+    "best": 21.5,
+    "avg": 11.35
+  },
+  {
+    "player": "Tetairoa McMillan",
+    "pos": "WR",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 5,
+    "pts": 45.4,
+    "best": 16.3,
+    "avg": 9.08
+  },
+  {
+    "player": "Eddy Pineiro",
+    "pos": "K",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 5,
+    "pts": 45.3,
+    "best": 18.8,
+    "avg": 9.06
+  },
+  {
+    "player": "Matthew Stafford",
+    "pos": "QB",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 3,
+    "pts": 45.14,
+    "best": 18.52,
+    "avg": 15.05
+  },
+  {
+    "player": "Omarion Hampton",
+    "pos": "RB",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 4,
+    "pts": 45.1,
+    "best": 25,
+    "avg": 11.28
+  },
+  {
+    "player": "BAL",
+    "pos": "DEF",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 4,
+    "pts": 45,
+    "best": 15,
+    "avg": 11.25
+  },
+  {
+    "player": "Cameron Dicker",
+    "pos": "K",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 4,
+    "pts": 45,
+    "best": 16,
+    "avg": 11.25
+  },
+  {
+    "player": "Kimani Vidal",
+    "pos": "RB",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 4,
+    "pts": 45,
+    "best": 19.2,
+    "avg": 11.25
+  },
+  {
+    "player": "Ka'imi Fairbairn",
+    "pos": "K",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 3,
+    "pts": 44.7,
+    "best": 18.8,
+    "avg": 14.9
+  },
+  {
+    "player": "Bucky Irving",
+    "pos": "RB",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 3,
+    "pts": 44,
+    "best": 24.2,
+    "avg": 14.67
+  },
+  {
+    "player": "PHI",
+    "pos": "DEF",
+    "manager": "benjlev",
+    "season": "2024",
+    "games": 5,
+    "pts": 44,
+    "best": 19,
+    "avg": 8.8
+  },
+  {
+    "player": "Calvin Ridley",
+    "pos": "WR",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 4,
+    "pts": 43.9,
+    "best": 22.9,
+    "avg": 10.98
+  },
+  {
+    "player": "Travis Etienne",
+    "pos": "RB",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 5,
+    "pts": 43.6,
+    "best": 13.3,
+    "avg": 8.72
+  },
+  {
+    "player": "Sam LaPorta",
+    "pos": "TE",
+    "manager": "joshjr11",
+    "season": "2023",
+    "games": 5,
+    "pts": 43.4,
+    "best": 24.5,
+    "avg": 8.68
+  },
+  {
+    "player": "IND",
+    "pos": "DEF",
+    "manager": "benjlev",
+    "season": "2024",
+    "games": 6,
+    "pts": 43,
+    "best": 16,
+    "avg": 7.17
+  },
+  {
+    "player": "Tyreek Hill",
+    "pos": "WR",
+    "manager": "benjlev",
+    "season": "2025",
+    "games": 4,
+    "pts": 43,
+    "best": 13.9,
+    "avg": 10.75
+  },
+  {
+    "player": "Kyler Murray",
+    "pos": "QB",
+    "manager": "benjlev",
+    "season": "2024",
+    "games": 3,
+    "pts": 42.98,
+    "best": 22.18,
+    "avg": 14.33
+  },
+  {
+    "player": "Tyreek Hill",
+    "pos": "WR",
+    "manager": "benjlev",
+    "season": "2024",
+    "games": 3,
+    "pts": 42.7,
+    "best": 23.1,
+    "avg": 14.23
+  },
+  {
+    "player": "Cameron Dicker",
+    "pos": "K",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 3,
+    "pts": 42.3,
+    "best": 22,
+    "avg": 14.1
+  },
+  {
+    "player": "Brock Purdy",
+    "pos": "QB",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 2,
+    "pts": 42.18,
+    "best": 23.82,
+    "avg": 21.09
+  },
+  {
+    "player": "Nico Collins",
+    "pos": "WR",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 3,
+    "pts": 42.1,
+    "best": 32.3,
+    "avg": 14.03
+  },
+  {
+    "player": "Jake Elliott",
+    "pos": "K",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 6,
+    "pts": 42,
+    "best": 10,
+    "avg": 7
+  },
+  {
+    "player": "Jake Elliott",
+    "pos": "K",
+    "manager": "benjlev",
+    "season": "2024",
+    "games": 5,
+    "pts": 42,
+    "best": 13,
+    "avg": 8.4
+  },
+  {
+    "player": "Diontae Johnson",
+    "pos": "WR",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 4,
+    "pts": 41.2,
+    "best": 17.8,
+    "avg": 10.3
+  },
+  {
+    "player": "Chuba Hubbard",
+    "pos": "RB",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 3,
+    "pts": 41.2,
+    "best": 16.4,
+    "avg": 13.73
+  },
+  {
+    "player": "Jordan Mason",
+    "pos": "RB",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 3,
+    "pts": 41.1,
+    "best": 23,
+    "avg": 13.7
+  },
+  {
+    "player": "Anthony Richardson",
+    "pos": "QB",
+    "manager": "AlastairL",
+    "season": "2024",
+    "games": 3,
+    "pts": 41.02,
+    "best": 26.08,
+    "avg": 13.67
+  },
+  {
+    "player": "SEA",
+    "pos": "DEF",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 5,
+    "pts": 41,
+    "best": 16,
+    "avg": 8.2
+  },
+  {
+    "player": "KC",
+    "pos": "DEF",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 5,
+    "pts": 41,
+    "best": 21,
+    "avg": 8.2
+  },
+  {
+    "player": "Jerome Ford",
+    "pos": "RB",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 4,
+    "pts": 40.8,
+    "best": 12.7,
+    "avg": 10.2
+  },
+  {
+    "player": "Mike Williams",
+    "pos": "WR",
+    "manager": "benjlev",
+    "season": "2023",
+    "games": 3,
+    "pts": 40.7,
+    "best": 21.6,
+    "avg": 13.57
+  },
+  {
+    "player": "Amari Cooper",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 9,
+    "pts": 40.3,
+    "best": 14.6,
+    "avg": 4.48
+  },
+  {
+    "player": "Diontae Johnson",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 4,
+    "pts": 40.2,
+    "best": 18.5,
+    "avg": 10.05
+  },
+  {
+    "player": "Cooper Kupp",
+    "pos": "WR",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 4,
+    "pts": 40.1,
+    "best": 24.3,
+    "avg": 10.03
+  },
+  {
+    "player": "HOU",
+    "pos": "DEF",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 3,
+    "pts": 40,
+    "best": 19,
+    "avg": 13.33
+  },
+  {
+    "player": "Tua Tagovailoa",
+    "pos": "QB",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 3,
+    "pts": 39.88,
+    "best": 23.54,
+    "avg": 13.29
+  },
+  {
+    "player": "Bo Nix",
+    "pos": "QB",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 2,
+    "pts": 39.58,
+    "best": 31.78,
+    "avg": 19.79
+  },
+  {
+    "player": "Brandon McManus",
+    "pos": "K",
+    "manager": "sanfbe",
+    "season": "2023",
+    "games": 8,
+    "pts": 39,
+    "best": 14,
+    "avg": 4.88
+  },
+  {
+    "player": "LAC",
+    "pos": "DEF",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 4,
+    "pts": 39,
+    "best": 16,
+    "avg": 9.75
+  },
+  {
+    "player": "Chris Boswell",
+    "pos": "K",
+    "manager": "benjlev",
+    "season": "2025",
+    "games": 4,
+    "pts": 39,
+    "best": 15.6,
+    "avg": 9.75
+  },
+  {
+    "player": "Jake Ferguson",
+    "pos": "TE",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 5,
+    "pts": 38.8,
+    "best": 12.5,
+    "avg": 7.76
+  },
+  {
+    "player": "Rico Dowdle",
+    "pos": "RB",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 3,
+    "pts": 38.8,
+    "best": 14.9,
+    "avg": 12.93
+  },
+  {
+    "player": "Terry McLaurin",
+    "pos": "WR",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 4,
+    "pts": 38.3,
+    "best": 14.8,
+    "avg": 9.57
+  },
+  {
+    "player": "Austin Ekeler",
+    "pos": "RB",
+    "manager": "dpol",
+    "season": "2023",
+    "games": 4,
+    "pts": 38.1,
+    "best": 18.5,
+    "avg": 9.53
+  },
+  {
+    "player": "Courtland Sutton",
+    "pos": "WR",
+    "manager": "dpol",
+    "season": "2023",
+    "games": 4,
+    "pts": 38,
+    "best": 14.7,
+    "avg": 9.5
+  },
+  {
+    "player": "NE",
+    "pos": "DEF",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 3,
+    "pts": 38,
+    "best": 20,
+    "avg": 12.67
+  },
+  {
+    "player": "Emeka Egbuka",
+    "pos": "WR",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 4,
+    "pts": 37.9,
+    "best": 20.5,
+    "avg": 9.48
+  },
+  {
+    "player": "Jaylen Warren",
+    "pos": "RB",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 3,
+    "pts": 37.9,
+    "best": 13.7,
+    "avg": 12.63
+  },
+  {
+    "player": "Kyler Murray",
+    "pos": "QB",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 2,
+    "pts": 37.7,
+    "best": 20.44,
+    "avg": 18.85
+  },
+  {
+    "player": "Isaac Guerendo",
+    "pos": "RB",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 2,
+    "pts": 37.7,
+    "best": 25.8,
+    "avg": 18.85
+  },
+  {
+    "player": "Taysom Hill",
+    "pos": "TE",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 1,
+    "pts": 37.52,
+    "best": 37.52,
+    "avg": 37.52
+  },
+  {
+    "player": "Kenny Gainwell",
+    "pos": "RB",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 2,
+    "pts": 37.4,
+    "best": 21.3,
+    "avg": 18.7
+  },
+  {
+    "player": "Bucky Irving",
+    "pos": "RB",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 3,
+    "pts": 37.3,
+    "best": 15.1,
+    "avg": 12.43
+  },
+  {
+    "player": "Brock Purdy",
+    "pos": "QB",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 2,
+    "pts": 37.16,
+    "best": 24.1,
+    "avg": 18.58
+  },
+  {
+    "player": "NYJ",
+    "pos": "DEF",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 5,
+    "pts": 37,
+    "best": 16,
+    "avg": 7.4
+  },
+  {
+    "player": "Jonnu Smith",
+    "pos": "TE",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 2,
+    "pts": 37,
+    "best": 25.1,
+    "avg": 18.5
+  },
+  {
+    "player": "Isiah Pacheco",
+    "pos": "RB",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 4,
+    "pts": 36.8,
+    "best": 14.8,
+    "avg": 9.2
+  },
+  {
+    "player": "Keenan Allen",
+    "pos": "WR",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 3,
+    "pts": 36.8,
+    "best": 16,
+    "avg": 12.27
+  },
+  {
+    "player": "Jakobi Meyers",
+    "pos": "WR",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 4,
+    "pts": 36.6,
+    "best": 14.5,
+    "avg": 9.15
+  },
+  {
+    "player": "Javonte Williams",
+    "pos": "RB",
+    "manager": "joshjr11",
+    "season": "2023",
+    "games": 3,
+    "pts": 36.4,
+    "best": 19,
+    "avg": 12.13
+  },
+  {
+    "player": "Tee Higgins",
+    "pos": "WR",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 3,
+    "pts": 36.4,
+    "best": 17.3,
+    "avg": 12.13
+  },
+  {
+    "player": "Chris Olave",
+    "pos": "WR",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 5,
+    "pts": 36.2,
+    "best": 17.6,
+    "avg": 7.24
+  },
+  {
+    "player": "Younghoe Koo",
+    "pos": "K",
+    "manager": "joshjr11",
+    "season": "2023",
+    "games": 5,
+    "pts": 36,
+    "best": 13,
+    "avg": 7.2
+  },
+  {
+    "player": "PIT",
+    "pos": "DEF",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 3,
+    "pts": 36,
+    "best": 22,
+    "avg": 12
+  },
+  {
+    "player": "Davante Adams",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 3,
+    "pts": 35.9,
+    "best": 21.5,
+    "avg": 11.97
+  },
+  {
+    "player": "Wan'Dale Robinson",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 5,
+    "pts": 35.9,
+    "best": 9.2,
+    "avg": 7.18
+  },
+  {
+    "player": "Miles Sanders",
+    "pos": "RB",
+    "manager": "dpol",
+    "season": "2023",
+    "games": 4,
+    "pts": 35.4,
+    "best": 14.7,
+    "avg": 8.85
+  },
+  {
+    "player": "Woody Marks",
+    "pos": "RB",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 4,
+    "pts": 35.2,
+    "best": 15.1,
+    "avg": 8.8
+  },
+  {
+    "player": "NO",
+    "pos": "DEF",
+    "manager": "sanfbe",
+    "season": "2023",
+    "games": 3,
+    "pts": 35,
+    "best": 21,
+    "avg": 11.67
+  },
+  {
+    "player": "MIN",
+    "pos": "DEF",
+    "manager": "AlastairL",
+    "season": "2024",
+    "games": 3,
+    "pts": 35,
+    "best": 13,
+    "avg": 11.67
+  },
+  {
+    "player": "Matthew Stafford",
+    "pos": "QB",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 1,
+    "pts": 34.84,
+    "best": 34.84,
+    "avg": 34.84
+  },
+  {
+    "player": "Christian Kirk",
+    "pos": "WR",
+    "manager": "benjlev",
+    "season": "2024",
+    "games": 4,
+    "pts": 34.7,
+    "best": 15.6,
+    "avg": 8.68
+  },
+  {
+    "player": "Zach Charbonnet",
+    "pos": "RB",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 2,
+    "pts": 34.7,
+    "best": 25.2,
+    "avg": 17.35
+  },
+  {
+    "player": "Brandon Aiyuk",
+    "pos": "WR",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 3,
+    "pts": 34.6,
+    "best": 13.4,
+    "avg": 11.53
+  },
+  {
+    "player": "Chris Godwin",
+    "pos": "WR",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 4,
+    "pts": 34.4,
+    "best": 10.7,
+    "avg": 8.6
+  },
+  {
+    "player": "Ka'imi Fairbairn",
+    "pos": "K",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 2,
+    "pts": 34.4,
+    "best": 19,
+    "avg": 17.2
+  },
+  {
+    "player": "C.J. Stroud",
+    "pos": "QB",
+    "manager": "dpol",
+    "season": "2023",
+    "games": 2,
+    "pts": 34.38,
+    "best": 19.04,
+    "avg": 17.19
+  },
+  {
+    "player": "DAL",
+    "pos": "DEF",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 3,
+    "pts": 34,
+    "best": 18,
+    "avg": 11.33
+  },
+  {
+    "player": "Justin Fields",
+    "pos": "QB",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 2,
+    "pts": 33.9,
+    "best": 29.92,
+    "avg": 16.95
+  },
+  {
+    "player": "Jordan Love",
+    "pos": "QB",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 1,
+    "pts": 33.76,
+    "best": 33.76,
+    "avg": 33.76
+  },
+  {
+    "player": "George Pickens",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2023",
+    "games": 1,
+    "pts": 33.5,
+    "best": 33.5,
+    "avg": 33.5
+  },
+  {
+    "player": "Jacoby Brissett",
+    "pos": "QB",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 2,
+    "pts": 33.1,
+    "best": 20.48,
+    "avg": 16.55
+  },
+  {
+    "player": "Matt Gay",
+    "pos": "K",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 4,
+    "pts": 33,
+    "best": 14,
+    "avg": 8.25
+  },
+  {
+    "player": "KC",
+    "pos": "DEF",
+    "manager": "benjlev",
+    "season": "2024",
+    "games": 5,
+    "pts": 33,
+    "best": 11,
+    "avg": 6.6
+  },
+  {
+    "player": "BUF",
+    "pos": "DEF",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 3,
+    "pts": 33,
+    "best": 18,
+    "avg": 11
+  },
+  {
+    "player": "Terry McLaurin",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 4,
+    "pts": 32.8,
+    "best": 12.9,
+    "avg": 8.2
+  },
+  {
+    "player": "Zay Flowers",
+    "pos": "WR",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 4,
+    "pts": 32.7,
+    "best": 10.9,
+    "avg": 8.18
+  },
+  {
+    "player": "Chase McLaughlin",
+    "pos": "K",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 4,
+    "pts": 32.7,
+    "best": 18.1,
+    "avg": 8.18
+  },
+  {
+    "player": "Colby Parkinson",
+    "pos": "TE",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 2,
+    "pts": 32.7,
+    "best": 22,
+    "avg": 16.35
+  },
+  {
+    "player": "Christian McCaffrey",
+    "pos": "RB",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 3,
+    "pts": 32.6,
+    "best": 13.7,
+    "avg": 10.87
+  },
+  {
+    "player": "Jake Elliott",
+    "pos": "K",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 4,
+    "pts": 32.6,
+    "best": 12.9,
+    "avg": 8.15
+  },
+  {
+    "player": "Tony Pollard",
+    "pos": "RB",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 3,
+    "pts": 32,
+    "best": 16.9,
+    "avg": 10.67
+  },
+  {
+    "player": "Tyrone Tracy",
+    "pos": "RB",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 3,
+    "pts": 31.4,
+    "best": 19.7,
+    "avg": 10.47
+  },
+  {
+    "player": "Dalton Kincaid",
+    "pos": "TE",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 4,
+    "pts": 31.3,
+    "best": 11.6,
+    "avg": 7.83
+  },
+  {
+    "player": "DET",
+    "pos": "DEF",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 4,
+    "pts": 31,
+    "best": 10,
+    "avg": 7.75
+  },
+  {
+    "player": "DEN",
+    "pos": "DEF",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 3,
+    "pts": 31,
+    "best": 14,
+    "avg": 10.33
+  },
+  {
+    "player": "BAL",
+    "pos": "DEF",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 3,
+    "pts": 31,
+    "best": 12,
+    "avg": 10.33
+  },
+  {
+    "player": "Jared Goff",
+    "pos": "QB",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 1,
+    "pts": 30.8,
+    "best": 30.8,
+    "avg": 30.8
+  },
+  {
+    "player": "Oronde Gadsden",
+    "pos": "TE",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 3,
+    "pts": 30.6,
+    "best": 16.2,
+    "avg": 10.2
+  },
+  {
+    "player": "DK Metcalf",
+    "pos": "WR",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 3,
+    "pts": 30.5,
+    "best": 10.7,
+    "avg": 10.17
+  },
+  {
+    "player": "Deebo Samuel",
+    "pos": "WR",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 2,
+    "pts": 30.2,
+    "best": 16.2,
+    "avg": 15.1
+  },
+  {
+    "player": "CeeDee Lamb",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 3,
+    "pts": 30.2,
+    "best": 15.7,
+    "avg": 10.07
+  },
+  {
+    "player": "MIA",
+    "pos": "DEF",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 3,
+    "pts": 30,
+    "best": 12,
+    "avg": 10
+  },
+  {
+    "player": "DEN",
+    "pos": "DEF",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 2,
+    "pts": 30,
+    "best": 20,
+    "avg": 15
+  },
+  {
+    "player": "Brian Thomas",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 4,
+    "pts": 30,
+    "best": 8.5,
+    "avg": 7.5
+  },
+  {
+    "player": "DET",
+    "pos": "DEF",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 2,
+    "pts": 30,
+    "best": 20,
+    "avg": 15
+  },
+  {
+    "player": "Kenneth Walker",
+    "pos": "RB",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 3,
+    "pts": 29.8,
+    "best": 12.9,
+    "avg": 9.93
+  },
+  {
+    "player": "Ricky Pearsall",
+    "pos": "WR",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 3,
+    "pts": 29.5,
+    "best": 15.7,
+    "avg": 9.83
+  },
+  {
+    "player": "Kyle Monangai",
+    "pos": "RB",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 2,
+    "pts": 29.5,
+    "best": 21.3,
+    "avg": 14.75
+  },
+  {
+    "player": "Brock Purdy",
+    "pos": "QB",
+    "manager": "sanfbe",
+    "season": "2023",
+    "games": 1,
+    "pts": 29.46,
+    "best": 29.46,
+    "avg": 29.46
+  },
+  {
+    "player": "James Conner",
+    "pos": "RB",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 3,
+    "pts": 29.3,
+    "best": 12.4,
+    "avg": 9.77
+  },
+  {
+    "player": "Chimere Dike",
+    "pos": "WR",
+    "manager": "benjlev",
+    "season": "2025",
+    "games": 3,
+    "pts": 29.2,
+    "best": 18.9,
+    "avg": 9.73
+  },
+  {
+    "player": "Daniel Jones",
+    "pos": "QB",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 1,
+    "pts": 29.18,
+    "best": 29.18,
+    "avg": 29.18
+  },
+  {
+    "player": "Jameson Williams",
+    "pos": "WR",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 5,
+    "pts": 29.1,
+    "best": 11.9,
+    "avg": 5.82
+  },
+  {
+    "player": "Chase McLaughlin",
+    "pos": "K",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 4,
+    "pts": 29,
+    "best": 9,
+    "avg": 7.25
+  },
+  {
+    "player": "PHI",
+    "pos": "DEF",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 2,
+    "pts": 29,
+    "best": 20,
+    "avg": 14.5
+  },
+  {
+    "player": "Jason Sanders",
+    "pos": "K",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 2,
+    "pts": 29,
+    "best": 21,
+    "avg": 14.5
+  },
+  {
+    "player": "Najee Harris",
+    "pos": "RB",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 3,
+    "pts": 28.8,
+    "best": 11.3,
+    "avg": 9.6
+  },
+  {
+    "player": "Austin Ekeler",
+    "pos": "RB",
+    "manager": "benjlev",
+    "season": "2024",
+    "games": 4,
+    "pts": 28.8,
+    "best": 13.6,
+    "avg": 7.2
+  },
+  {
+    "player": "Juwan Johnson",
+    "pos": "TE",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 4,
+    "pts": 28.5,
+    "best": 13.4,
+    "avg": 7.13
+  },
+  {
+    "player": "Rashid Shaheed",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 3,
+    "pts": 28.3,
+    "best": 16.6,
+    "avg": 9.43
+  },
+  {
+    "player": "Kyle Pitts",
+    "pos": "TE",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 3,
+    "pts": 28.2,
+    "best": 15.2,
+    "avg": 9.4
+  },
+  {
+    "player": "Zay Flowers",
+    "pos": "WR",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 3,
+    "pts": 28,
+    "best": 14.1,
+    "avg": 9.33
+  },
+  {
+    "player": "Dallas Goedert",
+    "pos": "TE",
+    "manager": "benjlev",
+    "season": "2023",
+    "games": 4,
+    "pts": 27.9,
+    "best": 16.2,
+    "avg": 6.98
+  },
+  {
+    "player": "Aaron Jones",
+    "pos": "RB",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 2,
+    "pts": 27.6,
+    "best": 25.7,
+    "avg": 13.8
+  },
+  {
+    "player": "Christian Watson",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 2,
+    "pts": 27.3,
+    "best": 22.9,
+    "avg": 13.65
+  },
+  {
+    "player": "Javonte Williams",
+    "pos": "RB",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 2,
+    "pts": 27.2,
+    "best": 17.5,
+    "avg": 13.6
+  },
+  {
+    "player": "Brock Bowers",
+    "pos": "TE",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 3,
+    "pts": 27.1,
+    "best": 15.4,
+    "avg": 9.03
+  },
+  {
+    "player": "Caleb Williams",
+    "pos": "QB",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 1,
+    "pts": 27.1,
+    "best": 27.1,
+    "avg": 27.1
+  },
+  {
+    "player": "NE",
+    "pos": "DEF",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 3,
+    "pts": 27,
+    "best": 12,
+    "avg": 9
+  },
+  {
+    "player": "Justin Tucker",
+    "pos": "K",
+    "manager": "sanfbe",
+    "season": "2023",
+    "games": 4,
+    "pts": 27,
+    "best": 11,
+    "avg": 6.75
+  },
+  {
+    "player": "Mike Evans",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 4,
+    "pts": 27,
+    "best": 11.3,
+    "avg": 6.75
+  },
+  {
+    "player": "Jaylen Waddle",
+    "pos": "WR",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 3,
+    "pts": 26.7,
+    "best": 13.7,
+    "avg": 8.9
+  },
+  {
+    "player": "Keenan Allen",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 3,
+    "pts": 26.7,
+    "best": 17.2,
+    "avg": 8.9
+  },
+  {
+    "player": "Evan Engram",
+    "pos": "TE",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 3,
+    "pts": 26.6,
+    "best": 11.6,
+    "avg": 8.87
+  },
+  {
+    "player": "Michael Pittman",
+    "pos": "WR",
+    "manager": "AlastairL",
+    "season": "2024",
+    "games": 4,
+    "pts": 26.5,
+    "best": 12.2,
+    "avg": 6.63
+  },
+  {
+    "player": "Jared Goff",
+    "pos": "QB",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 2,
+    "pts": 26.42,
+    "best": 13.74,
+    "avg": 13.21
+  },
+  {
+    "player": "Cam Skattebo",
+    "pos": "RB",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 2,
+    "pts": 26.4,
+    "best": 16.9,
+    "avg": 13.2
+  },
+  {
+    "player": "Tank Bigsby",
+    "pos": "RB",
+    "manager": "benjlev",
+    "season": "2024",
+    "games": 2,
+    "pts": 26.2,
+    "best": 23.8,
+    "avg": 13.1
+  },
+  {
+    "player": "Jaxson Dart",
+    "pos": "QB",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 2,
+    "pts": 26.16,
+    "best": 26.14,
+    "avg": 13.08
+  },
+  {
+    "player": "NE",
+    "pos": "DEF",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 4,
+    "pts": 26,
+    "best": 11,
+    "avg": 6.5
+  },
+  {
+    "player": "J.K. Dobbins",
+    "pos": "RB",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 2,
+    "pts": 25.9,
+    "best": 14.9,
+    "avg": 12.95
+  },
+  {
+    "player": "Tony Pollard",
+    "pos": "RB",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 3,
+    "pts": 25.7,
+    "best": 9.2,
+    "avg": 8.57
+  },
+  {
+    "player": "Dallas Goedert",
+    "pos": "TE",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 4,
+    "pts": 25.7,
+    "best": 10.7,
+    "avg": 6.43
+  },
+  {
+    "player": "Justin Herbert",
+    "pos": "QB",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 2,
+    "pts": 25.6,
+    "best": 17.62,
+    "avg": 12.8
+  },
+  {
+    "player": "J.K. Dobbins",
+    "pos": "RB",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 3,
+    "pts": 25.6,
+    "best": 13.1,
+    "avg": 8.53
+  },
+  {
+    "player": "Emanuel Wilson",
+    "pos": "RB",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 1,
+    "pts": 25.5,
+    "best": 25.5,
+    "avg": 25.5
+  },
+  {
+    "player": "Joshua Dobbs",
+    "pos": "QB",
+    "manager": "benjlev",
+    "season": "2023",
+    "games": 1,
+    "pts": 25.12,
+    "best": 25.12,
+    "avg": 25.12
+  },
+  {
+    "player": "NO",
+    "pos": "DEF",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 4,
+    "pts": 25,
+    "best": 10,
+    "avg": 6.25
+  },
+  {
+    "player": "Jake Moody",
+    "pos": "K",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 3,
+    "pts": 25,
+    "best": 12,
+    "avg": 8.33
+  },
+  {
+    "player": "ATL",
+    "pos": "DEF",
+    "manager": "AlastairL",
+    "season": "2024",
+    "games": 1,
+    "pts": 25,
+    "best": 25,
+    "avg": 25
+  },
+  {
+    "player": "DJ Moore",
+    "pos": "WR",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 3,
+    "pts": 25,
+    "best": 10.8,
+    "avg": 8.33
+  },
+  {
+    "player": "T.J. Hockenson",
+    "pos": "TE",
+    "manager": "sanfbe",
+    "season": "2023",
+    "games": 3,
+    "pts": 24.9,
+    "best": 9.3,
+    "avg": 8.3
+  },
+  {
+    "player": "Kyle Pitts",
+    "pos": "TE",
+    "manager": "sanfbe",
+    "season": "2023",
+    "games": 5,
+    "pts": 24.8,
+    "best": 7.6,
+    "avg": 4.96
+  },
+  {
+    "player": "Taysom Hill",
+    "pos": "TE",
+    "manager": "sanfbe",
+    "season": "2023",
+    "games": 3,
+    "pts": 24.8,
+    "best": 14.4,
+    "avg": 8.27
+  },
+  {
+    "player": "Quentin Johnston",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 2,
+    "pts": 24.7,
+    "best": 19.8,
+    "avg": 12.35
+  },
+  {
+    "player": "Kareem Hunt",
+    "pos": "RB",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 2,
+    "pts": 24.7,
+    "best": 12.7,
+    "avg": 12.35
+  },
+  {
+    "player": "Spencer Shrader",
+    "pos": "K",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 3,
+    "pts": 24.6,
+    "best": 11.6,
+    "avg": 8.2
+  },
+  {
+    "player": "Cedric Tillman",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 3,
+    "pts": 24.5,
+    "best": 16.5,
+    "avg": 8.17
+  },
+  {
+    "player": "Isaiah Likely",
+    "pos": "TE",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 2,
+    "pts": 24.3,
+    "best": 17.2,
+    "avg": 12.15
+  },
+  {
+    "player": "David Montgomery",
+    "pos": "RB",
+    "manager": "benjlev",
+    "season": "2025",
+    "games": 4,
+    "pts": 24.3,
+    "best": 10,
+    "avg": 6.08
+  },
+  {
+    "player": "Chuba Hubbard",
+    "pos": "RB",
+    "manager": "dpol",
+    "season": "2023",
+    "games": 2,
+    "pts": 24.2,
+    "best": 15.5,
+    "avg": 12.1
+  },
+  {
+    "player": "Zach Charbonnet",
+    "pos": "RB",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 1,
+    "pts": 24.2,
+    "best": 24.2,
+    "avg": 24.2
+  },
+  {
+    "player": "NYJ",
+    "pos": "DEF",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 3,
+    "pts": 24,
+    "best": 20,
+    "avg": 8
+  },
+  {
+    "player": "ATL",
+    "pos": "DEF",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 2,
+    "pts": 24,
+    "best": 17,
+    "avg": 12
+  },
+  {
+    "player": "MIN",
+    "pos": "DEF",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 2,
+    "pts": 24,
+    "best": 16,
+    "avg": 12
+  },
+  {
+    "player": "KC",
+    "pos": "DEF",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 2,
+    "pts": 24,
+    "best": 13,
+    "avg": 12
+  },
+  {
+    "player": "Najee Harris",
+    "pos": "RB",
+    "manager": "dpol",
+    "season": "2023",
+    "games": 3,
+    "pts": 23.8,
+    "best": 13.8,
+    "avg": 7.93
+  },
+  {
+    "player": "Tony Pollard",
+    "pos": "RB",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 2,
+    "pts": 23.8,
+    "best": 16.3,
+    "avg": 11.9
+  },
+  {
+    "player": "Tyler Lockett",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 2,
+    "pts": 23.7,
+    "best": 19.2,
+    "avg": 11.85
+  },
+  {
+    "player": "Chase Brown",
+    "pos": "RB",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 3,
+    "pts": 23.6,
+    "best": 12.1,
+    "avg": 7.87
+  },
+  {
+    "player": "Devin Singletary",
+    "pos": "RB",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 2,
+    "pts": 23.3,
+    "best": 18.8,
+    "avg": 11.65
+  },
+  {
+    "player": "LAC",
+    "pos": "DEF",
+    "manager": "benjlev",
+    "season": "2023",
+    "games": 2,
+    "pts": 23,
+    "best": 27,
+    "avg": 11.5
+  },
+  {
+    "player": "BAL",
+    "pos": "DEF",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 3,
+    "pts": 23,
+    "best": 14,
+    "avg": 7.67
+  },
+  {
+    "player": "NE",
+    "pos": "DEF",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 3,
+    "pts": 23,
+    "best": 13,
+    "avg": 7.67
+  },
+  {
+    "player": "ATL",
+    "pos": "DEF",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 3,
+    "pts": 23,
+    "best": 17,
+    "avg": 7.67
+  },
+  {
+    "player": "Zack Moss",
+    "pos": "RB",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 3,
+    "pts": 22.5,
+    "best": 15.8,
+    "avg": 7.5
+  },
+  {
+    "player": "Khalil Shakir",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 3,
+    "pts": 22.4,
+    "best": 11,
+    "avg": 7.47
+  },
+  {
+    "player": "Wil Lutz",
+    "pos": "K",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 3,
+    "pts": 22.4,
+    "best": 9.2,
+    "avg": 7.47
+  },
+  {
+    "player": "Mike Evans",
+    "pos": "WR",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 2,
+    "pts": 22.2,
+    "best": 11.6,
+    "avg": 11.1
+  },
+  {
+    "player": "Dalton Kincaid",
+    "pos": "TE",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 4,
+    "pts": 22,
+    "best": 11.1,
+    "avg": 5.5
+  },
+  {
+    "player": "LV",
+    "pos": "DEF",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 3,
+    "pts": 22,
+    "best": 17,
+    "avg": 7.33
+  },
+  {
+    "player": "PHI",
+    "pos": "DEF",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 2,
+    "pts": 22,
+    "best": 16,
+    "avg": 11
+  },
+  {
+    "player": "Chuba Hubbard",
+    "pos": "RB",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 2,
+    "pts": 21.9,
+    "best": 11.3,
+    "avg": 10.95
+  },
+  {
+    "player": "Tony Pollard",
+    "pos": "RB",
+    "manager": "benjlev",
+    "season": "2024",
+    "games": 2,
+    "pts": 21.9,
+    "best": 13.4,
+    "avg": 10.95
+  },
+  {
+    "player": "Troy Franklin",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 3,
+    "pts": 21.9,
+    "best": 12.5,
+    "avg": 7.3
+  },
+  {
+    "player": "Tucker Kraft",
+    "pos": "TE",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 3,
+    "pts": 21.4,
+    "best": 8.9,
+    "avg": 7.13
+  },
+  {
+    "player": "Chris Godwin",
+    "pos": "WR",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 1,
+    "pts": 21.2,
+    "best": 21.2,
+    "avg": 21.2
+  },
+  {
+    "player": "Nick Chubb",
+    "pos": "RB",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 2,
+    "pts": 21.1,
+    "best": 14.7,
+    "avg": 10.55
+  },
+  {
+    "player": "Ka'imi Fairbairn",
+    "pos": "K",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 2,
+    "pts": 21,
+    "best": 20,
+    "avg": 10.5
+  },
+  {
+    "player": "MIN",
+    "pos": "DEF",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 3,
+    "pts": 21,
+    "best": 8,
+    "avg": 7
+  },
+  {
+    "player": "GB",
+    "pos": "DEF",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 4,
+    "pts": 21,
+    "best": 8,
+    "avg": 5.25
+  },
+  {
+    "player": "Hunter Henry",
+    "pos": "TE",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 1,
+    "pts": 21,
+    "best": 21,
+    "avg": 21
+  },
+  {
+    "player": "George Kittle",
+    "pos": "TE",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 1,
+    "pts": 21,
+    "best": 21,
+    "avg": 21
+  },
+  {
+    "player": "Jacoby Brissett",
+    "pos": "QB",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 1,
+    "pts": 20.68,
+    "best": 20.68,
+    "avg": 20.68
+  },
+  {
+    "player": "Tyler Loop",
+    "pos": "K",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 3,
+    "pts": 20.6,
+    "best": 9.5,
+    "avg": 6.87
+  },
+  {
+    "player": "Adam Thielen",
+    "pos": "WR",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 2,
+    "pts": 20.4,
+    "best": 12.8,
+    "avg": 10.2
+  },
+  {
+    "player": "Harrison Butker",
+    "pos": "K",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 3,
+    "pts": 20.4,
+    "best": 8.6,
+    "avg": 6.8
+  },
+  {
+    "player": "Jason Sanders",
+    "pos": "K",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 2,
+    "pts": 20,
+    "best": 14,
+    "avg": 10
+  },
+  {
+    "player": "Trey McBride",
+    "pos": "TE",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 3,
+    "pts": 20,
+    "best": 9.5,
+    "avg": 6.67
+  },
+  {
+    "player": "Jake Bates",
+    "pos": "K",
+    "manager": "AlastairL",
+    "season": "2024",
+    "games": 3,
+    "pts": 20,
+    "best": 10,
+    "avg": 6.67
+  },
+  {
+    "player": "DEN",
+    "pos": "DEF",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 3,
+    "pts": 20,
+    "best": 12,
+    "avg": 6.67
+  },
+  {
+    "player": "NO",
+    "pos": "DEF",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 1,
+    "pts": 20,
+    "best": 20,
+    "avg": 20
+  },
+  {
+    "player": "DeVonta Smith",
+    "pos": "WR",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 2,
+    "pts": 19.8,
+    "best": 11.7,
+    "avg": 9.9
+  },
+  {
+    "player": "Sam Howell",
+    "pos": "QB",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 1,
+    "pts": 19.18,
+    "best": 19.18,
+    "avg": 19.18
+  },
+  {
+    "player": "Matt Prater",
+    "pos": "K",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 3,
+    "pts": 19.1,
+    "best": 9.6,
+    "avg": 6.37
+  },
+  {
+    "player": "Brett Maher",
+    "pos": "K",
+    "manager": "benjlev",
+    "season": "2023",
+    "games": 3,
+    "pts": 19,
+    "best": 15,
+    "avg": 6.33
+  },
+  {
+    "player": "PIT",
+    "pos": "DEF",
+    "manager": "dpol",
+    "season": "2023",
+    "games": 3,
+    "pts": 19,
+    "best": 10,
+    "avg": 6.33
+  },
+  {
+    "player": "Calvin Ridley",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 3,
+    "pts": 19,
+    "best": 7.3,
+    "avg": 6.33
+  },
+  {
+    "player": "TB",
+    "pos": "DEF",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 2,
+    "pts": 19,
+    "best": 17,
+    "avg": 9.5
+  },
+  {
+    "player": "Chase McLaughlin",
+    "pos": "K",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 2,
+    "pts": 19,
+    "best": 12,
+    "avg": 9.5
+  },
+  {
+    "player": "ARI",
+    "pos": "DEF",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 2,
+    "pts": 19,
+    "best": 13,
+    "avg": 9.5
+  },
+  {
+    "player": "DEN",
+    "pos": "DEF",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 2,
+    "pts": 19,
+    "best": 14,
+    "avg": 9.5
+  },
+  {
+    "player": "IND",
+    "pos": "DEF",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 3,
+    "pts": 19,
+    "best": 8,
+    "avg": 6.33
+  },
+  {
+    "player": "CLE",
+    "pos": "DEF",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 2,
+    "pts": 19,
+    "best": 17,
+    "avg": 9.5
+  },
+  {
+    "player": "MIA",
+    "pos": "DEF",
+    "manager": "benjlev",
+    "season": "2025",
+    "games": 2,
+    "pts": 19,
+    "best": 17,
+    "avg": 9.5
+  },
+  {
+    "player": "CHI",
+    "pos": "DEF",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 1,
+    "pts": 19,
+    "best": 19,
+    "avg": 19
+  },
+  {
+    "player": "Baker Mayfield",
+    "pos": "QB",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 1,
+    "pts": 18.8,
+    "best": 18.8,
+    "avg": 18.8
+  },
+  {
+    "player": "Eddy Pineiro",
+    "pos": "K",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 2,
+    "pts": 18.8,
+    "best": 12.8,
+    "avg": 9.4
+  },
+  {
+    "player": "Harold Fannin",
+    "pos": "TE",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 2,
+    "pts": 18.5,
+    "best": 10,
+    "avg": 9.25
+  },
+  {
+    "player": "Jordan Mason",
+    "pos": "RB",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 3,
+    "pts": 18.4,
+    "best": 8.7,
+    "avg": 6.13
+  },
+  {
+    "player": "DK Metcalf",
+    "pos": "WR",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 2,
+    "pts": 18.4,
+    "best": 10.5,
+    "avg": 9.2
+  },
+  {
+    "player": "AJ Dillon",
+    "pos": "RB",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 3,
+    "pts": 18,
+    "best": 9.2,
+    "avg": 6
+  },
+  {
+    "player": "Jake Elliott",
+    "pos": "K",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 3,
+    "pts": 18,
+    "best": 10,
+    "avg": 6
+  },
+  {
+    "player": "CIN",
+    "pos": "DEF",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 1,
+    "pts": 18,
+    "best": 18,
+    "avg": 18
+  },
+  {
+    "player": "Matthew Stafford",
+    "pos": "QB",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 1,
+    "pts": 17.92,
+    "best": 17.92,
+    "avg": 17.92
+  },
+  {
+    "player": "Kenneth Walker",
+    "pos": "RB",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 1,
+    "pts": 17.9,
+    "best": 17.9,
+    "avg": 17.9
+  },
+  {
+    "player": "Jaylen Warren",
+    "pos": "RB",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 2,
+    "pts": 17.8,
+    "best": 10.1,
+    "avg": 8.9
+  },
+  {
+    "player": "Kirk Cousins",
+    "pos": "QB",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 1,
+    "pts": 17.78,
+    "best": 17.78,
+    "avg": 17.78
+  },
+  {
+    "player": "Cade Otton",
+    "pos": "TE",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 1,
+    "pts": 17.7,
+    "best": 17.7,
+    "avg": 17.7
+  },
+  {
+    "player": "Jordan Love",
+    "pos": "QB",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 1,
+    "pts": 17.46,
+    "best": 17.46,
+    "avg": 17.46
+  },
+  {
+    "player": "Xavier Worthy",
+    "pos": "WR",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 2,
+    "pts": 17.3,
+    "best": 9.4,
+    "avg": 8.65
+  },
+  {
+    "player": "Gus Edwards",
+    "pos": "RB",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 1,
+    "pts": 17.2,
+    "best": 17.2,
+    "avg": 17.2
+  },
+  {
+    "player": "Juwan Johnson",
+    "pos": "TE",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 1,
+    "pts": 17.2,
+    "best": 17.2,
+    "avg": 17.2
+  },
+  {
+    "player": "Jake Ferguson",
+    "pos": "TE",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 2,
+    "pts": 17.1,
+    "best": 9.7,
+    "avg": 8.55
+  },
+  {
+    "player": "NO",
+    "pos": "DEF",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 2,
+    "pts": 17,
+    "best": 14,
+    "avg": 8.5
+  },
+  {
+    "player": "CLE",
+    "pos": "DEF",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 2,
+    "pts": 17,
+    "best": 11,
+    "avg": 8.5
+  },
+  {
+    "player": "HOU",
+    "pos": "DEF",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 3,
+    "pts": 17,
+    "best": 13,
+    "avg": 5.67
+  },
+  {
+    "player": "WAS",
+    "pos": "DEF",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 1,
+    "pts": 17,
+    "best": 17,
+    "avg": 17
+  },
+  {
+    "player": "DET",
+    "pos": "DEF",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 1,
+    "pts": 17,
+    "best": 17,
+    "avg": 17
+  },
+  {
+    "player": "GB",
+    "pos": "DEF",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 1,
+    "pts": 17,
+    "best": 17,
+    "avg": 17
+  },
+  {
+    "player": "Dalton Kincaid",
+    "pos": "TE",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 3,
+    "pts": 17,
+    "best": 12.1,
+    "avg": 5.67
+  },
+  {
+    "player": "Zack Moss",
+    "pos": "RB",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 3,
+    "pts": 16.9,
+    "best": 7.6,
+    "avg": 5.63
+  },
+  {
+    "player": "Jordan Mason",
+    "pos": "RB",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 1,
+    "pts": 16.9,
+    "best": 16.9,
+    "avg": 16.9
+  },
+  {
+    "player": "Calvin Ridley",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 2,
+    "pts": 16.9,
+    "best": 9.4,
+    "avg": 8.45
+  },
+  {
+    "player": "Aaron Jones",
+    "pos": "RB",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 3,
+    "pts": 16.8,
+    "best": 7.4,
+    "avg": 5.6
+  },
+  {
+    "player": "Cole Kmet",
+    "pos": "TE",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 3,
+    "pts": 16.8,
+    "best": 7.2,
+    "avg": 5.6
+  },
+  {
+    "player": "Quentin Johnston",
+    "pos": "WR",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 3,
+    "pts": 16.7,
+    "best": 10,
+    "avg": 5.57
+  },
+  {
+    "player": "Harold Fannin",
+    "pos": "TE",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 2,
+    "pts": 16.6,
+    "best": 9.3,
+    "avg": 8.3
+  },
+  {
+    "player": "Keaton Mitchell",
+    "pos": "RB",
+    "manager": "benjlev",
+    "season": "2023",
+    "games": 3,
+    "pts": 16.5,
+    "best": 9.8,
+    "avg": 5.5
+  },
+  {
+    "player": "Dallas Goedert",
+    "pos": "TE",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 1,
+    "pts": 16.3,
+    "best": 16.3,
+    "avg": 16.3
+  },
+  {
+    "player": "Christian Watson",
+    "pos": "WR",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 1,
+    "pts": 16.3,
+    "best": 16.3,
+    "avg": 16.3
+  },
+  {
+    "player": "Baker Mayfield",
+    "pos": "QB",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 1,
+    "pts": 16.26,
+    "best": 16.26,
+    "avg": 16.26
+  },
+  {
+    "player": "Sam Darnold",
+    "pos": "QB",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 1,
+    "pts": 16.26,
+    "best": 16.26,
+    "avg": 16.26
+  },
+  {
+    "player": "D'Onta Foreman",
+    "pos": "RB",
+    "manager": "dpol",
+    "season": "2023",
+    "games": 2,
+    "pts": 16.2,
+    "best": 16.2,
+    "avg": 8.1
+  },
+  {
+    "player": "C.J. Stroud",
+    "pos": "QB",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 1,
+    "pts": 16.06,
+    "best": 16.06,
+    "avg": 16.06
+  },
+  {
+    "player": "Russell Wilson",
+    "pos": "QB",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 1,
+    "pts": 16.02,
+    "best": 16.02,
+    "avg": 16.02
+  },
+  {
+    "player": "KC",
+    "pos": "DEF",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 2,
+    "pts": 16,
+    "best": 11,
+    "avg": 8
+  },
+  {
+    "player": "JAX",
+    "pos": "DEF",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 2,
+    "pts": 16,
+    "best": 20,
+    "avg": 8
+  },
+  {
+    "player": "LAC",
+    "pos": "DEF",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 2,
+    "pts": 16,
+    "best": 11,
+    "avg": 8
+  },
+  {
+    "player": "Matthew Wright",
+    "pos": "K",
+    "manager": "AlastairL",
+    "season": "2024",
+    "games": 1,
+    "pts": 16,
+    "best": 16,
+    "avg": 16
+  },
+  {
+    "player": "Omarion Hampton",
+    "pos": "RB",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 1,
+    "pts": 16,
+    "best": 16,
+    "avg": 16
+  },
+  {
+    "player": "Jordan Love",
+    "pos": "QB",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 1,
+    "pts": 15.96,
+    "best": 15.96,
+    "avg": 15.96
+  },
+  {
+    "player": "Justin Fields",
+    "pos": "QB",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 1,
+    "pts": 15.94,
+    "best": 15.94,
+    "avg": 15.94
+  },
+  {
+    "player": "Tyler Boyd",
+    "pos": "WR",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 1,
+    "pts": 15.7,
+    "best": 15.7,
+    "avg": 15.7
+  },
+  {
+    "player": "Tyler Lockett",
+    "pos": "WR",
+    "manager": "dpol",
+    "season": "2023",
+    "games": 2,
+    "pts": 15.7,
+    "best": 12.1,
+    "avg": 7.85
+  },
+  {
+    "player": "Trey Sermon",
+    "pos": "RB",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 1,
+    "pts": 15.3,
+    "best": 15.3,
+    "avg": 15.3
+  },
+  {
+    "player": "DEN",
+    "pos": "DEF",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 2,
+    "pts": 15,
+    "best": 15,
+    "avg": 7.5
+  },
+  {
+    "player": "BAL",
+    "pos": "DEF",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 1,
+    "pts": 15,
+    "best": 15,
+    "avg": 15
+  },
+  {
+    "player": "IND",
+    "pos": "DEF",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 1,
+    "pts": 15,
+    "best": 15,
+    "avg": 15
+  },
+  {
+    "player": "BUF",
+    "pos": "DEF",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 3,
+    "pts": 15,
+    "best": 7,
+    "avg": 5
+  },
+  {
+    "player": "LAC",
+    "pos": "DEF",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 2,
+    "pts": 15,
+    "best": 9,
+    "avg": 7.5
+  },
+  {
+    "player": "Andy Borregales",
+    "pos": "K",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 1,
+    "pts": 15,
+    "best": 15,
+    "avg": 15
+  },
+  {
+    "player": "Michael Badgley",
+    "pos": "K",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 2,
+    "pts": 14.1,
+    "best": 8.5,
+    "avg": 7.05
+  },
+  {
+    "player": "Dak Prescott",
+    "pos": "QB",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 1,
+    "pts": 14.04,
+    "best": 14.04,
+    "avg": 14.04
+  },
+  {
+    "player": "Daniel Carlson",
+    "pos": "K",
+    "manager": "dpol",
+    "season": "2023",
+    "games": 3,
+    "pts": 14,
+    "best": 5,
+    "avg": 4.67
+  },
+  {
+    "player": "Parker Romo",
+    "pos": "K",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 1,
+    "pts": 14,
+    "best": 14,
+    "avg": 14
+  },
+  {
+    "player": "HOU",
+    "pos": "DEF",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 2,
+    "pts": 14,
+    "best": 11,
+    "avg": 7
+  },
+  {
+    "player": "Cam Little",
+    "pos": "K",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 1,
+    "pts": 13.8,
+    "best": 13.8,
+    "avg": 13.8
+  },
+  {
+    "player": "Javonte Williams",
+    "pos": "RB",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 1,
+    "pts": 13.6,
+    "best": 13.6,
+    "avg": 13.6
+  },
+  {
+    "player": "Drake London",
+    "pos": "WR",
+    "manager": "dpol",
+    "season": "2023",
+    "games": 3,
+    "pts": 13.5,
+    "best": 8.4,
+    "avg": 4.5
+  },
+  {
+    "player": "Chase McLaughlin",
+    "pos": "K",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 1,
+    "pts": 13.5,
+    "best": 13.5,
+    "avg": 13.5
+  },
+  {
+    "player": "Jerome Ford",
+    "pos": "RB",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 2,
+    "pts": 13.3,
+    "best": 6.9,
+    "avg": 6.65
+  },
+  {
+    "player": "Zach Charbonnet",
+    "pos": "RB",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 1,
+    "pts": 13.1,
+    "best": 13.1,
+    "avg": 13.1
+  },
+  {
+    "player": "NO",
+    "pos": "DEF",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 1,
+    "pts": 13,
+    "best": 13,
+    "avg": 13
+  },
+  {
+    "player": "KC",
+    "pos": "DEF",
+    "manager": "dpol",
+    "season": "2023",
+    "games": 2,
+    "pts": 13,
+    "best": 7,
+    "avg": 6.5
+  },
+  {
+    "player": "KC",
+    "pos": "DEF",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 3,
+    "pts": 13,
+    "best": 8,
+    "avg": 4.33
+  },
+  {
+    "player": "C.J. Stroud",
+    "pos": "QB",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 1,
+    "pts": 12.92,
+    "best": 12.92,
+    "avg": 12.92
+  },
+  {
+    "player": "Kyren Williams",
+    "pos": "RB",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 1,
+    "pts": 12.9,
+    "best": 12.9,
+    "avg": 12.9
+  },
+  {
+    "player": "Jayden Reed",
+    "pos": "WR",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 3,
+    "pts": 12.9,
+    "best": 8.8,
+    "avg": 4.3
+  },
+  {
+    "player": "Pat Freiermuth",
+    "pos": "TE",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 2,
+    "pts": 12.8,
+    "best": 9.7,
+    "avg": 6.4
+  },
+  {
+    "player": "Jakobi Meyers",
+    "pos": "WR",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 1,
+    "pts": 12.8,
+    "best": 12.8,
+    "avg": 12.8
+  },
+  {
+    "player": "Brock Purdy",
+    "pos": "QB",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 1,
+    "pts": 12.78,
+    "best": 12.78,
+    "avg": 12.78
+  },
+  {
+    "player": "Tre Tucker",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 1,
+    "pts": 12.7,
+    "best": 12.7,
+    "avg": 12.7
+  },
+  {
+    "player": "Evan McPherson",
+    "pos": "K",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 2,
+    "pts": 12.6,
+    "best": 7.1,
+    "avg": 6.3
+  },
+  {
+    "player": "Cole Kmet",
+    "pos": "TE",
+    "manager": "sanfbe",
+    "season": "2023",
+    "games": 5,
+    "pts": 12.5,
+    "best": 7.1,
+    "avg": 2.5
+  },
+  {
+    "player": "Terry McLaurin",
+    "pos": "WR",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 2,
+    "pts": 12.4,
+    "best": 6.8,
+    "avg": 6.2
+  },
+  {
+    "player": "Hunter Henry",
+    "pos": "TE",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 1,
+    "pts": 12.4,
+    "best": 12.4,
+    "avg": 12.4
+  },
+  {
+    "player": "Jared Goff",
+    "pos": "QB",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 1,
+    "pts": 12.34,
+    "best": 12.34,
+    "avg": 12.34
+  },
+  {
+    "player": "Pat Freiermuth",
+    "pos": "TE",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 1,
+    "pts": 12.3,
+    "best": 12.3,
+    "avg": 12.3
+  },
+  {
+    "player": "DEN",
+    "pos": "DEF",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 2,
+    "pts": 12,
+    "best": 7,
+    "avg": 6
+  },
+  {
+    "player": "Jason Myers",
+    "pos": "K",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 1,
+    "pts": 12,
+    "best": 12,
+    "avg": 12
+  },
+  {
+    "player": "Cameron Dicker",
+    "pos": "K",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 2,
+    "pts": 12,
+    "best": 9,
+    "avg": 6
+  },
+  {
+    "player": "Jason Sanders",
+    "pos": "K",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 1,
+    "pts": 12,
+    "best": 12,
+    "avg": 12
+  },
+  {
+    "player": "PIT",
+    "pos": "DEF",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 2,
+    "pts": 12,
+    "best": 11,
+    "avg": 6
+  },
+  {
+    "player": "Kyle Pitts",
+    "pos": "TE",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 1,
+    "pts": 12,
+    "best": 12,
+    "avg": 12
+  },
+  {
+    "player": "DeVonta Smith",
+    "pos": "WR",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 1,
+    "pts": 11.9,
+    "best": 11.9,
+    "avg": 11.9
+  },
+  {
+    "player": "Joe Flacco",
+    "pos": "QB",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 1,
+    "pts": 11.86,
+    "best": 11.86,
+    "avg": 11.86
+  },
+  {
+    "player": "Devin Singletary",
+    "pos": "RB",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 2,
+    "pts": 11.5,
+    "best": 7.2,
+    "avg": 5.75
+  },
+  {
+    "player": "Christian Watson",
+    "pos": "WR",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 1,
+    "pts": 11.4,
+    "best": 11.4,
+    "avg": 11.4
+  },
+  {
+    "player": "Tyrone Tracy",
+    "pos": "RB",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 2,
+    "pts": 11.4,
+    "best": 6.2,
+    "avg": 5.7
+  },
+  {
+    "player": "Gabe Davis",
+    "pos": "WR",
+    "manager": "benjlev",
+    "season": "2023",
+    "games": 4,
+    "pts": 11.3,
+    "best": 8.6,
+    "avg": 2.83
+  },
+  {
+    "player": "Javonte Williams",
+    "pos": "RB",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 1,
+    "pts": 11.1,
+    "best": 11.1,
+    "avg": 11.1
+  },
+  {
+    "player": "WAS",
+    "pos": "DEF",
+    "manager": "joshjr11",
+    "season": "2023",
+    "games": 1,
+    "pts": 11,
+    "best": 11,
+    "avg": 11
+  },
+  {
+    "player": "Jahan Dotson",
+    "pos": "WR",
+    "manager": "joshjr11",
+    "season": "2023",
+    "games": 2,
+    "pts": 11,
+    "best": 6.5,
+    "avg": 5.5
+  },
+  {
+    "player": "Jake Moody",
+    "pos": "K",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 3,
+    "pts": 11,
+    "best": 6,
+    "avg": 3.67
+  },
+  {
+    "player": "Cameron Dicker",
+    "pos": "K",
+    "manager": "sanfbe",
+    "season": "2023",
+    "games": 1,
+    "pts": 11,
+    "best": 11,
+    "avg": 11
+  },
+  {
+    "player": "Ezekiel Elliott",
+    "pos": "RB",
+    "manager": "joshjr11",
+    "season": "2023",
+    "games": 1,
+    "pts": 11,
+    "best": 11,
+    "avg": 11
+  },
+  {
+    "player": "BAL",
+    "pos": "DEF",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 2,
+    "pts": 11,
+    "best": 7,
+    "avg": 5.5
+  },
+  {
+    "player": "Jake Moody",
+    "pos": "K",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 2,
+    "pts": 11,
+    "best": 6,
+    "avg": 5.5
+  },
+  {
+    "player": "BUF",
+    "pos": "DEF",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 1,
+    "pts": 11,
+    "best": 11,
+    "avg": 11
+  },
+  {
+    "player": "Dallas Goedert",
+    "pos": "TE",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 1,
+    "pts": 11,
+    "best": 11,
+    "avg": 11
+  },
+  {
+    "player": "PIT",
+    "pos": "DEF",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 1,
+    "pts": 11,
+    "best": 11,
+    "avg": 11
+  },
+  {
+    "player": "Darius Slayton",
+    "pos": "WR",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 1,
+    "pts": 10.9,
+    "best": 10.9,
+    "avg": 10.9
+  },
+  {
+    "player": "Jared Goff",
+    "pos": "QB",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 1,
+    "pts": 10.76,
+    "best": 10.76,
+    "avg": 10.76
+  },
+  {
+    "player": "J.K. Dobbins",
+    "pos": "RB",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 1,
+    "pts": 10.7,
+    "best": 10.7,
+    "avg": 10.7
+  },
+  {
+    "player": "Jake Ferguson",
+    "pos": "TE",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 1,
+    "pts": 10.6,
+    "best": 10.6,
+    "avg": 10.6
+  },
+  {
+    "player": "Marquez Valdes-Scantling",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 1,
+    "pts": 10.6,
+    "best": 10.6,
+    "avg": 10.6
+  },
+  {
+    "player": "Brock Purdy",
+    "pos": "QB",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 1,
+    "pts": 10.46,
+    "best": 10.46,
+    "avg": 10.46
+  },
+  {
+    "player": "DeVonta Smith",
+    "pos": "WR",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 2,
+    "pts": 10.4,
+    "best": 7.3,
+    "avg": 5.2
+  },
+  {
+    "player": "Matt Gay",
+    "pos": "K",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 2,
+    "pts": 10.3,
+    "best": 8.3,
+    "avg": 5.15
+  },
+  {
+    "player": "Jakobi Meyers",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 2,
+    "pts": 10.2,
+    "best": 5.2,
+    "avg": 5.1
+  },
+  {
+    "player": "Evan McPherson",
+    "pos": "K",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 2,
+    "pts": 10,
+    "best": 6,
+    "avg": 5
+  },
+  {
+    "player": "BAL",
+    "pos": "DEF",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 2,
+    "pts": 10,
+    "best": 10,
+    "avg": 5
+  },
+  {
+    "player": "Nick Folk",
+    "pos": "K",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 1,
+    "pts": 10,
+    "best": 10,
+    "avg": 10
+  },
+  {
+    "player": "Romeo Doubs",
+    "pos": "WR",
+    "manager": "joshjr11",
+    "season": "2023",
+    "games": 1,
+    "pts": 10,
+    "best": 10,
+    "avg": 10
+  },
+  {
+    "player": "SEA",
+    "pos": "DEF",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 1,
+    "pts": 10,
+    "best": 10,
+    "avg": 10
+  },
+  {
+    "player": "NO",
+    "pos": "DEF",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 2,
+    "pts": 10,
+    "best": 8,
+    "avg": 5
+  },
+  {
+    "player": "WAS",
+    "pos": "DEF",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 1,
+    "pts": 10,
+    "best": 10,
+    "avg": 10
+  },
+  {
+    "player": "LAR",
+    "pos": "DEF",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 1,
+    "pts": 10,
+    "best": 10,
+    "avg": 10
+  },
+  {
+    "player": "TB",
+    "pos": "DEF",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 2,
+    "pts": 10,
+    "best": 8,
+    "avg": 5
+  },
+  {
+    "player": "Caleb Williams",
+    "pos": "QB",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 1,
+    "pts": 9.94,
+    "best": 9.94,
+    "avg": 9.94
+  },
+  {
+    "player": "Zay Flowers",
+    "pos": "WR",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 1,
+    "pts": 9.8,
+    "best": 9.8,
+    "avg": 9.8
+  },
+  {
+    "player": "Dallas Goedert",
+    "pos": "TE",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 1,
+    "pts": 9.7,
+    "best": 9.7,
+    "avg": 9.7
+  },
+  {
+    "player": "Mark Andrews",
+    "pos": "TE",
+    "manager": "AlastairL",
+    "season": "2024",
+    "games": 4,
+    "pts": 9.5,
+    "best": 7.1,
+    "avg": 2.38
+  },
+  {
+    "player": "Tre Tucker",
+    "pos": "WR",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 1,
+    "pts": 9.5,
+    "best": 9.5,
+    "avg": 9.5
+  },
+  {
+    "player": "Trevor Lawrence",
+    "pos": "QB",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 1,
+    "pts": 9.34,
+    "best": 9.34,
+    "avg": 9.34
+  },
+  {
+    "player": "Brock Purdy",
+    "pos": "QB",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 1,
+    "pts": 9.32,
+    "best": 9.32,
+    "avg": 9.32
+  },
+  {
+    "player": "Najee Harris",
+    "pos": "RB",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 2,
+    "pts": 9.3,
+    "best": 4.8,
+    "avg": 4.65
+  },
+  {
+    "player": "Wil Lutz",
+    "pos": "K",
+    "manager": "benjlev",
+    "season": "2025",
+    "games": 1,
+    "pts": 9.2,
+    "best": 9.2,
+    "avg": 9.2
+  },
+  {
+    "player": "Dalton Schultz",
+    "pos": "TE",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 1,
+    "pts": 9.1,
+    "best": 9.1,
+    "avg": 9.1
+  },
+  {
+    "player": "Ka'imi Fairbairn",
+    "pos": "K",
+    "manager": "sanfbe",
+    "season": "2023",
+    "games": 3,
+    "pts": 9,
+    "best": 8,
+    "avg": 3
+  },
+  {
+    "player": "Christian Watson",
+    "pos": "WR",
+    "manager": "benjlev",
+    "season": "2023",
+    "games": 2,
+    "pts": 9,
+    "best": 4.8,
+    "avg": 4.5
+  },
+  {
+    "player": "NYJ",
+    "pos": "DEF",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 1,
+    "pts": 9,
+    "best": 9,
+    "avg": 9
+  },
+  {
+    "player": "WAS",
+    "pos": "DEF",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 1,
+    "pts": 9,
+    "best": 9,
+    "avg": 9
+  },
+  {
+    "player": "NYJ",
+    "pos": "DEF",
+    "manager": "sanfbe",
+    "season": "2023",
+    "games": 1,
+    "pts": 9,
+    "best": 9,
+    "avg": 9
+  },
+  {
+    "player": "SEA",
+    "pos": "DEF",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 1,
+    "pts": 9,
+    "best": 9,
+    "avg": 9
+  },
+  {
+    "player": "Josh Downs",
+    "pos": "WR",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 1,
+    "pts": 9,
+    "best": 9,
+    "avg": 9
+  },
+  {
+    "player": "Austin Seibert",
+    "pos": "K",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 1,
+    "pts": 9,
+    "best": 9,
+    "avg": 9
+  },
+  {
+    "player": "TEN",
+    "pos": "DEF",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 1,
+    "pts": 9,
+    "best": 9,
+    "avg": 9
+  },
+  {
+    "player": "LAR",
+    "pos": "DEF",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 1,
+    "pts": 9,
+    "best": 9,
+    "avg": 9
+  },
+  {
+    "player": "Jacory Croskey-Merritt",
+    "pos": "RB",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 2,
+    "pts": 9,
+    "best": 5.3,
+    "avg": 4.5
+  },
+  {
+    "player": "DET",
+    "pos": "DEF",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 2,
+    "pts": 9,
+    "best": 7,
+    "avg": 4.5
+  },
+  {
+    "player": "Cam Akers",
+    "pos": "RB",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 1,
+    "pts": 8.9,
+    "best": 8.9,
+    "avg": 8.9
+  },
+  {
+    "player": "Chris Olave",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 1,
+    "pts": 8.9,
+    "best": 8.9,
+    "avg": 8.9
+  },
+  {
+    "player": "Mark Andrews",
+    "pos": "TE",
+    "manager": "benjlev",
+    "season": "2025",
+    "games": 1,
+    "pts": 8.9,
+    "best": 8.9,
+    "avg": 8.9
+  },
+  {
+    "player": "Bo Nix",
+    "pos": "QB",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 1,
+    "pts": 8.84,
+    "best": 8.84,
+    "avg": 8.84
+  },
+  {
+    "player": "Jake Tonges",
+    "pos": "TE",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 1,
+    "pts": 8.8,
+    "best": 8.8,
+    "avg": 8.8
+  },
+  {
+    "player": "Jaylin Noel",
+    "pos": "WR",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 1,
+    "pts": 8.8,
+    "best": 8.8,
+    "avg": 8.8
+  },
+  {
+    "player": "Romeo Doubs",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 1,
+    "pts": 8.7,
+    "best": 8.7,
+    "avg": 8.7
+  },
+  {
+    "player": "Evan McPherson",
+    "pos": "K",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 1,
+    "pts": 8.7,
+    "best": 8.7,
+    "avg": 8.7
+  },
+  {
+    "player": "Deebo Samuel",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 1,
+    "pts": 8.6,
+    "best": 8.6,
+    "avg": 8.6
+  },
+  {
+    "player": "Baker Mayfield",
+    "pos": "QB",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 1,
+    "pts": 8.52,
+    "best": 8.52,
+    "avg": 8.52
+  },
+  {
+    "player": "Brenton Strange",
+    "pos": "TE",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 1,
+    "pts": 8.2,
+    "best": 8.2,
+    "avg": 8.2
+  },
+  {
+    "player": "Jaylen Warren",
+    "pos": "RB",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 1,
+    "pts": 8.2,
+    "best": 8.2,
+    "avg": 8.2
+  },
+  {
+    "player": "Darren Waller",
+    "pos": "TE",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 2,
+    "pts": 8.2,
+    "best": 8.2,
+    "avg": 4.1
+  },
+  {
+    "player": "WAS",
+    "pos": "DEF",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 1,
+    "pts": 8,
+    "best": 8,
+    "avg": 8
+  },
+  {
+    "player": "LV",
+    "pos": "DEF",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 1,
+    "pts": 8,
+    "best": 8,
+    "avg": 8
+  },
+  {
+    "player": "LAR",
+    "pos": "DEF",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 1,
+    "pts": 8,
+    "best": 8,
+    "avg": 8
+  },
+  {
+    "player": "Alvin Kamara",
+    "pos": "RB",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 2,
+    "pts": 8,
+    "best": 5.5,
+    "avg": 4
+  },
+  {
+    "player": "GB",
+    "pos": "DEF",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 1,
+    "pts": 8,
+    "best": 8,
+    "avg": 8
+  },
+  {
+    "player": "Zach Charbonnet",
+    "pos": "RB",
+    "manager": "sanfbe",
+    "season": "2023",
+    "games": 1,
+    "pts": 7.8,
+    "best": 7.8,
+    "avg": 7.8
+  },
+  {
+    "player": "Chase McLaughlin",
+    "pos": "K",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 2,
+    "pts": 7.8,
+    "best": 5.8,
+    "avg": 3.9
+  },
+  {
+    "player": "Jaylen Warren",
+    "pos": "RB",
+    "manager": "benjlev",
+    "season": "2024",
+    "games": 2,
+    "pts": 7.7,
+    "best": 7.1,
+    "avg": 3.85
+  },
+  {
+    "player": "Juwan Johnson",
+    "pos": "TE",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 1,
+    "pts": 7.6,
+    "best": 7.6,
+    "avg": 7.6
+  },
+  {
+    "player": "Wan'Dale Robinson",
+    "pos": "WR",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 1,
+    "pts": 7.5,
+    "best": 7.5,
+    "avg": 7.5
+  },
+  {
+    "player": "Cade Otton",
+    "pos": "TE",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 2,
+    "pts": 7.5,
+    "best": 4,
+    "avg": 3.75
+  },
+  {
+    "player": "Colston Loveland",
+    "pos": "TE",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 1,
+    "pts": 7.5,
+    "best": 7.5,
+    "avg": 7.5
+  },
+  {
+    "player": "Dalvin Cook",
+    "pos": "RB",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 1,
+    "pts": 7.4,
+    "best": 7.4,
+    "avg": 7.4
+  },
+  {
+    "player": "Michael Carter",
+    "pos": "RB",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 1,
+    "pts": 7.4,
+    "best": 7.4,
+    "avg": 7.4
+  },
+  {
+    "player": "Jaxon Smith-Njigba",
+    "pos": "WR",
+    "manager": "joshjr11",
+    "season": "2023",
+    "games": 1,
+    "pts": 7.3,
+    "best": 7.3,
+    "avg": 7.3
+  },
+  {
+    "player": "Javonte Williams",
+    "pos": "RB",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 1,
+    "pts": 7.2,
+    "best": 7.2,
+    "avg": 7.2
+  },
+  {
+    "player": "Taysom Hill",
+    "pos": "TE",
+    "manager": "AlastairL",
+    "season": "2024",
+    "games": 1,
+    "pts": 7.2,
+    "best": 7.2,
+    "avg": 7.2
+  },
+  {
+    "player": "Jake Bates",
+    "pos": "K",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 1,
+    "pts": 7.1,
+    "best": 7.1,
+    "avg": 7.1
+  },
+  {
+    "player": "IND",
+    "pos": "DEF",
+    "manager": "dpol",
+    "season": "2023",
+    "games": 1,
+    "pts": 7,
+    "best": 7,
+    "avg": 7
+  },
+  {
+    "player": "Jason Sanders",
+    "pos": "K",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 1,
+    "pts": 7,
+    "best": 7,
+    "avg": 7
+  },
+  {
+    "player": "MIA",
+    "pos": "DEF",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 1,
+    "pts": 7,
+    "best": 7,
+    "avg": 7
+  },
+  {
+    "player": "LAC",
+    "pos": "DEF",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 1,
+    "pts": 7,
+    "best": 7,
+    "avg": 7
+  },
+  {
+    "player": "LAR",
+    "pos": "DEF",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 1,
+    "pts": 7,
+    "best": 7,
+    "avg": 7
+  },
+  {
+    "player": "PIT",
+    "pos": "DEF",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 2,
+    "pts": 7,
+    "best": 5,
+    "avg": 3.5
+  },
+  {
+    "player": "PHI",
+    "pos": "DEF",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 3,
+    "pts": 7,
+    "best": 4,
+    "avg": 2.33
+  },
+  {
+    "player": "CLE",
+    "pos": "DEF",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 1,
+    "pts": 7,
+    "best": 7,
+    "avg": 7
+  },
+  {
+    "player": "PHI",
+    "pos": "DEF",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 1,
+    "pts": 7,
+    "best": 7,
+    "avg": 7
+  },
+  {
+    "player": "LAR",
+    "pos": "DEF",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 1,
+    "pts": 7,
+    "best": 7,
+    "avg": 7
+  },
+  {
+    "player": "Dalton Kincaid",
+    "pos": "TE",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 2,
+    "pts": 6.9,
+    "best": 5.3,
+    "avg": 3.45
+  },
+  {
+    "player": "AJ Dillon",
+    "pos": "RB",
+    "manager": "dpol",
+    "season": "2023",
+    "games": 1,
+    "pts": 6.8,
+    "best": 6.8,
+    "avg": 6.8
+  },
+  {
+    "player": "Tez Johnson",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 1,
+    "pts": 6.8,
+    "best": 6.8,
+    "avg": 6.8
+  },
+  {
+    "player": "Jerry Jeudy",
+    "pos": "WR",
+    "manager": "joshjr11",
+    "season": "2023",
+    "games": 1,
+    "pts": 6.7,
+    "best": 6.7,
+    "avg": 6.7
+  },
+  {
+    "player": "Tyler Higbee",
+    "pos": "TE",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 1,
+    "pts": 6.4,
+    "best": 6.4,
+    "avg": 6.4
+  },
+  {
+    "player": "Marquise Brown",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2023",
+    "games": 2,
+    "pts": 6.4,
+    "best": 6.4,
+    "avg": 3.2
+  },
+  {
+    "player": "Russell Wilson",
+    "pos": "QB",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 1,
+    "pts": 6.3,
+    "best": 6.3,
+    "avg": 6.3
+  },
+  {
+    "player": "Kyle Pitts",
+    "pos": "TE",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 1,
+    "pts": 6.2,
+    "best": 6.2,
+    "avg": 6.2
+  },
+  {
+    "player": "Zach Ertz",
+    "pos": "TE",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 1,
+    "pts": 6.2,
+    "best": 6.2,
+    "avg": 6.2
+  },
+  {
+    "player": "Joshua Kelley",
+    "pos": "RB",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 2,
+    "pts": 6.1,
+    "best": 3.9,
+    "avg": 3.05
+  },
+  {
+    "player": "Matt Prater",
+    "pos": "K",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 2,
+    "pts": 6,
+    "best": 6,
+    "avg": 3
+  },
+  {
+    "player": "Jake Moody",
+    "pos": "K",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 1,
+    "pts": 6,
+    "best": 6,
+    "avg": 6
+  },
+  {
+    "player": "NYJ",
+    "pos": "DEF",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 1,
+    "pts": 6,
+    "best": 6,
+    "avg": 6
+  },
+  {
+    "player": "George Kittle",
+    "pos": "TE",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 1,
+    "pts": 6,
+    "best": 6,
+    "avg": 6
+  },
+  {
+    "player": "SF",
+    "pos": "DEF",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 1,
+    "pts": 6,
+    "best": 6,
+    "avg": 6
+  },
+  {
+    "player": "PHI",
+    "pos": "DEF",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 1,
+    "pts": 6,
+    "best": 6,
+    "avg": 6
+  },
+  {
+    "player": "Jason Myers",
+    "pos": "K",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 1,
+    "pts": 6,
+    "best": 6,
+    "avg": 6
+  },
+  {
+    "player": "WAS",
+    "pos": "DEF",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 2,
+    "pts": 6,
+    "best": 4,
+    "avg": 3
+  },
+  {
+    "player": "Taysom Hill",
+    "pos": "TE",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 1,
+    "pts": 6,
+    "best": 6,
+    "avg": 6
+  },
+  {
+    "player": "IND",
+    "pos": "DEF",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 1,
+    "pts": 6,
+    "best": 6,
+    "avg": 6
+  },
+  {
+    "player": "Will Reichard",
+    "pos": "K",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 1,
+    "pts": 6,
+    "best": 6,
+    "avg": 6
+  },
+  {
+    "player": "WAS",
+    "pos": "DEF",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 1,
+    "pts": 6,
+    "best": 6,
+    "avg": 6
+  },
+  {
+    "player": "GB",
+    "pos": "DEF",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 2,
+    "pts": 6,
+    "best": 9,
+    "avg": 3
+  },
+  {
+    "player": "Cairo Santos",
+    "pos": "K",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 1,
+    "pts": 6,
+    "best": 6,
+    "avg": 6
+  },
+  {
+    "player": "Dameon Pierce",
+    "pos": "RB",
+    "manager": "sanfbe",
+    "season": "2023",
+    "games": 1,
+    "pts": 5.7,
+    "best": 5.7,
+    "avg": 5.7
+  },
+  {
+    "player": "Jaylen Warren",
+    "pos": "RB",
+    "manager": "joshjr11",
+    "season": "2023",
+    "games": 1,
+    "pts": 5.7,
+    "best": 5.7,
+    "avg": 5.7
+  },
+  {
+    "player": "Hunter Henry",
+    "pos": "TE",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 1,
+    "pts": 5.6,
+    "best": 5.6,
+    "avg": 5.6
+  },
+  {
+    "player": "Calvin Ridley",
+    "pos": "WR",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 2,
+    "pts": 5.5,
+    "best": 3.2,
+    "avg": 2.75
+  },
+  {
+    "player": "Darren Waller",
+    "pos": "TE",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 1,
+    "pts": 5.5,
+    "best": 5.5,
+    "avg": 5.5
+  },
+  {
+    "player": "Josh Reynolds",
+    "pos": "WR",
+    "manager": "benjlev",
+    "season": "2023",
+    "games": 1,
+    "pts": 5.3,
+    "best": 5.3,
+    "avg": 5.3
+  },
+  {
+    "player": "Dallas Goedert",
+    "pos": "TE",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 1,
+    "pts": 5.3,
+    "best": 5.3,
+    "avg": 5.3
+  },
+  {
+    "player": "Sean Tucker",
+    "pos": "RB",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 1,
+    "pts": 5.1,
+    "best": 5.1,
+    "avg": 5.1
+  },
+  {
+    "player": "Younghoe Koo",
+    "pos": "K",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 1,
+    "pts": 5,
+    "best": 5,
+    "avg": 5
+  },
+  {
+    "player": "SEA",
+    "pos": "DEF",
+    "manager": "dpol",
+    "season": "2023",
+    "games": 1,
+    "pts": 5,
+    "best": 5,
+    "avg": 5
+  },
+  {
+    "player": "HOU",
+    "pos": "DEF",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 1,
+    "pts": 5,
+    "best": 5,
+    "avg": 5
+  },
+  {
+    "player": "Jakobi Meyers",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2023",
+    "games": 1,
+    "pts": 5,
+    "best": 5,
+    "avg": 5
+  },
+  {
+    "player": "BUF",
+    "pos": "DEF",
+    "manager": "joshjr11",
+    "season": "2023",
+    "games": 1,
+    "pts": 5,
+    "best": 5,
+    "avg": 5
+  },
+  {
+    "player": "PHI",
+    "pos": "DEF",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 1,
+    "pts": 5,
+    "best": 5,
+    "avg": 5
+  },
+  {
+    "player": "Nick Chubb",
+    "pos": "RB",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 1,
+    "pts": 5,
+    "best": 5,
+    "avg": 5
+  },
+  {
+    "player": "CLE",
+    "pos": "DEF",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 1,
+    "pts": 5,
+    "best": 5,
+    "avg": 5
+  },
+  {
+    "player": "TB",
+    "pos": "DEF",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 1,
+    "pts": 5,
+    "best": 5,
+    "avg": 5
+  },
+  {
+    "player": "Tutu Atwell",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 1,
+    "pts": 4.9,
+    "best": 4.9,
+    "avg": 4.9
+  },
+  {
+    "player": "Rome Odunze",
+    "pos": "WR",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 1,
+    "pts": 4.9,
+    "best": 4.9,
+    "avg": 4.9
+  },
+  {
+    "player": "Brandin Cooks",
+    "pos": "WR",
+    "manager": "dpol",
+    "season": "2023",
+    "games": 1,
+    "pts": 4.7,
+    "best": 4.7,
+    "avg": 4.7
+  },
+  {
+    "player": "T.J. Hockenson",
+    "pos": "TE",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 2,
+    "pts": 4.7,
+    "best": 3,
+    "avg": 2.35
+  },
+  {
+    "player": "Caleb Williams",
+    "pos": "QB",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 1,
+    "pts": 4.68,
+    "best": 4.68,
+    "avg": 4.68
+  },
+  {
+    "player": "Brian Thomas",
+    "pos": "WR",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 1,
+    "pts": 4.6,
+    "best": 4.6,
+    "avg": 4.6
+  },
+  {
+    "player": "Pat Freiermuth",
+    "pos": "TE",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 1,
+    "pts": 4.4,
+    "best": 4.4,
+    "avg": 4.4
+  },
+  {
+    "player": "Chris Godwin",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2025",
+    "games": 1,
+    "pts": 4.1,
+    "best": 4.1,
+    "avg": 4.1
+  },
+  {
+    "player": "Younghoe Koo",
+    "pos": "K",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 1,
+    "pts": 4,
+    "best": 4,
+    "avg": 4
+  },
+  {
+    "player": "Harrison Butker",
+    "pos": "K",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 1,
+    "pts": 4,
+    "best": 4,
+    "avg": 4
+  },
+  {
+    "player": "CHI",
+    "pos": "DEF",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 1,
+    "pts": 4,
+    "best": 4,
+    "avg": 4
+  },
+  {
+    "player": "NYG",
+    "pos": "DEF",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 1,
+    "pts": 4,
+    "best": 4,
+    "avg": 4
+  },
+  {
+    "player": "GB",
+    "pos": "DEF",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 1,
+    "pts": 4,
+    "best": 4,
+    "avg": 4
+  },
+  {
+    "player": "Harrison Butker",
+    "pos": "K",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 1,
+    "pts": 4,
+    "best": 4,
+    "avg": 4
+  },
+  {
+    "player": "Tyler Loop",
+    "pos": "K",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 1,
+    "pts": 4,
+    "best": 4,
+    "avg": 4
+  },
+  {
+    "player": "TB",
+    "pos": "DEF",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 1,
+    "pts": 4,
+    "best": 4,
+    "avg": 4
+  },
+  {
+    "player": "Brock Purdy",
+    "pos": "QB",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 1,
+    "pts": 3.98,
+    "best": 3.98,
+    "avg": 3.98
+  },
+  {
+    "player": "Cade Otton",
+    "pos": "TE",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 1,
+    "pts": 3.8,
+    "best": 3.8,
+    "avg": 3.8
+  },
+  {
+    "player": "Devin Singletary",
+    "pos": "RB",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 1,
+    "pts": 3.6,
+    "best": 3.6,
+    "avg": 3.6
+  },
+  {
+    "player": "Dalton Schultz",
+    "pos": "TE",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 1,
+    "pts": 3.4,
+    "best": 3.4,
+    "avg": 3.4
+  },
+  {
+    "player": "Gerald Everett",
+    "pos": "TE",
+    "manager": "joshjr11",
+    "season": "2023",
+    "games": 1,
+    "pts": 3.3,
+    "best": 3.3,
+    "avg": 3.3
+  },
+  {
+    "player": "Rashod Bateman",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 1,
+    "pts": 3.3,
+    "best": 3.3,
+    "avg": 3.3
+  },
+  {
+    "player": "Dak Prescott",
+    "pos": "QB",
+    "manager": "benjlev",
+    "season": "2024",
+    "games": 1,
+    "pts": 3.22,
+    "best": 3.22,
+    "avg": 3.22
+  },
+  {
+    "player": "Zach Ertz",
+    "pos": "TE",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 1,
+    "pts": 3.2,
+    "best": 3.2,
+    "avg": 3.2
+  },
+  {
+    "player": "Oronde Gadsden",
+    "pos": "TE",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 1,
+    "pts": 3.2,
+    "best": 3.2,
+    "avg": 3.2
+  },
+  {
+    "player": "Rhamondre Stevenson",
+    "pos": "RB",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 1,
+    "pts": 3.1,
+    "best": 3.1,
+    "avg": 3.1
+  },
+  {
+    "player": "Jake Ferguson",
+    "pos": "TE",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 1,
+    "pts": 3,
+    "best": 3,
+    "avg": 3
+  },
+  {
+    "player": "Brayden Narveson",
+    "pos": "K",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 1,
+    "pts": 3,
+    "best": 3,
+    "avg": 3
+  },
+  {
+    "player": "Dontayvion Wicks",
+    "pos": "WR",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 1,
+    "pts": 3,
+    "best": 3,
+    "avg": 3
+  },
+  {
+    "player": "BUF",
+    "pos": "DEF",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 1,
+    "pts": 3,
+    "best": 3,
+    "avg": 3
+  },
+  {
+    "player": "NYJ",
+    "pos": "DEF",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 1,
+    "pts": 3,
+    "best": 3,
+    "avg": 3
+  },
+  {
+    "player": "TB",
+    "pos": "DEF",
+    "manager": "AlastairL",
+    "season": "2024",
+    "games": 1,
+    "pts": 3,
+    "best": 3,
+    "avg": 3
+  },
+  {
+    "player": "ATL",
+    "pos": "DEF",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 1,
+    "pts": 3,
+    "best": 3,
+    "avg": 3
+  },
+  {
+    "player": "Jake Elliott",
+    "pos": "K",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 1,
+    "pts": 3,
+    "best": 3,
+    "avg": 3
+  },
+  {
+    "player": "Josh Downs",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 1,
+    "pts": 2.9,
+    "best": 2.9,
+    "avg": 2.9
+  },
+  {
+    "player": "Raheem Mostert",
+    "pos": "RB",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 1,
+    "pts": 2.9,
+    "best": 2.9,
+    "avg": 2.9
+  },
+  {
+    "player": "Gerald Everett",
+    "pos": "TE",
+    "manager": "dpol",
+    "season": "2023",
+    "games": 1,
+    "pts": 2.8,
+    "best": 2.8,
+    "avg": 2.8
+  },
+  {
+    "player": "Demarcus Robinson",
+    "pos": "WR",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 1,
+    "pts": 2.8,
+    "best": 2.8,
+    "avg": 2.8
+  },
+  {
+    "player": "Darius Slayton",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 1,
+    "pts": 2.6,
+    "best": 2.6,
+    "avg": 2.6
+  },
+  {
+    "player": "Taysom Hill",
+    "pos": "TE",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 1,
+    "pts": 2.4,
+    "best": 2.4,
+    "avg": 2.4
+  },
+  {
+    "player": "Nick Westbrook-Ikhine",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 1,
+    "pts": 2.4,
+    "best": 2.4,
+    "avg": 2.4
+  },
+  {
+    "player": "Kendrick Bourne",
+    "pos": "WR",
+    "manager": "benjlev",
+    "season": "2025",
+    "games": 1,
+    "pts": 2.4,
+    "best": 2.4,
+    "avg": 2.4
+  },
+  {
+    "player": "CIN",
+    "pos": "DEF",
+    "manager": "AlastairL",
+    "season": "2024",
+    "games": 1,
+    "pts": 2,
+    "best": 2,
+    "avg": 2
+  },
+  {
+    "player": "Matt Prater",
+    "pos": "K",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 1,
+    "pts": 2,
+    "best": 2,
+    "avg": 2
+  },
+  {
+    "player": "MIA",
+    "pos": "DEF",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 1,
+    "pts": 2,
+    "best": 2,
+    "avg": 2
+  },
+  {
+    "player": "NYJ",
+    "pos": "DEF",
+    "manager": "sanfbe",
+    "season": "2024",
+    "games": 1,
+    "pts": 2,
+    "best": 2,
+    "avg": 2
+  },
+  {
+    "player": "LAR",
+    "pos": "DEF",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 1,
+    "pts": 2,
+    "best": 2,
+    "avg": 2
+  },
+  {
+    "player": "Odell Beckham",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2023",
+    "games": 1,
+    "pts": 1.9,
+    "best": 1.9,
+    "avg": 1.9
+  },
+  {
+    "player": "Courtland Sutton",
+    "pos": "WR",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 1,
+    "pts": 1.8,
+    "best": 1.8,
+    "avg": 1.8
+  },
+  {
+    "player": "Jauan Jennings",
+    "pos": "WR",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 1,
+    "pts": 1.8,
+    "best": 1.8,
+    "avg": 1.8
+  },
+  {
+    "player": "Darnell Mooney",
+    "pos": "WR",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 1,
+    "pts": 1.6,
+    "best": 1.6,
+    "avg": 1.6
+  },
+  {
+    "player": "Dalton Schultz",
+    "pos": "TE",
+    "manager": "sanfbe",
+    "season": "2023",
+    "games": 1,
+    "pts": 1.5,
+    "best": 1.5,
+    "avg": 1.5
+  },
+  {
+    "player": "Josh Downs",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2023",
+    "games": 1,
+    "pts": 1.5,
+    "best": 1.5,
+    "avg": 1.5
+  },
+  {
+    "player": "Tyler Lockett",
+    "pos": "WR",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 1,
+    "pts": 1.4,
+    "best": 1.4,
+    "avg": 1.4
+  },
+  {
+    "player": "Jauan Jennings",
+    "pos": "WR",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 1,
+    "pts": 1.2,
+    "best": 1.2,
+    "avg": 1.2
+  },
+  {
+    "player": "Taysom Hill",
+    "pos": "TE",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 1,
+    "pts": 1.2,
+    "best": 1.2,
+    "avg": 1.2
+  },
+  {
+    "player": "GB",
+    "pos": "DEF",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 1,
+    "pts": 1,
+    "best": 1,
+    "avg": 1
+  },
+  {
+    "player": "LV",
+    "pos": "DEF",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 1,
+    "pts": 1,
+    "best": 1,
+    "avg": 1
+  },
+  {
+    "player": "Evan Engram",
+    "pos": "TE",
+    "manager": "GSac",
+    "season": "2024",
+    "games": 1,
+    "pts": 1,
+    "best": 1,
+    "avg": 1
+  },
+  {
+    "player": "Khalil Shakir",
+    "pos": "WR",
+    "manager": "AlastairL",
+    "season": "2025",
+    "games": 1,
+    "pts": 1,
+    "best": 1,
+    "avg": 1
+  },
+  {
+    "player": "Braelon Allen",
+    "pos": "RB",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 1,
+    "pts": 0.8,
+    "best": 0.8,
+    "avg": 0.8
+  },
+  {
+    "player": "David Njoku",
+    "pos": "TE",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 1,
+    "pts": 0,
+    "best": 0,
+    "avg": 0
+  },
+  {
+    "player": "DEN",
+    "pos": "DEF",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 1,
+    "pts": 0,
+    "best": 0,
+    "avg": 0
+  },
+  {
+    "player": "PIT",
+    "pos": "DEF",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 1,
+    "pts": 0,
+    "best": 0,
+    "avg": 0
+  },
+  {
+    "player": "Jakobi Meyers",
+    "pos": "WR",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 1,
+    "pts": 0,
+    "best": 0,
+    "avg": 0
+  },
+  {
+    "player": "CIN",
+    "pos": "DEF",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 1,
+    "pts": 0,
+    "best": 0,
+    "avg": 0
+  },
+  {
+    "player": "Khalil Herbert",
+    "pos": "RB",
+    "manager": "dpol",
+    "season": "2023",
+    "games": 1,
+    "pts": 0,
+    "best": 0,
+    "avg": 0
+  },
+  {
+    "player": "Jordan Love",
+    "pos": "QB",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 1,
+    "pts": 0,
+    "best": 0,
+    "avg": 0
+  },
+  {
+    "player": "WAS",
+    "pos": "DEF",
+    "manager": "drjkay",
+    "season": "2023",
+    "games": 1,
+    "pts": 0,
+    "best": 0,
+    "avg": 0
+  },
+  {
+    "player": "DET",
+    "pos": "DEF",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 1,
+    "pts": 0,
+    "best": 0,
+    "avg": 0
+  },
+  {
+    "player": "Jaleel McLaughlin",
+    "pos": "RB",
+    "manager": "sanfbe",
+    "season": "2023",
+    "games": 1,
+    "pts": 0,
+    "best": 0,
+    "avg": 0
+  },
+  {
+    "player": "TB",
+    "pos": "DEF",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 1,
+    "pts": 0,
+    "best": 0,
+    "avg": 0
+  },
+  {
+    "player": "Jameson Williams",
+    "pos": "WR",
+    "manager": "benjlev",
+    "season": "2023",
+    "games": 1,
+    "pts": 0,
+    "best": 0,
+    "avg": 0
+  },
+  {
+    "player": "Blake Grupe",
+    "pos": "K",
+    "manager": "dpol",
+    "season": "2023",
+    "games": 1,
+    "pts": 0,
+    "best": 0,
+    "avg": 0
+  },
+  {
+    "player": "Jahan Dotson",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2023",
+    "games": 1,
+    "pts": 0,
+    "best": 0,
+    "avg": 0
+  },
+  {
+    "player": "MIN",
+    "pos": "DEF",
+    "manager": "sanfbe",
+    "season": "2023",
+    "games": 1,
+    "pts": 0,
+    "best": 0,
+    "avg": 0
+  },
+  {
+    "player": "Logan Thomas",
+    "pos": "TE",
+    "manager": "saulgoat",
+    "season": "2023",
+    "games": 1,
+    "pts": 0,
+    "best": 0,
+    "avg": 0
+  },
+  {
+    "player": "PIT",
+    "pos": "DEF",
+    "manager": "GSac",
+    "season": "2023",
+    "games": 1,
+    "pts": 0,
+    "best": 0,
+    "avg": 0
+  },
+  {
+    "player": "Quentin Johnston",
+    "pos": "WR",
+    "manager": "drjkay",
+    "season": "2024",
+    "games": 1,
+    "pts": 0,
+    "best": 0,
+    "avg": 0
+  },
+  {
+    "player": "George Pickens",
+    "pos": "WR",
+    "manager": "dpol",
+    "season": "2024",
+    "games": 1,
+    "pts": 0,
+    "best": 0,
+    "avg": 0
+  },
+  {
+    "player": "Luke McCaffrey",
+    "pos": "WR",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 1,
+    "pts": 0,
+    "best": 0,
+    "avg": 0
+  },
+  {
+    "player": "ATL",
+    "pos": "DEF",
+    "manager": "dpol",
+    "season": "2025",
+    "games": 1,
+    "pts": 0,
+    "best": 0,
+    "avg": 0
+  },
+  {
+    "player": "DJ Moore",
+    "pos": "WR",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 1,
+    "pts": 0,
+    "best": 0,
+    "avg": 0
+  },
+  {
+    "player": "BAL",
+    "pos": "DEF",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 1,
+    "pts": 0,
+    "best": 0,
+    "avg": 0
+  },
+  {
+    "player": "SF",
+    "pos": "DEF",
+    "manager": "saulgoat",
+    "season": "2025",
+    "games": 1,
+    "pts": 0,
+    "best": 0,
+    "avg": 0
+  },
+  {
+    "player": "Evan McPherson",
+    "pos": "K",
+    "manager": "sanfbe",
+    "season": "2025",
+    "games": 1,
+    "pts": 0,
+    "best": 0,
+    "avg": 0
+  },
+  {
+    "player": "Jonathon Brooks",
+    "pos": "RB",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 1,
+    "pts": -0.3,
+    "best": 0,
+    "avg": -0.3
+  },
+  {
+    "player": "Mike Gesicki",
+    "pos": "TE",
+    "manager": "saulgoat",
+    "season": "2024",
+    "games": 1,
+    "pts": -0.4,
+    "best": 0,
+    "avg": -0.4
+  },
+  {
+    "player": "NYG",
+    "pos": "DEF",
+    "manager": "AlastairL",
+    "season": "2023",
+    "games": 1,
+    "pts": -1,
+    "best": 0,
+    "avg": -1
+  },
+  {
+    "player": "ARI",
+    "pos": "DEF",
+    "manager": "joshjr11",
+    "season": "2024",
+    "games": 1,
+    "pts": -1,
+    "best": 0,
+    "avg": -1
+  },
+  {
+    "player": "Cam Little",
+    "pos": "K",
+    "manager": "joshjr11",
+    "season": "2025",
+    "games": 1,
+    "pts": -1,
+    "best": 0,
+    "avg": -1
+  },
+  {
+    "player": "LAC",
+    "pos": "DEF",
+    "manager": "drjkay",
+    "season": "2025",
+    "games": 1,
+    "pts": -2,
+    "best": 0,
+    "avg": -2
+  },
+  {
+    "player": "IND",
+    "pos": "DEF",
+    "manager": "AlastairL",
+    "season": "2024",
+    "games": 1,
+    "pts": -4,
+    "best": 0,
+    "avg": -4
+  }
+]

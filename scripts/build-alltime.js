@@ -398,6 +398,34 @@ for (const g of allGames) {
 benchWasteTop.sort((a, b) => b.benchPts - a.benchPts);
 const benchWasteTopN = benchWasteTop.slice(0, 20);
 
+// ── Per-player scoring (starters) → player-scores.json ────────────────────────
+// Compact per-(player, pos, manager, season) aggregate so the artifact's query
+// engine can answer player-level questions ("best WR", "top scorers", "how did X
+// do") WITHOUT loading the 857KB detail file. Only STARTER points count (what the
+// manager actually banked); DEF/K included as scoring units.
+const playerAgg = {};
+for (const s of seasons) {
+  for (const g of (s.games || [])) {
+    for (const [mgr, starters] of [[g.a, g.as], [g.b, g.bs]]) {
+      for (const p of (starters || [])) {
+        if (!p || !p.n) continue;
+        const key = p.n + '|' + p.pos + '|' + mgr + '|' + s.season;
+        if (!playerAgg[key]) playerAgg[key] = { player: p.n, pos: p.pos, manager: mgr, season: s.season, games: 0, pts: 0, best: 0 };
+        const a = playerAgg[key];
+        a.games++;
+        a.pts = Math.round((a.pts + (p.pts || 0)) * 100) / 100;
+        if ((p.pts || 0) > a.best) a.best = p.pts || 0;
+      }
+    }
+  }
+}
+const playerScores = Object.values(playerAgg)
+  .map((a) => { a.avg = a.games ? Math.round(a.pts / a.games * 100) / 100 : 0; return a; })
+  .sort((a, b) => b.pts - a.pts);
+const OUT_PLAYERS = path.join(__dirname, "../docs/data/player-scores.json");
+fs.writeFileSync(OUT_PLAYERS, JSON.stringify(playerScores, null, 2));
+console.log(`Wrote ${OUT_PLAYERS} — ${playerScores.length} player-season rows`);
+
 // ── Write output ──────────────────────────────────────────────────────────────
 fs.mkdirSync(path.dirname(OUT), { recursive: true });
 fs.writeFileSync(OUT, JSON.stringify({

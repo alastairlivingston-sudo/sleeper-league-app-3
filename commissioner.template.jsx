@@ -44,13 +44,14 @@ const ROSTERS_DATA = __ROSTERS__;
 const TRADE_VALUES = __TRADES__;
 const ALLTIME_DATA = __ALLTIME__;
 const TRANSACTIONS_DATA = __TRANSACTIONS__;
+const PLAYER_SCORES = __PLAYERS__;
 
 const REPO = 'alastairlivingston-sudo/sleeper-league-app-3';
 const PAGES_BASE = 'https://alastairlivingston-sudo.github.io/' + REPO.split('/')[1];
 
 const DATA_SOURCES = [
-  { history: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/history.json', stats: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/stats.json', rosters: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/rosters.json', trades: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/fc-values.json', alltime: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/alltime.json', transactions: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/transactions.json' },
-  { history: PAGES_BASE + '/data/history.json', stats: PAGES_BASE + '/data/stats.json', rosters: PAGES_BASE + '/data/rosters.json', trades: PAGES_BASE + '/data/fc-values.json', alltime: PAGES_BASE + '/data/alltime.json', transactions: PAGES_BASE + '/data/transactions.json' },
+  { history: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/history.json', stats: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/stats.json', rosters: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/rosters.json', trades: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/fc-values.json', alltime: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/alltime.json', transactions: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/transactions.json', players: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/player-scores.json' },
+  { history: PAGES_BASE + '/data/history.json', stats: PAGES_BASE + '/data/stats.json', rosters: PAGES_BASE + '/data/rosters.json', trades: PAGES_BASE + '/data/fc-values.json', alltime: PAGES_BASE + '/data/alltime.json', transactions: PAGES_BASE + '/data/transactions.json', players: PAGES_BASE + '/data/player-scores.json' },
 ];
 
 const LORE_SOURCES = [
@@ -248,7 +249,7 @@ function flattenGames(history) {
 }
 
 // Executes a constrained query spec against flattened games. Pure + deterministic.
-function runStatQuery(spec, games) {
+function runStatQuery(spec, games, players) {
   if (!spec || spec.type === 'none') return null;
   const regOnly = spec.regularSeasonOnly !== false; // default true
   const seasonSet = Array.isArray(spec.seasons) && spec.seasons.length ? new Set(spec.seasons.map(String)) : null;
@@ -326,6 +327,29 @@ function runStatQuery(spec, games) {
     return { type: 'gameList', rows: rows.slice(0, limit) };
   }
 
+  if (spec.type === 'player') {
+    // Per-player, per-season starter scoring (name / pos / manager / season /
+    // games / total pts / avg / single-game best). Queried in JS; only matching
+    // rows are handed to the narrator.
+    const nameNeedle = spec.player ? String(spec.player).toLowerCase() : null;
+    const posSet = Array.isArray(spec.positions) && spec.positions.length ? new Set(spec.positions.map(function(p) { return String(p).toUpperCase(); })) : null;
+    const by = spec.sortBy === 'avg' ? 'avg' : (spec.sortBy === 'best' ? 'best' : (spec.sortBy === 'games' ? 'games' : 'pts'));
+    // avg is misleading on tiny samples, so require a floor unless the query set one.
+    const minGames = spec.minGames != null ? spec.minGames : (by === 'avg' ? 4 : 1);
+    let rows = (players || []).filter(function(r) {
+      if (nameNeedle && String(r.player).toLowerCase().indexOf(nameNeedle) === -1) return false;
+      if (posSet && !posSet.has(r.pos)) return false;
+      if (mgrSet && !mgrSet.has(canonical(r.manager))) return false;
+      if (seasonSet && !seasonSet.has(String(r.season))) return false;
+      if (r.games < minGames) return false;
+      return true;
+    });
+    const order = spec.order === 'asc' ? 1 : -1;
+    rows = rows.slice().sort(function(x, y) { return (x[by] - y[by]) * order; });
+    const limit = Math.min(spec.limit || 10, 25);
+    return { type: 'player', rows: rows.slice(0, limit) };
+  }
+
   return null;
 }
 
@@ -337,15 +361,17 @@ async function planStatQuery(query, messages) {
     'You translate a fantasy-football question into a JSON query spec. Output ONLY valid JSON, nothing else.',
     'Manager handles (use these exact strings in "managers"): ' + nameLines + '. Note benjlev=Lev, sanfbe=Sanford, allyl900 maps to AlastairL.',
     'Schema:',
-    '{ "type": "headToHead" | "totals" | "gameList" | "none",',
+    '{ "type": "headToHead" | "totals" | "gameList" | "player" | "none",',
     '  "managers": [handle, ...]   // optional; for headToHead between two, list both',
     '  "seasons": ["2023", ...]    // optional; omit for all-time',
     '  "regularSeasonOnly": true,  // default true; set false to include playoffs',
-    '  "sortBy": "margin"|"high"|"low"|"combined",  // gameList only',
-    '  "order": "desc"|"asc",      // gameList only',
-    '  "limit": 10 }               // gameList only',
+    '  "sortBy": "margin"|"high"|"low"|"combined",  // gameList: margin/high/low/combined; player: "pts"|"avg"|"best"|"games"',
+    '  "order": "desc"|"asc",      // gameList & player',
+    '  "limit": 10,                // gameList & player',
+    '  "player": "chase",          // player only: substring of the player name',
+    '  "positions": ["WR"] }       // player only: filter by QB/RB/WR/TE/K/DEF',
     'headToHead with exactly two managers = the record between that pair. With three or more managers = each listed manager\'s record against ALL opponents. Omit "managers" for the whole league.',
-    'Rules: head-to-head / nemesis / "who beats whom" -> headToHead. Records/standings/win totals/points -> totals. "biggest/closest/highest game" -> gameList. If the question is not a numeric data lookup (opinion, definition, lore) -> {"type":"none"}.',
+    'Rules: head-to-head / nemesis / "who beats whom" -> headToHead. Manager records/standings/win totals/points -> totals. "biggest/closest/highest GAME" -> gameList. Individual NFL PLAYERS ("best WR", "top scorers", "most points by a QB", "how did Ja\'Marr Chase do", "who scored most for Lev") -> player (set "player" for a named player, "positions" for a position, "managers" for whose roster, "sortBy":"avg" for per-game rate vs "pts" for totals). If the question is not a numeric data lookup (opinion, definition, lore) -> {"type":"none"}.',
   ].join('\n');
   try {
     const raw = await claudeCall(messages.slice(-6), planner);
@@ -382,12 +408,15 @@ function formatQueryResult(spec, result) {
   } else if (result.type === 'gameList') {
     lines.push('Matching games:');
     result.rows.forEach(function(g) { lines.push('- ' + g.season + ' wk' + g.week + (g.playoff ? ' (playoff)' : '') + ': ' + nm(g.a) + ' ' + g.pa + ' – ' + g.pb + ' ' + nm(g.b)); });
+  } else if (result.type === 'player') {
+    lines.push('Player scoring (starter points, per player · season · manager):');
+    result.rows.forEach(function(p) { lines.push('- ' + p.player + ' (' + p.pos + ', ' + nm(p.manager) + ' ' + p.season + '): ' + p.pts + ' pts over ' + p.games + ' games, ' + p.avg + '/game, best ' + p.best); });
   }
   return '══ DETERMINISTIC QUERY RESULT (authoritative — narrate ONLY these numbers, do not recompute) ══\n' + lines.join('\n');
 }
 
 function useLeagueData() {
-  const [data, setData] = useState({ history: HISTORY_DATA, stats: STATS_DATA, rosters: ROSTERS_DATA, trades: TRADE_VALUES, alltime: ALLTIME_DATA, transactions: TRANSACTIONS_DATA, live: false });
+  const [data, setData] = useState({ history: HISTORY_DATA, stats: STATS_DATA, rosters: ROSTERS_DATA, trades: TRADE_VALUES, alltime: ALLTIME_DATA, transactions: TRANSACTIONS_DATA, players: PLAYER_SCORES, live: false });
   useEffect(function() {
     let cancelled = false;
     (async function() {
@@ -663,7 +692,7 @@ function slimHistory(d) {
 }
 
 function StatsTab(props) {
-  const { historyData, statsData, alltimeData, transactionsData, loreMaster } = props;
+  const { historyData, statsData, alltimeData, transactionsData, playersData, loreMaster } = props;
   const analytics = useMemo(function() { return computeAnalytics(historyData); }, [historyData]);
   const games = useMemo(function() { return flattenGames(historyData); }, [historyData]);
   const loreCtx = loreMaster
@@ -686,7 +715,8 @@ function StatsTab(props) {
     + '  luckScores[manager]: [{season, actualWins, expectedWins, luckScore}] — luck per season\n'
     + '  positionalStrengths[manager][season]: {QB, RB, WR, TE, K, DEF, games} — avg pts by position per game\n'
     + '  benchWasteTop: top 20 games with most bench pts left on field\n'
-    + '  h2hBySeason: use the deterministic query layer (ask with "H2H in 2023" etc.) — not included in prompt to save space\n\n'
+    + '  h2hBySeason: use the deterministic query layer (ask with "H2H in 2023" etc.) — not included in prompt to save space\n'
+    + '  PLAYER SCORING (individual players, e.g. "best WR", "top scorers", "how did Ja\'Marr Chase do", "most points by a QB"): use the deterministic query layer — per-player scoring is NOT in this prompt, it is fetched on demand and arrives in the DETERMINISTIC QUERY RESULT block.\n\n'
     + 'TRADE DATA: transactions array has every completed trade: {season, week, managerA, managerB, aReceives[], bReceives[]}. Use for trade history questions.'
     + loreCtx
     + '\n\nANALYTICS (all-play, luck, consistency — pre-computed):\n' + JSON.stringify(analytics)
@@ -701,7 +731,7 @@ function StatsTab(props) {
     try {
       const convo = (conversation && conversation.length) ? conversation : [{ role: 'user', content: query }];
       const spec = await planStatQuery(query, convo);
-      const result = runStatQuery(spec, games);
+      const result = runStatQuery(spec, games, playersData);
       return formatQueryResult(spec, result);
     } catch (e) { return ''; }
   }
@@ -1327,7 +1357,7 @@ const TABS = [
 
 export default function App() {
   const [tab, setTab] = useState('stats');
-  const { history, stats, rosters, trades, alltime, transactions, live } = useLeagueData();
+  const { history, stats, rosters, trades, alltime, transactions, players, live } = useLeagueData();
   const { keyboardOpen } = useViewport();
   const lore = useLore(tab === 'banter');
 
@@ -1360,7 +1390,7 @@ export default function App() {
             sandbox, so keep-alive is the only option. Live mounts on demand: it
             fetches Sleeper on mount and is spoiler-safe, so a fresh mount is correct. */}
         <div style={{ display: tab === 'stats' ? 'flex' : 'none', flex: 1, minHeight: 0, flexDirection: 'column' }}>
-          <StatsTab historyData={history} statsData={stats} alltimeData={alltime} transactionsData={transactions} loreMaster={lore.master} />
+          <StatsTab historyData={history} statsData={stats} alltimeData={alltime} transactionsData={transactions} playersData={players} loreMaster={lore.master} />
         </div>
         <div style={{ display: tab === 'banter' ? 'flex' : 'none', flex: 1, minHeight: 0, flexDirection: 'column' }}>
           <BanterTab historyData={history} statsData={stats} alltimeData={alltime} lore={lore} />

@@ -108,6 +108,16 @@ if (fs.existsSync(detailsPath)) {
     "history-details.json missing meta.generated");
 }
 
+// player-scores.json: per-player starter aggregates for the query engine.
+const playersPath = path.join(DATA, "player-scores.json");
+if (fs.existsSync(playersPath)) {
+  const ps = readJson(playersPath);
+  check(Array.isArray(ps) && ps.length > 0, "players.nonempty", "player-scores.json is empty");
+  check(ps.some((r) => r.pos === "WR" && r.pts > 0), "players.wr", "no WR scoring rows in player-scores.json");
+  check(ps.every((r) => r.player && r.pos && r.manager && r.season && typeof r.pts === "number"), "players.shape",
+    "player-scores.json row missing player/pos/manager/season/pts");
+}
+
 const playedSeasons = (history.seasons || []).filter((s) => (s.games || []).length > 0);
 const latest = playedSeasons[playedSeasons.length - 1];
 
