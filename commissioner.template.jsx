@@ -4,7 +4,9 @@
 // ║  Edit commissioner.template.jsx, then run build-artifact.js  ║
 // ╚══════════════════════════════════════════════════════════════╝
 
-const { useState, useEffect, useRef, useMemo } = React;
+// The current Claude.ai artifact runtime is an ESM sandbox — React is imported,
+// not a script-tag global. (Older runtimes exposed a global `React`.)
+import React, { useState, useEffect, useRef, useMemo } from "react";
 const DEBUG = false; // set true to log system-prompt sizes to the console
 // Single position→colour map (was duplicated as POSColors + POS_TINT).
 const POS_COLORS = { QB: '#ff7a1a', RB: '#10b981', WR: '#60a5fa', TE: '#a855f7', K: '#94a3b8', DEF: '#f87171', FLEX: '#f59e0b' };
@@ -67,15 +69,36 @@ const T = {
 };
 const FF = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif";
 
-// In Claude.ai artifacts, fetch to the Anthropic API is proxied automatically —
-// no API key required. Using the Messages API directly gives proper system/messages
-// separation and avoids the hidden prompt-budget limits of window.claude.complete().
-// Model fallback chain — bare aliases only, NEVER date-pinned IDs (a pinned
-// Sonnet 4 ID retired and killed every AI feature). Probed once per session.
+// Calling the model from an artifact.
+// The current Claude.ai artifact runtime is a sandboxed iframe (claudeusercontent.com)
+// under a strict CSP: a raw fetch to api.anthropic.com is BLOCKED. The sanctioned
+// bridge the host injects is window.claude.complete(promptString) -> string. It has
+// no system/messages separation and no memory, so we flatten the whole exchange into
+// one prompt string. (Older runtimes proxied the Messages API instead; that path is
+// kept below as a fallback so the artifact works in both.)
 const MODELS = ['claude-sonnet-5', 'claude-sonnet-4-5', 'claude-haiku-4-5'];
 let modelIdx = 0;
 
+function flattenPrompt(messages, systemPrompt) {
+  const convo = (messages || [])
+    .filter(function(m) { return m.role === 'user' || m.role === 'assistant'; })
+    .map(function(m) { return (m.role === 'user' ? 'Human' : 'Assistant') + ': ' + m.content; })
+    .join('\n\n');
+  return systemPrompt + '\n\n' + convo + '\n\nAssistant:';
+}
+
 async function claudeCall(messages, systemPrompt) {
+  // Primary: window.claude.complete (current artifact sandbox).
+  if (typeof window !== 'undefined' && window.claude && typeof window.claude.complete === 'function') {
+    const out = await window.claude.complete(flattenPrompt(messages, systemPrompt));
+    if (!out) throw new Error('Empty response');
+    return out;
+  }
+  // Fallback: older runtime that proxied the Messages API directly.
+  return messagesApiCall(messages, systemPrompt);
+}
+
+async function messagesApiCall(messages, systemPrompt) {
   const body = (model) => JSON.stringify({
     model,
     max_tokens: 2000,

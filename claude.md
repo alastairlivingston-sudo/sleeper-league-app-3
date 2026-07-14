@@ -83,25 +83,27 @@ contract; `npm run build` rebuilds derived tables + artifact.
 advancing on 404, with retry/backoff on 429/5xx and a 60s timeout. A date-pinned ID
 (`claude-sonnet-4-20250514`) previously retired and 404'd every AI feature — do not reintroduce one.
 
-### Use the Anthropic Messages API directly, never window.claude.complete()
-In Claude.ai artifacts, `fetch('https://api.anthropic.com/v1/messages', {...})` is proxied automatically —
-no API key. This is the ONLY correct way to call the model. `window.claude.complete()` concatenates
-system+conversation and has an invisible ~30–35 KB budget that silently truncates.
+### Calling the model: window.claude.complete() — the runtime changed (2026-07)
+The current Claude.ai artifact runtime is a **sandboxed iframe** (`*.claudeusercontent.com`) under a
+**strict CSP**. Two consequences that reversed earlier guidance:
+1. **React is imported, not global.** Use `import React, { useState, ... } from "react";` at the top.
+   A bare `const { useState } = React;` fails to render (no global `React`).
+2. **A raw `fetch('https://api.anthropic.com/v1/messages')` is BLOCKED by the CSP** — this is why the
+   bots went silent after the runtime update. The sanctioned bridge is **`window.claude.complete(promptString)`**,
+   which the host injects; it takes ONE string and returns a string (no system/messages split, no memory —
+   flatten the exchange yourself), and is billed to the *viewer's* account.
 
 ```js
-// CORRECT — direct Messages API, proxied by Claude.ai, no key needed
-const res = await fetch('https://api.anthropic.com/v1/messages', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    model: 'claude-sonnet-5',
-    max_tokens: 2000,
-    system: systemPrompt,
-    messages: messages.filter(m => m.role==='user'||m.role==='assistant')
-                      .map(m => ({ role: m.role, content: m.content })),
-  }),
-});
+// CORRECT (current runtime) — host-provided bridge, no key, no external fetch
+const out = await window.claude.complete(systemPrompt + '\n\n' + conversationAsText + '\n\nAssistant:');
 ```
+
+`claudeCall` uses `window.claude.complete` when present and falls back to the old proxied Messages-API
+fetch otherwise, so the artifact works in both the new and legacy runtimes. NOTE: `window.claude.complete`
+historically had a prompt-size budget (~30–35 KB, undocumented); keep prompts lean (Phase-4 slimming already
+did most of this) and watch for a bot that renders but claims "no data" — that is the truncation signature.
+Because the CSP may also block the jsDelivr/Pages data fetch, the app can fall back to the **inlined
+snapshot** — so a data refresh may again require a rebuild + re-paste in the new runtime.
 
 ### Keep system prompts lean (target < 20 KB)
 Put only what the model needs for NARRATION in the prompt; use the deterministic query layer for any numeric
