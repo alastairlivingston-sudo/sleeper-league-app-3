@@ -34,8 +34,8 @@ function fmtBuiltAt(iso) {
   try {
     const d = new Date(iso);
     const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    return 'Updated ' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
-  } catch(e) { return 'Updated recently'; }
+    return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+  } catch(e) { return 'recently'; }
 }
 
 const HISTORY_DATA = __HISTORY__;
@@ -1348,9 +1348,9 @@ export default function App() {
           <div style={{ fontWeight: 900, fontSize: 22, color: T.text, letterSpacing: '-0.5px', lineHeight: 1 }}>Pl<span style={{ color: T.indigo }}>AI</span>ncy</div>
           <div style={{ fontSize: 11, color: T.dim, marginTop: 2, letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 600 }}>Borehamwood Plancy League</div>
         </div>
-        <div style={{ fontSize: 10.5, color: T.dim, border: '1px solid ' + T.border, borderRadius: 6, padding: '4px 9px', whiteSpace: 'nowrap', flexShrink: 0, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 5 }}>
-          <span style={{ width: 6, height: 6, borderRadius: '50%', background: live ? T.green : T.faint, display: 'inline-block' }} />
-          {fmtBuiltAt(BUILT_AT)}
+        <div title={live ? 'Fetched the latest published data' : 'Running on the data baked into this artifact — re-paste to update'} style={{ fontSize: 10.5, color: T.dim, border: '1px solid ' + T.border, borderRadius: 6, padding: '4px 9px', whiteSpace: 'nowrap', flexShrink: 0, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 5 }}>
+          <span style={{ width: 6, height: 6, borderRadius: '50%', background: live ? T.green : T.amber, display: 'inline-block' }} />
+          {(live ? 'Live · ' : 'Snapshot · ') + fmtBuiltAt(BUILT_AT)}
         </div>
       </div>
 
