@@ -28,7 +28,7 @@ function teamLabel(k) {
   return (nm && nm !== handle) ? `${nm} · ${team}` : (team || k);
 }
 
-const BUILT_AT = "2026-07-14T14:41:40.671Z";
+const BUILT_AT = "2026-07-14T15:36:22.034Z";
 
 function fmtBuiltAt(iso) {
   try {
@@ -1157,8 +1157,8 @@ function LiveTab(props) {
       <div style={{ background: T.bg, color: T.text, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24, textAlign: 'center' }}>
         <div>
           <div style={{ fontSize: 30, marginBottom: 10 }}>📡</div>
-          <div style={{ color: T.amber, fontWeight: 700, marginBottom: 6 }}>Couldn't reach Sleeper</div>
-          <div style={{ color: T.dim, fontSize: 13 }}>Live scores need the Sleeper API. Check your connection and reopen this tab.</div>
+          <div style={{ color: T.amber, fontWeight: 700, marginBottom: 6 }}>Live scores unavailable here</div>
+          <div style={{ color: T.dim, fontSize: 13, lineHeight: 1.6, maxWidth: 340 }}>This artifact runs in a sandbox that blocks live calls to the Sleeper API, so real-time scores can't load. Stats, Banter and Trades still work — they use the built-in league data.</div>
         </div>
       </div>
     );
