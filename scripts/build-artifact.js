@@ -10,6 +10,17 @@ const ROOT = path.join(__dirname, "..");
 const SRC  = path.join(ROOT, "commissioner.template.jsx");
 const OUT  = path.join(ROOT, "commissioner.jsx");
 
+// The inlined data is only an OFFLINE FALLBACK — at runtime the app fetches every
+// file live from the CDN and replaces the fallback wholesale (useLeagueData sets
+// live:true on first success). alltime.json (~100KB) and player-scores.json (~140KB)
+// feed ONLY the chat/query layer (StatsTab prompt + runStatQuery), which itself only
+// runs on Claude.ai — i.e. always online, where the live data has already replaced
+// the fallback. So we inline `null` for them: the offline fallback keeps working
+// standings/trades (history/stats/rosters stay full) and loses nothing that could
+// actually function offline, while the artifact shrinks by ~240KB so it round-trips
+// reliably when pasted into a Claude artifact.
+const dropLargeFallback = () => null;
+
 const DATA = {
   // history.json is already lean (produced without the per-game player arrays);
   // it is the offline fallback verbatim.
@@ -17,9 +28,9 @@ const DATA = {
   __STATS__:        { file: path.join(ROOT, "docs/data/stats.json") },
   __ROSTERS__:      { file: path.join(ROOT, "docs/data/rosters.json") },
   __TRADES__:       { file: path.join(ROOT, "docs/data/fc-values.json") },
-  __ALLTIME__:      { file: path.join(ROOT, "docs/data/alltime.json") },
+  __ALLTIME__:      { file: path.join(ROOT, "docs/data/alltime.json"), transform: dropLargeFallback },
   __TRANSACTIONS__: { file: path.join(ROOT, "docs/data/transactions.json"), optional: true },
-  __PLAYERS__:      { file: path.join(ROOT, "docs/data/player-scores.json"), optional: true },
+  __PLAYERS__:      { file: path.join(ROOT, "docs/data/player-scores.json"), optional: true, transform: dropLargeFallback },
 };
 
 const SCALARS = {
