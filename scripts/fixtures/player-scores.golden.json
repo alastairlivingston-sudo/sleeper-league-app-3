@@ -1,0 +1,242 @@
+[
+  {
+    "player": "alpha-QB1",
+    "pos": "QB",
+    "manager": "alpha",
+    "season": "2001",
+    "games": 4,
+    "pts": 119.5,
+    "best": 31,
+    "avg": 29.88
+  },
+  {
+    "player": "alpha-QB1",
+    "pos": "QB",
+    "manager": "alpha",
+    "season": "2002",
+    "games": 4,
+    "pts": 119.5,
+    "best": 31,
+    "avg": 29.88
+  },
+  {
+    "player": "beta-QB1",
+    "pos": "QB",
+    "manager": "beta",
+    "season": "2001",
+    "games": 4,
+    "pts": 112.75,
+    "best": 28.75,
+    "avg": 28.19
+  },
+  {
+    "player": "beta-QB1",
+    "pos": "QB",
+    "manager": "beta",
+    "season": "2002",
+    "games": 4,
+    "pts": 112.75,
+    "best": 28.75,
+    "avg": 28.19
+  },
+  {
+    "player": "alpha-RB1",
+    "pos": "RB",
+    "manager": "alpha",
+    "season": "2001",
+    "games": 4,
+    "pts": 95.6,
+    "best": 24.8,
+    "avg": 23.9
+  },
+  {
+    "player": "alpha-RB1",
+    "pos": "RB",
+    "manager": "alpha",
+    "season": "2002",
+    "games": 4,
+    "pts": 95.6,
+    "best": 24.8,
+    "avg": 23.9
+  },
+  {
+    "player": "beta-RB1",
+    "pos": "RB",
+    "manager": "beta",
+    "season": "2001",
+    "games": 4,
+    "pts": 90.2,
+    "best": 23,
+    "avg": 22.55
+  },
+  {
+    "player": "beta-RB1",
+    "pos": "RB",
+    "manager": "beta",
+    "season": "2002",
+    "games": 4,
+    "pts": 90.2,
+    "best": 23,
+    "avg": 22.55
+  },
+  {
+    "player": "alpha-WR1",
+    "pos": "WR",
+    "manager": "alpha",
+    "season": "2001",
+    "games": 4,
+    "pts": 86.04,
+    "best": 22.32,
+    "avg": 21.51
+  },
+  {
+    "player": "alpha-WR1",
+    "pos": "WR",
+    "manager": "alpha",
+    "season": "2002",
+    "games": 4,
+    "pts": 86.04,
+    "best": 22.32,
+    "avg": 21.51
+  },
+  {
+    "player": "beta-WR1",
+    "pos": "WR",
+    "manager": "beta",
+    "season": "2001",
+    "games": 4,
+    "pts": 81.18,
+    "best": 20.7,
+    "avg": 20.3
+  },
+  {
+    "player": "beta-WR1",
+    "pos": "WR",
+    "manager": "beta",
+    "season": "2002",
+    "games": 4,
+    "pts": 81.18,
+    "best": 20.7,
+    "avg": 20.3
+  },
+  {
+    "player": "gamma-QB1",
+    "pos": "QB",
+    "manager": "gamma",
+    "season": "2001",
+    "games": 3,
+    "pts": 74.25,
+    "best": 25.5,
+    "avg": 24.75
+  },
+  {
+    "player": "gamma-QB1",
+    "pos": "QB",
+    "manager": "gamma",
+    "season": "2002",
+    "games": 3,
+    "pts": 74.25,
+    "best": 25.5,
+    "avg": 24.75
+  },
+  {
+    "player": "delta-QB1",
+    "pos": "QB",
+    "manager": "delta",
+    "season": "2001",
+    "games": 3,
+    "pts": 73.25,
+    "best": 25,
+    "avg": 24.42
+  },
+  {
+    "player": "delta-QB1",
+    "pos": "QB",
+    "manager": "delta",
+    "season": "2002",
+    "games": 3,
+    "pts": 73.25,
+    "best": 25,
+    "avg": 24.42
+  },
+  {
+    "player": "gamma-RB1",
+    "pos": "RB",
+    "manager": "gamma",
+    "season": "2001",
+    "games": 3,
+    "pts": 59.4,
+    "best": 20.4,
+    "avg": 19.8
+  },
+  {
+    "player": "gamma-RB1",
+    "pos": "RB",
+    "manager": "gamma",
+    "season": "2002",
+    "games": 3,
+    "pts": 59.4,
+    "best": 20.4,
+    "avg": 19.8
+  },
+  {
+    "player": "delta-RB1",
+    "pos": "RB",
+    "manager": "delta",
+    "season": "2001",
+    "games": 3,
+    "pts": 58.6,
+    "best": 20,
+    "avg": 19.53
+  },
+  {
+    "player": "delta-RB1",
+    "pos": "RB",
+    "manager": "delta",
+    "season": "2002",
+    "games": 3,
+    "pts": 58.6,
+    "best": 20,
+    "avg": 19.53
+  },
+  {
+    "player": "gamma-WR1",
+    "pos": "WR",
+    "manager": "gamma",
+    "season": "2001",
+    "games": 3,
+    "pts": 53.46,
+    "best": 18.36,
+    "avg": 17.82
+  },
+  {
+    "player": "gamma-WR1",
+    "pos": "WR",
+    "manager": "gamma",
+    "season": "2002",
+    "games": 3,
+    "pts": 53.46,
+    "best": 18.36,
+    "avg": 17.82
+  },
+  {
+    "player": "delta-WR1",
+    "pos": "WR",
+    "manager": "delta",
+    "season": "2001",
+    "games": 3,
+    "pts": 52.74,
+    "best": 18,
+    "avg": 17.58
+  },
+  {
+    "player": "delta-WR1",
+    "pos": "WR",
+    "manager": "delta",
+    "season": "2002",
+    "games": 3,
+    "pts": 52.74,
+    "best": 18,
+    "avg": 17.58
+  }
+]

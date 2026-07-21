@@ -1,0 +1,54 @@
+name: Test
+
+# Runs the full quality gate on CODE changes (not just the daily data cron), so a
+# template or script edit that would break the artifact is caught on the PR/push —
+# the "template drift" guard. The daily refresh.yml runs the same gates on data.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "commissioner.template.jsx"
+      - "scripts/**"
+      - "league-config.json"
+      - "package.json"
+      - ".github/workflows/test.yml"
+  pull_request:
+    paths:
+      - "commissioner.template.jsx"
+      - "scripts/**"
+      - "league-config.json"
+      - "package.json"
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # Rebuild derived tables + artifact from the CURRENT template/scripts, so the
+      # gates run against exactly what this change would produce.
+      - name: Rebuild derived data + artifact
+        run: |
+          node scripts/build-lore.js || true
+          node scripts/build-alltime.js
+          node scripts/build-artifact.js
+
+      - name: Data contract
+        run: node scripts/validate.js
+
+      - name: Aggregation golden test
+        run: node scripts/test-alltime.js
+
+      - name: Artifact structure
+        run: node scripts/test-artifact.js
+
+      # User-journey render gate needs dev tooling (test-only; pipeline stays zero-dep).
+      - name: Install test deps
+        run: npm install --no-save @babel/core @babel/preset-env @babel/preset-react react react-dom jsdom
+
+      - name: Artifact render (user journey)
+        run: node scripts/test-render.js

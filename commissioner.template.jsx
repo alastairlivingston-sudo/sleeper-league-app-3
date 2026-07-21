@@ -353,8 +353,62 @@ function runStatQuery(spec, games, players) {
   return null;
 }
 
+// Session cache: identical questions cost the model nothing the second time.
+const SPEC_CACHE = {};
+function cacheKey(q) { return String(q || '').toLowerCase().replace(/\s+/g, ' ').trim(); }
+
+// Which known managers does this query name? Matches distinct display names and
+// first names (case-insensitive, word-boundary) → canonical handles, de-duped.
+function matchManagers(query) {
+  const q = ' ' + String(query || '').toLowerCase() + ' ';
+  const hits = [];
+  Object.keys(NAMES).forEach(function(h) {
+    const names = [distinctName(h), displayName(h)];
+    for (let i = 0; i < names.length; i++) {
+      const full = String(names[i] || '').toLowerCase();
+      if (!full) continue;
+      const candidates = [full].concat(full.split(' ')); // full name + each token (first name)
+      for (let j = 0; j < candidates.length; j++) {
+        const w = candidates[j];
+        if (w.length < 3) continue;
+        if (new RegExp('(^|[^a-z])' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '([^a-z]|$)').test(q)) {
+          if (hits.indexOf(h) === -1) hits.push(h);
+          return; // this handle counted once
+        }
+      }
+    }
+  });
+  return hits;
+}
+
+// Deterministic intent detection for the two common, unambiguous shapes, so the
+// planner MODEL CALL is skipped on the majority path. Returns a spec or null
+// (null → fall through to the model planner). Conservative by design: anything
+// player/position-flavoured or ambiguous is left to the model.
+const PLAYER_HINT = /\b(wr|rb|qb|te|def|kicker|\bk\b|player|players|scorer|scorers|scored|touchdown|position|positions)\b/i;
+const H2H_HINT    = /\b(vs\.?|versus|against|head[\s-]?to[\s-]?head|h2h|beat|beaten|record against)\b/i;
+const TOTALS_HINT = /\b(standings|all[\s-]?time (table|standings|record)|win totals?|most wins|best (record|team)|career (record|wins)|rankings?|league table)\b/i;
+function fastPlan(query) {
+  if (PLAYER_HINT.test(query)) return null;      // player scoring → model
+  const mgrs = matchManagers(query);
+  if (H2H_HINT.test(query) && mgrs.length >= 2) {
+    return { type: 'headToHead', managers: mgrs };
+  }
+  if (TOTALS_HINT.test(query) && mgrs.length <= 1) {
+    return { type: 'totals', managers: mgrs.length === 1 ? mgrs : undefined };
+  }
+  return null;
+}
+
 // Asks the model to translate a question into a query spec (JSON only).
+// Fast-path (no model call) for common H2H/totals questions, then a session
+// cache, then the model planner as the general fallback.
 async function planStatQuery(query, messages) {
+  const key = cacheKey(query);
+  if (SPEC_CACHE[key]) return SPEC_CACHE[key];
+  const fast = fastPlan(query);
+  if (fast) { SPEC_CACHE[key] = fast; return fast; }
+
   const handles = Object.keys(NAMES);
   const nameLines = handles.map(function(h) { return h + '=' + distinctName(h); }).join(', ');
   const planner = [
@@ -375,7 +429,9 @@ async function planStatQuery(query, messages) {
   ].join('\n');
   try {
     const raw = await claudeCall(messages.slice(-6), planner);
-    return parseSpec(raw);
+    const spec = parseSpec(raw);
+    SPEC_CACHE[key] = spec;
+    return spec;
   } catch (e) {
     return { type: 'none' };
   }
@@ -679,6 +735,97 @@ function slimAlltime(d) {
   return { ...rest, records };
 }
 
+// ── Compact prompt encoders (token-lean: no repeated JSON keys) ───────────────
+// Pipe-delimited tables beat JSON for tabular data — one header line, then rows,
+// so a field name is paid for once instead of once per manager. The big matrices
+// (allTimeH2H, weeklyScores, per-season boards) are dropped from the prompt
+// entirely — the deterministic query engine answers those exactly on demand.
+function tsv(cols, rows) {
+  return [cols.join('|')].concat((rows || []).map(function(r) {
+    return cols.map(function(c) { const v = r[c]; return v == null ? '' : v; }).join('|');
+  })).join('\n');
+}
+// Career table from computeAnalytics().allTime — carries record, pf/pa, avg, the
+// consistency SD, all-time high/low, all-play and the luck (actual−expected wins).
+function careerTable(allTime) {
+  return tsv(['name', 'rec', 'pf', 'pa', 'avg', 'SD', 'hi', 'lo', 'allPlay', 'apW%', 'xW', 'luck'],
+    (allTime || []).map(function(m) {
+      return { name: m.alias || m.name, rec: m.record, pf: m.pf, pa: m.pa, avg: m.avgScore,
+        SD: m.consistencySD, hi: m.high, lo: m.low, allPlay: m.allPlay, 'apW%': m.allPlayWinPct,
+        xW: m.expectedWins, luck: m.luck };
+    }));
+}
+// Everything from alltime.json that the career table does NOT already cover,
+// encoded compactly: playoff records, nemesis/bunny, all-time record games,
+// per-season finish trend, and positional strengths.
+function alltimeSummary(d) {
+  if (!d) return '';
+  const out = [];
+  const g = function(x) { return x ? (distinctName(x.a) + ' ' + x.pa + '-' + x.pb + ' ' + distinctName(x.b) + ' [' + x.season + ' wk' + x.week + ']') : ''; };
+
+  const pr = d.playoffRecords || {};
+  const prRows = Object.keys(pr).map(function(h) { const r = pr[h]; return { name: distinctName(h), rec: r.wins + '-' + r.losses, apps: r.appearances, pf: r.pf, pa: r.pa }; });
+  if (prRows.length) out.push('PLAYOFFS (W-L, apps=appearances):\n' + tsv(['name', 'rec', 'apps', 'pf', 'pa'], prRows));
+
+  if (d.nemesis) out.push('NEMESIS (worst matchup, min 3 mtgs): ' + Object.keys(d.nemesis).map(function(h) { const n = d.nemesis[h]; return distinctName(h) + '→' + distinctName(n.opponent) + '(' + n.wins + '-' + n.losses + ')'; }).join('; '));
+  if (d.bunny)   out.push('BUNNY (best matchup, min 3 mtgs): '   + Object.keys(d.bunny).map(function(h)   { const b = d.bunny[h];   return distinctName(h) + '→' + distinctName(b.opponent) + '(' + b.wins + '-' + b.losses + ')'; }).join('; '));
+
+  const rec = d.records || {};
+  const rl = [];
+  if (rec.highestScore)  rl.push('highest game: ' + g(rec.highestScore));
+  if (rec.lowestScore)   rl.push('lowest game: ' + g(rec.lowestScore));
+  if (rec.biggestWin)    rl.push('biggest blowout: ' + g(rec.biggestWin));
+  if (rec.closestGame)   rl.push('closest game: ' + g(rec.closestGame));
+  if (rec.highestSeason) rl.push('highest season PF: ' + distinctName(rec.highestSeason.manager) + ' ' + rec.highestSeason.pf + ' (' + rec.highestSeason.season + ')');
+  if (rec.lowestSeason)  rl.push('lowest season PF: ' + distinctName(rec.lowestSeason.manager) + ' ' + rec.lowestSeason.pf + ' (' + rec.lowestSeason.season + ')');
+  if (rec.longestWinStreak)  rl.push('longest W streak: ' + distinctName(rec.longestWinStreak.manager) + ' ' + rec.longestWinStreak.streak);
+  if (rec.longestLossStreak) rl.push('longest L streak: ' + distinctName(rec.longestLossStreak.manager) + ' ' + rec.longestLossStreak.streak);
+  if (rl.length) out.push('RECORDS:\n' + rl.join('\n'));
+
+  // Per-season finish trend: "name: 2023 r3 108ppg, 2024 r1 121ppg, ..."
+  if (d.seasonalTrends) {
+    const tl = Object.keys(d.seasonalTrends).map(function(h) {
+      const arr = d.seasonalTrends[h] || [];
+      return distinctName(h) + ': ' + arr.map(function(t) { return t.season + ' r' + t.rank + ' ' + t.ppg + 'ppg'; }).join(', ');
+    });
+    if (tl.length) out.push('SEASON TREND (r=finish rank, ppg=points/game):\n' + tl.join('\n'));
+  }
+
+  // Positional strengths: latest season only, avg pts/game by position.
+  if (d.positionalStrengths) {
+    const rows = [];
+    Object.keys(d.positionalStrengths).forEach(function(h) {
+      const seasonsObj = d.positionalStrengths[h] || {};
+      const yrs = Object.keys(seasonsObj).sort();
+      const last = yrs[yrs.length - 1];
+      if (!last) return;
+      const p = seasonsObj[last];
+      rows.push({ name: distinctName(h), yr: last, QB: p.QB, RB: p.RB, WR: p.WR, TE: p.TE, K: p.K, DEF: p.DEF });
+    });
+    if (rows.length) out.push('POSITIONAL avg pts/game (latest season):\n' + tsv(['name', 'yr', 'QB', 'RB', 'WR', 'TE', 'K', 'DEF'], rows));
+  }
+  return out.join('\n\n');
+}
+// One line per completed trade — compact vs JSON's repeated keys.
+function tradesLines(txns) {
+  const list = Array.isArray(txns) ? txns : ((txns && txns.items) || []);
+  if (!list.length) return '(none on record)';
+  return list.map(function(t) {
+    const a = (t.aReceives || []).join(', '), b = (t.bReceives || []).join(', ');
+    return t.season + ' wk' + t.week + ': ' + distinctName(t.managerA) + ' gets [' + a + '] ↔ ' + distinctName(t.managerB) + ' gets [' + b + ']';
+  }).join('\n');
+}
+// Current-season standings + extremes, compact.
+function currentSeasonBlock(statsData) {
+  if (!statsData) return '(no current-season data)';
+  const st = (statsData.standings || []).map(function(r, i) {
+    return { rk: i + 1, name: distinctName(r.manager), rec: (r.wins || 0) + '-' + (r.losses || 0), pf: r.pf, pa: r.pa };
+  });
+  let s = 'season ' + statsData.season + '\n' + tsv(['rk', 'name', 'rec', 'pf', 'pa'], st);
+  if (statsData.extremes) s += '\nextremes: ' + JSON.stringify(statsData.extremes);
+  return s;
+}
+
 // Per-season champion + condensed standings (no games) — for the banter prompt.
 function slimHistory(d) {
   const seasons = (d && d.seasons) ? d.seasons : [];
@@ -702,27 +849,18 @@ function StatsTab(props) {
   // so the model cannot do its own (error-prone) win/loss arithmetic. Anything
   // not in the tables arrives via the DETERMINISTIC QUERY RESULT block (buildContext).
   const sp = 'You are the statistician for the Borehamwood Plancy League. Answer ONLY from the data below — NEVER compute or invent numbers yourself.\n\n'
-    + 'CRITICAL: All win/loss/points figures must be read verbatim from the pre-computed tables or the DETERMINISTIC QUERY RESULT block. Do NOT add up games or derive records yourself — if a number is not given to you, say you do not have it rather than estimate.\n\n'
-    + 'NAMES: always use real NAME not Sleeper handle. TWO BENJYS: benjlev=Lev, sanfbe=Sanford when both appear. Alastair\'s allyl900 account is the same person.\n\n'
+    + 'CRITICAL: All win/loss/points figures must be read verbatim from the tables below or the DETERMINISTIC QUERY RESULT block. Do NOT add up games or derive records yourself — if a number is not given to you, say you do not have it rather than estimate.\n\n'
+    + 'NAMES: always use the real NAME shown in the tables, never a Sleeper handle. Two Benjys: Lev and Sanford.\n\n'
     + 'ANSWER FORMAT: 1) ONE short sentence on method. 2) GitHub Markdown table for any ranking. 3) At most ONE closing sentence. No preamble.\n\n'
-    + 'METRICS: allPlay, allPlayWinPct, expectedWins, luck (positive=lucky, negative=unlucky), consistencySD, avgScore, high, low, pf, pa, record. nemesis=worst H2H opponent, bunny=best H2H opponent (both pre-computed, symmetric — trust them).\n\n'
-    + 'EXTENDED TABLES IN alltime.json — use these for deeper questions:\n'
-    + '  consistencyStats[manager].allTime: {avg, stdDev, high, low, games} — all-time scoring consistency\n'
-    + '  consistencyStats[manager].perSeason[year]: same breakdown per season\n'
-    + '  personalRecords[manager]: {highWeek, lowWeek, biggestWin, biggestLoss} — personal scoring milestones\n'
-    + '  playoffRecords[manager]: {wins, losses, pf, pa, appearances} — playoff-only record\n'
-    + '  seasonalTrends[manager]: [{season, pf, wins, losses, ppg, rank}] — season-by-season performance\n'
-    + '  luckScores[manager]: [{season, actualWins, expectedWins, luckScore}] — luck per season\n'
-    + '  positionalStrengths[manager][season]: {QB, RB, WR, TE, K, DEF, games} — avg pts by position per game\n'
-    + '  benchWasteTop: top 20 games with most bench pts left on field\n'
-    + '  h2hBySeason: use the deterministic query layer (ask with "H2H in 2023" etc.) — not included in prompt to save space\n'
-    + '  PLAYER SCORING (individual players, e.g. "best WR", "top scorers", "how did Ja\'Marr Chase do", "most points by a QB"): use the deterministic query layer — per-player scoring is NOT in this prompt, it is fetched on demand and arrives in the DETERMINISTIC QUERY RESULT block.\n\n'
-    + 'TRADE DATA: transactions array has every completed trade: {season, week, managerA, managerB, aReceives[], bReceives[]}. Use for trade history questions.'
+    + 'TABLES BELOW are pipe-delimited (header row, then one row per manager). Column key — '
+    + 'rec=record W-L; pf/pa=points for/against; avg=avg score; SD=consistency (lower=steadier); hi/lo=best/worst single game; '
+    + 'allPlay=record vs the whole league each week; apW%=all-play win%; xW=expected wins; luck=actual−expected wins (+lucky, −unlucky).\n\n'
+    + 'ANYTHING NOT IN THESE TABLES — a specific head-to-head, a per-season H2H, a game list, individual NFL player scoring — arrives via the DETERMINISTIC QUERY RESULT block appended below when relevant. Do not guess it from the tables.'
     + loreCtx
-    + '\n\nANALYTICS (all-play, luck, consistency — pre-computed):\n' + JSON.stringify(analytics)
-    + '\n\nALL-TIME RECORDS, H2H MATRIX, NEMESIS/BUNNY (pre-computed, authoritative):\n' + JSON.stringify(slimAlltime(alltimeData))
-    + '\n\nTRADE HISTORY:\n' + JSON.stringify(transactionsData)
-    + '\n\nCURRENT SEASON SUMMARY:\n' + JSON.stringify({ league: statsData && statsData.league, season: statsData && statsData.season, standings: statsData && statsData.standings, headToHead: statsData && statsData.headToHead, extremes: statsData && statsData.extremes });
+    + '\n\nCAREER (all-time, regular season):\n' + careerTable(analytics.allTime)
+    + '\n\n' + alltimeSummary(slimAlltime(alltimeData))
+    + '\n\nTRADES:\n' + tradesLines(transactionsData)
+    + '\n\nCURRENT SEASON:\n' + currentSeasonBlock(statsData);
 
   // buildContext: deterministic query layer. Plan → execute in JS → inject result.
   // Plans from the running conversation (not just the latest line) so follow-ups
@@ -736,7 +874,7 @@ function StatsTab(props) {
     } catch (e) { return ''; }
   }
 
-  return <ChatTab systemPrompt={sp} buildContext={buildContext} chips={['Unluckiest manager?', 'Best playoff record?', 'Most consistent scorer?', 'Biggest bench disasters?']} placeholder="Message…" errorMsg="Something went wrong — try again." intro="The record book — career records, luck ratings, playoff history, consistency. Ask about personal bests, positional strengths, or any head-to-head." />;
+  return <ChatTab systemPrompt={sp} buildContext={buildContext} chips={['All-time standings', 'Unluckiest manager?', 'Most consistent scorer?', 'Biggest bench disasters?']} placeholder="Message…" errorMsg="Something went wrong — try again." intro="The record book — career records, luck ratings, playoff history, consistency. Ask about personal bests, positional strengths, or any head-to-head." />;
 }
 
 function BanterTab(props) {

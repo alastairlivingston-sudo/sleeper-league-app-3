@@ -66,6 +66,15 @@ file that the paste truncated. `validate.js` gates the *data*; this harness gate
 | UR-2 | Tap through BANTER, TRADES, SCORES → each shows its content, no error thrown. | test-render |
 | UR-3 | Type a question in STATS and send → a reply bubble appears (model bridge mocked). | test-render |
 | UR-4 | Live data source unreachable → app still loads from the inlined snapshot (offline resilience). | test-render |
+| UR-5 | A common question (H2H / totals) is answered WITHOUT a planner model call (client-side fast-path), saving tokens. | test-render |
+| UR-6 | Legacy runtime (no `window.claude`) → the model fallback chain advances past a 404 to the next model. | test-render |
+
+## Data-math requirements (DR) — locked by golden file
+
+| ID | Requirement | Test |
+|----|-------------|------|
+| DR-1 | `build-alltime.js` output for a fixed fixture league byte-matches the committed golden (career/H2H/luck/streaks/positional/player math is stable). | test-alltime |
+| DR-2 | Aliases are merged before aggregation (no un-canonicalized handle survives into `careerRankings`). | test-alltime |
 
 ---
 

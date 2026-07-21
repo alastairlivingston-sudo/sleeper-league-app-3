@@ -13,7 +13,8 @@
     "validate":        "node scripts/validate.js",
     "test-artifact":   "node scripts/test-artifact.js",
     "test-render":     "node scripts/test-render.js",
-    "test":            "node scripts/validate.js && node scripts/test-artifact.js && node scripts/test-render.js",
+    "test-alltime":    "node scripts/test-alltime.js",
+    "test":            "node scripts/validate.js && node scripts/test-alltime.js && node scripts/test-artifact.js && node scripts/test-render.js",
     "build":           "node scripts/build-lore.js && node scripts/build-alltime.js && node scripts/build-artifact.js",
     "refresh":         "node scripts/fetch-history.js && node scripts/fetch-rosters.js && node scripts/fetch-stats.js && node scripts/fetch-fc-values.js && node scripts/fetch-trades.js && node scripts/build-lore.js && node scripts/build-alltime.js && node scripts/build-artifact.js && node scripts/validate.js"
   },

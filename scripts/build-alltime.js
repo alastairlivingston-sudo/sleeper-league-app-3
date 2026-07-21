@@ -11,15 +11,19 @@ const path = require("path");
 // Read the FULL detail file (per-game positional/bench arrays) — the served
 // history.json is lean and lacks them. Falls back to history.json if details
 // are absent (e.g. a partial local run).
-const HISTORY = fs.existsSync(path.join(__dirname, "../docs/data/history-details.json"))
-  ? path.join(__dirname, "../docs/data/history-details.json")
-  : path.join(__dirname, "../docs/data/history.json");
-const OUT     = path.join(__dirname, "../docs/data/alltime.json");
+// I/O paths default to the repo layout but are overridable via env so the golden
+// test (scripts/test-alltime.js) can run this exact code against a fixture.
+const HISTORY = process.env.ALLTIME_HISTORY || (
+  fs.existsSync(path.join(__dirname, "../docs/data/history-details.json"))
+    ? path.join(__dirname, "../docs/data/history-details.json")
+    : path.join(__dirname, "../docs/data/history.json"));
+const OUT     = process.env.ALLTIME_OUT || path.join(__dirname, "../docs/data/alltime.json");
+const CONFIG  = process.env.ALLTIME_CONFIG || path.join(__dirname, "../league-config.json");
 
 // Merge alternate Sleeper handles for the same person (Alastair's old account).
 // Aliases come from league-config.json, the single source of truth shared with
 // the artifact (injected into the template's canonical() at build time).
-const ALIAS = JSON.parse(fs.readFileSync(path.join(__dirname, "../league-config.json"), "utf8")).aliases || {};
+const ALIAS = JSON.parse(fs.readFileSync(CONFIG, "utf8")).aliases || {};
 function canon(h) { const c = String(h || "").replace(/^@/, "").trim(); return ALIAS[c] || c; }
 
 const { seasons } = JSON.parse(fs.readFileSync(HISTORY, "utf8"));
@@ -422,7 +426,7 @@ for (const s of seasons) {
 const playerScores = Object.values(playerAgg)
   .map((a) => { a.avg = a.games ? Math.round(a.pts / a.games * 100) / 100 : 0; return a; })
   .sort((a, b) => b.pts - a.pts);
-const OUT_PLAYERS = path.join(__dirname, "../docs/data/player-scores.json");
+const OUT_PLAYERS = process.env.ALLTIME_OUT_PLAYERS || path.join(__dirname, "../docs/data/player-scores.json");
 fs.writeFileSync(OUT_PLAYERS, JSON.stringify(playerScores, null, 2));
 console.log(`Wrote ${OUT_PLAYERS} — ${playerScores.length} player-season rows`);
 

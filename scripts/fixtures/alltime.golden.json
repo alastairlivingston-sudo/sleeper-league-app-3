@@ -1,0 +1,1403 @@
+{
+  "careerRankings": [
+    {
+      "manager": "alpha",
+      "wins": 6,
+      "losses": 0,
+      "ties": 0,
+      "pf": 708,
+      "pa": 614,
+      "seasons": 2,
+      "championships": 1,
+      "playoffAppearances": 2,
+      "winPct": 1
+    },
+    {
+      "manager": "beta",
+      "wins": 4,
+      "losses": 2,
+      "ties": 0,
+      "pf": 680,
+      "pa": 624,
+      "seasons": 2,
+      "championships": 1,
+      "playoffAppearances": 2,
+      "winPct": 0.667
+    },
+    {
+      "manager": "gamma",
+      "wins": 2,
+      "losses": 4,
+      "ties": 0,
+      "pf": 594,
+      "pa": 660,
+      "seasons": 2,
+      "championships": 0,
+      "playoffAppearances": 0,
+      "winPct": 0.333
+    },
+    {
+      "manager": "delta",
+      "wins": 0,
+      "losses": 6,
+      "ties": 0,
+      "pf": 586,
+      "pa": 670,
+      "seasons": 2,
+      "championships": 0,
+      "playoffAppearances": 0,
+      "winPct": 0
+    }
+  ],
+  "allTimeH2H": {
+    "alpha": {
+      "beta": {
+        "wins": 2,
+        "losses": 0,
+        "pf": 230,
+        "pa": 226
+      },
+      "gamma": {
+        "wins": 2,
+        "losses": 0,
+        "pf": 236,
+        "pa": 196
+      },
+      "delta": {
+        "wins": 2,
+        "losses": 0,
+        "pf": 242,
+        "pa": 192
+      }
+    },
+    "beta": {
+      "alpha": {
+        "wins": 0,
+        "losses": 2,
+        "pf": 226,
+        "pa": 230
+      },
+      "delta": {
+        "wins": 2,
+        "losses": 0,
+        "pf": 224,
+        "pa": 200
+      },
+      "gamma": {
+        "wins": 2,
+        "losses": 0,
+        "pf": 230,
+        "pa": 194
+      }
+    },
+    "gamma": {
+      "delta": {
+        "wins": 2,
+        "losses": 0,
+        "pf": 204,
+        "pa": 194
+      },
+      "alpha": {
+        "wins": 0,
+        "losses": 2,
+        "pf": 196,
+        "pa": 236
+      },
+      "beta": {
+        "wins": 0,
+        "losses": 2,
+        "pf": 194,
+        "pa": 230
+      }
+    },
+    "delta": {
+      "gamma": {
+        "wins": 0,
+        "losses": 2,
+        "pf": 194,
+        "pa": 204
+      },
+      "beta": {
+        "wins": 0,
+        "losses": 2,
+        "pf": 200,
+        "pa": 224
+      },
+      "alpha": {
+        "wins": 0,
+        "losses": 2,
+        "pf": 192,
+        "pa": 242
+      }
+    }
+  },
+  "h2hBySeason": {
+    "2001": {
+      "alpha": {
+        "beta": {
+          "wins": 1,
+          "losses": 0,
+          "pf": 115,
+          "pa": 113
+        },
+        "gamma": {
+          "wins": 1,
+          "losses": 0,
+          "pf": 118,
+          "pa": 98
+        },
+        "delta": {
+          "wins": 1,
+          "losses": 0,
+          "pf": 121,
+          "pa": 96
+        }
+      },
+      "beta": {
+        "alpha": {
+          "wins": 0,
+          "losses": 1,
+          "pf": 113,
+          "pa": 115
+        },
+        "delta": {
+          "wins": 1,
+          "losses": 0,
+          "pf": 112,
+          "pa": 100
+        },
+        "gamma": {
+          "wins": 1,
+          "losses": 0,
+          "pf": 115,
+          "pa": 97
+        }
+      },
+      "gamma": {
+        "delta": {
+          "wins": 1,
+          "losses": 0,
+          "pf": 102,
+          "pa": 97
+        },
+        "alpha": {
+          "wins": 0,
+          "losses": 1,
+          "pf": 98,
+          "pa": 118
+        },
+        "beta": {
+          "wins": 0,
+          "losses": 1,
+          "pf": 97,
+          "pa": 115
+        }
+      },
+      "delta": {
+        "gamma": {
+          "wins": 0,
+          "losses": 1,
+          "pf": 97,
+          "pa": 102
+        },
+        "beta": {
+          "wins": 0,
+          "losses": 1,
+          "pf": 100,
+          "pa": 112
+        },
+        "alpha": {
+          "wins": 0,
+          "losses": 1,
+          "pf": 96,
+          "pa": 121
+        }
+      }
+    },
+    "2002": {
+      "alpha": {
+        "beta": {
+          "wins": 1,
+          "losses": 0,
+          "pf": 115,
+          "pa": 113
+        },
+        "gamma": {
+          "wins": 1,
+          "losses": 0,
+          "pf": 118,
+          "pa": 98
+        },
+        "delta": {
+          "wins": 1,
+          "losses": 0,
+          "pf": 121,
+          "pa": 96
+        }
+      },
+      "beta": {
+        "alpha": {
+          "wins": 0,
+          "losses": 1,
+          "pf": 113,
+          "pa": 115
+        },
+        "delta": {
+          "wins": 1,
+          "losses": 0,
+          "pf": 112,
+          "pa": 100
+        },
+        "gamma": {
+          "wins": 1,
+          "losses": 0,
+          "pf": 115,
+          "pa": 97
+        }
+      },
+      "gamma": {
+        "delta": {
+          "wins": 1,
+          "losses": 0,
+          "pf": 102,
+          "pa": 97
+        },
+        "alpha": {
+          "wins": 0,
+          "losses": 1,
+          "pf": 98,
+          "pa": 118
+        },
+        "beta": {
+          "wins": 0,
+          "losses": 1,
+          "pf": 97,
+          "pa": 115
+        }
+      },
+      "delta": {
+        "gamma": {
+          "wins": 0,
+          "losses": 1,
+          "pf": 97,
+          "pa": 102
+        },
+        "beta": {
+          "wins": 0,
+          "losses": 1,
+          "pf": 100,
+          "pa": 112
+        },
+        "alpha": {
+          "wins": 0,
+          "losses": 1,
+          "pf": 96,
+          "pa": 121
+        }
+      }
+    }
+  },
+  "nemesis": {},
+  "bunny": {},
+  "seasonRankings": [
+    {
+      "season": "2001",
+      "champion": "alpha",
+      "standings": [
+        {
+          "rank": 1,
+          "manager": "alpha",
+          "wins": 3,
+          "losses": 0,
+          "pf": 354
+        },
+        {
+          "rank": 2,
+          "manager": "beta",
+          "wins": 2,
+          "losses": 1,
+          "pf": 340
+        },
+        {
+          "rank": 3,
+          "manager": "gamma",
+          "wins": 1,
+          "losses": 2,
+          "pf": 297
+        },
+        {
+          "rank": 4,
+          "manager": "delta",
+          "wins": 0,
+          "losses": 3,
+          "pf": 293
+        }
+      ]
+    },
+    {
+      "season": "2002",
+      "champion": "beta",
+      "standings": [
+        {
+          "rank": 1,
+          "manager": "alpha",
+          "wins": 3,
+          "losses": 0,
+          "pf": 354
+        },
+        {
+          "rank": 2,
+          "manager": "beta",
+          "wins": 2,
+          "losses": 1,
+          "pf": 340
+        },
+        {
+          "rank": 3,
+          "manager": "gamma",
+          "wins": 1,
+          "losses": 2,
+          "pf": 297
+        },
+        {
+          "rank": 4,
+          "manager": "delta",
+          "wins": 0,
+          "losses": 3,
+          "pf": 293
+        }
+      ]
+    }
+  ],
+  "records": {
+    "highestScore": {
+      "week": 5,
+      "playoff": false,
+      "a": "alpha",
+      "b": "delta",
+      "pa": 121,
+      "pb": 96,
+      "ap": {
+        "QB": 30.25,
+        "RB": 42.349999999999994,
+        "WR": 36.3,
+        "TE": 6.050000000000001,
+        "K": 2.42,
+        "DEF": 3.63
+      },
+      "bp": {
+        "QB": 24,
+        "RB": 33.599999999999994,
+        "WR": 28.799999999999997,
+        "TE": 4.800000000000001,
+        "K": 1.92,
+        "DEF": 2.88
+      },
+      "as": [
+        {
+          "n": "alpha-QB1",
+          "pos": "QB",
+          "pts": 30.25
+        },
+        {
+          "n": "alpha-RB1",
+          "pos": "RB",
+          "pts": 24.2
+        },
+        {
+          "n": "alpha-WR1",
+          "pos": "WR",
+          "pts": 21.78
+        }
+      ],
+      "bs": [
+        {
+          "n": "delta-QB1",
+          "pos": "QB",
+          "pts": 24
+        },
+        {
+          "n": "delta-RB1",
+          "pos": "RB",
+          "pts": 19.2
+        },
+        {
+          "n": "delta-WR1",
+          "pos": "WR",
+          "pts": 17.28
+        }
+      ],
+      "ab": [
+        {
+          "n": "alpha-BN1",
+          "pos": "WR",
+          "pts": 6
+        }
+      ],
+      "bb": [
+        {
+          "n": "delta-BN1",
+          "pos": "WR",
+          "pts": 6
+        }
+      ],
+      "season": "2001"
+    },
+    "lowestScore": {
+      "week": 5,
+      "playoff": false,
+      "a": "alpha",
+      "b": "delta",
+      "pa": 121,
+      "pb": 96,
+      "ap": {
+        "QB": 30.25,
+        "RB": 42.349999999999994,
+        "WR": 36.3,
+        "TE": 6.050000000000001,
+        "K": 2.42,
+        "DEF": 3.63
+      },
+      "bp": {
+        "QB": 24,
+        "RB": 33.599999999999994,
+        "WR": 28.799999999999997,
+        "TE": 4.800000000000001,
+        "K": 1.92,
+        "DEF": 2.88
+      },
+      "as": [
+        {
+          "n": "alpha-QB1",
+          "pos": "QB",
+          "pts": 30.25
+        },
+        {
+          "n": "alpha-RB1",
+          "pos": "RB",
+          "pts": 24.2
+        },
+        {
+          "n": "alpha-WR1",
+          "pos": "WR",
+          "pts": 21.78
+        }
+      ],
+      "bs": [
+        {
+          "n": "delta-QB1",
+          "pos": "QB",
+          "pts": 24
+        },
+        {
+          "n": "delta-RB1",
+          "pos": "RB",
+          "pts": 19.2
+        },
+        {
+          "n": "delta-WR1",
+          "pos": "WR",
+          "pts": 17.28
+        }
+      ],
+      "ab": [
+        {
+          "n": "alpha-BN1",
+          "pos": "WR",
+          "pts": 6
+        }
+      ],
+      "bb": [
+        {
+          "n": "delta-BN1",
+          "pos": "WR",
+          "pts": 6
+        }
+      ],
+      "season": "2001"
+    },
+    "biggestWin": {
+      "week": 5,
+      "playoff": false,
+      "a": "alpha",
+      "b": "delta",
+      "pa": 121,
+      "pb": 96,
+      "ap": {
+        "QB": 30.25,
+        "RB": 42.349999999999994,
+        "WR": 36.3,
+        "TE": 6.050000000000001,
+        "K": 2.42,
+        "DEF": 3.63
+      },
+      "bp": {
+        "QB": 24,
+        "RB": 33.599999999999994,
+        "WR": 28.799999999999997,
+        "TE": 4.800000000000001,
+        "K": 1.92,
+        "DEF": 2.88
+      },
+      "as": [
+        {
+          "n": "alpha-QB1",
+          "pos": "QB",
+          "pts": 30.25
+        },
+        {
+          "n": "alpha-RB1",
+          "pos": "RB",
+          "pts": 24.2
+        },
+        {
+          "n": "alpha-WR1",
+          "pos": "WR",
+          "pts": 21.78
+        }
+      ],
+      "bs": [
+        {
+          "n": "delta-QB1",
+          "pos": "QB",
+          "pts": 24
+        },
+        {
+          "n": "delta-RB1",
+          "pos": "RB",
+          "pts": 19.2
+        },
+        {
+          "n": "delta-WR1",
+          "pos": "WR",
+          "pts": 17.28
+        }
+      ],
+      "ab": [
+        {
+          "n": "alpha-BN1",
+          "pos": "WR",
+          "pts": 6
+        }
+      ],
+      "bb": [
+        {
+          "n": "delta-BN1",
+          "pos": "WR",
+          "pts": 6
+        }
+      ],
+      "season": "2001"
+    },
+    "closestGame": {
+      "week": 1,
+      "playoff": false,
+      "a": "alpha",
+      "b": "beta",
+      "pa": 115,
+      "pb": 113,
+      "ap": {
+        "QB": 28.75,
+        "RB": 40.25,
+        "WR": 34.5,
+        "TE": 5.75,
+        "K": 2.3000000000000003,
+        "DEF": 3.4499999999999997
+      },
+      "bp": {
+        "QB": 28.25,
+        "RB": 39.55,
+        "WR": 33.9,
+        "TE": 5.65,
+        "K": 2.2600000000000002,
+        "DEF": 3.3899999999999997
+      },
+      "as": [
+        {
+          "n": "alpha-QB1",
+          "pos": "QB",
+          "pts": 28.75
+        },
+        {
+          "n": "alpha-RB1",
+          "pos": "RB",
+          "pts": 23
+        },
+        {
+          "n": "alpha-WR1",
+          "pos": "WR",
+          "pts": 20.7
+        }
+      ],
+      "bs": [
+        {
+          "n": "beta-QB1",
+          "pos": "QB",
+          "pts": 28.25
+        },
+        {
+          "n": "beta-RB1",
+          "pos": "RB",
+          "pts": 22.6
+        },
+        {
+          "n": "beta-WR1",
+          "pos": "WR",
+          "pts": 20.34
+        }
+      ],
+      "ab": [
+        {
+          "n": "alpha-BN1",
+          "pos": "WR",
+          "pts": 6
+        }
+      ],
+      "bb": [
+        {
+          "n": "beta-BN1",
+          "pos": "WR",
+          "pts": 6
+        }
+      ],
+      "season": "2001"
+    },
+    "highestSeason": {
+      "manager": "alpha",
+      "season": "2001",
+      "pf": 354
+    },
+    "lowestSeason": {
+      "manager": "delta",
+      "season": "2001",
+      "pf": 293
+    },
+    "longestWinStreak": {
+      "manager": "alpha",
+      "streak": 6
+    },
+    "longestLossStreak": {
+      "manager": "delta",
+      "streak": 6
+    }
+  },
+  "benchStats": {
+    "gamesWithData": 14,
+    "perManager": [
+      {
+        "manager": "gamma",
+        "totalBenchPts": 44,
+        "games": 6,
+        "avgBenchPts": 7.33
+      },
+      {
+        "manager": "alpha",
+        "totalBenchPts": 56,
+        "games": 8,
+        "avgBenchPts": 7
+      },
+      {
+        "manager": "beta",
+        "totalBenchPts": 52,
+        "games": 8,
+        "avgBenchPts": 6.5
+      },
+      {
+        "manager": "delta",
+        "totalBenchPts": 36,
+        "games": 6,
+        "avgBenchPts": 6
+      }
+    ]
+  },
+  "weeklyScores": {
+    "alpha": {
+      "2001": [
+        {
+          "week": 1,
+          "score": 115
+        },
+        {
+          "week": 3,
+          "score": 118
+        },
+        {
+          "week": 5,
+          "score": 121
+        }
+      ],
+      "2002": [
+        {
+          "week": 1,
+          "score": 115
+        },
+        {
+          "week": 3,
+          "score": 118
+        },
+        {
+          "week": 5,
+          "score": 121
+        }
+      ]
+    },
+    "beta": {
+      "2001": [
+        {
+          "week": 1,
+          "score": 113
+        },
+        {
+          "week": 4,
+          "score": 112
+        },
+        {
+          "week": 6,
+          "score": 115
+        }
+      ],
+      "2002": [
+        {
+          "week": 1,
+          "score": 113
+        },
+        {
+          "week": 4,
+          "score": 112
+        },
+        {
+          "week": 6,
+          "score": 115
+        }
+      ]
+    },
+    "gamma": {
+      "2001": [
+        {
+          "week": 2,
+          "score": 102
+        },
+        {
+          "week": 3,
+          "score": 98
+        },
+        {
+          "week": 6,
+          "score": 97
+        }
+      ],
+      "2002": [
+        {
+          "week": 2,
+          "score": 102
+        },
+        {
+          "week": 3,
+          "score": 98
+        },
+        {
+          "week": 6,
+          "score": 97
+        }
+      ]
+    },
+    "delta": {
+      "2001": [
+        {
+          "week": 2,
+          "score": 97
+        },
+        {
+          "week": 4,
+          "score": 100
+        },
+        {
+          "week": 5,
+          "score": 96
+        }
+      ],
+      "2002": [
+        {
+          "week": 2,
+          "score": 97
+        },
+        {
+          "week": 4,
+          "score": 100
+        },
+        {
+          "week": 5,
+          "score": 96
+        }
+      ]
+    }
+  },
+  "consistencyStats": {
+    "alpha": {
+      "allTime": {
+        "avg": 118,
+        "stdDev": 2.45,
+        "high": 121,
+        "low": 115,
+        "games": 6
+      },
+      "perSeason": {
+        "2001": {
+          "avg": 118,
+          "stdDev": 2.45,
+          "high": 121,
+          "low": 115,
+          "games": 3
+        },
+        "2002": {
+          "avg": 118,
+          "stdDev": 2.45,
+          "high": 121,
+          "low": 115,
+          "games": 3
+        }
+      }
+    },
+    "beta": {
+      "allTime": {
+        "avg": 113.33,
+        "stdDev": 1.25,
+        "high": 115,
+        "low": 112,
+        "games": 6
+      },
+      "perSeason": {
+        "2001": {
+          "avg": 113.33,
+          "stdDev": 1.25,
+          "high": 115,
+          "low": 112,
+          "games": 3
+        },
+        "2002": {
+          "avg": 113.33,
+          "stdDev": 1.25,
+          "high": 115,
+          "low": 112,
+          "games": 3
+        }
+      }
+    },
+    "gamma": {
+      "allTime": {
+        "avg": 99,
+        "stdDev": 2.16,
+        "high": 102,
+        "low": 97,
+        "games": 6
+      },
+      "perSeason": {
+        "2001": {
+          "avg": 99,
+          "stdDev": 2.16,
+          "high": 102,
+          "low": 97,
+          "games": 3
+        },
+        "2002": {
+          "avg": 99,
+          "stdDev": 2.16,
+          "high": 102,
+          "low": 97,
+          "games": 3
+        }
+      }
+    },
+    "delta": {
+      "allTime": {
+        "avg": 97.67,
+        "stdDev": 1.7,
+        "high": 100,
+        "low": 96,
+        "games": 6
+      },
+      "perSeason": {
+        "2001": {
+          "avg": 97.67,
+          "stdDev": 1.7,
+          "high": 100,
+          "low": 96,
+          "games": 3
+        },
+        "2002": {
+          "avg": 97.67,
+          "stdDev": 1.7,
+          "high": 100,
+          "low": 96,
+          "games": 3
+        }
+      }
+    }
+  },
+  "personalRecords": {
+    "alpha": {
+      "highWeek": {
+        "score": 121,
+        "opp": "delta",
+        "season": "2001",
+        "week": 5
+      },
+      "lowWeek": {
+        "score": 115,
+        "opp": "beta",
+        "season": "2001",
+        "week": 1
+      },
+      "biggestWin": {
+        "margin": 25,
+        "score": 121,
+        "opp": "delta",
+        "season": "2001",
+        "week": 5
+      },
+      "biggestLoss": {
+        "margin": 0,
+        "score": 0,
+        "opp": null,
+        "season": null,
+        "week": null
+      }
+    },
+    "beta": {
+      "highWeek": {
+        "score": 115,
+        "opp": "gamma",
+        "season": "2001",
+        "week": 6
+      },
+      "lowWeek": {
+        "score": 112,
+        "opp": "delta",
+        "season": "2001",
+        "week": 4
+      },
+      "biggestWin": {
+        "margin": 18,
+        "score": 115,
+        "opp": "gamma",
+        "season": "2001",
+        "week": 6
+      },
+      "biggestLoss": {
+        "margin": 2,
+        "score": 113,
+        "opp": "alpha",
+        "season": "2001",
+        "week": 1
+      }
+    },
+    "gamma": {
+      "highWeek": {
+        "score": 102,
+        "opp": "delta",
+        "season": "2001",
+        "week": 2
+      },
+      "lowWeek": {
+        "score": 97,
+        "opp": "beta",
+        "season": "2001",
+        "week": 6
+      },
+      "biggestWin": {
+        "margin": 5,
+        "score": 102,
+        "opp": "delta",
+        "season": "2001",
+        "week": 2
+      },
+      "biggestLoss": {
+        "margin": 20,
+        "score": 98,
+        "opp": "alpha",
+        "season": "2001",
+        "week": 3
+      }
+    },
+    "delta": {
+      "highWeek": {
+        "score": 100,
+        "opp": "beta",
+        "season": "2001",
+        "week": 4
+      },
+      "lowWeek": {
+        "score": 96,
+        "opp": "alpha",
+        "season": "2001",
+        "week": 5
+      },
+      "biggestWin": {
+        "margin": 0,
+        "score": 0,
+        "opp": null,
+        "season": null,
+        "week": null
+      },
+      "biggestLoss": {
+        "margin": 25,
+        "score": 96,
+        "opp": "alpha",
+        "season": "2001",
+        "week": 5
+      }
+    }
+  },
+  "playoffRecords": {
+    "alpha": {
+      "wins": 1,
+      "losses": 1,
+      "pf": 280,
+      "pa": 280,
+      "appearances": 2
+    },
+    "beta": {
+      "wins": 1,
+      "losses": 1,
+      "pf": 280,
+      "pa": 280,
+      "appearances": 2
+    }
+  },
+  "seasonalTrends": {
+    "alpha": [
+      {
+        "season": "2001",
+        "pf": 354,
+        "wins": 3,
+        "losses": 0,
+        "ppg": 118,
+        "rank": 1
+      },
+      {
+        "season": "2002",
+        "pf": 354,
+        "wins": 3,
+        "losses": 0,
+        "ppg": 118,
+        "rank": 1
+      }
+    ],
+    "beta": [
+      {
+        "season": "2001",
+        "pf": 340,
+        "wins": 2,
+        "losses": 1,
+        "ppg": 113.33,
+        "rank": 2
+      },
+      {
+        "season": "2002",
+        "pf": 340,
+        "wins": 2,
+        "losses": 1,
+        "ppg": 113.33,
+        "rank": 2
+      }
+    ],
+    "gamma": [
+      {
+        "season": "2001",
+        "pf": 297,
+        "wins": 1,
+        "losses": 2,
+        "ppg": 99,
+        "rank": 3
+      },
+      {
+        "season": "2002",
+        "pf": 297,
+        "wins": 1,
+        "losses": 2,
+        "ppg": 99,
+        "rank": 3
+      }
+    ],
+    "delta": [
+      {
+        "season": "2001",
+        "pf": 293,
+        "wins": 0,
+        "losses": 3,
+        "ppg": 97.67,
+        "rank": 4
+      },
+      {
+        "season": "2002",
+        "pf": 293,
+        "wins": 0,
+        "losses": 3,
+        "ppg": 97.67,
+        "rank": 4
+      }
+    ]
+  },
+  "luckScores": {
+    "alpha": [
+      {
+        "season": "2001",
+        "actualWins": 3,
+        "expectedWins": 3,
+        "luckScore": 0
+      },
+      {
+        "season": "2002",
+        "actualWins": 3,
+        "expectedWins": 3,
+        "luckScore": 0
+      }
+    ],
+    "beta": [
+      {
+        "season": "2001",
+        "actualWins": 2,
+        "expectedWins": 2,
+        "luckScore": 0
+      },
+      {
+        "season": "2002",
+        "actualWins": 2,
+        "expectedWins": 2,
+        "luckScore": 0
+      }
+    ],
+    "gamma": [
+      {
+        "season": "2001",
+        "actualWins": 1,
+        "expectedWins": 1,
+        "luckScore": 0
+      },
+      {
+        "season": "2002",
+        "actualWins": 1,
+        "expectedWins": 1,
+        "luckScore": 0
+      }
+    ],
+    "delta": [
+      {
+        "season": "2001",
+        "actualWins": 0,
+        "expectedWins": 0,
+        "luckScore": 0
+      },
+      {
+        "season": "2002",
+        "actualWins": 0,
+        "expectedWins": 0,
+        "luckScore": 0
+      }
+    ]
+  },
+  "positionalStrengths": {
+    "alpha": {
+      "2001": {
+        "games": 3,
+        "QB": 29.5,
+        "RB": 41.3,
+        "WR": 35.4,
+        "TE": 5.9,
+        "K": 2.36,
+        "DEF": 3.54
+      },
+      "2002": {
+        "games": 3,
+        "QB": 29.5,
+        "RB": 41.3,
+        "WR": 35.4,
+        "TE": 5.9,
+        "K": 2.36,
+        "DEF": 3.54
+      }
+    },
+    "beta": {
+      "2001": {
+        "games": 3,
+        "QB": 28.33,
+        "RB": 39.67,
+        "WR": 34,
+        "TE": 5.67,
+        "K": 2.27,
+        "DEF": 3.4
+      },
+      "2002": {
+        "games": 3,
+        "QB": 28.33,
+        "RB": 39.67,
+        "WR": 34,
+        "TE": 5.67,
+        "K": 2.27,
+        "DEF": 3.4
+      }
+    },
+    "gamma": {
+      "2001": {
+        "games": 3,
+        "QB": 24.75,
+        "RB": 34.65,
+        "WR": 29.7,
+        "TE": 4.95,
+        "K": 1.98,
+        "DEF": 2.97
+      },
+      "2002": {
+        "games": 3,
+        "QB": 24.75,
+        "RB": 34.65,
+        "WR": 29.7,
+        "TE": 4.95,
+        "K": 1.98,
+        "DEF": 2.97
+      }
+    },
+    "delta": {
+      "2001": {
+        "games": 3,
+        "QB": 24.42,
+        "RB": 34.18,
+        "WR": 29.3,
+        "TE": 4.88,
+        "K": 1.95,
+        "DEF": 2.93
+      },
+      "2002": {
+        "games": 3,
+        "QB": 24.42,
+        "RB": 34.18,
+        "WR": 29.3,
+        "TE": 4.88,
+        "K": 1.95,
+        "DEF": 2.93
+      }
+    }
+  },
+  "benchWasteTop": [
+    {
+      "manager": "alpha",
+      "season": "2001",
+      "week": 3,
+      "benchPts": 8
+    },
+    {
+      "manager": "gamma",
+      "season": "2001",
+      "week": 3,
+      "benchPts": 8
+    },
+    {
+      "manager": "alpha",
+      "season": "2001",
+      "week": 7,
+      "benchPts": 8
+    },
+    {
+      "manager": "beta",
+      "season": "2001",
+      "week": 7,
+      "benchPts": 8
+    },
+    {
+      "manager": "alpha",
+      "season": "2002",
+      "week": 3,
+      "benchPts": 8
+    },
+    {
+      "manager": "gamma",
+      "season": "2002",
+      "week": 3,
+      "benchPts": 8
+    },
+    {
+      "manager": "beta",
+      "season": "2002",
+      "week": 7,
+      "benchPts": 8
+    },
+    {
+      "manager": "alpha",
+      "season": "2002",
+      "week": 7,
+      "benchPts": 8
+    },
+    {
+      "manager": "gamma",
+      "season": "2001",
+      "week": 2,
+      "benchPts": 7
+    },
+    {
+      "manager": "delta",
+      "season": "2001",
+      "week": 2,
+      "benchPts": 7
+    },
+    {
+      "manager": "beta",
+      "season": "2001",
+      "week": 6,
+      "benchPts": 7
+    },
+    {
+      "manager": "gamma",
+      "season": "2001",
+      "week": 6,
+      "benchPts": 7
+    },
+    {
+      "manager": "gamma",
+      "season": "2002",
+      "week": 2,
+      "benchPts": 7
+    },
+    {
+      "manager": "delta",
+      "season": "2002",
+      "week": 2,
+      "benchPts": 7
+    },
+    {
+      "manager": "beta",
+      "season": "2002",
+      "week": 6,
+      "benchPts": 7
+    },
+    {
+      "manager": "gamma",
+      "season": "2002",
+      "week": 6,
+      "benchPts": 7
+    },
+    {
+      "manager": "alpha",
+      "season": "2001",
+      "week": 1,
+      "benchPts": 6
+    },
+    {
+      "manager": "beta",
+      "season": "2001",
+      "week": 1,
+      "benchPts": 6
+    },
+    {
+      "manager": "alpha",
+      "season": "2001",
+      "week": 5,
+      "benchPts": 6
+    },
+    {
+      "manager": "delta",
+      "season": "2001",
+      "week": 5,
+      "benchPts": 6
+    }
+  ]
+}

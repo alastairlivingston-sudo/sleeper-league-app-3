@@ -146,13 +146,12 @@ async function main() {
 
   // UR-1 + UR-3: full online journey with a mocked model bridge.
   console.log("Journey 1 — online, model bridge mocked:");
-  let completeCalls = 0;
+  let completeCalls = 0, plannerCalls = 0;
+  const isPlanner = (p) => p.includes("translate a fantasy-football question into a JSON query spec");
   const complete = async (prompt) => {
     completeCalls++;
-    // The stats planner call is uniquely identified by its opening instruction.
-    // Return a no-op spec for it (runStatQuery becomes a clean pass-through); the
-    // narration call then returns the sentinel we assert on screen.
-    if (prompt.includes("translate a fantasy-football question into a JSON query spec")) return '{"type":"none"}';
+    if (isPlanner(prompt)) { plannerCalls++; return '{"type":"none"}'; }
+    if (process.env.MEASURE_PROMPT) console.error(`NARRATION_PROMPT_CHARS=${prompt.length}`);
     return REPLY_SENTINEL;
   };
   const { window } = await mountApp({ fetchImpl: localFetch(DATA_MAP), complete });
@@ -191,12 +190,52 @@ async function main() {
     ok("UR-3", text().includes(REPLY_SENTINEL), "the mocked reply bubble rendered on screen");
   }
 
+  // UR-5: the fast-path skips the planner MODEL CALL on common questions. The
+  // "All-time standings" chip calls send(text) directly and its text matches the
+  // totals intent client-side, so NO planner call should fire — only narration.
+  const p0 = plannerCalls, c0 = completeCalls;
+  const fastChip = [...doc.querySelectorAll("button.chip")].find((c) => /all-?time standings/i.test(c.textContent || ""));
+  ok("UR-5", !!fastChip, "fast-path chip ('All-time standings') present");
+  if (fastChip) {
+    await act(async () => { fastChip.dispatchEvent(new window.Event("click", { bubbles: true })); });
+    await flush(); await flush(); await sleep(30); await flush(); await flush();
+    ok("UR-5", plannerCalls === p0, `fast-path skipped the planner model call (planner unchanged at ${plannerCalls})`);
+    ok("UR-5", completeCalls > c0, "narration model call still fired (reply produced)");
+  }
+
   // UR-4: offline — live fetch fails, app must still render from inlined snapshot.
   console.log("Journey 2 — offline (live fetch fails), snapshot fallback:");
   uncaught = null;
   const { window: w2 } = await mountApp({ fetchImpl: rejectFetch, complete });
   ok("UR-4", /PlAIncy|Plancy|Borehamwood/i.test(w2.document.body.textContent || ""), "renders from inlined snapshot when offline");
   ok("UR-4", !uncaught, "no uncaught error in offline mode" + (uncaught ? `: ${uncaught.message}` : ""));
+
+  // UR-6: model fallback chain — with the window.claude bridge ABSENT, claudeCall
+  // uses the legacy Messages-API fetch, which must advance past a 404 model to the
+  // next in the chain. Mock: first model id → 404, second → 200 with the sentinel.
+  console.log("Journey 3 — legacy runtime, model chain advances past 404:");
+  uncaught = null;
+  let seenModels = [];
+  const modelFetch = async (url, opts) => {
+    const u = String(url).split("?")[0];
+    if (u.includes("api.anthropic.com")) {
+      const body = JSON.parse(opts.body);
+      seenModels.push(body.model);
+      if (seenModels.length === 1) return { ok: false, status: 404, json: async () => ({}) };
+      return { ok: true, status: 200, json: async () => ({ content: [{ type: "text", text: '{"type":"none"}' }] }) };
+    }
+    return localFetch(DATA_MAP)(url);
+  };
+  const { window: w3 } = await mountApp({ fetchImpl: modelFetch, complete: null }); // no bridge → legacy path
+  const doc3 = w3.document;
+  const chip3 = [...doc3.querySelectorAll("button.chip")].find((c) => /playoff record|all-?time|standings/i.test(c.textContent || ""));
+  if (chip3) {
+    await act(async () => { chip3.dispatchEvent(new w3.Event("click", { bubbles: true })); });
+    await flush(); await flush(); await sleep(30); await flush(); await flush();
+  }
+  ok("UR-6", seenModels.length >= 2, `advanced to a second model after 404 (models tried: ${seenModels.join(", ") || "none"})`);
+  ok("UR-6", seenModels[0] !== seenModels[1], "the second attempt used a DIFFERENT model id (chain advanced)");
+  ok("UR-6", !uncaught, "no uncaught error on the legacy model-fallback path" + (uncaught ? `: ${uncaught.message}` : ""));
 
   process.off("uncaughtException", onErr);
   process.off("unhandledRejection", onErr);

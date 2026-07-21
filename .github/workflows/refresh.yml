@@ -50,6 +50,10 @@ jobs:
       - name: Validate generated data
         run: node scripts/validate.js --fresh
 
+      # Aggregation golden test — locks build-alltime.js math against a fixture.
+      - name: Test aggregation math
+        run: node scripts/test-alltime.js
+
       # Structural gate on the built artifact (REQUIREMENTS.md FR-*/TR-*): valid
       # inlined JSON, required components, no placeholders, size budget, etc.
       # Zero-dep — always runs. A failure means the artifact would fail to load.
