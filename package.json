@@ -11,10 +11,22 @@
     "build-lore":      "node scripts/build-lore.js",
     "build-alltime":   "node scripts/build-alltime.js",
     "validate":        "node scripts/validate.js",
+    "test-artifact":   "node scripts/test-artifact.js",
+    "test-render":     "node scripts/test-render.js",
+    "test":            "node scripts/validate.js && node scripts/test-artifact.js && node scripts/test-render.js",
     "build":           "node scripts/build-lore.js && node scripts/build-alltime.js && node scripts/build-artifact.js",
     "refresh":         "node scripts/fetch-history.js && node scripts/fetch-rosters.js && node scripts/fetch-stats.js && node scripts/fetch-fc-values.js && node scripts/fetch-trades.js && node scripts/build-lore.js && node scripts/build-alltime.js && node scripts/build-artifact.js && node scripts/validate.js"
   },
   "engines": {
     "node": ">=20"
+  },
+  "//devDependencies": "Test-only tooling for scripts/test-render.js (the user-journey gate). The data-pipeline scripts remain zero-dependency; these are never imported by anything that runs in production or in the daily refresh's fetch/build path.",
+  "devDependencies": {
+    "@babel/core": "^7.24.0",
+    "@babel/preset-env": "^7.24.0",
+    "@babel/preset-react": "^7.24.0",
+    "jsdom": "^29.1.1",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
   }
 }

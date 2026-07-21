@@ -73,8 +73,27 @@ rewrites `meta.generated`/`BUILT_AT` timestamps, so the "Detect real data change
 to avoid daily off-season no-op commits. Permissions are `contents: write` only.
 
 ## Build/run
-No install needed (zero deps). `npm run refresh` runs the whole pipeline; `npm run validate` checks the
-contract; `npm run build` rebuilds derived tables + artifact.
+No install needed for the pipeline (zero deps). `npm run refresh` runs the whole pipeline; `npm run validate`
+checks the data contract; `npm run build` rebuilds derived tables + artifact. `npm test` runs the full
+quality gate (data + artifact structure + render — the render test needs dev deps, `npm install`).
+
+## Testing & quality gates (why the artifact stops failing to load)
+`REQUIREMENTS.md` is the testable contract for `commissioner.jsx` — every requirement has an ID
+(`FR-*` functional, `TR-*` technical, `UR-*` user-journey) mapped to a test. Two gates enforce it:
+- `scripts/test-artifact.js` — ZERO-DEP structural gate. **Runs automatically at the end of
+  `build-artifact.js`**, so a broken file is never written/committed (build exits non-zero). Catches the real
+  load-failure causes: a data constant that is not valid JSON (truncation — TR-2), a leftover
+  `__PLACEHOLDER__` (TR-1), missing `import React` (TR-4), a missing component (FR-2), oversize file that
+  truncates on paste (TR-7), a date-pinned model id (TR-8), hand-editing of the built file (TR-10). When
+  `@babel/core` is present it also does a real transpile (TR-5) — the authoritative parse check.
+- `scripts/test-render.js` — the general USER TEST (`UR-*`). Transpiles the artifact, mounts `<App/>` in
+  jsdom with the model bridge + fetch mocked, switches every tab, drives a chat send, and confirms the
+  offline snapshot fallback. Needs dev deps (`@babel/*`, `react`, `react-dom`, `jsdom`); prints SKIP if
+  absent so zero-install runs are unaffected. CI installs them with `--no-save`.
+- CI (`refresh.yml`) runs `validate.js --fresh` → `test-artifact.js` → `test-render.js` before the commit
+  step. **The pipeline scripts stay zero-dependency; test tooling lives only in `devDependencies`.**
+- GROWTH RULE: when you add a feature or hit a new failure mode, add a requirement to `REQUIREMENTS.md`
+  AND an assertion to the matching test. The harness is meant to accrete.
 
 ## Claude artifact runtime — hard lessons
 

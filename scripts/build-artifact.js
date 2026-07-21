@@ -74,6 +74,20 @@ async function main() {
   fs.writeFileSync(OUT, src);
   const kb = Math.round(fs.statSync(OUT).size / 1024);
   console.log(`Built ${OUT} — ${kb} KB`);
+
+  // Gate: the artifact must satisfy the structural requirements (REQUIREMENTS.md)
+  // before it is allowed to ship. A failure here means the file we just wrote would
+  // fail to load when pasted into a Claude artifact — abort so it is never committed.
+  const { run } = require("./test-artifact.js");
+  const { errors, warns } = run(src);
+  for (const w of warns) console.warn(`  warn ${w}`);
+  if (errors.length) {
+    console.error(`build-artifact: BUILT FILE FAILED ${errors.length} requirement(s):`);
+    for (const e of errors) console.error(`  ${e}`);
+    console.error("Refusing to ship a broken artifact. Fix the template and rebuild.");
+    process.exit(1);
+  }
+  console.log("build-artifact: structural requirements passed ✓");
 }
 
 main().catch(e => { console.error(e); process.exit(1); });

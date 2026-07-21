@@ -50,6 +50,20 @@ jobs:
       - name: Validate generated data
         run: node scripts/validate.js --fresh
 
+      # Structural gate on the built artifact (REQUIREMENTS.md FR-*/TR-*): valid
+      # inlined JSON, required components, no placeholders, size budget, etc.
+      # Zero-dep — always runs. A failure means the artifact would fail to load.
+      - name: Test artifact structure
+        run: node scripts/test-artifact.js
+
+      # User-journey gate (REQUIREMENTS.md UR-*): transpile + render <App/> in jsdom,
+      # switch every tab, drive a chat send, confirm offline fallback. Needs dev deps,
+      # so install them here (test-only — the pipeline itself stays zero-dependency).
+      - name: Test artifact render (user journey)
+        run: |
+          npm install --no-save @babel/core @babel/preset-env @babel/preset-react react react-dom jsdom
+          node scripts/test-render.js
+
       # Only commit when real data changed. Every run rewrites meta.generated /
       # BUILT_AT timestamps, so ignore those lines — otherwise the off-season
       # would commit daily no-op churn (this repo had 55 such commits).
