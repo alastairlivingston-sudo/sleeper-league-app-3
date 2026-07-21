@@ -130,11 +130,26 @@ lookup. Do NOT dump raw weekly scores, full H2H-by-season tables, or per-game pl
 summary (nemesis, bunny, playoffRecords) beats the entire alltime.json. Working prompt ~5 KB; a broken one
 was ~66 KB.
 
-### Template vs built artifact
-`commissioner.template.jsx` is the build source; `build-artifact.js` inlines data via `__PLACEHOLDER__`
-substitution and writes `commissioner.jsx`. The two files are identical except the inlined-data lines.
-NEVER hand-edit `commissioner.jsx` — change the template and rebuild. When making architecture changes,
-edit the template so the next refresh doesn't clobber the fix.
+### Template vs built artifact — and the partials
+Source of truth is `template/*.jsx` (ordered partials: 00-header, 10-analytics, 20-query-engine,
+30-chat-components, 40-live-and-app). `build-template.js` concatenates them BYTE-EXACTLY into
+`commissioner.template.jsx` (committed, generated); `build-artifact.js` then inlines data via
+`__PLACEHOLDER__` substitution into `commissioner.jsx`. So the chain is: `template/*.jsx`
+→ `commissioner.template.jsx` → `commissioner.jsx`.
+- EDIT THE PARTIALS, not the monolith. `build-template.js --check` (run in CI) fails if the committed
+  monolith drifts from the partials — i.e. if someone hand-edited `commissioner.template.jsx` directly.
+  After editing a partial, run `node scripts/build-template.js` to regenerate the monolith and commit both.
+- NEVER hand-edit `commissioner.jsx`. When making architecture changes, edit the partial so the next
+  refresh doesn't clobber the fix.
+
+### Stats prompt is token-lean by construction
+The Stats narration prompt uses compact pipe-delimited tables (`careerTable`/`alltimeSummary`/
+`tradesLines`/`currentSeasonBlock`), NOT `JSON.stringify` of the aggregates — a field name is paid for
+once, not once per manager (~73% fewer chars: 51K→14K). The big matrices (allTimeH2H, weeklyScores,
+per-season boards) are NOT in the prompt; the deterministic query engine answers those exactly on demand.
+`planStatQuery` also has a client-side fast-path (`fastPlan`/`matchManagers`) that answers common
+H2H/totals questions WITHOUT a planner model call, plus a session `SPEC_CACHE`. Keep this discipline:
+new numeric facts go through the query engine or a compact encoder, never a raw JSON dump.
 
 ### Self-refresh: live-fetch so you paste the artifact only ONCE
 `useLeagueData()` fetches JSON from jsDelivr (CDN) first, then GitHub Pages fallback; both send

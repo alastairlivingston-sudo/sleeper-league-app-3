@@ -34,6 +34,13 @@ jobs:
       - name: Fetch trade history (Sleeper trades)
         run: node scripts/fetch-trades.js
 
+      # Assemble the template from its partials (source of truth) and fail if the
+      # committed monolith drifted from them.
+      - name: Assemble + verify template
+        run: |
+          node scripts/build-template.js
+          node scripts/build-template.js --check
+
       # Build derived data tables
       - name: Build lore index
         run: node scripts/build-lore.js

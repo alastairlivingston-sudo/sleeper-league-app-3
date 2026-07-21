@@ -57,6 +57,7 @@ file that the paste truncated. `validate.js` gates the *data*; this harness gate
 | TR-8  | The model list is bare aliases only — no date-pinned IDs (`claude-*-YYYYMMDD`). | A retired date-pinned ID 404s every AI feature. | test-artifact |
 | TR-9  | No `api.anthropic.com` raw-fetch is the *sole* model path (bridge must be primary). | Raw fetch is CSP-blocked in the sandbox. | test-artifact |
 | TR-10 | `commissioner.jsx` is byte-identical to the template except on inlined-data / `BUILT_AT` lines. | Guarantees the artifact was built, never hand-edited. | test-artifact |
+| TR-11 | `commissioner.template.jsx` equals the byte-exact concatenation of `template/*.jsx` (partials are source of truth). | Prevents a hand-edit to the generated monolith from being silently lost on the next assemble. | build-template --check (CI) |
 
 ## User-journey requirements (UR) — the "general user test"
 

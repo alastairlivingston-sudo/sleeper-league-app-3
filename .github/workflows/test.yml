@@ -29,6 +29,11 @@ jobs:
         with:
           node-version: "20"
 
+      # The template is assembled from template/ partials — fail if the committed
+      # monolith drifted from them (someone hand-edited commissioner.template.jsx).
+      - name: Template in sync with partials
+        run: node scripts/build-template.js --check
+
       # Rebuild derived tables + artifact from the CURRENT template/scripts, so the
       # gates run against exactly what this change would produce.
       - name: Rebuild derived data + artifact
