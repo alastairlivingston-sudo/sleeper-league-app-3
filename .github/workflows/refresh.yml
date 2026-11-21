@@ -41,28 +41,35 @@ jobs:
           node scripts/build-template.js
           node scripts/build-template.js --check
 
-      # Build derived data tables
       - name: Build lore index
         run: node scripts/build-lore.js
 
+      # The ONE fact table every record/standing/streak/H2H derives from.
       - name: Build fact table (games.json)
         run: node scripts/build-facts.js
 
-      - name: Build all-time aggregates
+      - name: Build all-time aggregates (from the fact table)
         run: node scripts/build-alltime.js
 
-      # Rebuild self-contained artifact with fresh inlined data
+      # Paste-in artifact (legacy target, 200 KB budget).
       - name: Build commissioner.jsx
         run: node scripts/build-artifact.js
 
-      # Validate the data contract before publishing — a failure aborts the
-      # run so structurally-wrong data (e.g. a truncated season) is never pushed
+      # Dev tooling: esbuild for the HTML bundle, Babel/React/jsdom for the render
+      # gate. Test + bundling only — the fetch/build-data scripts stay zero-dep.
+      - name: Install dev tools
+        run: npm install --no-save @babel/core @babel/preset-env @babel/preset-react react react-dom jsdom esbuild@0.24.2
+
+      # Published-artifact target: one self-contained page with all data inlined.
+      - name: Build dist/plaincy.html
+        run: node scripts/build-html.js
+
+      # Validate the data contract before publishing — a failure aborts the run
+      # so structurally-wrong data (e.g. a truncated season) is never pushed.
       - name: Validate generated data
         run: node scripts/validate.js --fresh
 
-      # DR-3/DR-4: status tagging, bracket phase/bye rules and the in-progress-
-      # season validator against frozen mid-season fixtures (zero-dep).
-      - name: Test game status + in-progress season rules
+      - name: Test game status + in-progress season rules (DR-3/DR-4)
         run: node scripts/test-status.js
 
       - name: Test fact table (DR-5 independent recompute)
@@ -71,23 +78,14 @@ jobs:
       - name: Test question engine (QR-1..3, UR-7 engine)
         run: node scripts/test-questions.js
 
-      # Aggregation golden test — locks build-alltime.js math against a fixture.
-      - name: Test aggregation math
+      - name: Test aggregation math (golden)
         run: node scripts/test-alltime.js
 
-      # Structural gate on the built artifact (REQUIREMENTS.md FR-*/TR-*): valid
-      # inlined JSON, required components, no placeholders, size budget, etc.
-      # Zero-dep — always runs. A failure means the artifact would fail to load.
-      - name: Test artifact structure
+      - name: Test artifact structure (FR/TR incl. TR-12)
         run: node scripts/test-artifact.js
 
-      # User-journey gate (REQUIREMENTS.md UR-*): transpile + render <App/> in jsdom,
-      # switch every tab, drive a chat send, confirm offline fallback. Needs dev deps,
-      # so install them here (test-only — the pipeline itself stays zero-dependency).
-      - name: Test artifact render (user journey)
-        run: |
-          npm install --no-save @babel/core @babel/preset-env @babel/preset-react react react-dom jsdom
-          node scripts/test-render.js
+      - name: Test artifact render (user journeys incl. UR-7, UR-8)
+        run: node scripts/test-render.js
 
       # Only commit when real data changed. Every run rewrites meta.generated /
       # BUILT_AT timestamps, so ignore those lines — otherwise the off-season
@@ -112,6 +110,6 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/data/*.json docs/lore/*.json docs/.nojekyll commissioner.jsx
+          git add docs/data/*.json docs/lore/*.json docs/.nojekyll commissioner.jsx dist/plaincy.html
           git commit -m "chore: refresh league data + rebuild artifact [skip ci]"
           git push

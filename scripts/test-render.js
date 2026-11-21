@@ -225,6 +225,11 @@ async function main() {
 
   // FR-12: This Week card renders the last completed week.
   const card = doc.querySelector("[data-testid=this-week]");
+  // The card auto-collapses once a conversation starts — expand it to inspect.
+  if (card && !card.querySelector(".tw-game")) {
+    await act(async () => { card.querySelector(".tw-toggle").dispatchEvent(new window.Event("click", { bubbles: true })); });
+    await flush();
+  }
   ok("FR-12", !!card && (card.textContent || "").includes(`Week ${cur.lastFinalWeek}`), "This Week card shows the last final week");
   ok("FR-12", !!card && card.querySelectorAll(".tw-game").length === 4 && card.querySelectorAll("tbody tr").length === 8, "card lists 4 results and an 8-row mini standings table");
 
@@ -328,6 +333,16 @@ async function main() {
   ok("UR-7", ur7Calls === 0, `the whole conversation needed zero model calls (made ${ur7Calls})`);
   ok("UR-7", !uncaught, "no uncaught error during the replay" + (uncaught ? `: ${uncaught.message}` : ""));
 
+  // UR-8: the published-artifact build (dist/plaincy.html) in jsdom, scripts run
+  // as a browser would. Run A: window.claude.use("sample") → a stub. Run B:
+  // use() → null — the page still renders and answers recipe questions, AI hides.
+  const HTML = path.join(ROOT, "dist", "plaincy.html");
+  if (!fs.existsSync(HTML)) {
+    console.log("Journey 5 — dist/plaincy.html: SKIP (not built; needs esbuild)");
+  } else {
+    await htmlJourneys(HTML);
+  }
+
   process.off("uncaughtException", onErr);
   process.off("unhandledRejection", onErr);
 
@@ -337,6 +352,106 @@ async function main() {
     process.exit(1);
   }
   console.log("\ntest-render: all user-journey checks passed ✓");
+}
+
+// Expected answers for the HTML journeys, computed from the CURRENT data by the
+// same engine the page runs (so 2026 games can't make this test stale).
+function expectedFromData() {
+  const { loadPartials } = require("./load-partials");
+  const ctx = loadPartials(["15-facts.jsx", "20-query-v2.jsx"]);
+  const hist = JSON.parse(fs.readFileSync(path.join(ROOT, "docs/data/history.json"), "utf8"));
+  const facts = ctx.buildFactTable(hist, ctx.canonical);
+  const r = facts.records.highestScoreInLoss.regular[0];
+  const nm = (h) => ctx.distinctName(h);
+  return { loser: nm(r.manager), winner: nm(r.opponent), lpf: r.pf.toFixed(2), wpf: r.pa.toFixed(2), total: (Math.round((r.pf + r.pa) * 100) / 100).toFixed(2) };
+}
+
+async function htmlJourneys(file) {
+  const exp = expectedFromData();
+  const html = fs.readFileSync(file, "utf8");
+  const waitFor = async (fn, ms = 8000) => { const t0 = Date.now(); while (Date.now() - t0 < ms) { try { if (fn()) return true; } catch {} await sleep(25); } return false; };
+
+  async function open(useImpl) {
+    const errors = [];
+    const dom = new JSDOM(html, {
+      url: "https://x.claudeusercontent.com/", runScripts: "dangerously", pretendToBeVisual: true,
+      beforeParse(w) {
+        w.HTMLElement.prototype.scrollIntoView = function () {};
+        w.HTMLElement.prototype.scrollTo = function () {};
+        w.fetch = async () => { throw new Error("offline"); };
+        w.claude = { use: useImpl };
+        w.addEventListener("error", (e) => errors.push(e.message || String(e.error)));
+      },
+    });
+    const w = dom.window;
+    await waitFor(() => w.document.querySelector("[data-testid=this-week]"));
+    // Read the app's own DOM (#root): body text also holds the inlined JSON.
+    return { w, d: w.document, root: () => w.document.getElementById("root"), errors };
+  }
+  async function say(env, text) {
+    const { w, d } = env;
+    const area = d.querySelector("textarea");
+    const setter = Object.getOwnPropertyDescriptor(w.HTMLTextAreaElement.prototype, "value").set;
+    setter.call(area, text);
+    area.dispatchEvent(new w.Event("input", { bubbles: true }));
+    await sleep(10);
+    const before = d.querySelectorAll(".rt, [data-testid=answer]").length + d.body.textContent.length;
+    d.querySelector("button.send-btn").dispatchEvent(new w.MouseEvent("click", { bubbles: true }));
+    await waitFor(() => !d.querySelector(".ld") && d.body.textContent.length !== before, 8000);
+    await sleep(50);
+  }
+  const lastBubble = (d) => { const ts = [...d.querySelectorAll("table.rt")]; return ts.length ? ts[ts.length - 1].closest("div[style]").parentElement : null; };
+
+  // Run A — sample stub.
+  console.log("Journey 5 — dist/plaincy.html with claude.use('sample') (UR-8):");
+  const calls = { text: [], json: [] };
+  const sampleStub = Object.assign(async (input, opts) => { calls.text.push({ input, opts }); return { text: "ZZTOP COMMISSIONER REPLY SENTINEL", truncated: false, modelTierApplied: "quick" }; }, {
+    json: async (input, opts) => { calls.json.push({ input, opts }); return { v: 2, table: "games", where: { managers: ["GSac"] }, groupBy: ["manager"], select: ["games", "wins", "losses"] }; },
+    limits: async () => ({ maxPromptBytes: 262144 }),
+  });
+  const A = await open(async (name) => (name === "sample" ? sampleStub : null));
+  ok("UR-8", /PlAIncy/.test(A.d.body.textContent) && !!A.d.querySelector("[data-testid=freshness]"), "HTML build renders the app shell + badge (UR-1)");
+  for (const label of ["BANTER", "TRADES", "SCORES", "STATS"]) {
+    const btn = [...A.d.querySelectorAll("button.nav-btn")].find((b) => b.textContent.toUpperCase().includes(label));
+    btn.dispatchEvent(new A.w.MouseEvent("click", { bubbles: true }));
+    await sleep(30);
+  }
+  ok("UR-8", A.errors.length === 0, "switched every tab without a script error (UR-2)" + (A.errors.length ? `: ${A.errors[0]}` : ""));
+  await say(A, "What is the most points anyone has scored in a loss?");
+  const row = [...(lastBubble(A.d) || A.d).querySelectorAll("table.rt tbody tr:first-child td")].map((t) => t.textContent);
+  ok("UR-8", row[0] === exp.loser && row[1] === exp.lpf && row[2] === exp.winner && row[3] === exp.wpf && row[4] === "L", `UR-7 msg 1 top row ${row.slice(0, 5).join(" ")} (want ${exp.loser} ${exp.lpf} ${exp.winner} ${exp.wpf} L)`);
+  await say(A, "What was the total game score?");
+  ok("UR-8", A.root().textContent.includes(exp.total + " total points"), `UR-7 msg 2 total ${exp.total}`);
+  await say(A, `How could ${exp.winner} score ${exp.wpf} and lose?`);
+  ok("UR-8", A.root().textContent.includes(`${exp.winner} won ${exp.wpf}–${exp.lpf}`) && !/fabricat/i.test(A.root().textContent), "UR-7 msg 3 explains who won, no 'fabricat'");
+  ok("UR-8", calls.text.length === 0 && calls.json.length === 0, `recipe + follow-up + dispute made zero sample calls (text ${calls.text.length}, json ${calls.json.length})`);
+  await say(A, "Current standings");
+  ok("UR-8", calls.text.length === 1 && calls.text[0].opts.modelTier === "quick" && calls.text[0].opts.cache === false, "multi-row narration uses sample() with modelTier quick, cache false (UR-3)");
+  ok("UR-8", A.root().textContent.includes("ZZTOP COMMISSIONER REPLY SENTINEL"), "narrated sentence rendered");
+  await say(A, "How did Gideon get on overall in his career here?");
+  ok("UR-8", calls.json.length === 1 && calls.json[0].opts.modelTier === "quick", "planner uses sample.json with modelTier quick");
+  ok("UR-8", Array.isArray(calls.text[0].input) && calls.text[0].input[0].role === "user" && calls.text[0].input[calls.text[0].input.length - 1].role === "user", "sample input is a turn list that starts and ends on a user turn");
+  ok("UR-8", A.errors.length === 0, "no script errors in run A" + (A.errors.length ? `: ${A.errors[0]}` : ""));
+  A.w.close();
+
+  // Run B — use() resolves null: deterministic answers still work, AI hides.
+  console.log("Journey 6 — dist/plaincy.html with claude.use() → null (UR-8):");
+  const B = await open(async () => null);
+  await say(B, "What is the most points anyone has scored in a loss?");
+  const rowB = [...B.d.querySelectorAll("table.rt tbody tr:first-child td")].map((t) => t.textContent);
+  ok("UR-8", rowB[0] === exp.loser && rowB[1] === exp.lpf, "recipe question answered with no AI available");
+  await say(B, "Current standings");
+  ok("UR-8", B.d.querySelectorAll("table.rt").length === 2, "multi-row recipe answered with its JS sentence + table");
+  const banter = [...B.d.querySelectorAll("button.nav-btn")].find((b) => b.textContent.toUpperCase().includes("BANTER"));
+  banter.dispatchEvent(new B.w.MouseEvent("click", { bubbles: true }));
+  await waitFor(() => B.d.querySelector("[data-testid=ai-off]"), 3000);
+  ok("UR-8", !!B.d.querySelector("[data-testid=ai-off]"), "Banter shows the 'AI not available' notice instead of a chat box");
+  const trades = [...B.d.querySelectorAll("button.nav-btn")].find((b) => b.textContent.toUpperCase().includes("TRADES"));
+  trades.dispatchEvent(new B.w.MouseEvent("click", { bubbles: true }));
+  await sleep(30);
+  ok("UR-8", !/Commissioner's Verdict/.test(B.root().textContent), "trade verdict button hidden when AI is unavailable");
+  ok("UR-8", B.errors.length === 0, "no script errors in run B" + (B.errors.length ? `: ${B.errors[0]}` : ""));
+  B.w.close();
 }
 
 main().catch((e) => { console.error("test-render: harness error:", e); process.exit(1); });

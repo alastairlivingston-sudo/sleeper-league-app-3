@@ -364,9 +364,9 @@ export default function App() {
         <div style={{ width: 40, height: 40, borderRadius: 12, background: 'linear-gradient(135deg,#6366f1,#4f46e5)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: 22, color: '#fff', flexShrink: 0 }}>P</div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontWeight: 900, fontSize: 22, color: T.text, letterSpacing: '-0.5px', lineHeight: 1 }}>Pl<span style={{ color: T.indigo }}>AI</span>ncy</div>
-          <div style={{ fontSize: 11, color: T.dim, marginTop: 2, letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 600 }}>Borehamwood Plancy League</div>
+          <div style={{ fontSize: 11, color: T.dim, marginTop: 2, letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Borehamwood Plancy League</div>
         </div>
-        <div data-testid="freshness" title={'Data built ' + fmtBuiltAt(BUILT_AT) + ' (' + BUILT_AT + ')'} style={{ fontSize: 10.5, color: T.dim, border: '1px solid ' + T.border, borderRadius: 6, padding: '4px 9px', flexShrink: 1, minWidth: 0, fontWeight: 600, textAlign: 'right', lineHeight: 1.35 }}>
+        <div data-testid="freshness" title={'Data built ' + fmtBuiltAt(BUILT_AT) + ' (' + BUILT_AT + ')'} style={{ fontSize: 10.5, color: T.dim, border: '1px solid ' + T.border, borderRadius: 6, padding: '4px 9px', flexShrink: 0, maxWidth: '44%', fontWeight: 600, textAlign: 'right', lineHeight: 1.35 }}>
           {badgeText(facts) || fmtBuiltAt(BUILT_AT)}
         </div>
       </div>

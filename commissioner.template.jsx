@@ -45,6 +45,7 @@ const TRADE_VALUES = __TRADES__;
 const ALLTIME_DATA = __ALLTIME__;
 const TRANSACTIONS_DATA = __TRANSACTIONS__;
 const PLAYER_SCORES = __PLAYERS__;
+const LORE_DATA = __LORE__;
 
 const REPO = 'alastairlivingston-sudo/sleeper-league-app-3';
 const PAGES_BASE = 'https://alastairlivingston-sudo.github.io/' + REPO.split('/')[1];
@@ -88,13 +89,72 @@ function flattenPrompt(messages, systemPrompt) {
   return systemPrompt + '\n\n' + convo + '\n\nAssistant:';
 }
 
-async function claudeCall(messages, systemPrompt) {
-  // Primary: window.claude.complete (current artifact sandbox).
-  if (typeof window !== 'undefined' && window.claude && typeof window.claude.complete === 'function') {
+// ── Model bridge adapter (Phase 4) ────────────────────────────────────────────
+// Tried in order:
+//   1. claude.use("sample") — published claude.ai artifacts. Resolves async (up
+//      to ~10 s) to the sample function, or null when this view can't sample.
+//   2. window.claude.complete — the legacy paste-in artifact runtime.
+//   3. the proxied Messages API — older runtimes (kept for UR-6).
+// AI state: 'pending' → 'on' | 'off'. The UI renders immediately; AI-only
+// features (Banter, trade verdict, narration) hide when it settles 'off', while
+// deterministic Stats answers keep working.
+let SAMPLE_P = null;
+let AI_STATE = 'pending';
+const AI_LISTENERS = [];
+function setAIState(v) { if (AI_STATE === v) return; AI_STATE = v; AI_LISTENERS.slice().forEach(function(f) { f(v); }); }
+function hasWindowClaude() { return typeof window !== 'undefined' && !!window.claude; }
+function getSample() {
+  if (SAMPLE_P) return SAMPLE_P;
+  if (hasWindowClaude() && typeof window.claude.use === 'function') {
+    SAMPLE_P = Promise.resolve().then(function() { return window.claude.use('sample'); }).catch(function() { return null; });
+  } else {
+    SAMPLE_P = Promise.resolve(null);
+  }
+  SAMPLE_P.then(function(sample) {
+    if (sample) setAIState('on');
+    else if (hasWindowClaude() && typeof window.claude.complete === 'function') setAIState('on');
+    else if (hasWindowClaude()) setAIState('off'); // a Claude viewer that can't sample here
+    else setAIState('on');                         // no bridge at all → legacy Messages API path
+  });
+  return SAMPLE_P;
+}
+function useAIState() {
+  const [v, setV] = useState(AI_STATE);
+  useEffect(function() {
+    getSample();
+    AI_LISTENERS.push(setV);
+    setV(AI_STATE);
+    return function() { const i = AI_LISTENERS.indexOf(setV); if (i !== -1) AI_LISTENERS.splice(i, 1); };
+  }, []);
+  return v;
+}
+const SAMPLE_OFF = ['not_granted', 'sampling_disabled', 'not_declared', 'capability_disabled', 'capability_removed'];
+
+// opts.json → planner (sample.json, quick tier). Narration/chat → sample(), quick
+// tier, cache:false. Always resolves to a string.
+async function claudeCall(messages, systemPrompt, opts) {
+  const sample = await getSample();
+  if (sample) {
+    const turns = (messages || []).filter(function(m) { return (m.role === 'user' || m.role === 'assistant') && m.content; })
+      .map(function(m) { return { role: m.role, content: String(m.content) }; });
+    const input = [{ role: 'user', content: systemPrompt || 'Answer briefly.' }].concat(turns);
+    if (input[input.length - 1].role !== 'user') input.push({ role: 'user', content: 'Continue.' });
+    try {
+      if (opts && opts.json) return JSON.stringify(await sample.json(input, { modelTier: 'quick' }));
+      const r = await sample(input, { modelTier: 'quick', cache: false });
+      return r.text;
+    } catch (e) {
+      if (e && SAMPLE_OFF.indexOf(e.code) !== -1) setAIState('off');
+      throw new Error(e && e.code === 'rate_limited' ? 'MODEL_ERROR' : ((e && e.message) || 'sample failed'));
+    }
+  }
+  // window.claude.complete (legacy paste-in artifact sandbox).
+  if (hasWindowClaude() && typeof window.claude.complete === 'function') {
     const out = await window.claude.complete(flattenPrompt(messages, systemPrompt));
     if (!out) throw new Error('Empty response');
     return out;
   }
+  if (hasWindowClaude()) throw new Error('MODEL_ERROR'); // Claude viewer without sampling
   // Fallback: older runtime that proxied the Messages API directly.
   return messagesApiCall(messages, systemPrompt);
 }
@@ -1175,6 +1235,10 @@ function useLeagueData() {
           }));
           const result = { live: true };
           keys.forEach(function(k, idx) { result[k] = fetched[idx]; });
+          // The inlined data is primary: a CDN copy is only taken when it is at
+          // least as new (jsDelivr can serve a cached, older history.json).
+          const gen = function(h) { return Date.parse((h && h.meta && h.meta.generated) || '') || 0; };
+          if (HISTORY_DATA && gen(result.history) && gen(result.history) < gen(HISTORY_DATA)) return;
           if (!cancelled) setData(result);
           return;
         } catch (e) { /* try next */ }
@@ -1186,10 +1250,13 @@ function useLeagueData() {
 }
 
 function useLore(active) {
-  const [lore, setLore] = useState({ master: '', archive: [], quotes: [], ready: false });
+  // Inlined lore (the HTML build carries it; the paste build inlines null).
+  const [lore, setLore] = useState(LORE_DATA
+    ? { master: (LORE_DATA.master && LORE_DATA.master.text) || '', archive: LORE_DATA.archive || [], quotes: LORE_DATA.quotes || [], ready: true }
+    : { master: '', archive: [], quotes: [], ready: false });
   const fetchedRef = useRef(false);
   useEffect(function() {
-    if (!active || fetchedRef.current) return;
+    if (!active || fetchedRef.current || LORE_DATA) return;
     fetchedRef.current = true;
     let cancelled = false;
     (async function() {
@@ -1422,7 +1489,7 @@ function ChatTab(props) {
         })}
       </div>
       <div style={{ flexGrow: 1, overflowY: 'auto', padding: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
-        {header || null}
+        {typeof header === 'function' ? header(messages.length) : (header || null)}
         {messages.length === 0 && !loading && (
           <div style={{ margin: 'auto', textAlign: 'center', color: T.faint, fontSize: 14, maxWidth: 300, lineHeight: 1.7, padding: '20px 8px' }}>{intro}</div>
         )}
@@ -1504,6 +1571,8 @@ function tradesLines(txns) {
 function ThisWeekCard(props) {
   const tw = useMemo(function() { return thisWeekFacts(props.facts); }, [props.facts]);
   const [open, setOpen] = useState(true);
+  // Collapse once the conversation starts so answers stay in view on a phone.
+  useEffect(function() { if (props.started) setOpen(false); }, [props.started]);
   if (!tw) return null;
   const line = function(label, r, extra) { return r ? <div className="tw-line"><span className="tw-k">{label}</span> {nm(r.manager) + ' ' + fmt2(r.pf) + (extra ? extra(r) : '')}</div> : null; };
   return (
@@ -1578,6 +1647,7 @@ function RecordBook(props) {
 function StatsTab(props) {
   const { historyData, facts, alltimeData, transactionsData, playersData, loreMaster } = props;
   const [book, setBook] = useState(false);
+  const ai = useAIState();
   const loreCtx = loreMaster
     ? '\n\nLEAGUE CONTEXT (names, champions, glossary — for resolving names only, NOT for inventing stats):\n' + loreMaster.slice(0, 2500)
     : '';
@@ -1594,13 +1664,15 @@ function StatsTab(props) {
 
   // Query engine v2: code answers, the model only phrases (answerStatQuestion).
   async function answer(query, conversation, ctx) {
+    const aiOn = ai !== 'off';
     const out = await answerStatQuestion(query, ctx, {
       facts: facts, players: playersData,
-      plan: function(prompt) { return claudeCall([{ role: 'user', content: prompt }], 'Output only JSON.', { json: true }); },
-      narrate: function(prompt) { return claudeCall([{ role: 'user', content: prompt }], 'Reply in one or two plain sentences.'); },
+      plan: aiOn ? function(prompt) { return claudeCall([{ role: 'user', content: prompt }], 'Output only JSON.', { json: true }); } : null,
+      narrate: aiOn ? function(prompt) { return claudeCall([{ role: 'user', content: prompt }], 'Reply in one or two plain sentences.'); } : null,
       log: function() { if (DEBUG) console.log.apply(console, ['[stats]'].concat([].slice.call(arguments))); },
     });
     if (out.content != null) return out;
+    if (!aiOn) return { content: CANT_ANSWER, table: null, ctx: ctx };
     const reply = await claudeCall(conversation.filter(function(m) { return m.role === 'user' || m.role === 'assistant'; }), sp);
     const g = numberGuard(reply, [], [sp]);
     if (!g.ok) { if (DEBUG) console.log('[stats] chat reply rejected by number guard', g.bad); return { content: CANT_ANSWER, table: null, ctx: ctx }; }
@@ -1611,7 +1683,7 @@ function StatsTab(props) {
     <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
       {book && <RecordBook facts={facts} onClose={function() { setBook(false); }} />}
       <ChatTab systemPrompt={sp} answer={answer}
-        header={<ThisWeekCard facts={facts} onRecordBook={function() { setBook(true); }} />}
+        header={function(n) { return <ThisWeekCard facts={facts} started={n > 0} onRecordBook={function() { setBook(true); }} />; }}
         chips={['Most points in a loss?', "This week's upset?", 'Current standings', 'Longest streaks']}
         placeholder="Message…" errorMsg="Something went wrong — try again."
         intro="Ask about records, standings, head-to-heads or any week. Numbers come straight from the league data." />
@@ -1621,6 +1693,7 @@ function StatsTab(props) {
 
 function BanterTab(props) {
   const { historyData, facts, alltimeData, lore } = props;
+  const ai = useAIState();
 
   const banterPrompt = useMemo(function() {
     const rule = [
@@ -1654,6 +1727,9 @@ function BanterTab(props) {
     return g.text || "I'll keep the numbers out of this one — ask the Stats tab for the receipts.";
   }
 
+  if (ai === 'off') {
+    return <div data-testid="ai-off" style={{ margin: 'auto', padding: '24px 16px', textAlign: 'center', color: T.dim, fontSize: 14, lineHeight: 1.7, maxWidth: 320 }}>Banter needs Claude, which isn't available in this view. The Stats tab still answers every record and standings question from the league data.</div>;
+  }
   return <ChatTab
     systemPrompt={banterPrompt}
     buildContext={buildContext}
@@ -1669,6 +1745,7 @@ function normalizeName(str) { return str.toLowerCase().replace(/[^a-z0-9 ]/g, ''
 
 function TradeGrader(props) {
   const { rostersData, tradeValues } = props;
+  const ai = useAIState();
   const teamKeys = useMemo(function() { return Object.keys(rostersData || {}); }, [rostersData]);
   const [teamA, setTeamA] = useState(teamKeys[0] || '');
   const [teamB, setTeamB] = useState(teamKeys[1] || '');
@@ -1893,9 +1970,9 @@ function TradeGrader(props) {
               </div>
             )}
 
-            <button onClick={getVerdict} disabled={vLoading} style={{ width: '100%', background: T.panel, border: '1px solid ' + T.amber, color: T.amber, borderRadius: 11, padding: '13px 20px', fontSize: 13.5, fontWeight: 700, letterSpacing: '0.5px', textTransform: 'uppercase', cursor: vLoading ? 'default' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9, opacity: vLoading ? 0.7 : 1 }}>
+            {ai !== 'off' && <button onClick={getVerdict} disabled={vLoading} style={{ width: '100%', background: T.panel, border: '1px solid ' + T.amber, color: T.amber, borderRadius: 11, padding: '13px 20px', fontSize: 13.5, fontWeight: 700, letterSpacing: '0.5px', textTransform: 'uppercase', cursor: vLoading ? 'default' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9, opacity: vLoading ? 0.7 : 1 }}>
               {vLoading ? <span style={spin} /> : "🎙"} The Commissioner's Verdict
-            </button>
+            </button>}
 
             {(verdict || vError) && (
               <div style={{ background: T.panel2, border: '1px solid ' + (vError ? T.amber : T.border), borderLeft: '3px solid ' + (vError ? T.amber : T.indigo), borderRadius: '4px 12px 12px 4px', padding: 14, color: vError ? T.amber : T.text, marginTop: 10, fontSize: 14, lineHeight: 1.6 }}>
@@ -2275,9 +2352,9 @@ export default function App() {
         <div style={{ width: 40, height: 40, borderRadius: 12, background: 'linear-gradient(135deg,#6366f1,#4f46e5)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: 22, color: '#fff', flexShrink: 0 }}>P</div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontWeight: 900, fontSize: 22, color: T.text, letterSpacing: '-0.5px', lineHeight: 1 }}>Pl<span style={{ color: T.indigo }}>AI</span>ncy</div>
-          <div style={{ fontSize: 11, color: T.dim, marginTop: 2, letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 600 }}>Borehamwood Plancy League</div>
+          <div style={{ fontSize: 11, color: T.dim, marginTop: 2, letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Borehamwood Plancy League</div>
         </div>
-        <div data-testid="freshness" title={'Data built ' + fmtBuiltAt(BUILT_AT) + ' (' + BUILT_AT + ')'} style={{ fontSize: 10.5, color: T.dim, border: '1px solid ' + T.border, borderRadius: 6, padding: '4px 9px', flexShrink: 1, minWidth: 0, fontWeight: 600, textAlign: 'right', lineHeight: 1.35 }}>
+        <div data-testid="freshness" title={'Data built ' + fmtBuiltAt(BUILT_AT) + ' (' + BUILT_AT + ')'} style={{ fontSize: 10.5, color: T.dim, border: '1px solid ' + T.border, borderRadius: 6, padding: '4px 9px', flexShrink: 0, maxWidth: '44%', fontWeight: 600, textAlign: 'right', lineHeight: 1.35 }}>
           {badgeText(facts) || fmtBuiltAt(BUILT_AT)}
         </div>
       </div>

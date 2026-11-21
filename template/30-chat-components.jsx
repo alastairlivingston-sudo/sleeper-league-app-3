@@ -125,7 +125,7 @@ function ChatTab(props) {
         })}
       </div>
       <div style={{ flexGrow: 1, overflowY: 'auto', padding: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
-        {header || null}
+        {typeof header === 'function' ? header(messages.length) : (header || null)}
         {messages.length === 0 && !loading && (
           <div style={{ margin: 'auto', textAlign: 'center', color: T.faint, fontSize: 14, maxWidth: 300, lineHeight: 1.7, padding: '20px 8px' }}>{intro}</div>
         )}
@@ -207,6 +207,8 @@ function tradesLines(txns) {
 function ThisWeekCard(props) {
   const tw = useMemo(function() { return thisWeekFacts(props.facts); }, [props.facts]);
   const [open, setOpen] = useState(true);
+  // Collapse once the conversation starts so answers stay in view on a phone.
+  useEffect(function() { if (props.started) setOpen(false); }, [props.started]);
   if (!tw) return null;
   const line = function(label, r, extra) { return r ? <div className="tw-line"><span className="tw-k">{label}</span> {nm(r.manager) + ' ' + fmt2(r.pf) + (extra ? extra(r) : '')}</div> : null; };
   return (
@@ -281,6 +283,7 @@ function RecordBook(props) {
 function StatsTab(props) {
   const { historyData, facts, alltimeData, transactionsData, playersData, loreMaster } = props;
   const [book, setBook] = useState(false);
+  const ai = useAIState();
   const loreCtx = loreMaster
     ? '\n\nLEAGUE CONTEXT (names, champions, glossary — for resolving names only, NOT for inventing stats):\n' + loreMaster.slice(0, 2500)
     : '';
@@ -297,13 +300,15 @@ function StatsTab(props) {
 
   // Query engine v2: code answers, the model only phrases (answerStatQuestion).
   async function answer(query, conversation, ctx) {
+    const aiOn = ai !== 'off';
     const out = await answerStatQuestion(query, ctx, {
       facts: facts, players: playersData,
-      plan: function(prompt) { return claudeCall([{ role: 'user', content: prompt }], 'Output only JSON.', { json: true }); },
-      narrate: function(prompt) { return claudeCall([{ role: 'user', content: prompt }], 'Reply in one or two plain sentences.'); },
+      plan: aiOn ? function(prompt) { return claudeCall([{ role: 'user', content: prompt }], 'Output only JSON.', { json: true }); } : null,
+      narrate: aiOn ? function(prompt) { return claudeCall([{ role: 'user', content: prompt }], 'Reply in one or two plain sentences.'); } : null,
       log: function() { if (DEBUG) console.log.apply(console, ['[stats]'].concat([].slice.call(arguments))); },
     });
     if (out.content != null) return out;
+    if (!aiOn) return { content: CANT_ANSWER, table: null, ctx: ctx };
     const reply = await claudeCall(conversation.filter(function(m) { return m.role === 'user' || m.role === 'assistant'; }), sp);
     const g = numberGuard(reply, [], [sp]);
     if (!g.ok) { if (DEBUG) console.log('[stats] chat reply rejected by number guard', g.bad); return { content: CANT_ANSWER, table: null, ctx: ctx }; }
@@ -314,7 +319,7 @@ function StatsTab(props) {
     <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
       {book && <RecordBook facts={facts} onClose={function() { setBook(false); }} />}
       <ChatTab systemPrompt={sp} answer={answer}
-        header={<ThisWeekCard facts={facts} onRecordBook={function() { setBook(true); }} />}
+        header={function(n) { return <ThisWeekCard facts={facts} started={n > 0} onRecordBook={function() { setBook(true); }} />; }}
         chips={['Most points in a loss?', "This week's upset?", 'Current standings', 'Longest streaks']}
         placeholder="Message…" errorMsg="Something went wrong — try again."
         intro="Ask about records, standings, head-to-heads or any week. Numbers come straight from the league data." />
@@ -324,6 +329,7 @@ function StatsTab(props) {
 
 function BanterTab(props) {
   const { historyData, facts, alltimeData, lore } = props;
+  const ai = useAIState();
 
   const banterPrompt = useMemo(function() {
     const rule = [
@@ -357,6 +363,9 @@ function BanterTab(props) {
     return g.text || "I'll keep the numbers out of this one — ask the Stats tab for the receipts.";
   }
 
+  if (ai === 'off') {
+    return <div data-testid="ai-off" style={{ margin: 'auto', padding: '24px 16px', textAlign: 'center', color: T.dim, fontSize: 14, lineHeight: 1.7, maxWidth: 320 }}>Banter needs Claude, which isn't available in this view. The Stats tab still answers every record and standings question from the league data.</div>;
+  }
   return <ChatTab
     systemPrompt={banterPrompt}
     buildContext={buildContext}
@@ -372,6 +381,7 @@ function normalizeName(str) { return str.toLowerCase().replace(/[^a-z0-9 ]/g, ''
 
 function TradeGrader(props) {
   const { rostersData, tradeValues } = props;
+  const ai = useAIState();
   const teamKeys = useMemo(function() { return Object.keys(rostersData || {}); }, [rostersData]);
   const [teamA, setTeamA] = useState(teamKeys[0] || '');
   const [teamB, setTeamB] = useState(teamKeys[1] || '');
@@ -596,9 +606,9 @@ function TradeGrader(props) {
               </div>
             )}
 
-            <button onClick={getVerdict} disabled={vLoading} style={{ width: '100%', background: T.panel, border: '1px solid ' + T.amber, color: T.amber, borderRadius: 11, padding: '13px 20px', fontSize: 13.5, fontWeight: 700, letterSpacing: '0.5px', textTransform: 'uppercase', cursor: vLoading ? 'default' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9, opacity: vLoading ? 0.7 : 1 }}>
+            {ai !== 'off' && <button onClick={getVerdict} disabled={vLoading} style={{ width: '100%', background: T.panel, border: '1px solid ' + T.amber, color: T.amber, borderRadius: 11, padding: '13px 20px', fontSize: 13.5, fontWeight: 700, letterSpacing: '0.5px', textTransform: 'uppercase', cursor: vLoading ? 'default' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9, opacity: vLoading ? 0.7 : 1 }}>
               {vLoading ? <span style={spin} /> : "🎙"} The Commissioner's Verdict
-            </button>
+            </button>}
 
             {(verdict || vError) && (
               <div style={{ background: T.panel2, border: '1px solid ' + (vError ? T.amber : T.border), borderLeft: '3px solid ' + (vError ? T.amber : T.indigo), borderRadius: '4px 12px 12px 4px', padding: 14, color: vError ? T.amber : T.text, marginTop: 10, fontSize: 14, lineHeight: 1.6 }}>

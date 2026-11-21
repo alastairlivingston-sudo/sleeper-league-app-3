@@ -38,7 +38,7 @@ file that the paste truncated. `validate.js` gates the *data*; this harness gate
 | FR-2  | All four tabs are present and wired: `StatsTab`, `BanterTab`, `TradeGrader`, `LiveTab`. | test-artifact |
 | FR-3  | The `TABS` nav array lists exactly: stats, banter, trade, live. | test-artifact |
 | FR-4  | `useLeagueData` fetches live JSON and falls back to inlined snapshot on failure. | test-artifact |
-| FR-5  | `claudeCall` uses the `window.claude.complete` bridge when present. | test-artifact |
+| FR-5  | `claudeCall` is a bridge adapter, tried in order: `claude.use("sample")` (planner → `sample.json`, narration/chat → `sample`, both `modelTier: "quick"`, narration `cache: false`), then `window.claude.complete` (legacy paste-in runtime), then the proxied Messages API. The UI renders before `use()` resolves; when no bridge is available AI features hide and deterministic answers keep working. | test-artifact, test-render (UR-8) |
 | FR-6  | Query engine v2 is present: fact table (`buildFactTable`), spec whitelist (`validateSpec`), executor (`runQuery`), recipe table (`fastPlan`), orchestrator (`answerStatQuestion`), `numberGuard`, and the code-rendered `ResultTable`. | test-artifact |
 | FR-7  | Lore retrieval (`useLore`/`retrieveLore`) is present for the Banter tab. | test-artifact |
 | FR-8  | App renders without throwing; the STATS tab (default) shows content. | test-render |
@@ -64,6 +64,7 @@ file that the paste truncated. `validate.js` gates the *data*; this harness gate
 | TR-8  | The model list is bare aliases only — no date-pinned IDs (`claude-*-YYYYMMDD`). | A retired date-pinned ID 404s every AI feature. | test-artifact |
 | TR-9  | No `api.anthropic.com` raw-fetch is the *sole* model path (bridge must be primary). | Raw fetch is CSP-blocked in the sandbox. | test-artifact |
 | TR-10 | `commissioner.jsx` is byte-identical to the template except on inlined-data / `BUILT_AT` lines. | Guarantees the artifact was built, never hand-edited. | test-artifact |
+| TR-12 | `dist/plaincy.html` (built by `scripts/build-html.js`, esbuild IIFE with React inside — no external scripts) exists, has `<title>PlAIncy</title>`, a viewport meta, `:root` colour tokens and an explicit body background; its `plaincy-data` JSON parses and carries history/stats/rosters/trades/alltime/transactions/players/lore; size warns > 2 MB, fails > 16 MB. | test-artifact |
 | TR-11 | `commissioner.template.jsx` equals the byte-exact concatenation of `template/*.jsx` (partials are source of truth). | Prevents a hand-edit to the generated monolith from being silently lost on the next assemble. | build-template --check (CI) |
 
 ## User-journey requirements (UR) — the "general user test"
@@ -76,6 +77,7 @@ file that the paste truncated. `validate.js` gates the *data*; this harness gate
 | UR-4 | Live data source unreachable → app still loads from the inlined snapshot (offline resilience). | test-render |
 | UR-5 | A common question (H2H / totals) is answered WITHOUT a planner model call (client-side fast-path), saving tokens. | test-render |
 | UR-7 | Screenshot replay through the Stats `ChatTab`: "most points scored in a loss?" → top row Alastair 151.40 L v Josh 168.56 (2023 wk 13); "total game score?" → 319.96 with both rows of that game; "How could Josh score 168.56 and lose?" → explains Josh won 168.56–151.40, no "fabricat" text, zero model calls. | test-render (+ engine-level in test-questions) |
+| UR-8 | `dist/plaincy.html` run in jsdom like a browser. With `window.claude.use("sample")` mocked: shell renders, every tab switches, the UR-7 conversation is correct against the current data with zero sample calls, multi-row narration calls `sample()` (quick, `cache:false`) with a turn list starting and ending on a user turn, the planner calls `sample.json` (quick). With `use()` → null: recipe questions still answer, Banter shows an "AI not available" notice, the trade verdict hides, no script errors. | test-render |
 | UR-6 | Legacy runtime (no `window.claude`) → the model fallback chain advances past a 404 to the next model. | test-render |
 
 ## Question-engine requirements (QR) — code computes, the model only phrases

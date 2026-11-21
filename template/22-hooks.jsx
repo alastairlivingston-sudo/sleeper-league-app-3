@@ -12,6 +12,10 @@ function useLeagueData() {
           }));
           const result = { live: true };
           keys.forEach(function(k, idx) { result[k] = fetched[idx]; });
+          // The inlined data is primary: a CDN copy is only taken when it is at
+          // least as new (jsDelivr can serve a cached, older history.json).
+          const gen = function(h) { return Date.parse((h && h.meta && h.meta.generated) || '') || 0; };
+          if (HISTORY_DATA && gen(result.history) && gen(result.history) < gen(HISTORY_DATA)) return;
           if (!cancelled) setData(result);
           return;
         } catch (e) { /* try next */ }
@@ -23,10 +27,13 @@ function useLeagueData() {
 }
 
 function useLore(active) {
-  const [lore, setLore] = useState({ master: '', archive: [], quotes: [], ready: false });
+  // Inlined lore (the HTML build carries it; the paste build inlines null).
+  const [lore, setLore] = useState(LORE_DATA
+    ? { master: (LORE_DATA.master && LORE_DATA.master.text) || '', archive: LORE_DATA.archive || [], quotes: LORE_DATA.quotes || [], ready: true }
+    : { master: '', archive: [], quotes: [], ready: false });
   const fetchedRef = useRef(false);
   useEffect(function() {
-    if (!active || fetchedRef.current) return;
+    if (!active || fetchedRef.current || LORE_DATA) return;
     fetchedRef.current = true;
     let cancelled = false;
     (async function() {
