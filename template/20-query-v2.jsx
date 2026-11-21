@@ -124,6 +124,7 @@ function validateSpec(raw, facts) {
   if (raw.table === 'record') {
     if (RECORD_NAMES.indexOf(raw.record) === -1) return { ok: false, error: 'unknown record ' + raw.record };
     spec.record = raw.record;
+    if (raw.top === true) spec.top = true; // ranked list ("top 10") instead of the record holder(s)
   }
   const gb = Array.isArray(raw.groupBy) ? raw.groupBy.join(',') : '';
   if (SPEC_GROUPS.indexOf(gb) === -1) return { ok: false, error: 'bad groupBy' };
@@ -275,15 +276,19 @@ function runQuery(spec, facts, players) {
       if (w.seasons && w.seasons.indexOf(r.season) === -1) return false;
       return true;
     });
-    const rec = factGameRecords(sub, scope)[name] || [];
+    const rec = spec.top ? factGameRanked(sub, scope, name).slice(0, spec.limit) : (factGameRecords(sub, scope)[name] || []);
+    const recTotal = spec.top ? factGameRanked(sub, scope, name).length : rec.length;
     if (name === 'longestWinStreak' || name === 'longestLossStreak' || name === 'currentStreaks') {
       const rows = rec.map(function(x) { return { manager: x.manager, type: x.type, length: x.length, from: x.from.season + ' wk' + x.from.week, to: x.to.season + ' wk' + x.to.week }; });
-      return { table: 'record', record: name, columns: ['manager', 'type', 'length', 'from', 'to'], rows: rows.slice(0, name === 'currentStreaks' ? 25 : spec.limit), total: rows.length, spec: spec };
+      return { table: 'record', record: name, top: !!spec.top, columns: ['manager', 'type', 'length', 'from', 'to'], rows: rows.slice(0, name === 'currentStreaks' ? 25 : spec.limit), total: recTotal, spec: spec };
     }
     if (name === 'mostTopScoreWeeks' || name === 'mostBottomScoreWeeks') {
-      return { table: 'record', record: name, columns: ['manager', 'count'], rows: rec, total: rec.length, spec: spec };
+      return { table: 'record', record: name, top: !!spec.top, columns: ['manager', 'count'], rows: rec, total: recTotal, spec: spec };
     }
-    return { table: 'record', record: name, columns: ['manager', 'pf', 'opponent', 'pa', 'result', 'margin', 'season', 'week', 'phase'], rows: rec, total: rec.length, spec: spec };
+    const cols = (name === 'highestCombined' || name === 'lowestCombined')
+      ? ['manager', 'pf', 'opponent', 'pa', 'combined', 'result', 'season', 'week', 'phase']
+      : ['manager', 'pf', 'opponent', 'pa', 'result', 'margin', 'season', 'week', 'phase'];
+    return { table: 'record', record: name, top: !!spec.top, columns: cols, rows: rec, total: recTotal, spec: spec };
   }
   return { table: spec.table, columns: [], rows: [], total: 0, spec: spec };
 }
@@ -309,6 +314,20 @@ function templateSentence(spec, result, ctx) {
   if (!rows.length) return 'Nothing in the data matches that.';
   const r = rows[0];
   const tie = rows.length > 1 ? ' (tied — ' + rows.length + ' share it)' : '';
+  if (result.table === 'record' && result.top && rows.length > 1) {
+    const label = RECORD_LABELS[result.record] || 'Record';
+    const lead = (function() {
+      switch (result.record) {
+        case 'highestCombined': case 'lowestCombined': return nm(r.manager) + ' ' + fmt2(r.pf) + ' – ' + fmt2(r.pa) + ' ' + nm(r.opponent) + ' (' + wkLabel(r) + ', ' + fmt2(r.combined) + ' combined)';
+        case 'biggestMargin': case 'closestGame': return nm(r.manager) + ' over ' + nm(r.opponent) + ' by ' + fmt2(Math.abs(r.margin)) + ' (' + wkLabel(r) + ')';
+        case 'longestWinStreak': case 'longestLossStreak': return nm(r.manager) + ' with ' + r.length + ' (' + r.from + ' to ' + r.to + ')';
+        case 'currentStreaks': return nm(r.manager) + ' with ' + r.length;
+        case 'mostTopScoreWeeks': case 'mostBottomScoreWeeks': return nm(r.manager) + ' with ' + r.count;
+        default: return nm(r.manager) + ' with ' + fmt2(r.pf) + ' against ' + nm(r.opponent) + ' (' + wkLabel(r) + ')';
+      }
+    })();
+    return 'Top ' + rows.length + ' — ' + label.toLowerCase() + (spec.where.seasons ? ' (' + spec.where.seasons.join(', ') + ')' : '') + (spec.where.phase === 'all' ? ', all games' : ', regular season') + '. ' + lead + ' leads.';
+  }
   if (result.table === 'record') {
     switch (result.record) {
       case 'highestScoreInLoss': return nm(r.manager) + ' scored ' + fmt2(r.pf) + ' and still lost — ' + nm(r.opponent) + ' put up ' + fmt2(r.pa) + ' in ' + wkLabel(r) + '.' + tie;
@@ -407,7 +426,20 @@ function numberGuard(sentence, rows, extra) {
 // ── Recipes: regex → spec, no model call ─────────────────────────────────────
 const NUMERIC_HINT = /\b(most|highest|lowest|fewest|least|record|how many|points?|pts|average|avg|score[ds]?|scoring|wins?|won|loss(es)?|lost|streaks?|best|worst|margin|blowout|closest|standings|rank(ed|ing)?|total|biggest|largest|smallest)\b|\d/i;
 const PLAYOFF_HINT = /\b(playoffs?|post-?season|including playoffs|all games)\b/i;
-const DISPUTE_HINT = /\b(how could|how can|how did .* (lose|win)|that'?s wrong|that is wrong|are you sure|that can'?t be|not true|incorrect|wrong|fabricat\w*|made (that|it) up|really\?)/i;
+const DISPUTE_HINT = /\b(how could|how can|how did .* (lose|win)|that'?s wrong|that is wrong|are you sure|that can'?t be|not true|incorrect|wrong|fabricat\w*|made (that|it) up|really\?|\b(had|has|have|got|scored|put up) (a |an |one )?(bigger|higher|better|lower|closer|larger|tighter|more)\b|^\W*no[,.!\s]+\w+ (had|has|got|scored|was))/i;
+// A fresh ranking question ("biggest combined score") must not be read as a
+// follow-up about the previous answer's game just because it says "combined".
+const RANKING_HINT = /\b(highest|lowest|biggest|largest|smallest|most|fewest|least|best|worst|top|record|ever|all[- ]time|in history|of all time|any(one|body)?)\b/i;
+// "top 10", "top ten", "10 highest", "the 5 biggest" → N (1..25).
+const NUM_WORDS = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, fifteen: 15, twenty: 20, 'twenty five': 25 };
+function topN(query) {
+  const q = String(query || '').toLowerCase();
+  let m = q.match(/\btop[- ]?(\d{1,2}|one|two|three|four|five|six|seven|eight|nine|ten|fifteen|twenty)\b/) ||
+    q.match(/\b(\d{1,2}|three|four|five|six|seven|eight|nine|ten|fifteen|twenty) (highest|lowest|biggest|largest|best|worst|most|closest|longest|smallest)\b/);
+  if (!m) return /\b(list|rank(ed|ing)?|leaderboard|show (me )?(more|all|the rest))\b/.test(q) ? 10 : null;
+  const n = NUM_WORDS[m[1]] || Number(m[1]);
+  return n >= 1 ? Math.min(25, n) : null;
+}
 const FOLLOW_GAME_HINT = /\b(total (game )?score|game total|combined( score)?|that game|the game|final score|who won (it|that|the game)|what was the score|full score|both scores)\b/i;
 
 function recipeSpec(table, where, extra) {
@@ -437,7 +469,7 @@ const RECIPES = [
   { id: 'upset', re: /\bupsets?\b/i, make: function(i) { return recipeSpec('games', { seasons: [i.cur.season], weeks: [i.cur.lastFinalWeek], result: 'W', phase: 'all' }, { orderBy: [{ col: 'weekRank', dir: 'desc' }, { col: 'pf', dir: 'asc' }], limit: 1 }); } },
   { id: 'points-total', re: /\b(most|total|career|all[- ]time) points\b|\bpoints (all[- ]time|overall|in total)\b/i, not: /\b(game|week|single|matchup|in a|loss|lost|win|won|season|year)\b/i, make: function(i) { return recipeSpec('games', { managers: i.where.managers, seasons: i.where.seasons, phase: i.where.phase }, { groupBy: ['manager'], select: ['games', 'pf_sum', 'pf_avg', 'wins', 'losses'], orderBy: [{ col: 'pf_sum', dir: 'desc' }], limit: 10 }); } },
   { id: 'week-top', re: /\b(top|highest|best) (scorer|score)\b.*\bthis week\b|\bthis week'?s? (top|high(est)?) (scorer|score)\b|\bwho (scored|had) (the )?most (points )?this week\b/i, make: function(i) { return recipeSpec('games', { seasons: [i.cur.season], weeks: [i.cur.lastFinalWeek], phase: 'all' }, { orderBy: [{ col: 'pf', dir: 'desc' }], limit: 1 }); } },
-  { id: 'week-scores', re: /\b(this|last) week'?s? (scores|results|games|matchups)\b|\b(scores|results) (from )?(this|last) week\b|\bweek (\d{1,2}) (scores|results)\b/i, make: function(i, q) {
+  { id: 'week-scores', re: /\b(this|last) week'?s? (scores?|results|games?|matchups?)\b|\b(scores?|results) (from )?(this|last) week\b|\bweek (\d{1,2}) (scores?|results)\b/i, make: function(i, q) {
     const m = q.match(/\bweek (\d{1,2})\b/i);
     return recipeSpec('games', { seasons: [i.cur.season], weeks: [m ? Number(m[1]) : i.cur.lastFinalWeek], result: 'W', phase: 'all' }, { orderBy: [{ col: 'pf', dir: 'desc' }], limit: 8 });
   } },
@@ -473,27 +505,51 @@ function recipeInfo(query, facts) {
 function fastPlan(query, facts) {
   const q = String(query || '');
   if (/\b(wr|rb|qb|te|kicker|player|players|touchdowns?|position)\b/i.test(q)) return null; // player scoring → planner
-  const info = recipeInfo(q, facts);
+  const n = topN(q);
+  // "top 10 combined scores" → match the recipes as "highest combined scores".
+  let qm = n && !/\b(highest|lowest|biggest|largest|smallest|most|fewest|least|best|worst|closest|longest|narrowest)\b/i.test(q)
+    ? q.replace(/\btop[- ]?(\d{1,2}|[a-z]+)\b/i, 'highest') : q;
+  qm = qm.replace(/\b(score|game|matchup)s\b/gi, '$1'); // "highest scores" reads as "highest score"
+  const info = recipeInfo(qm, facts);
   for (let k = 0; k < RECIPES.length; k++) {
     const r = RECIPES[k];
     if (r.need === 'oneMgr' && info.mgrs.length !== 1) continue;
     if (r.need === 'twoMgr' && info.mgrs.length < 2) continue;
     if (r.need === 'oneMgrYear' && !(info.mgrs.length === 1 && info.years.length)) continue;
     if (!r.need && info.mgrs.length >= 2) continue; // two names → only the H2H recipes
-    if (!r.re.test(q)) continue;
-    if (r.not && r.not.test(q)) continue;
-    const spec = r.make(info, q);
-    if (spec) { spec._recipe = r.id; return spec; }
+    if (!r.re.test(qm)) continue;
+    if (r.not && r.not.test(qm)) continue;
+    const spec = r.make(info, qm);
+    if (spec) { spec._recipe = r.id; return n ? widen(spec, n) : spec; }
   }
   return null;
 }
 
+// A spec turned into a ranked list of n rows: a record → its top n, a list → n rows.
+function widen(spec, n) {
+  const s = JSON.parse(JSON.stringify(spec));
+  if (s.table === 'record') { s.top = true; s.limit = n; }
+  else if (!(s.groupBy && s.groupBy.length && s.groupBy.join(',') === 'manager,opponent')) s.limit = n;
+  return s;
+}
+
 // Follow-ups resolve against the previous result (cause D).
-function followUpSpec(query, ctx) {
+function followUpSpec(query, ctx, facts) {
   if (!ctx || !ctx.lastResult) return null;
   const rows = ctx.lastResult.rows || [];
   const q = String(query || '');
-  if (FOLLOW_GAME_HINT.test(q) && rows.length && rows[0].gameId) {
+  // "give me the top 10 of this" / "show more" → the previous metric, widened.
+  const n = topN(q);
+  const base = ctx.metricSpec || ctx.lastSpec;
+  if (n && base && !(base.where && base.where.gameIds) && !(facts && fastPlan(q, facts)) && /\b(this|that|these|those|them|it|same|more|the rest|of (this|that)|in history|ever|all[- ]time|of all time)\b|^\W*(top[- ]?\w+|show (me )?more|list( them)?)\W*$/i.test(q)) {
+    const prevN = (ctx.lastResult.rows || []).length;
+    const spec = widen(base, /\b(more|the rest)\b/i.test(q) && !/\d/.test(q) ? Math.min(25, Math.max(n, prevN + 10)) : n);
+    delete spec._recipe;
+    if (/\b(in history|ever|all[- ]time|of all time)\b/i.test(q) && spec.where) delete spec.where.seasons;
+    spec._recipe = 'follow-top';
+    return spec;
+  }
+  if (FOLLOW_GAME_HINT.test(q) && !RANKING_HINT.test(q) && rows.length && rows[0].gameId) {
     return { v: 2, table: 'games', where: { gameIds: [rows[0].gameId], status: 'any', phase: 'all' }, orderBy: [{ col: 'pf', dir: 'desc' }], _recipe: 'follow-game' };
   }
   // "and in 2024?" / "what about Dan?" → previous spec with seasons / managers swapped.
@@ -513,9 +569,88 @@ function followUpSpec(query, ctx) {
   return null;
 }
 
+// "Last week Dan and I had a bigger game" → find the game they mean and check it
+// against the record the previous answer was about. Returns a reply or null.
+function counterClaim(query, ctx, facts) {
+  const spec = ctx.metricSpec || ctx.lastSpec;
+  if (!spec || spec.table !== 'record' || !RECORD_DIR[spec.record]) return null;
+  const q = String(query || '');
+  if (!/\b(bigger|higher|better|more|lower|smaller|closer|tighter|larger|beat (it|that))\b/i.test(q)) return null;
+  const named = matchManagers(q);
+  const cur = facts.current || {};
+  let season = null, week = null;
+  if (/\blast week\b|\bthis week\b/i.test(q)) { season = cur.season; week = cur.lastFinalWeek; }
+  const wm = q.match(/\bweek (\d{1,2})\b/i); if (wm) week = Number(wm[1]);
+  const ym = q.match(/\b20\d\d\b/); if (ym) season = ym[0];
+  if (week != null && season == null) season = (spec.where && spec.where.seasons && spec.where.seasons.length === 1) ? spec.where.seasons[0] : cur.season;
+  if (!named.length && week == null && season == null) return null;
+  const otherSeason = season != null && !!(spec.where && spec.where.seasons) && spec.where.seasons.indexOf(season) === -1;
+  const name = spec.record;
+  const scope = spec.where && spec.where.phase === 'all' ? 'all' : 'regular';
+  const pool = facts.games.filter(function(r) {
+    // A claim about another season/week is checked against every season.
+    if (!otherSeason && spec.where && spec.where.seasons && spec.where.seasons.indexOf(r.season) === -1) return false;
+    if (spec.where && spec.where.managers && spec.where.managers.indexOf(r.manager) === -1) return false;
+    return true;
+  });
+  const ranked = factGameRanked(pool, 'all', name);
+  const inScope = factGameRanked(pool, scope, name);
+  const cands = ranked.filter(function(r) {
+    if (season != null && r.season !== season) return false;
+    if (week != null && r.week !== week) return false;
+    return named.every(function(h) { return r.manager === h || r.opponent === h; });
+  });
+  if (!cands.length) return null;
+  const claim = cands[0];
+  const v = factRecordValue(name, claim);
+  const best = inScope[0];
+  const shown = (ctx.lastResult && ctx.lastResult.rows && ctx.lastResult.rows[0]) || null;
+  const shownV = shown ? factRecordValue(name, shown) : null;
+  const label = (RECORD_LABELS[name] || 'record').toLowerCase();
+  const desc = nm(claim.manager) + ' ' + fmt2(claim.pf) + ' – ' + fmt2(claim.pa) + ' ' + nm(claim.opponent) + ' in ' + wkLabel(claim) + ' (' + fmt2(v) + ')';
+  const rank = inScope.indexOf(claim) + 1;
+  const better = function(a, b) { return RECORD_DIR[name] === 'max' ? a > b + 1e-9 : a < b - 1e-9; };
+  let content;
+  const isRecord = best && factRecordValue(name, best) === v && rank > 0;
+  if (otherSeason) {
+    content = 'That one is from ' + season + ', and the answer above was for ' + spec.where.seasons.join(', ') + '. ' + desc + (rank === 1 ? ' is the ' + label + ' across all seasons.' : ' ranks #' + rank + ' across all seasons; the ' + label + ' is ' + fmt2(factRecordValue(name, best)) + '.');
+  } else if (isRecord && shown && shown.gameId === claim.gameId) {
+    content = 'Yes — ' + desc + ' is the ' + label + ' on record, the answer above.';
+  } else if (shownV != null && better(v, shownV)) {
+    content = "You're right — " + desc + ' beats the ' + fmt2(shownV) + ' I gave. ' +
+      (best === claim || (best && factRecordValue(name, best) === v) ? 'It is the ' + label + ' on record.' : 'It ranks #' + rank + '; the ' + label + ' is ' + fmt2(factRecordValue(name, best)) + '.');
+  } else if (rank > 0) {
+    content = 'Checked: ' + desc + ' ranks #' + rank + ' for ' + label + ' — behind ' + fmt2(factRecordValue(name, best)) + '.';
+  } else {
+    content = desc + ' is a ' + claim.phase + ' game, outside the regular-season record. Add "including playoffs" to rank it.';
+  }
+  const top = inScope.slice(0, 5);
+  if (rank > 5) top.push(claim);
+  const rspec = Object.assign({}, spec, { top: true, limit: top.length });
+  const cols = (name === 'highestCombined' || name === 'lowestCombined')
+    ? ['manager', 'pf', 'opponent', 'pa', 'combined', 'result', 'season', 'week', 'phase']
+    : ['manager', 'pf', 'opponent', 'pa', 'result', 'margin', 'season', 'week', 'phase'];
+  return { content: content, table: { table: 'record', record: name, top: true, columns: cols, rows: top, total: inScope.length, spec: rspec } };
+}
+
 // "How could Josh score 168.56 and lose?" → re-show the source rows, templated.
 function disputeReply(query, ctx, facts) {
   if (!ctx || !ctx.lastResult || !DISPUTE_HINT.test(String(query || ''))) return null;
+  const claim = counterClaim(query, ctx, facts);
+  if (claim) return claim;
+  // Re-run the question the user is disputing from scratch; if the fresh answer
+  // differs from what was shown, say so and show the corrected rows.
+  if (ctx.lastQ && ctx.lastSpec && ctx.lastSpec._recipe && /^follow-/.test(ctx.lastSpec._recipe)) {
+    const fresh = fastPlan(ctx.lastQ, facts);
+    const v = fresh && validateSpec(fresh, facts);
+    if (v && v.ok) {
+      const res = runQuery(v.spec, facts);
+      const a = res.rows[0], b = (ctx.lastResult.rows || [])[0];
+      if (a && (!b || a.gameId !== b.gameId)) {
+        return { content: 'I got that wrong — I answered about the previous game instead of the question. ' + templateSentence(v.spec, res), table: res };
+      }
+    }
+  }
   const rows = ctx.lastResult.rows || [];
   const gid = rows.length && rows[0].gameId;
   if (!gid) {
@@ -537,6 +672,7 @@ function disputeReply(query, ctx, facts) {
   };
 }
 
+const CLARIFY = "Which stat do you mean? For example: “Top 10 combined scores”, “Most points in a loss”, “Biggest blowout”, “Dan vs Josh” or “Longest win streak”.";
 const CANT_ANSWER = "I can't answer that one from the league data, and I won't guess a number. Try: “Most points in a loss?”, “Dan vs Josh”, “Lev's record in 2024”, “Current standings”, “This week's scores” or “Longest win streak”.";
 
 // Compact pipe table of result rows for prompts (≤ 25 rows, names not handles).
@@ -565,7 +701,7 @@ function plannerPrompt(query, ctx) {
     '  "select": ["games","wins","losses","ties","winPct","pf_sum","pf_avg","pf_max","pf_min","pa_sum","pa_avg","margin_avg","topScoreWeeks"],',
     '  "orderBy": [{ "col": "pf", "dir": "desc" }], "limit": 10 }',
     'games rows are one per manager per game: manager, pf, opponent, pa, result (W/L/T from that manager\'s side), margin, combined, season, week, phase, weekRank. seasons rows: manager, season, rank, wins, losses, pf, pa, expectedWins, luck, playoffFinish. players rows: player, pos, manager, season, games, pts, avg, best.',
-    'records: ' + RECORD_NAMES.join(', ') + '.',
+    'records: ' + RECORD_NAMES.join(', ') + '. A record spec returns only the holder(s); add "top": true and "limit": N for a ranked top-N list (e.g. top 10 combined scores = {"v":2,"table":"record","record":"highestCombined","top":true,"limit":10}).',
     'Defaults: phase regular, final games only, limit 10. If the question is not a data lookup (opinion, lore, definitions) output {"table":"none"}.',
   ];
   if (ctx && ctx.lastQ) {
@@ -608,13 +744,20 @@ async function answerStatQuestion(query, ctx, deps) {
   const facts = deps.facts;
   let modelCalls = 0;
   const log = deps.log || function() {};
-  const next = function(spec, result) { return { lastQ: query, lastSpec: spec, lastResult: result }; };
+  const next = function(spec, result) {
+    const metric = spec && !(spec.where && spec.where.gameIds) ? spec : (ctx && ctx.metricSpec) || null;
+    return { lastQ: query, lastSpec: spec, lastResult: result, metricSpec: metric };
+  };
 
   const dispute = disputeReply(query, ctx, facts);
-  if (dispute) return { content: dispute.content, table: dispute.table, ctx: next(dispute.table.spec, dispute.table), source: 'dispute', modelCalls: 0 };
+  if (dispute) return { content: dispute.content, table: dispute.table, ctx: Object.assign(next(dispute.table.spec, dispute.table), { lastQ: (ctx && ctx.lastQ) || query }), source: 'dispute', modelCalls: 0 };
 
-  let raw = followUpSpec(query, ctx) || fastPlan(query, facts);
+  let raw = followUpSpec(query, ctx, facts) || fastPlan(query, facts);
   let source = raw ? 'recipe' : 'planner';
+  // One or two words with no recognised stat ("stat", "hmm") → ask, don't guess.
+  if (!raw && String(query || '').trim().split(/\s+/).length <= 2 && !matchManagers(query).length && !/\b20\d\d\b/.test(query)) {
+    return { content: CLARIFY, table: null, ctx: ctx, source: 'clarify', modelCalls: 0 };
+  }
   if (!raw && deps.plan) {
     try { modelCalls++; raw = parseSpecJson(await deps.plan(plannerPrompt(query, ctx))); } catch (e) { raw = null; }
   }

@@ -106,7 +106,8 @@ function run(src) {
 
   // ── TR-10: built-not-hand-edited (diff vs template is data/BUILT_AT lines only)
   if (fs.existsSync(TEMPLATE)) {
-    const tpl = fs.readFileSync(TEMPLATE, "utf8").split("\n");
+    // Compare against the template after the build's paste-budget transform.
+    const tpl = fs.readFileSync(TEMPLATE, "utf8").split("\n").map(leanLine);
     const out = src.split("\n");
     if (tpl.length !== out.length) {
       fail("TR-10", `line count differs from template (${out.length} vs ${tpl.length}) — hand-edited?`);
@@ -134,6 +135,11 @@ function run(src) {
 
   return { errors, warns };
 }
+
+// Paste-budget transform applied by build-artifact.js to every template line:
+// whole-line // comments are blanked, leading indentation dropped. Lines are
+// kept (never removed) so TR-10 still compares line for line.
+function leanLine(l) { return /^\s*\/\//.test(l) ? "" : l.replace(/^\s+/, ""); }
 
 // String/template/comment-aware delimiter balance.
 function balance(src) {
@@ -232,4 +238,4 @@ if (require.main === module) {
   console.log(`test-artifact: all structural requirements passed${warns.length ? ` (${warns.length} warning(s))` : ""}`);
 }
 
-module.exports = { run, runHtml, balance };
+module.exports = { run, runHtml, balance, leanLine };

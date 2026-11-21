@@ -18,6 +18,7 @@ const path = require("path");
 const ROOT = path.join(__dirname, "..");
 const SRC  = path.join(ROOT, "commissioner.template.jsx");
 const OUT  = path.join(ROOT, "dist", "plaincy.html");
+const OUT_ARTIFACT = path.join(ROOT, "dist", "plaincy.artifact.html"); // publish copy, not committed
 const WARN_BYTES = 2 * 1024 * 1024;
 const FAIL_BYTES = 16 * 1024 * 1024;
 
@@ -57,28 +58,44 @@ function collectData() {
 // JSON safe inside <script>: no "</script", no "<!--".
 const safeJson = (v) => JSON.stringify(v).replace(/</g, "\\u003c").replace(/\u2028/g, "\\u2028").replace(/\u2029/g, "\\u2029");
 
-function htmlPage(js, dataJson, builtAt) {
+// The page's own head content (title + styles) and body, shared by both outputs.
+function pageParts(js, dataJson, builtAt) {
+  const head = `<title>PlAIncy</title>
+<style>
+:root{--bg:#090d18;--panel:#0f1625;--text:#e8f1ff;--dim:#6e8db0;--accent:#6366f1;color-scheme:dark;}
+html,body{margin:0;background:var(--bg);color:var(--text);overflow-x:hidden;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;-webkit-text-size-adjust:100%;}
+#root{min-height:100dvh;}
+.boot{padding:24px 16px;color:var(--dim);font-size:14px;}
+</style>`;
+  const body = `<div id="root"><div class="boot">Loading PlAIncy…</div></div>
+<script type="application/json" id="plaincy-data">${dataJson}</script>
+<script>/* PlAIncy — built ${builtAt} by scripts/build-html.js */
+${js.replace(/<\/script/gi, "<\\/script")}</script>`;
+  return { head, body };
+}
+
+// dist/plaincy.html: a complete document that opens on its own in any browser.
+function htmlPage(parts) {
   return `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>PlAIncy</title>
-<style>
-:root{--bg:#090d18;--panel:#0f1625;--text:#e8f1ff;--dim:#6e8db0;--accent:#6366f1;color-scheme:dark;}
-html,body{margin:0;padding:0;background:var(--bg);color:var(--text);overflow-x:hidden;}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;-webkit-text-size-adjust:100%;}
-#root{min-height:100dvh;}
-.boot{padding:24px 16px;color:var(--dim);font-size:14px;}
-</style>
+${parts.head}
 </head>
 <body>
-<div id="root"><div class="boot">Loading PlAIncy…</div></div>
-<script type="application/json" id="plaincy-data">${dataJson}</script>
-<script>/* PlAIncy — built ${builtAt} by scripts/build-html.js */
-${js.replace(/<\/script/gi, "<\\/script")}</script>
+${parts.body}
 </body>
 </html>
+`;
+}
+
+// dist/plaincy.artifact.html: the same page as content only — what the claude.ai
+// Artifact tool publishes (it wraps the page in its own doctype/head skeleton).
+function artifactPage(parts) {
+  return `${parts.head}
+${parts.body}
 `;
 }
 
@@ -123,9 +140,11 @@ createRoot(document.getElementById("root")).render(React.createElement(App));
   });
   fs.rmSync(tmp, { recursive: true, force: true });
   const js = result.outputFiles[0].text;
-  const html = htmlPage(js, safeJson(collectData()), builtAt);
+  const parts = pageParts(js, safeJson(collectData()), builtAt);
+  const html = htmlPage(parts);
   fs.mkdirSync(path.dirname(OUT), { recursive: true });
   fs.writeFileSync(OUT, html);
+  fs.writeFileSync(OUT_ARTIFACT, artifactPage(parts));
   const bytes = Buffer.byteLength(html);
   const kb = Math.round(bytes / 1024);
   if (bytes > FAIL_BYTES) throw new Error(`dist/plaincy.html is ${kb} KB (> 16 MB artifact limit)`);
