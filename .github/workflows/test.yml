@@ -39,6 +39,7 @@ jobs:
       - name: Rebuild derived data + artifact
         run: |
           node scripts/build-lore.js || true
+          node scripts/build-facts.js
           node scripts/build-alltime.js
           node scripts/build-artifact.js
 
@@ -47,6 +48,9 @@ jobs:
 
       - name: Game status + in-progress season rules (DR-3/DR-4)
         run: node scripts/test-status.js
+
+      - name: Fact table (DR-5)
+        run: node scripts/test-facts.js
 
       - name: Aggregation golden test
         run: node scripts/test-alltime.js

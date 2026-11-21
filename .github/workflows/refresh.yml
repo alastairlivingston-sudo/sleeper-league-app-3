@@ -45,6 +45,9 @@ jobs:
       - name: Build lore index
         run: node scripts/build-lore.js
 
+      - name: Build fact table (games.json)
+        run: node scripts/build-facts.js
+
       - name: Build all-time aggregates
         run: node scripts/build-alltime.js
 
@@ -61,6 +64,9 @@ jobs:
       # season validator against frozen mid-season fixtures (zero-dep).
       - name: Test game status + in-progress season rules
         run: node scripts/test-status.js
+
+      - name: Test fact table (DR-5 independent recompute)
+        run: node scripts/test-facts.js
 
       # Aggregation golden test — locks build-alltime.js math against a fixture.
       - name: Test aggregation math

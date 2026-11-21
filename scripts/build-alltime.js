@@ -37,6 +37,22 @@ for (const s of seasons) {
   for (const g of (s.games || [])) { g.a = canon(g.a); g.b = canon(g.b); }
 }
 
+// ── Fact table (Phase 1) ──────────────────────────────────────────────────────
+// Records, streaks, H2H and career W/L/PF/PA derive from the ONE manager-game
+// table (template/15-facts.jsx, shared with the artifact), so alltime.json and
+// the query engine cannot disagree. Shapes below are unchanged.
+const FACTS = require("./build-facts").build({ seasons });
+const factPlayedReg = FACTS.games.filter((r) => r.status === "final" && !r.bye && r.phase === "regular");
+const factSeason = {};
+for (const r of FACTS.seasons) factSeason[r.season + "|" + r.manager] = r;
+// Map a fact row back to the original game object (alltime.json record shape).
+function gameOf(row) {
+  if (!row) return null;
+  const s = seasons.find((x) => String(x.season) === row.season);
+  const g = s && s.games.find((x) => x.week === row.week && ((x.a === row.manager && x.b === row.opponent) || (x.b === row.manager && x.a === row.opponent)));
+  return g ? { ...g, season: s.season } : null;
+}
+
 // ── Career standings ──────────────────────────────────────────────────────────
 const career = {};
 
@@ -44,11 +60,12 @@ for (const s of seasons) {
   for (const row of s.standings) {
     const m = row.manager;
     if (!career[m]) career[m] = { wins: 0, losses: 0, ties: 0, pf: 0, pa: 0, seasons: 0, championships: 0, playoffAppearances: 0 };
-    career[m].wins   += row.wins;
-    career[m].losses += row.losses;
-    career[m].ties   += (row.ties || 0);
-    career[m].pf     += row.pf;
-    career[m].pa     += (row.pa || 0);
+    const f = factSeason[String(s.season) + "|" + m] || { wins: 0, losses: 0, ties: 0, pf: 0, pa: 0 };
+    career[m].wins   += f.wins;
+    career[m].losses += f.losses;
+    career[m].ties   += f.ties;
+    career[m].pf     += f.pf;
+    career[m].pa     += f.pa;
     career[m].seasons++;
     if (s.champion === m) career[m].championships++;
   }
@@ -75,51 +92,25 @@ const careerRankings = Object.entries(career)
 
 // ── All-time H2H ──────────────────────────────────────────────────────────────
 const h2h = {};
-
-for (const s of seasons) {
-  for (const g of s.games) {
-    if (g.playoff) continue;
-    const { a, b, pa, pb } = g;
-    if (!h2h[a]) h2h[a] = {};
-    if (!h2h[b]) h2h[b] = {};
-    if (!h2h[a][b]) h2h[a][b] = { wins: 0, losses: 0, pf: 0, pa: 0 };
-    if (!h2h[b][a]) h2h[b][a] = { wins: 0, losses: 0, pf: 0, pa: 0 };
-    h2h[a][b].pf += pa; h2h[a][b].pa += pb;
-    h2h[b][a].pf += pb; h2h[b][a].pa += pa;
-    if (pa > pb)      { h2h[a][b].wins++; h2h[b][a].losses++; }
-    else if (pb > pa) { h2h[b][a].wins++; h2h[a][b].losses++; }
-  }
-}
-for (const a of Object.values(h2h))
-  for (const b of Object.values(a)) {
-    b.pf = Math.round(b.pf * 100) / 100;
-    b.pa = Math.round(b.pa * 100) / 100;
-  }
-
-// ── H2H by season ─────────────────────────────────────────────────────────────
-// h2hBySeason[season][managerA][managerB] = { wins, losses, pf, pa }
 const h2hBySeason = {};
-for (const s of seasons) {
-  const yr = s.season;
-  h2hBySeason[yr] = {};
-  for (const g of s.games) {
-    if (g.playoff) continue;
-    const { a, b, pa, pb } = g;
-    if (!h2hBySeason[yr][a]) h2hBySeason[yr][a] = {};
-    if (!h2hBySeason[yr][b]) h2hBySeason[yr][b] = {};
-    if (!h2hBySeason[yr][a][b]) h2hBySeason[yr][a][b] = { wins: 0, losses: 0, pf: 0, pa: 0 };
-    if (!h2hBySeason[yr][b][a]) h2hBySeason[yr][b][a] = { wins: 0, losses: 0, pf: 0, pa: 0 };
-    h2hBySeason[yr][a][b].pf += pa; h2hBySeason[yr][a][b].pa += pb;
-    h2hBySeason[yr][b][a].pf += pb; h2hBySeason[yr][b][a].pa += pa;
-    if (pa > pb)      { h2hBySeason[yr][a][b].wins++; h2hBySeason[yr][b][a].losses++; }
-    else if (pb > pa) { h2hBySeason[yr][b][a].wins++; h2hBySeason[yr][a][b].losses++; }
-  }
-  for (const mgr of Object.values(h2hBySeason[yr]))
-    for (const opp of Object.values(mgr)) {
-      opp.pf = Math.round(opp.pf * 100) / 100;
-      opp.pa = Math.round(opp.pa * 100) / 100;
-    }
+for (const s of seasons) h2hBySeason[s.season] = {};
+function h2hAdd(tbl, r) {
+  if (!tbl[r.manager]) tbl[r.manager] = {};
+  if (!tbl[r.manager][r.opponent]) tbl[r.manager][r.opponent] = { wins: 0, losses: 0, pf: 0, pa: 0 };
+  const c = tbl[r.manager][r.opponent];
+  c.pf += r.pf; c.pa += r.pa;
+  if (r.result === "W") c.wins++; else if (r.result === "L") c.losses++;
 }
+for (const r of factPlayedReg) {
+  h2hAdd(h2h, r);
+  h2hAdd(h2hBySeason[seasons.find((x) => String(x.season) === r.season).season], r);
+}
+for (const tbl of [h2h, ...Object.values(h2hBySeason)])
+  for (const a of Object.values(tbl))
+    for (const b of Object.values(a)) {
+      b.pf = Math.round(b.pf * 100) / 100;
+      b.pa = Math.round(b.pa * 100) / 100;
+    }
 
 // ── Nemesis & bunny ───────────────────────────────────────────────────────────
 const MIN_MEETINGS = 3;
@@ -148,41 +139,22 @@ const seasonRankings = seasons.map(s => ({
 const allGames = seasons.flatMap(s => s.games.map(g => ({ ...g, season: s.season })));
 const regGames = allGames.filter(g => !g.playoff && g.pa > 0 && g.pb > 0);
 
-function pickRecord(games, compareFn) {
-  return games.reduce((best, g) => compareFn(g, best) ? g : best, games[0]);
-}
-
+const FR = FACTS.records;
+const first = (k) => (FR[k].regular || [])[0];
 const records = {
-  highestScore:  pickRecord(regGames, (g, b) => Math.max(g.pa, g.pb) > Math.max(b.pa, b.pb)),
-  lowestScore:   pickRecord(regGames, (g, b) => Math.min(g.pa, g.pb) < Math.min(b.pa, b.pb)),
-  biggestWin:    pickRecord(regGames, (g, b) => Math.abs(g.pa - g.pb) > Math.abs(b.pa - b.pb)),
-  closestGame:   pickRecord(regGames, (g, b) => Math.abs(g.pa - g.pb) < Math.abs(b.pa - b.pb)),
+  highestScore:  gameOf(first("highestScore")),
+  lowestScore:   gameOf(first("lowestScore")),
+  biggestWin:    gameOf(first("biggestMargin")),
+  closestGame:   gameOf(first("closestGame")),
   highestSeason: null,
   lowestSeason:  null,
 };
-
-const seasonPFs = seasons.flatMap(s => s.standings.map(r => ({ manager: r.manager, season: s.season, pf: r.pf })));
-records.highestSeason = seasonPFs.reduce((b, x) => x.pf > b.pf ? x : b);
-records.lowestSeason  = seasonPFs.reduce((b, x) => x.pf < b.pf ? x : b);
-
-// Longest winning/losing streaks across all-time
-const streaks = {};
-for (const s of seasons) {
-  for (const g of s.games.filter(g => !g.playoff)) {
-    const update = (m, won) => {
-      if (!streaks[m]) streaks[m] = { cur: 0, dir: null, maxWin: 0, maxLoss: 0 };
-      const e = streaks[m];
-      if (e.dir === (won ? 'W' : 'L')) { e.cur++; }
-      else { e.cur = 1; e.dir = won ? 'W' : 'L'; }
-      if (won)  e.maxWin  = Math.max(e.maxWin,  e.cur);
-      else      e.maxLoss = Math.max(e.maxLoss, e.cur);
-    };
-    update(g.a, g.pa > g.pb);
-    update(g.b, g.pb > g.pa);
-  }
-}
-records.longestWinStreak  = Object.entries(streaks).map(([m, s]) => ({ manager: m, streak: s.maxWin  })).sort((a,b) => b.streak - a.streak)[0];
-records.longestLossStreak = Object.entries(streaks).map(([m, s]) => ({ manager: m, streak: s.maxLoss })).sort((a,b) => b.streak - a.streak)[0];
+const seasonRec = (r) => r ? { manager: r.manager, season: seasons.find((x) => String(x.season) === r.season).season, pf: r.pf } : null;
+records.highestSeason = seasonRec(first("bestSeasonPF"));
+records.lowestSeason  = seasonRec(first("worstSeasonPF"));
+const streakRec = (r) => r ? { manager: r.manager, streak: r.length } : null;
+records.longestWinStreak  = streakRec(first("longestWinStreak"));
+records.longestLossStreak = streakRec(first("longestLossStreak"));
 
 // ── Bench stats ───────────────────────────────────────────────────────────────
 const benchWasted = {};

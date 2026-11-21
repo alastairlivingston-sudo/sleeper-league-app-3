@@ -119,9 +119,14 @@ function main() {
   const wantPl  = JSON.parse(fs.readFileSync(GOLDEN_PLAYERS, "utf8"));
 
   const errs = [];
-  const aJson = JSON.stringify(gotAll), bJson = JSON.stringify(wantAll);
+  // Compare VALUES with keys sorted: the golden locks the math, not object key
+  // insertion order (which changed harmlessly when H2H moved onto the fact table).
+  const sorted = (v) => Array.isArray(v) ? v.map(sorted)
+    : (v && typeof v === "object") ? Object.keys(v).sort().reduce((o, k) => { o[k] = sorted(v[k]); return o; }, {}) : v;
+  const stable = (v) => JSON.stringify(sorted(v));
+  const aJson = stable(gotAll), bJson = stable(wantAll);
   if (aJson !== bJson) errs.push("alltime.json output diverged from golden (aggregation math changed?)");
-  if (JSON.stringify(gotPl) !== JSON.stringify(wantPl)) errs.push("player-scores.json output diverged from golden");
+  if (stable(gotPl) !== stable(wantPl)) errs.push("player-scores.json output diverged from golden");
 
   // A couple of explicit spot-checks so a golden regen can't hide an obvious bug.
   const alpha = (wantAll.careerRankings || []).find((c) => c.manager === "alpha");
