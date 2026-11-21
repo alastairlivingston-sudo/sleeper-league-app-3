@@ -247,9 +247,25 @@ function buildRecords(rows, seasonRows) {
   return records;
 }
 
+// Where the league is right now: latest season, last FINAL week, live week.
+function factCurrent(history, rows) {
+  const seasons = (history && history.seasons) ? history.seasons : [];
+  const s = seasons[seasons.length - 1];
+  if (!s) return null;
+  const season = String(s.season);
+  const finals = rows.filter(function(r) { return r.season === season && r.status === 'final' && !r.bye; });
+  const lastFinalWeek = s.lastFinalWeek != null ? s.lastFinalWeek : finals.reduce(function(m, r) { return Math.max(m, r.week); }, 0);
+  const live = rows.filter(function(r) { return r.season === season && r.status === 'live'; });
+  return {
+    season: season, complete: s.complete != null ? !!s.complete : s.champion != null,
+    lastFinalWeek: lastFinalWeek, liveWeek: s.liveWeek != null ? s.liveWeek : (live.length ? live[0].week : null),
+    champion: s.champion || null, schedule: s.schedule || [],
+  };
+}
+
 function buildFactTable(history, canon) {
   const c = canon || function(h) { return String(h || '').replace(/^@/, '').trim(); };
   const rows = buildFactRows(history, c);
   const seasonRows = buildSeasonRows(history, rows, c);
-  return { games: rows, seasons: seasonRows, records: buildRecords(rows, seasonRows) };
+  return { games: rows, seasons: seasonRows, records: buildRecords(rows, seasonRows), current: factCurrent(history, rows) };
 }

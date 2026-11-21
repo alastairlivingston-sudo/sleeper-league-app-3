@@ -24,7 +24,8 @@ const DATA_CONSTS = [
 const REQUIRED_FUNCS = [
   "App", "StatsTab", "BanterTab", "TradeGrader", "LiveTab", "ChatTab",
   "useLeagueData", "useLore", "retrieveLore", "claudeCall",
-  "flattenGames", "runStatQuery", "parseSpec", "formatQueryResult",
+  // FR-6: query engine v2 + fact table (Phase 1/2).
+  "buildFactTable", "validateSpec", "runQuery", "fastPlan", "answerStatQuestion", "numberGuard", "ResultTable",
 ];
 const SIZE_WARN_KB = 150;
 const SIZE_FAIL_KB = 200;

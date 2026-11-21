@@ -39,7 +39,7 @@ file that the paste truncated. `validate.js` gates the *data*; this harness gate
 | FR-3  | The `TABS` nav array lists exactly: stats, banter, trade, live. | test-artifact |
 | FR-4  | `useLeagueData` fetches live JSON and falls back to inlined snapshot on failure. | test-artifact |
 | FR-5  | `claudeCall` uses the `window.claude.complete` bridge when present. | test-artifact |
-| FR-6  | The deterministic stats engine (`flattenGames`/`runStatQuery`/`parseSpec`/`formatQueryResult`) is present. | test-artifact |
+| FR-6  | Query engine v2 is present: fact table (`buildFactTable`), spec whitelist (`validateSpec`), executor (`runQuery`), recipe table (`fastPlan`), orchestrator (`answerStatQuestion`), `numberGuard`, and the code-rendered `ResultTable`. | test-artifact |
 | FR-7  | Lore retrieval (`useLore`/`retrieveLore`) is present for the Banter tab. | test-artifact |
 | FR-8  | App renders without throwing; the STATS tab (default) shows content. | test-render |
 | FR-9  | Switching to each tab (Banter, Trades, Scores) renders without error. | test-render |
@@ -71,7 +71,16 @@ file that the paste truncated. `validate.js` gates the *data*; this harness gate
 | UR-3 | Type a question in STATS and send → a reply bubble appears (model bridge mocked). | test-render |
 | UR-4 | Live data source unreachable → app still loads from the inlined snapshot (offline resilience). | test-render |
 | UR-5 | A common question (H2H / totals) is answered WITHOUT a planner model call (client-side fast-path), saving tokens. | test-render |
+| UR-7 | Screenshot replay through the Stats `ChatTab`: "most points scored in a loss?" → top row Alastair 151.40 L v Josh 168.56 (2023 wk 13); "total game score?" → 319.96 with both rows of that game; "How could Josh score 168.56 and lose?" → explains Josh won 168.56–151.40, no "fabricat" text, zero model calls. | test-render (+ engine-level in test-questions) |
 | UR-6 | Legacy runtime (no `window.claude`) → the model fallback chain advances past a 404 to the next model. | test-render |
+
+## Question-engine requirements (QR) — code computes, the model only phrases
+
+| ID | Requirement | Test |
+|----|-------------|------|
+| QR-1 | Every PLAN seed question, phrased three ways (24 phrasings), returns the right top row via the recipe table (`fastPlan`) with ZERO model calls; the other PLAN recipes (this week's scores, standings, X's record (in YYYY), X vs Y, who won YYYY, streaks, top scorer, best/worst week, loss/win extremes, closest/biggest/combined) never call the planner; follow-ups ("that game", "and in 2024?") resolve against the previous result. | test-questions |
+| QR-2 | A planner returning a valid v2 spec yields correct rows; junk, an unknown table/column/handle, a v1 spec, or `none` on a numeric-sounding question yields the can't-answer reply — never free-text numbers. | test-questions |
+| QR-3 | Number guard: a narration containing any number not in the result rows (2 dp / 1 dp / integer forms, seasons, weeks, row counts) — or claiming fabrication — is replaced by the JS template sentence. Narration prompt < 4 KB with 25 rows. | test-questions |
 
 ## Data-math requirements (DR) — locked by golden file
 

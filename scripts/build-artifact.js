@@ -21,11 +21,36 @@ const OUT  = path.join(ROOT, "commissioner.jsx");
 // reliably when pasted into a Claude artifact.
 const dropLargeFallback = () => null;
 
+// history.json inlined lean: `status: "final"` and a `phase` derivable from the
+// playoff flag are the defaults every reader assumes when absent (fact table:
+// missing status = final, missing phase = playoff ? "playoff" : "regular"), so
+// they are dropped here only. Consolation phase and live status are kept.
+const leanHistory = (h) => ({
+  ...h,
+  seasons: (h.seasons || []).map((s) => ({
+    ...s,
+    games: (s.games || []).map((g) => {
+      const o = { ...g };
+      if (o.status === "final") delete o.status;
+      if ((o.phase === "regular" && !o.playoff) || (o.phase === "playoff" && o.playoff)) delete o.phase;
+      return o;
+    }),
+  })),
+});
+// stats.json: the template reads standings + extremes scores only (head-to-head
+// now comes from the fact table), so drop headToHead and per-player arrays.
+const leanStats = (st) => {
+  const strip = (g) => (g ? { week: g.week, playoff: g.playoff, a: g.a, b: g.b, pa: g.pa, pb: g.pb } : g);
+  const ex = st.extremes || {};
+  const { headToHead, ...rest } = st;
+  return { ...rest, extremes: { closestGame: strip(ex.closestGame), biggestBlowout: strip(ex.biggestBlowout), highestScoringGame: strip(ex.highestScoringGame) } };
+};
+
 const DATA = {
   // history.json is already lean (produced without the per-game player arrays);
   // it is the offline fallback verbatim.
-  __HISTORY__:      { file: path.join(ROOT, "docs/data/history.json") },
-  __STATS__:        { file: path.join(ROOT, "docs/data/stats.json") },
+  __HISTORY__:      { file: path.join(ROOT, "docs/data/history.json"), transform: leanHistory },
+  __STATS__:        { file: path.join(ROOT, "docs/data/stats.json"), transform: leanStats },
   __ROSTERS__:      { file: path.join(ROOT, "docs/data/rosters.json") },
   __TRADES__:       { file: path.join(ROOT, "docs/data/fc-values.json") },
   __ALLTIME__:      { file: path.join(ROOT, "docs/data/alltime.json"), transform: dropLargeFallback },

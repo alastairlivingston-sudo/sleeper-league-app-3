@@ -34,9 +34,44 @@ function MarkdownMessage(props) {
   return React.createElement(React.Fragment, null, out);
 }
 
+// Code-rendered answer table (Phase 2): labels + number formatting come from
+// COLUMNS, never from model-written markdown.
+function fmtCell(col, v) {
+  const t = (COLUMNS[col] || {}).type;
+  if (v == null || v === '') return '—';
+  if (t === 'mgr') return distinctName(v);
+  if (t === 'pts') return fmt2(v);
+  if (t === 'pct') return (Number(v) * 100).toFixed(1) + '%';
+  return String(v);
+}
+function ResultTable(props) {
+  const result = props.result;
+  if (!result || !result.rows || !result.rows.length) return null;
+  const cols = result.columns || [];
+  return (
+    <div className="rt-wrap">
+      <table className="md-table rt">
+        <thead><tr>{cols.map(function(c) { return <th key={c}>{(COLUMNS[c] || {}).label || c}</th>; })}</tr></thead>
+        <tbody>
+          {result.rows.map(function(r, i) {
+            return <tr key={r.id || (r.gameId ? r.gameId + i : i)}>{cols.map(function(c) {
+              if (c === 'result') return <td key={c}><span className={'res res-' + (r.result || 'x')}>{r.result || '·'}</span></td>;
+              return <td key={c}>{fmtCell(c, r[c])}</td>;
+            })}</tr>;
+          })}
+        </tbody>
+      </table>
+      {result.total > result.rows.length ? <div className="rt-more">{'Top ' + result.rows.length + ' of ' + result.total}</div> : null}
+    </div>
+  );
+}
+
 function ChatTab(props) {
-  const { systemPrompt, chips, placeholder, errorMsg, intro, buildContext } = props;
+  const { systemPrompt, chips, placeholder, errorMsg, intro, buildContext, answer } = props;
   const [messages, setMessages] = useState([]);
+  // Conversation context per tab (cause D): the previous question, spec and
+  // result, so follow-ups ("that game", "and in 2024?") have a referent.
+  const ctxRef = useRef(null);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const bottomRef = useRef(null);
@@ -58,6 +93,14 @@ function ChatTab(props) {
     setMessages(next); setInput(''); setLoading(true);
     if (taRef.current) taRef.current.style.height = 'auto';
     try {
+      if (answer) {
+        const out = await answer(t, next, ctxRef.current);
+        if (out && out.content != null) {
+          ctxRef.current = out.ctx || ctxRef.current;
+          setMessages(function(p) { return p.concat([{ role: 'assistant', content: out.content, table: out.table || null }]); });
+          return;
+        }
+      }
       const extra = buildContext ? await buildContext(t, next) : '';
       const fullPrompt = extra ? systemPrompt + '\n\n' + extra : systemPrompt;
       const raw = await claudeCall(next.filter(function(m) { return m.role === 'user' || m.role === 'assistant'; }), fullPrompt);
@@ -85,7 +128,7 @@ function ChatTab(props) {
           <div style={{ margin: 'auto', textAlign: 'center', color: T.faint, fontSize: 14, maxWidth: 300, lineHeight: 1.7, padding: '20px 8px' }}>{intro}</div>
         )}
         {messages.map(function(m, i) {
-          if (m.role === 'assistant') return <div key={i} style={bubAsst}><MarkdownMessage text={m.content} /></div>;
+          if (m.role === 'assistant') return <div key={i} style={bubAsst}><MarkdownMessage text={m.content} />{m.table ? <ResultTable result={m.table} /> : null}</div>;
           if (m.role === 'error') return <div key={i} style={bubErr}>{m.content}</div>;
           return <div key={i} style={bubUser}>{m.content}</div>;
         })}
@@ -234,7 +277,7 @@ function slimHistory(d) {
 function StatsTab(props) {
   const { historyData, statsData, alltimeData, transactionsData, playersData, loreMaster } = props;
   const analytics = useMemo(function() { return computeAnalytics(historyData); }, [historyData]);
-  const games = useMemo(function() { return flattenGames(historyData); }, [historyData]);
+  const facts = useMemo(function() { return buildFactTable(historyData, canonical); }, [historyData]);
   const loreCtx = loreMaster
     ? '\n\nLEAGUE CONTEXT (names, champions, glossary — for resolving names only, NOT for inventing stats):\n' + loreMaster.slice(0, 2500)
     : '';
@@ -255,19 +298,24 @@ function StatsTab(props) {
     + '\n\nTRADES:\n' + tradesLines(transactionsData)
     + '\n\nCURRENT SEASON:\n' + currentSeasonBlock(statsData);
 
-  // buildContext: deterministic query layer. Plan → execute in JS → inject result.
-  // Plans from the running conversation (not just the latest line) so follow-ups
-  // like "and in 2024?" resolve their referents.
-  async function buildContext(query, conversation) {
-    try {
-      const convo = (conversation && conversation.length) ? conversation : [{ role: 'user', content: query }];
-      const spec = await planStatQuery(query, convo);
-      const result = runStatQuery(spec, games, playersData);
-      return formatQueryResult(spec, result);
-    } catch (e) { return ''; }
+  // Query engine v2: code answers, the model only phrases (answerStatQuestion).
+  // A non-data question (opinion/lore) falls through to chat with the tables
+  // above; any number in that reply must appear in the prompt (number guard).
+  async function answer(query, conversation, ctx) {
+    const out = await answerStatQuestion(query, ctx, {
+      facts: facts, players: playersData,
+      plan: function(prompt) { return claudeCall([{ role: 'user', content: prompt }], 'Output only JSON.'); },
+      narrate: function(prompt) { return claudeCall([{ role: 'user', content: prompt }], 'Reply in one or two plain sentences.'); },
+      log: function() { if (DEBUG) console.log.apply(console, ['[stats]'].concat([].slice.call(arguments))); },
+    });
+    if (out.content != null) return out;
+    const reply = await claudeCall(conversation.filter(function(m) { return m.role === 'user' || m.role === 'assistant'; }), sp);
+    const g = numberGuard(reply, [], [sp]);
+    if (!g.ok) { if (DEBUG) console.log('[stats] chat reply rejected by number guard', g.bad); return { content: CANT_ANSWER, table: null, ctx: ctx }; }
+    return { content: reply, table: null, ctx: ctx };
   }
 
-  return <ChatTab systemPrompt={sp} buildContext={buildContext} chips={['All-time standings', 'Unluckiest manager?', 'Most consistent scorer?', 'Biggest bench disasters?']} placeholder="Message…" errorMsg="Something went wrong — try again." intro="The record book — career records, luck ratings, playoff history, consistency. Ask about personal bests, positional strengths, or any head-to-head." />;
+  return <ChatTab systemPrompt={sp} answer={answer} chips={['All-time standings', 'Unluckiest manager?', 'Most consistent scorer?', 'Biggest bench disasters?']} placeholder="Message…" errorMsg="Something went wrong — try again." intro="The record book — career records, luck ratings, playoff history, consistency. Ask about personal bests, positional strengths, or any head-to-head." />;
 }
 
 function BanterTab(props) {

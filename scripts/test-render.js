@@ -25,9 +25,16 @@ function tryReq(name) {
 const babel   = tryReq("@babel/core");
 const presetEnv   = tryReq("@babel/preset-env");
 const presetReact = tryReq("@babel/preset-react");
+const jsdomMod = tryReq("jsdom");
+// React DOM feature-detects the browser ONCE at module load (e.g. whether the
+// `input` event exists). Loaded with no window it falls back to legacy polyfill
+// events and typed text never reaches onChange — so give it a window first.
+if (jsdomMod && typeof global.window === "undefined") {
+  const boot = new jsdomMod.JSDOM("<!doctype html><html><body></body></html>", { url: "https://x.claudeusercontent.com/" });
+  global.window = boot.window; global.document = boot.window.document; global.navigator = boot.window.navigator;
+}
 const React   = tryReq("react");
 const ReactDOM = tryReq("react-dom/client") || tryReq("react-dom");
-const jsdomMod = tryReq("jsdom");
 
 if (!babel || !presetEnv || !presetReact || !React || !ReactDOM || !jsdomMod) {
   console.log("test-render: SKIP — dev deps not installed (@babel/*, react, react-dom, jsdom).");
@@ -135,7 +142,8 @@ const rejectFetch = async () => { throw new Error("offline"); };
 
 // A reply string that cannot already exist anywhere on the page, so matching it
 // proves it came from the mocked model bridge (not pre-existing data/intro text).
-const REPLY_SENTINEL = "ZZTOP_COMMISSIONER_REPLY_4242";
+// No digits: the number guard (Phase 2) would rightly reject an unknown number.
+const REPLY_SENTINEL = "ZZTOP COMMISSIONER REPLY SENTINEL";
 
 // ── Tests ─────────────────────────────────────────────────────────────────────
 async function main() {
@@ -236,6 +244,42 @@ async function main() {
   ok("UR-6", seenModels.length >= 2, `advanced to a second model after 404 (models tried: ${seenModels.join(", ") || "none"})`);
   ok("UR-6", seenModels[0] !== seenModels[1], "the second attempt used a DIFFERENT model id (chain advanced)");
   ok("UR-6", !uncaught, "no uncaught error on the legacy model-fallback path" + (uncaught ? `: ${uncaught.message}` : ""));
+
+  // UR-7: the screenshot conversation, typed into the real Stats ChatTab. Live
+  // data is the frozen 2023–25 fixture so the answer can't drift as 2026 lands.
+  console.log("Journey 4 — screenshot replay (UR-7):");
+  uncaught = null;
+  let ur7Calls = 0;
+  const ur7Complete = async (p) => { ur7Calls++; return isPlanner(p) ? '{"table":"none"}' : "Sorry, I fabricated that earlier."; };
+  const fixtureMap = { ...DATA_MAP, "history.json": "scripts/fixtures/history-2023-2025.json" };
+  const { window: w4 } = await mountApp({ fetchImpl: localFetch(fixtureMap), complete: ur7Complete });
+  const d4 = w4.document;
+  const bubbles = () => [...d4.querySelectorAll("table.rt")].map((t) => t.closest("div[style]"));
+  async function sendText(text) {
+    const area = d4.querySelector("textarea");
+    const setter = Object.getOwnPropertyDescriptor(w4.HTMLTextAreaElement.prototype, "value").set;
+    await act(async () => { setter.call(area, text); area.dispatchEvent(new w4.Event("input", { bubbles: true })); });
+    const send = [...d4.querySelectorAll("button.send-btn")][0];
+    await act(async () => { send.dispatchEvent(new w4.Event("click", { bubbles: true })); });
+    await flush(); await flush(); await sleep(30); await flush(); await flush();
+  }
+  const lastTable = () => { const ts = [...d4.querySelectorAll("table.rt")]; return ts[ts.length - 1]; };
+  const rowsOf = (t) => t ? [...t.querySelectorAll("tbody tr")].map((tr) => [...tr.querySelectorAll("td")].map((td) => td.textContent)) : [];
+  const assistantText = () => { const b = [...d4.querySelectorAll("table.rt")]; return b.length ? b[b.length - 1].parentElement.parentElement.textContent : ""; };
+
+  await sendText("What is the most points anyone has scored in a loss?");
+  const r1 = rowsOf(lastTable())[0] || [];
+  ok("UR-7", r1.join("|") === "Alastair|151.40|Josh|168.56|L|-17.16|2023|13|regular", `msg 1 table top row is Alastair 151.40 L v Josh 168.56, 2023 wk 13 (got ${r1.join("|")})`);
+  await sendText("What was the total game score?");
+  ok("UR-7", /319\.96/.test(assistantText()), "msg 2 answer contains 319.96");
+  const r2 = rowsOf(lastTable());
+  ok("UR-7", r2.length === 2 && r2.some((r) => r[0] === "Josh") && r2.some((r) => r[0] === "Alastair"), `msg 2 shows both rows of that game (${r2.map((r) => r.slice(0, 4).join(" ")).join(" / ")})`);
+  await sendText("How could Josh score 168.56 and lose?");
+  const t3 = assistantText();
+  ok("UR-7", /Josh won 168\.56–151\.40/.test(t3), "msg 3 explains Josh won 168.56–151.40");
+  ok("UR-7", !/fabricat/i.test(d4.body.textContent || ""), "no 'fabricat' text anywhere in the conversation");
+  ok("UR-7", ur7Calls === 0, `the whole conversation needed zero model calls (made ${ur7Calls})`);
+  ok("UR-7", !uncaught, "no uncaught error during the replay" + (uncaught ? `: ${uncaught.message}` : ""));
 
   process.off("uncaughtException", onErr);
   process.off("unhandledRejection", onErr);

@@ -304,6 +304,13 @@ const CSS = `
   .nav-lab{font-size:10px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;}
   .plaincy-app{display:flex;flex-direction:column;height:var(--app-h,100dvh);width:100%;max-width:560px;margin:0 auto;background:#090d18;overflow:hidden;}
   @media(min-width:640px){.plaincy-app{max-width:780px;}}
+  .rt-wrap{overflow-x:auto;margin:8px -4px 0;}
+  .rt td,.rt th{white-space:nowrap;}
+  .rt-more{font-size:11px;color:#6e8db0;margin-top:4px;}
+  .res{display:inline-block;min-width:18px;text-align:center;border-radius:5px;padding:1px 5px;font-size:11px;font-weight:800;}
+  .res-W{background:rgba(16,185,129,0.18);color:#10b981;}
+  .res-L{background:rgba(248,113,113,0.18);color:#f87171;}
+  .res-T,.res-x{background:rgba(110,141,176,0.18);color:#6e8db0;}
   button{font-family:inherit;}
   textarea,select{font-family:inherit;font-size:16px;}
   textarea:focus,select:focus{outline:none;}

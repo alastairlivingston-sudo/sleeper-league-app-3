@@ -30,6 +30,7 @@ if (require.main === module) {
   const out = "{\n\"games\": " + lines(facts.games)
     + ",\n\"seasons\": " + lines(facts.seasons)
     + ",\n\"records\": " + JSON.stringify(facts.records)
+    + ",\n\"current\": " + JSON.stringify(facts.current)
     + ",\n\"meta\": " + JSON.stringify({ generated: new Date().toISOString(), source: path.basename(IN) }) + "\n}\n";
   fs.writeFileSync(OUT, out);
   console.log(`Wrote ${OUT} — ${facts.games.length} manager-game rows, ${facts.seasons.length} manager-seasons, ${Object.keys(facts.records).length} record groups`);
