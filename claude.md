@@ -245,9 +245,13 @@ buster), but only takes a fetched copy whose `history.meta.generated` is at leas
 never a live/snapshot state.
 
 ### Publish route (retires "paste once")
-`dist/plaincy.html` is published as a claude.ai artifact with `capabilities: {sample: {}}` — one stable
-link. A scheduled task (Tuesdays + Fridays ~10:00 UK, after MNF and the 08:00 UTC Action; Friday catches
-stat corrections) pulls the repo, checks the Action committed fresh data that week, and republishes
-`dist/plaincy.html` to the same link, flagging if the data has not advanced. The artifact lives at that
+Published (2026-11-21) at **https://claude.ai/artifact/8egNcNmsiLofrQ2GyaTBiJ** with
+`capabilities: {sample: {}}` (private to the owner; share from the page's Share menu). `build-html.js`
+writes two files: `dist/plaincy.html` (a complete document, committed, opens on its own) and
+`dist/plaincy.artifact.html` (the same page as content only — the Artifact tool adds its own doctype/head
+skeleton; gitignored). Publish the ARTIFACT copy. A scheduled task "Republish PlAIncy artifact" (Tue + Fri
+09:35 Europe/London, after MNF and the 08:00 UTC Action; Friday catches stat corrections) checks out
+`origin/main`, checks the refresh Action and data freshness, rebuilds `dist/plaincy.artifact.html`, and
+republishes it to the same link (label "SEASON through Week N"), flagging if the data has not advanced. The artifact lives at that
 link on any device; the keyless model call works because claude.ai serves `sample` to the viewer.
 `commissioner.jsx` remains buildable for the legacy paste-in runtime.
