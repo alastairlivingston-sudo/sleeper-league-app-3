@@ -185,8 +185,10 @@ function factCountBy(list, pred) {
   return Object.keys(c).map(function(m) { return { manager: m, count: c[m] }; });
 }
 
-// Game-level records over one scope of rows.
-function factGameRecords(rows, scope) {
+// One definition per game record: the pool of rows, the value, the direction.
+// factGameRecords (the record itself, ties kept) and factGameRanked ("top N")
+// both read these, so "the record" is always row 1 of "the top 10".
+function factRecordDefs(rows, scope) {
   const played = rows.filter(function(r) { return factPlayed(r) && factInScope(r, scope); });
   const W = played.filter(function(r) { return r.result === 'W'; });
   const L = played.filter(function(r) { return r.result === 'L'; });
@@ -194,30 +196,83 @@ function factGameRecords(rows, scope) {
   const ranked = played.filter(function(r) { return r.weekRank != null; });
   const weekSize = {};
   ranked.forEach(function(r) { const k = r.season + '|' + r.week; weekSize[k] = (weekSize[k] || 0) + 1; });
-  const streakRows = played.slice();
-  const runs = factStreaks(streakRows);
+  const pf = function(r) { return r.pf; };
+  return {
+    played: played, ranked: ranked, weekSize: weekSize,
+    games: {
+      highestScore: { list: played, key: pf, dir: 'max' },
+      lowestScore: { list: played, key: pf, dir: 'min' },
+      highestScoreInLoss: { list: L, key: pf, dir: 'max' },
+      lowestScoreInWin: { list: W, key: pf, dir: 'min' },
+      biggestMargin: { list: W, key: function(r) { return r.margin; }, dir: 'max' },
+      closestGame: { list: oneSide, key: function(r) { return Math.abs(r.margin); }, dir: 'min' },
+      highestCombined: { list: oneSide, key: function(r) { return r.combined; }, dir: 'max' },
+      lowestCombined: { list: oneSide, key: function(r) { return r.combined; }, dir: 'min' },
+    },
+  };
+}
+
+// Game-level records over one scope of rows.
+function factGameRecords(rows, scope) {
+  const d = factRecordDefs(rows, scope);
+  const played = d.played, ranked = d.ranked, weekSize = d.weekSize;
+  const runs = factStreaks(played.slice());
   const lossRanked = ranked.filter(function(r) { return r.result === 'L'; });
   const winRanked = ranked.filter(function(r) { return r.result === 'W'; });
   const bestRank = lossRanked.length ? Math.min.apply(null, lossRanked.map(function(r) { return r.weekRank; })) : null;
   const worstRank = winRanked.length ? Math.max.apply(null, winRanked.map(function(r) { return r.weekRank; })) : null;
-  return {
-    highestScore: factBest(played, function(r) { return r.pf; }, 'max'),
-    lowestScore: factBest(played, function(r) { return r.pf; }, 'min'),
-    highestScoreInLoss: factBest(L, function(r) { return r.pf; }, 'max'),
-    lowestScoreInWin: factBest(W, function(r) { return r.pf; }, 'min'),
-    biggestMargin: factBest(W, function(r) { return r.margin; }, 'max'),
-    closestGame: factBest(oneSide, function(r) { return Math.abs(r.margin); }, 'min'),
-    highestCombined: factBest(oneSide, function(r) { return r.combined; }, 'max'),
-    lowestCombined: factBest(oneSide, function(r) { return r.combined; }, 'min'),
-    longestWinStreak: factBest(runs.filter(function(x) { return x.type === 'W'; }), function(x) { return x.length; }, 'max'),
-    longestLossStreak: factBest(runs.filter(function(x) { return x.type === 'L'; }), function(x) { return x.length; }, 'max'),
-    currentStreaks: runs.filter(function(x) { return x.current; }).sort(function(a, b) { return b.length - a.length || a.manager.localeCompare(b.manager); }),
-    mostTopScoreWeeks: factBest(factCountBy(ranked, function(r) { return r.weekRank === 1; }), function(x) { return x.count; }, 'max'),
-    mostBottomScoreWeeks: factBest(factCountBy(ranked, function(r) { return r.weekRank === weekSize[r.season + '|' + r.week]; }), function(x) { return x.count; }, 'max'),
-    unluckiestLoss: bestRank == null ? [] : factBest(lossRanked.filter(function(r) { return r.weekRank === bestRank; }), function(r) { return r.pf; }, 'max'),
-    luckiestWin: worstRank == null ? [] : factBest(winRanked.filter(function(r) { return r.weekRank === worstRank; }), function(r) { return r.pf; }, 'min'),
-  };
+  const out = {};
+  Object.keys(d.games).forEach(function(name) { const g = d.games[name]; out[name] = factBest(g.list, g.key, g.dir); });
+  out.longestWinStreak = factBest(runs.filter(function(x) { return x.type === 'W'; }), function(x) { return x.length; }, 'max');
+  out.longestLossStreak = factBest(runs.filter(function(x) { return x.type === 'L'; }), function(x) { return x.length; }, 'max');
+  out.currentStreaks = runs.filter(function(x) { return x.current; }).sort(function(a, b) { return b.length - a.length || a.manager.localeCompare(b.manager); });
+  out.mostTopScoreWeeks = factBest(factCountBy(ranked, function(r) { return r.weekRank === 1; }), function(x) { return x.count; }, 'max');
+  out.mostBottomScoreWeeks = factBest(factCountBy(ranked, function(r) { return r.weekRank === weekSize[r.season + '|' + r.week]; }), function(x) { return x.count; }, 'max');
+  out.unluckiestLoss = bestRank == null ? [] : factBest(lossRanked.filter(function(r) { return r.weekRank === bestRank; }), function(r) { return r.pf; }, 'max');
+  out.luckiestWin = worstRank == null ? [] : factBest(winRanked.filter(function(r) { return r.weekRank === worstRank; }), function(r) { return r.pf; }, 'min');
+  return out;
 }
+
+// "Top N" for any record: the full pool, best first (newest first on equal value).
+// Row 1 always equals the record from factGameRecords.
+function factGameRanked(rows, scope, name) {
+  const d = factRecordDefs(rows, scope);
+  const newest = function(a, b) { return b.season.localeCompare(a.season) || b.week - a.week; };
+  const sortBy = function(list, key, dir) {
+    return list.filter(function(r) { return key(r) != null; }).slice().sort(function(a, b) {
+      const c = dir === 'max' ? key(b) - key(a) : key(a) - key(b);
+      return c || newest(a, b);
+    });
+  };
+  if (d.games[name]) { const g = d.games[name]; return sortBy(g.list, g.key, g.dir); }
+  if (name === 'longestWinStreak' || name === 'longestLossStreak') {
+    const t = name === 'longestWinStreak' ? 'W' : 'L';
+    return factStreaks(d.played.slice()).filter(function(x) { return x.type === t; })
+      .sort(function(a, b) { return b.length - a.length || b.to.season.localeCompare(a.to.season) || b.to.week - a.to.week; });
+  }
+  if (name === 'currentStreaks') return factGameRecords(rows, scope).currentStreaks;
+  if (name === 'mostTopScoreWeeks' || name === 'mostBottomScoreWeeks') {
+    const top = name === 'mostTopScoreWeeks';
+    return factCountBy(d.ranked, function(r) { return top ? r.weekRank === 1 : r.weekRank === d.weekSize[r.season + '|' + r.week]; })
+      .sort(function(a, b) { return b.count - a.count || a.manager.localeCompare(b.manager); });
+  }
+  if (name === 'unluckiestLoss') return d.ranked.filter(function(r) { return r.result === 'L'; }).sort(function(a, b) { return a.weekRank - b.weekRank || b.pf - a.pf || newest(a, b); });
+  if (name === 'luckiestWin') return d.ranked.filter(function(r) { return r.result === 'W'; }).sort(function(a, b) { return b.weekRank - a.weekRank || a.pf - b.pf || newest(a, b); });
+  return [];
+}
+
+// The value a game record ranks on (for "is X bigger?" checks).
+function factRecordValue(name, r) {
+  switch (name) {
+    case 'highestScore': case 'lowestScore': case 'highestScoreInLoss': case 'lowestScoreInWin': return r.pf;
+    case 'biggestMargin': return r.margin;
+    case 'closestGame': return r.margin == null ? null : Math.abs(r.margin);
+    case 'highestCombined': case 'lowestCombined': return r.combined;
+    default: return null;
+  }
+}
+const RECORD_DIR = { highestScore: 'max', lowestScore: 'min', highestScoreInLoss: 'max', lowestScoreInWin: 'min',
+  biggestMargin: 'max', closestGame: 'min', highestCombined: 'max', lowestCombined: 'min' };
 
 const RECORD_NAMES = ['highestScore', 'lowestScore', 'highestScoreInLoss', 'lowestScoreInWin', 'biggestMargin',
   'closestGame', 'highestCombined', 'lowestCombined', 'bestSeasonPF', 'worstSeasonPF', 'longestWinStreak',

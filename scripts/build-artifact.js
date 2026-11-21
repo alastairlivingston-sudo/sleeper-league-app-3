@@ -64,6 +64,13 @@ async function main() {
 
   let src = fs.readFileSync(SRC, "utf8");
 
+  // Paste budget (TR-7): blank whole-line // comments and strip leading indentation from
+  // the CODE before any data is inlined. Safe: the template's only multi-line
+  // template literal is the CSS block (no // lines, whitespace-insensitive).
+  // The template and the partials keep their comments; only the paste copy is lean.
+  // Lines are blanked, not removed, so the TR-10 line count still matches.
+  src = src.split("\n").map(require("./test-artifact.js").leanLine).join("\n");
+
   // Inline JSON data files (trimmed fallback — full data fetched at runtime)
   for (const [placeholder, { file, transform, optional }] of Object.entries(DATA)) {
     if (!fs.existsSync(file)) {
