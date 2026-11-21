@@ -48,10 +48,40 @@ artifact's `canonical()`/name maps stay in sync. Add a manager or alias in ONE p
 - `build-alltime.js`  -> `docs/data/alltime.json`  (career/H2H/records aggregates; `canon()` reads
     aliases from `league-config.json`).
 - `build-artifact.js` -> `commissioner.jsx`  (inlines data into the template — see below).
-- `validate.js`       -> data-contract gate (run before commit). Invariants: 8 standings rows + champion
-    per completed season; contiguous weeks; per-manager regular-season game count == standings W/L (the
-    real truncation detector); stats↔history reconciliation; every trade non-empty; careerRankings pa != 0;
-    no leftover `__PLACEHOLDER__` in the built artifact; `meta.generated` present/fresh (`--fresh`).
+- `validate.js`       -> data-contract gate (run before commit). Season invariants live in
+    `validate-history.js` (shared with `test-status.js`). Complete season (bracket final has a winner):
+    8 standings rows + champion, all games final, playoff games present. In-progress season: champion may
+    be null, live games only in the current week, no scheduled games in `games[]`. Both: contiguous FINAL
+    weeks; per-manager FINAL regular-season game count == standings W/L (the real truncation detector);
+    standings `high` == games max (DR-4); stats↔history reconciliation (h2h W/L sums, `throughWeek`); every
+    trade non-empty; careerRankings pa != 0; no leftover `__PLACEHOLDER__`; `meta.generated` (`--fresh`).
+    Warnings (non-fatal) are printed for known Sleeper quirks — see "Game status" below.
+
+## Game status, phase, byes (DR-3/DR-4) — empirical findings (2026-11-21)
+- **Sleeper pre-creates every week's matchups** (weeks 1–18) with 0 points once the season starts, so a
+  non-empty week does NOT mean played. This broke every refresh from 2026-09-10 (validate saw 14
+  "regular-season games" vs W+L of 0…10) and no data was committed after 2026-09-06.
+- **Status rule** (`lib.weekStatus`): league `complete` → final; `pre_draft`/`drafting` → scheduled;
+  `in_season`: week ≤ `league.settings.last_scored_leg` → `final`, ≤ `state.week` → `live`, else
+  `scheduled`. Verified: `state.week`=11, `last_scored_leg`=10, every roster W+L = 10, week 11 had partial
+  scores, weeks 12–18 all zeros. `last_scored_leg` is used for `final` because it is what roster W/L track
+  (the plan's `week < state.week` rule agreed on the day checked; if Sleeper advances `state.week` before
+  scoring, `last_scored_leg` stays correct).
+- History season gains (additive): `complete`, `lastFinalWeek`, `liveWeek`, `byes[]`, `schedule[]`
+  (regular-season `{week,a,b}` only — future playoff pairings are placeholders); games gain `status`,
+  `phase`. stats.json gains `throughWeek`.
+- **Phase** (`lib.gamePhase`): winners-bracket match between two teams in the playoff field → `playoff`
+  (incl. 3rd place); 5th-place (p=5), losers bracket, or any other playoff-week pairing → `consolation`.
+  Needed because Sleeper re-filled the 2024 week-17 3rd-place slot (`t1_original` 1 / `t2_original` 3) with
+  the toilet-bowl teams 2 v 8.
+- **`high` (cause F)**: the old max over every matchup entry included `matchup_id: null` entries —
+  eliminated teams in weeks 16–17 and the whole of week 18 (beyond the 3-round bracket). Those are not
+  games. Decision: a round-1 sit-out by a playoff-field team is a **bye** (`byes[]`, counts toward `high`);
+  every other null entry is ignored. Fixed: drjkay 2024 213.46→192.72, benjlev 2024 142.9→131.44, GSac 2023
+  146.14→135.02.
+- **Known quirk (warning only):** in 2023, Sleeper's roster W/L disagree with the stored scores on three
+  close games (6 managers off by one result), most likely post-lock stat corrections. Game counts still
+  reconcile. We never "correct" either side; `validate.js` prints `history.games.wl` warnings.
 
 ## League facts (for sanity-checking output)
 1-QB redraft, WR/RB/TE flex, half-PPR, 8 teams. Structured data runs 2023→present (Sleeper era); lore goes

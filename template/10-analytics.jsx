@@ -34,7 +34,7 @@ function computeAnalytics(history) {
     const games = s.games || [];
     for (let gi = 0; gi < games.length; gi++) {
       const g = games[gi];
-      if (g.playoff || !(g.pa > 0 || g.pb > 0)) continue;
+      if (g.playoff || (g.status && g.status !== 'final') || !(g.pa > 0 || g.pb > 0)) continue;
       if (!weeks[g.week]) weeks[g.week] = [];
       weeks[g.week].push(g);
     }

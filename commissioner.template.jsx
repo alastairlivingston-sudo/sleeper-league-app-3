@@ -183,7 +183,7 @@ function computeAnalytics(history) {
     const games = s.games || [];
     for (let gi = 0; gi < games.length; gi++) {
       const g = games[gi];
-      if (g.playoff || !(g.pa > 0 || g.pb > 0)) continue;
+      if (g.playoff || (g.status && g.status !== 'final') || !(g.pa > 0 || g.pb > 0)) continue;
       if (!weeks[g.week]) weeks[g.week] = [];
       weeks[g.week].push(g);
     }
@@ -241,6 +241,7 @@ function flattenGames(history) {
   const rows = [];
   for (const s of seasons) {
     for (const g of (s.games || [])) {
+      if (g.status && g.status !== 'final') continue; // live/scheduled (DR-3); no status = final
       if (!(g.pa > 0 || g.pb > 0)) continue; // skip unplayed
       rows.push({ season: s.season, week: g.week, playoff: !!g.playoff, a: canonical(g.a), b: canonical(g.b), pa: g.pa, pb: g.pb });
     }

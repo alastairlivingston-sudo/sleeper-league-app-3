@@ -29,6 +29,9 @@ function canon(h) { const c = String(h || "").replace(/^@/, "").trim(); return A
 const { seasons } = JSON.parse(fs.readFileSync(HISTORY, "utf8"));
 // Canonicalise every manager handle up-front so all derived stats merge accounts.
 for (const s of seasons) {
+  // DR-3: aggregates use FINAL games only. Live (in-progress week) rows are
+  // dropped here; a missing status (older data / fixtures) counts as final.
+  s.games = (s.games || []).filter((g) => !g.status || g.status === "final");
   if (s.champion) s.champion = canon(s.champion);
   for (const row of (s.standings || [])) row.manager = canon(row.manager);
   for (const g of (s.games || [])) { g.a = canon(g.a); g.b = canon(g.b); }

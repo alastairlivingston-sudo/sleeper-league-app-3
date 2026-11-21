@@ -32,7 +32,7 @@
     "managerB": "drjkay",
     "aReceives": [
       {
-        "name": "Deebo Samuel",
+        "name": "Deebo Samuel Sr.",
         "pos": "WR"
       },
       {
@@ -42,7 +42,7 @@
     ],
     "bReceives": [
       {
-        "name": "Chris Godwin",
+        "name": "Chris Godwin Jr.",
         "pos": "WR"
       },
       {
@@ -58,7 +58,7 @@
     "managerB": "GSac",
     "aReceives": [
       {
-        "name": "Kenneth Walker",
+        "name": "Kenneth Walker III",
         "pos": "RB"
       },
       {
@@ -144,7 +144,7 @@
     "managerB": "drjkay",
     "aReceives": [
       {
-        "name": "Kenneth Walker",
+        "name": "Kenneth Walker III",
         "pos": "RB"
       },
       {
@@ -158,7 +158,7 @@
         "pos": "WR"
       },
       {
-        "name": "James Cook",
+        "name": "James Cook III",
         "pos": "RB"
       }
     ]
@@ -232,7 +232,7 @@
     ],
     "bReceives": [
       {
-        "name": "Deebo Samuel",
+        "name": "Deebo Samuel Sr.",
         "pos": "WR"
       },
       {
@@ -265,7 +265,7 @@
         "pos": "RB"
       },
       {
-        "name": "Brian Thomas",
+        "name": "Brian Thomas Jr.",
         "pos": "WR"
       }
     ],
@@ -459,7 +459,7 @@
         "pos": "WR"
       },
       {
-        "name": "James Cook",
+        "name": "James Cook III",
         "pos": "RB"
       },
       {
@@ -535,6 +535,58 @@
       {
         "name": "Javonte Williams",
         "pos": "RB"
+      }
+    ]
+  },
+  {
+    "season": "2026",
+    "week": 5,
+    "managerA": "AlastairL",
+    "managerB": "GSac",
+    "aReceives": [
+      {
+        "name": "Travis Kelce",
+        "pos": "TE"
+      },
+      {
+        "name": "Marvin Harrison Jr.",
+        "pos": "WR"
+      }
+    ],
+    "bReceives": [
+      {
+        "name": "Caleb Williams",
+        "pos": "QB"
+      }
+    ]
+  },
+  {
+    "season": "2026",
+    "week": 5,
+    "managerA": "dpol",
+    "managerB": "GSac",
+    "aReceives": [
+      {
+        "name": "DJ Moore",
+        "pos": "WR"
+      },
+      {
+        "name": "Justin Jefferson",
+        "pos": "WR"
+      }
+    ],
+    "bReceives": [
+      {
+        "name": "Aaron Jones Sr.",
+        "pos": "RB"
+      },
+      {
+        "name": "A.J. Brown",
+        "pos": "WR"
+      },
+      {
+        "name": "Rashee Rice",
+        "pos": "WR"
       }
     ]
   }

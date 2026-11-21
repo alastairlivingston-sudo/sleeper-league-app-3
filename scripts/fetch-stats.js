@@ -8,12 +8,16 @@ const { BASE, get, posPoints, starterList, benchList, writeJson } = L;
 
 const OUT = path.join(__dirname, "../docs/data/stats.json");
 
-async function fetchAllMatchups(leagueId, playoffWeekStart) {
+async function fetchAllMatchups(league, playoffWeekStart, state) {
+  const leagueId = league.league_id;
   const all = [];
   for (let w = 1; w <= 18; w++) {
     try {
       const week = await get(`${BASE}/league/${leagueId}/matchups/${w}`);
       if (!week || week.length === 0) break;
+      // DR-3: only FINAL weeks feed standings-style aggregates. Live partial
+      // scores and Sleeper's pre-created 0-0 future weeks are skipped.
+      if (L.weekStatus(league, w, state) !== "final") continue;
       all.push({ week: w, entries: week, playoff: w >= playoffWeekStart });
     } catch (e) { if (e.notFound) break; throw e; }
   }
@@ -23,6 +27,7 @@ async function fetchAllMatchups(leagueId, playoffWeekStart) {
 async function main() {
   const league = await L.findActiveLeague("games");
   const leagueId = league.league_id;
+  const state = await get(`${BASE}/state/nfl`);
   const playoffWeekStart = L.playoffWeekStart(league);
 
   console.log("Fetching /players/nfl for position data...");
@@ -59,7 +64,8 @@ async function main() {
     })
     .sort((a, b) => b.wins - a.wins || b.pf - a.pf);
 
-  const matchupWeeks = await fetchAllMatchups(leagueId, playoffWeekStart);
+  const matchupWeeks = await fetchAllMatchups(league, playoffWeekStart, state);
+  const throughWeek = matchupWeeks.reduce((m, w) => Math.max(m, w.week), 0);
 
   // head-to-head matrix: h2h[managerA][managerB] = { wins, losses, pf, pa }
   const h2h = {};
@@ -138,6 +144,7 @@ async function main() {
   const out = {
     league: league.name,
     season: league.season,
+    throughWeek,
     standings: standingsArr,
     headToHead: h2h,
     extremes: {

@@ -14,6 +14,11 @@ const ROOT = path.join(__dirname, "..");
 const FRESH = process.argv.includes("--fresh");
 
 const errors = [];
+const warnings = [];
+function warn(cond, invariant, detail) {
+  if (!cond) warnings.push(`[${invariant}] ${detail}`);
+  return cond;
+}
 function check(cond, invariant, detail) {
   if (!cond) errors.push(`[${invariant}] ${detail}`);
   return cond;
@@ -34,67 +39,16 @@ function canon(h) {
   return ALIASES[c] || c;
 }
 
+const { checkHistory } = require("./validate-history");
+
 // ── history.json ──────────────────────────────────────────────────────────────
 const history = readJson(path.join(DATA, "history.json"));
 check(Array.isArray(history.seasons) && history.seasons.length > 0,
   "history.seasons", "seasons[] is empty or missing");
 
-for (const s of history.seasons || []) {
-  const games = s.games || [];
-  const standings = s.standings || [];
-  if (games.length === 0) continue; // future/unplayed season — skip completeness checks
-
-  // Known handles for THIS season (Sleeper display names vary by season).
-  const known = new Set(standings.map((r) => canon(r.manager)));
-
-  check(standings.length === 8, "history.standings.count",
-    `season ${s.season} has ${standings.length} standings rows, expected 8`);
-  check(s.champion != null, "history.champion",
-    `season ${s.season} has games but champion is null`);
-
-  // Contiguous weeks from 1 (catches a mid-season gap).
-  const weeks = [...new Set(games.map((g) => g.week))].sort((a, b) => a - b);
-  check(weeks[0] === 1, "history.weeks.start",
-    `season ${s.season} first game week is ${weeks[0]}, expected 1`);
-  for (let i = 0; i < weeks.length; i++) {
-    check(weeks[i] === i + 1, "history.weeks.contiguous",
-      `season ${s.season} week gap: expected ${i + 1}, got ${weeks[i]}`);
-  }
-
-  // Truncation guard: standings W/L come from Sleeper's authoritative roster
-  // settings (full season); the games list is fetched week-by-week and can be
-  // cut short by a transient error. So each manager's regular-season game count
-  // must equal wins+losses+ties. A tail-truncated season fails here even though
-  // its remaining weeks are still contiguous from 1.
-  const regCount = {};
-  for (const g of games) {
-    if (g.playoff) continue;
-    for (const m of [canon(g.a), canon(g.b)]) regCount[m] = (regCount[m] || 0) + 1;
-  }
-  for (const r of standings) {
-    const m = canon(r.manager);
-    const record = (r.wins || 0) + (r.losses || 0) + (r.ties || 0);
-    check(record === (regCount[m] || 0), "history.games.complete",
-      `season ${s.season} ${r.manager}: standings record ${record} != ${regCount[m] || 0} regular-season games (truncated?)`);
-  }
-  // A completed season with a champion is a playoff league — at least one playoff
-  // game must be present (guards wholesale loss of the playoff weeks). NOTE: a
-  // break during the final playoff week is not asserted here (rare, and the
-  // champion comes from the winners_bracket fetch, not this games list).
-  check(games.some((g) => g.playoff), "history.playoffs.present",
-    `season ${s.season} has a champion but no playoff games`);
-
-  // Every participant handle resolves into this season's standings; scores non-negative.
-  const champ = canon(s.champion);
-  check(known.has(champ), "history.champion.known",
-    `season ${s.season} champion ${s.champion} not in standings`);
-  for (const g of games) {
-    check(known.has(canon(g.a)), "history.game.handle", `season ${s.season} unknown manager ${g.a}`);
-    check(known.has(canon(g.b)), "history.game.handle", `season ${s.season} unknown manager ${g.b}`);
-    check(g.pa >= 0 && g.pb >= 0, "history.game.score",
-      `season ${s.season} wk${g.week} negative score ${g.pa}/${g.pb}`);
-  }
-}
+// Season-level invariants (complete + in-progress seasons, DR-3/DR-4) live in
+// validate-history.js so test-status.js can run them against fixtures.
+checkHistory(history, { check, warn, canon });
 
 // history-details.json (full per-game arrays, read by build-alltime) must carry
 // exactly the same games as the lean history.json — guards the split.
@@ -130,6 +84,24 @@ if (latest) {
   const statMgrs = new Set((stats.standings || []).map((r) => canon(r.manager)));
   check(histMgrs.size === statMgrs.size && [...statMgrs].every((m) => histMgrs.has(m)),
     "stats.reconcile", "stats standings managers do not reconcile with history's latest season");
+
+  // Reconcile stats.json with history.json on FINAL games only: each manager's
+  // head-to-head W/L summed over opponents == history's standings W/L.
+  const h2h = stats.headToHead || {};
+  for (const r of latest.standings) {
+    const m = canon(r.manager);
+    let w = 0, l = 0;
+    for (const [a, opps] of Object.entries(h2h)) {
+      if (canon(a) !== m) continue;
+      for (const rec of Object.values(opps)) { w += rec.wins || 0; l += rec.losses || 0; }
+    }
+    check(w === (r.wins || 0) && l === (r.losses || 0), "stats.h2h.reconcile",
+      `stats headToHead for ${r.manager} sums to ${w}-${l}, history standings ${r.wins}-${r.losses}`);
+  }
+  if (stats.throughWeek != null && latest.lastFinalWeek != null) {
+    check(stats.throughWeek === latest.lastFinalWeek, "stats.throughWeek",
+      `stats throughWeek ${stats.throughWeek} != history lastFinalWeek ${latest.lastFinalWeek}`);
+  }
 }
 
 // ── transactions.json ─────────────────────────────────────────────────────────
@@ -183,6 +155,10 @@ check(!/__[A-Z_]+__/.test(artifact), "artifact.placeholders",
 check(artifact.includes("BUILT_AT"), "artifact.builtAt", "commissioner.jsx missing BUILT_AT");
 
 // ── report ────────────────────────────────────────────────────────────────────
+if (warnings.length) {
+  console.warn(`validate.js: ${warnings.length} warning(s):`);
+  for (const w of warnings) console.warn("  " + w);
+}
 if (errors.length) {
   console.error(`validate.js: ${errors.length} invariant(s) FAILED:`);
   for (const e of errors) console.error("  " + e);

@@ -155,6 +155,76 @@ function playoffWeekStart(league) {
   return league.settings?.playoff_week_start || 15;
 }
 
+// ── game status (DR-3) ────────────────────────────────────────────────────────
+// Sleeper pre-creates EVERY week's matchups (weeks 1..18) with 0 points as soon
+// as the season starts, so "non-empty week" does not mean "played".
+// Verified 2026-11-21: state.week=11, league.settings.last_scored_leg=10, live
+// partial scores in week 11, all-zero weeks 12–18, every roster W+L = 10.
+// `last_scored_leg` is what Sleeper's roster W/L track, so it decides `final`;
+// `state.week` separates `live` from `scheduled`.
+//   league complete            → final
+//   league pre_draft/drafting  → scheduled
+//   in_season: week <= last_scored_leg → final; week <= state.week → live; else scheduled
+function weekStatus(league, week, state) {
+  if (league.status === "complete") return "final";
+  if (league.status !== "in_season") return "scheduled";
+  const stWeek = Number(state && state.week) || 0;
+  const scored = league.settings && league.settings.last_scored_leg != null
+    ? Number(league.settings.last_scored_leg)
+    : stWeek - 1;
+  if (week <= scored) return "final";
+  if (week <= Math.max(stWeek, scored + 1)) return "live";
+  return "scheduled";
+}
+
+// A season is complete when its winners bracket has a final (p === 1) with a winner.
+function bracketFinal(winnersBracket) {
+  return (winnersBracket || []).find((g) => g.p === 1) || null;
+}
+
+// The playoff FIELD: teams in a round-1 winners-bracket match, plus round-1 byes
+// (teams whose first winners-bracket match is in round 2).
+function playoffField(wb) {
+  const field = new Set();
+  for (const g of wb || []) {
+    if (g.r === 1) { field.add(g.t1); field.add(g.t2); }
+  }
+  for (const g of wb || []) {
+    if (g.r === 2 && !g.t1_from && g.t1 != null) field.add(g.t1);
+    if (g.r === 2 && !g.t2_from && g.t2 != null) field.add(g.t2);
+  }
+  field.delete(null); field.delete(undefined);
+  return field;
+}
+
+// Phase of a PAIRED game in week `week`, from the brackets (not just the week number).
+//   week < playoff_week_start                                   → regular
+//   winners-bracket match (incl. 3rd place, p=3) between two
+//     teams in the playoff field                                → playoff
+//   anything else in a playoff week (5th-place p=5, losers
+//     bracket, or a slot Sleeper re-filled with non-playoff
+//     teams — e.g. 2024 wk17 3rd-place slot t1_original 1/3,
+//     played by rosters 2 v 8)                                  → consolation
+function gamePhase(week, pws, rosterA, rosterB, wb, lb) {
+  if (week < pws) return "regular";
+  const r = week - pws + 1;
+  const same = (g) => (g.t1 === rosterA && g.t2 === rosterB) || (g.t1 === rosterB && g.t2 === rosterA);
+  const w = (wb || []).find((g) => g.r === r && same(g));
+  const field = playoffField(wb);
+  if (w && w.p !== 5 && field.has(rosterA) && field.has(rosterB)) return "playoff";
+  return "consolation";
+}
+
+// A playoff-week entry with matchup_id null is a BYE only in round 1 for a team
+// in the playoff field (a top seed). Other null entries — eliminated teams,
+// toilet-bowl teams sitting out, weeks beyond the bracket (week 18) — are not
+// games and do not count toward any record.
+function isBye(week, pws, rosterId, wb) {
+  if (week !== pws) return false;
+  const inR1 = (wb || []).some((g) => g.r === 1 && (g.t1 === rosterId || g.t2 === rosterId));
+  return !inR1 && playoffField(wb).has(rosterId);
+}
+
 // ── JSON output with meta stamp ───────────────────────────────────────────────
 // Stamps meta.generated on fixed-shape object outputs. NOT for bare arrays, and
 // NOT for rosters.json (a team-keyed map the artifact iterates key-by-key) —
@@ -172,5 +242,6 @@ module.exports = {
   get, getPlayers, skillPosMap,
   playerPos, posPoints, starterList, benchList, DEF_RE,
   getUserId, findLeague, findActiveLeague, playoffWeekStart,
+  weekStatus, bracketFinal, playoffField, gamePhase, isBye,
   writeJson,
 };

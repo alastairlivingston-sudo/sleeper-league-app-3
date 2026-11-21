@@ -45,6 +45,9 @@ jobs:
       - name: Data contract
         run: node scripts/validate.js
 
+      - name: Game status + in-progress season rules (DR-3/DR-4)
+        run: node scripts/test-status.js
+
       - name: Aggregation golden test
         run: node scripts/test-alltime.js
 

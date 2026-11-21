@@ -8,6 +8,9 @@ automated test:
 - **`scripts/test-artifact.js`** — zero-dependency structural gate. Runs automatically
   at the end of every `build-artifact.js` run and in CI. A failure aborts the build so a
   broken artifact is never written/committed. Covers `FR-*` (structure) and all `TR-*`.
+- **`scripts/test-status.js`** — zero-dependency data-rule gate for `DR-3`/`DR-4`
+  (status tagging, bracket phase and bye rules, in-progress-season validator) on
+  frozen mid-season fixtures. Runs in `npm test` and CI.
 - **`scripts/test-render.js`** — real headless render (Babel + jsdom + React). Mounts
   `<App/>`, exercises every tab and a chat send, asserts zero uncaught errors. Covers
   `UR-*` (user journey). Requires dev dependencies; skips cleanly if absent.
@@ -76,6 +79,8 @@ file that the paste truncated. `validate.js` gates the *data*; this harness gate
 |----|-------------|------|
 | DR-1 | `build-alltime.js` output for a fixed fixture league byte-matches the committed golden (career/H2H/luck/streaks/positional/player math is stable). | test-alltime |
 | DR-2 | Aliases are merged before aggregation (no un-canonicalized handle survives into `careerRankings`). | test-alltime |
+| DR-3 | Every game carries `status` (`final`/`live`) and `phase` (`regular`/`playoff`/`consolation`, from the brackets; `playoff` boolean kept = phase ≠ regular). Scheduled (0-0 future) pairings live in the season's `schedule[]`, never `games[]`. An in-progress season validates with: champion may be null, no playoff games required, contiguous FINAL weeks, per-manager FINAL regular-season game count == Sleeper W+L+T, live games only in the week after the last final week. Readers (`build-alltime`, template `flattenGames`/analytics, `fetch-stats`) use final games only; a missing status counts as final. | test-status (fixtures `history-midseason.json`, `sleeper-midseason.json`) + validate |
+| DR-4 | Standings `high` == max FINAL score in that season's games list plus round-1 playoff byes (`byes[]`). Null-matchup entries for eliminated teams / beyond-bracket weeks (wk 18) are not games and never count. | test-status + validate |
 
 ---
 
