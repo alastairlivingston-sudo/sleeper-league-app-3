@@ -45,6 +45,10 @@ file that the paste truncated. `validate.js` gates the *data*; this harness gate
 | FR-9  | Switching to each tab (Banter, Trades, Scores) renders without error. | test-render |
 | FR-10 | A chat send in the Stats tab calls the model bridge and renders a reply. | test-render |
 | FR-11 | With live fetch failing, the app still renders from the inlined snapshot. | test-render |
+| FR-12 | The Stats tab opens with a collapsible **This Week** card for the last completed week, from the fact table: every result, week high/low, closest game, the upset (winner with the worst week rank) and a mini standings table (rank, W-L, PF, streak). Renders from fixture data too. | test-render, test-questions |
+| FR-13 | The **Record Book** panel (no model) lists every named record with regular/all and season filters; each game row shows both sides. | test-render |
+| FR-14 | The header badge reads "SEASON · through Week N" (last FINAL week), plus "· Week N+1 live" when live rows exist, or "· season complete"; the tooltip shows the build time. No live/snapshot dot. | test-render, test-questions |
+| FR-15 | Banter and the Stats chat fallback get a compact fact-table recap (this week, standings, champions, career, named records) instead of raw JSON; Banter prompt < 20 KB; any roast sentence carrying a number not in the prompt is dropped. | test-render, test-questions |
 
 ## Technical requirements (TR)
 

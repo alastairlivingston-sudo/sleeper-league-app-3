@@ -147,92 +147,6 @@ async function messagesApiCall(messages, systemPrompt) {
   throw modelIdx >= MODELS.length ? new Error('MODEL_ERROR') : (lastErr || new Error('API failed'));
 }
 
-function r1(n) { return Math.round(n * 10) / 10; }
-function r2(n) { return Math.round(n * 100) / 100; }
-function stdev(arr) {
-  if (arr.length < 2) return 0;
-  const m = arr.reduce(function(a, b) { return a + b; }, 0) / arr.length;
-  return Math.sqrt(arr.reduce(function(a, b) { return a + (b - m) * (b - m); }, 0) / arr.length);
-}
-function blankRow(h) { return { handle: h, w: 0, l: 0, t: 0, pf: 0, pa: 0, scores: [], apW: 0, apL: 0, apT: 0 }; }
-function finalizeRow(m) {
-  const games = m.w + m.l + m.t;
-  const apG = m.apW + m.apL + m.apT;
-  const apPct = apG ? m.apW / apG : 0;
-  const expW = apPct * games;
-  const avg = m.scores.length ? m.scores.reduce(function(a,b){return a+b;},0) / m.scores.length : 0;
-  return {
-    name: displayName(m.handle), alias: distinctName(m.handle), handle: m.handle,
-    record: m.w + '-' + m.l + (m.t ? '-' + m.t : ''),
-    wins: m.w, losses: m.l, pf: r2(m.pf), pa: r2(m.pa),
-    avgScore: r1(avg), consistencySD: r1(stdev(m.scores)),
-    high: m.scores.length ? r2(Math.max.apply(null, m.scores)) : 0,
-    low: m.scores.length ? r2(Math.min.apply(null, m.scores)) : 0,
-    allPlay: m.apW + '-' + m.apL + (m.apT ? '-' + m.apT : ''),
-    allPlayWinPct: r1(apPct * 100), expectedWins: r1(expW), luck: r1(m.w - expW),
-  };
-}
-function computeAnalytics(history) {
-  const seasons = (history && history.seasons) ? history.seasons : [];
-  const perSeason = [];
-  const allAcc = {};
-  for (let si = 0; si < seasons.length; si++) {
-    const s = seasons[si];
-    const acc = {};
-    const weeks = {};
-    const games = s.games || [];
-    for (let gi = 0; gi < games.length; gi++) {
-      const g = games[gi];
-      if (g.playoff || (g.status && g.status !== 'final') || !(g.pa > 0 || g.pb > 0)) continue;
-      if (!weeks[g.week]) weeks[g.week] = [];
-      weeks[g.week].push(g);
-    }
-    const weekKeys = Object.keys(weeks);
-    for (let wi = 0; wi < weekKeys.length; wi++) {
-      const wgames = weeks[weekKeys[wi]];
-      const board = [];
-      for (let gi = 0; gi < wgames.length; gi++) {
-        const g = wgames[gi];
-        const ha = canonical(g.a), hb = canonical(g.b);
-        if (!acc[ha]) acc[ha] = blankRow(ha);
-        if (!acc[hb]) acc[hb] = blankRow(hb);
-        const A = acc[ha], B = acc[hb];
-        A.pf += g.pa; A.pa += g.pb; A.scores.push(g.pa);
-        B.pf += g.pb; B.pa += g.pa; B.scores.push(g.pb);
-        if (g.pa > g.pb) { A.w++; B.l++; } else if (g.pb > g.pa) { B.w++; A.l++; } else { A.t++; B.t++; }
-        board.push([ha, g.pa], [hb, g.pb]);
-      }
-      for (let ai = 0; ai < board.length; ai++) {
-        const h = board[ai][0], sc = board[ai][1];
-        const a = acc[h];
-        for (let bi = 0; bi < board.length; bi++) {
-          const h2 = board[bi][0], sc2 = board[bi][1];
-          if (h2 === h) continue;
-          if (sc > sc2) a.apW++; else if (sc < sc2) a.apL++; else a.apT++;
-        }
-      }
-    }
-    const rows = Object.values(acc);
-    if (rows.length) {
-      perSeason.push({
-        season: s.season,
-        champion: s.champion ? displayName(s.champion) : null,
-        managers: rows.map(finalizeRow).sort(function(a,b){ return b.wins - a.wins || b.pf - a.pf; }),
-      });
-    }
-    for (let ri = 0; ri < rows.length; ri++) {
-      const m = rows[ri];
-      if (!allAcc[m.handle]) allAcc[m.handle] = blankRow(m.handle);
-      const t = allAcc[m.handle];
-      t.w += m.w; t.l += m.l; t.t += m.t; t.pf += m.pf; t.pa += m.pa;
-      t.apW += m.apW; t.apL += m.apL; t.apT += m.apT;
-      for (let si2 = 0; si2 < m.scores.length; si2++) t.scores.push(m.scores[si2]);
-    }
-  }
-  const allTime = Object.values(allAcc).map(finalizeRow).sort(function(a,b){ return b.wins - a.wins || b.pf - a.pf; });
-  return { perSeason: perSeason, allTime: allTime };
-}
-
 
 // ── Fact table (Phase 1) ─────────────────────────────────────────────────────
 // ONE table behind every record, standing, streak and H2H: two rows per game, one
@@ -1144,6 +1058,109 @@ async function answerStatQuestion(query, ctx, deps) {
   }
   return { content: sentence, table: result, ctx: next(spec, result), source: source, modelCalls: modelCalls };
 }
+
+// ── Current-season summaries (Phase 3) — pure, built from the fact table ──────
+// The last completed week: results, high/low, closest game, upset, mini standings.
+function thisWeekFacts(facts) {
+  const cur = facts && facts.current;
+  if (!cur || !cur.lastFinalWeek) return null;
+  const rows = facts.games.filter(function(r) { return r.season === cur.season && r.week === cur.lastFinalWeek && r.status === 'final' && !r.bye; });
+  if (!rows.length) return null;
+  const byGame = {};
+  rows.forEach(function(r) { (byGame[r.gameId] = byGame[r.gameId] || []).push(r); });
+  const games = Object.keys(byGame).map(function(k) {
+    const p = byGame[k];
+    const w = p.find(function(r) { return r.result === 'W'; }) || p[0];
+    const l = p.find(function(r) { return r !== w; }) || p[0];
+    return { w: w, l: l, tie: w.result === 'T' };
+  }).sort(function(a, b) { return b.w.pf - a.w.pf; });
+  const high = factBest(rows, function(r) { return r.pf; }, 'max')[0];
+  const low = factBest(rows, function(r) { return r.pf; }, 'min')[0];
+  const winners = rows.filter(function(r) { return r.result === 'W'; });
+  const closest = factBest(winners, function(r) { return r.margin; }, 'min')[0] || null;
+  const ranked = winners.filter(function(r) { return r.weekRank != null; });
+  const upset = ranked.length ? factBest(ranked, function(r) { return r.weekRank; }, 'max')[0] : (factBest(winners, function(r) { return r.pf; }, 'min')[0] || null);
+  const streaks = {};
+  (((facts.records.current || {}).regular || {}).currentStreaks || []).forEach(function(s) { streaks[s.manager] = s.type + s.length; });
+  const standings = facts.seasons.filter(function(r) { return r.season === cur.season; })
+    .sort(function(a, b) { return a.rank - b.rank; })
+    .map(function(r) { return { rank: r.rank, manager: r.manager, wins: r.wins, losses: r.losses, ties: r.ties, pf: r.pf, streak: streaks[r.manager] || '' }; });
+  return { season: cur.season, week: cur.lastFinalWeek, liveWeek: cur.liveWeek, complete: cur.complete, games: games, high: high, low: low, closest: closest, upset: upset, standings: standings };
+}
+
+// Freshness badge: "2026 · through Week 10 · Week 11 live" (last FINAL week).
+function badgeText(facts) {
+  const cur = facts && facts.current;
+  if (!cur) return '';
+  if (cur.complete) return cur.season + ' · season complete';
+  if (!cur.lastFinalWeek) return cur.season + ' · season starting';
+  return cur.season + ' · through Week ' + cur.lastFinalWeek + (cur.liveWeek ? ' · Week ' + cur.liveWeek + ' live' : '');
+}
+
+function recordLine(name, res) {
+  const r = res.rows[0];
+  if (!r) return null;
+  const label = RECORD_LABELS[name];
+  if (r.type) return label + ': ' + res.rows.map(function(x) { return nm(x.manager); }).join(', ') + ' ' + r.length + r.type + ' (' + r.from + ' to ' + r.to + ')';
+  if (r.count != null) return label + ': ' + res.rows.map(function(x) { return nm(x.manager); }).join(', ') + ' ' + r.count;
+  if (r.opponent === undefined) return label + ': ' + nm(r.manager) + ' ' + fmt2(r.pf) + ' (' + r.season + ')';
+  return label + ': ' + nm(r.manager) + ' ' + fmt2(r.pf) + ' v ' + nm(r.opponent) + ' ' + fmt2(r.pa) + ' (' + r.result + ', ' + r.season + ' wk' + r.week + ')';
+}
+
+// Compact, number-safe recap for the Banter and Stats-chat prompts (Phase 3):
+// this week, standings, champions, career lines, named records. Every number a
+// roast may use is in here — the number guard checks replies against it.
+function leagueRecap(facts, history) {
+  if (!facts) return '';
+  const out = [];
+  const tw = thisWeekFacts(facts);
+  if (tw) {
+    out.push('THIS WEEK (' + tw.season + ' week ' + tw.week + '): ' + tw.games.map(function(g) {
+      return nm(g.w.manager) + ' ' + fmt2(g.w.pf) + (g.tie ? ' tied ' : ' beat ') + nm(g.l.manager) + ' ' + fmt2(g.l.pf);
+    }).join('; '));
+    out.push('Week high: ' + nm(tw.high.manager) + ' ' + fmt2(tw.high.pf) + '. Week low: ' + nm(tw.low.manager) + ' ' + fmt2(tw.low.pf) + '.'
+      + (tw.closest ? ' Closest: ' + nm(tw.closest.manager) + ' over ' + nm(tw.closest.opponent) + ' by ' + fmt2(tw.closest.margin) + '.' : '')
+      + (tw.upset ? ' Upset: ' + nm(tw.upset.manager) + ' won with ' + fmt2(tw.upset.pf) + (tw.upset.weekRank ? ' (rank ' + tw.upset.weekRank + ' that week)' : '') + '.' : ''));
+    out.push('STANDINGS ' + tw.season + ' (rank name W-L PF streak):\n' + tw.standings.map(function(r) {
+      return r.rank + ' ' + nm(r.manager) + ' ' + r.wins + '-' + r.losses + (r.ties ? '-' + r.ties : '') + ' ' + fmt2(r.pf) + ' ' + r.streak;
+    }).join('\n'));
+  }
+  const seasons = (history && history.seasons) || [];
+  const champs = seasons.filter(function(s) { return s.champion; }).map(function(s) { return s.season + ' ' + nm(s.champion); });
+  if (champs.length) out.push('CHAMPIONS: ' + champs.join(', '));
+  const career = {};
+  facts.seasons.forEach(function(r) {
+    const c = career[r.manager] = career[r.manager] || { w: 0, l: 0, t: 0, pf: 0, titles: 0, xw: 0 };
+    c.w += r.wins; c.l += r.losses; c.t += r.ties; c.pf += r.pf; c.xw += r.expectedWins;
+    if (r.playoffFinish === 'champion') c.titles++;
+  });
+  out.push('CAREER regular season (name W-L PF titles luck=W-expected):\n' + Object.keys(career).sort(function(a, b) { return career[b].w - career[a].w; }).map(function(m) {
+    const c = career[m];
+    return nm(m) + ' ' + c.w + '-' + c.l + (c.t ? '-' + c.t : '') + ' ' + fmt2(c.pf) + ' ' + c.titles + ' ' + fmt2(c.w - c.xw);
+  }).join('\n'));
+  const lines = [];
+  RECORD_NAMES.forEach(function(name) {
+    if (name === 'currentStreaks') return;
+    const v = validateSpec({ v: 2, table: 'record', record: name }, facts);
+    if (!v.ok) return;
+    const line = recordLine(name, runQuery(v.spec, facts, []));
+    if (line) lines.push(line);
+  });
+  if (lines.length) out.push('RECORDS (regular season):\n' + lines.join('\n'));
+  return out.join('\n\n');
+}
+
+// Banter guard: drop any sentence carrying a number that is not in `allowedText`.
+function guardSentences(text, allowedText) {
+  // Shield decimal points (151.40) so the sentence split only breaks on real stops.
+  const DOT = '\u2024';
+  const shielded = String(text || '').replace(/(\d)\.(\d)/g, '$1' + DOT + '$2');
+  const parts = shielded.match(/[^.!?\n]+[.!?]*\s*|\n+/g) || [];
+  const unshield = function(p) { return p.split(DOT).join('.'); };
+  const kept = parts.map(unshield).filter(function(p) { return numberGuard(p, [], [allowedText]).ok; });
+  const out = kept.join('').trim();
+  return { text: out, dropped: parts.length - kept.length };
+}
 function useLeagueData() {
   const [data, setData] = useState({ history: HISTORY_DATA, stats: STATS_DATA, rosters: ROSTERS_DATA, trades: TRADE_VALUES, alltime: ALLTIME_DATA, transactions: TRANSACTIONS_DATA, players: PLAYER_SCORES, live: false });
   useEffect(function() {
@@ -1347,7 +1364,7 @@ function ResultTable(props) {
 }
 
 function ChatTab(props) {
-  const { systemPrompt, chips, placeholder, errorMsg, intro, buildContext, answer } = props;
+  const { systemPrompt, chips, placeholder, errorMsg, intro, buildContext, answer, header, postProcess } = props;
   const [messages, setMessages] = useState([]);
   // Conversation context per tab (cause D): the previous question, spec and
   // result, so follow-ups ("that game", "and in 2024?") have a referent.
@@ -1384,7 +1401,8 @@ function ChatTab(props) {
       const extra = buildContext ? await buildContext(t, next) : '';
       const fullPrompt = extra ? systemPrompt + '\n\n' + extra : systemPrompt;
       const raw = await claudeCall(next.filter(function(m) { return m.role === 'user' || m.role === 'assistant'; }), fullPrompt);
-      const reply = raw.replace(/\[(FACT|MYTH|REAL|EVENT)\]/g, '').replace(/  +/g, ' ').trim();
+      let reply = raw.replace(/\[(FACT|MYTH|REAL|EVENT)\]/g, '').replace(/  +/g, ' ').trim();
+      if (postProcess) reply = postProcess(reply, fullPrompt);
       setMessages(function(p) { return p.concat([{ role: 'assistant', content: reply }]); });
     } catch (e) {
       const txt = (e && e.message === 'MODEL_ERROR') ? 'Model hiccup — try again.' : errorMsg;
@@ -1404,6 +1422,7 @@ function ChatTab(props) {
         })}
       </div>
       <div style={{ flexGrow: 1, overflowY: 'auto', padding: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
+        {header || null}
         {messages.length === 0 && !loading && (
           <div style={{ margin: 'auto', textAlign: 'center', color: T.faint, fontSize: 14, maxWidth: 300, lineHeight: 1.7, padding: '20px 8px' }}>{intro}</div>
         )}
@@ -1433,87 +1452,36 @@ function ChatTab(props) {
   );
 }
 
-function slimAlltime(d) {
-  if (!d) return d;
-  // weeklyScores (raw per-game scores) and h2hBySeason (covered by deterministic query layer)
-  // are excluded to keep the system prompt within the artifact runtime's prompt budget.
-  // records games have player-name arrays stripped — scores and teams are sufficient for narration.
-  function stripGame(g) {
-    if (!g || typeof g !== 'object') return g;
-    const { as, bs, ab, bb, ...rest } = g;
-    return rest;
-  }
-  const records = {};
-  for (const [k, v] of Object.entries(d.records || {})) {
-    records[k] = Array.isArray(v) ? v.map(stripGame) : stripGame(v);
-  }
-  const { weeklyScores, h2hBySeason, records: _r, ...rest } = d;
-  return { ...rest, records };
-}
-
 // ── Compact prompt encoders (token-lean: no repeated JSON keys) ───────────────
-// Pipe-delimited tables beat JSON for tabular data — one header line, then rows,
-// so a field name is paid for once instead of once per manager. The big matrices
-// (allTimeH2H, weeklyScores, per-season boards) are dropped from the prompt
-// entirely — the deterministic query engine answers those exactly on demand.
 function tsv(cols, rows) {
   return [cols.join('|')].concat((rows || []).map(function(r) {
     return cols.map(function(c) { const v = r[c]; return v == null ? '' : v; }).join('|');
   })).join('\n');
 }
-// Career table from computeAnalytics().allTime — carries record, pf/pa, avg, the
-// consistency SD, all-time high/low, all-play and the luck (actual−expected wins).
-function careerTable(allTime) {
-  return tsv(['name', 'rec', 'pf', 'pa', 'avg', 'SD', 'hi', 'lo', 'allPlay', 'apW%', 'xW', 'luck'],
-    (allTime || []).map(function(m) {
-      return { name: m.alias || m.name, rec: m.record, pf: m.pf, pa: m.pa, avg: m.avgScore,
-        SD: m.consistencySD, hi: m.high, lo: m.low, allPlay: m.allPlay, 'apW%': m.allPlayWinPct,
-        xW: m.expectedWins, luck: m.luck };
-    }));
-}
-// Everything from alltime.json that the career table does NOT already cover,
-// encoded compactly: playoff records, nemesis/bunny, all-time record games,
-// per-season finish trend, and positional strengths.
+// alltime.json tables the fact-table recap does NOT carry: playoff records,
+// nemesis/bunny, season trend, positional strengths, consistency, bench waste.
+// (W/L, PF, records and streaks come from the recap — one source.)
 function alltimeSummary(d) {
   if (!d) return '';
   const out = [];
-  const g = function(x) { return x ? (distinctName(x.a) + ' ' + x.pa + '-' + x.pb + ' ' + distinctName(x.b) + ' [' + x.season + ' wk' + x.week + ']') : ''; };
-
   const pr = d.playoffRecords || {};
   const prRows = Object.keys(pr).map(function(h) { const r = pr[h]; return { name: distinctName(h), rec: r.wins + '-' + r.losses, apps: r.appearances, pf: r.pf, pa: r.pa }; });
   if (prRows.length) out.push('PLAYOFFS (W-L, apps=appearances):\n' + tsv(['name', 'rec', 'apps', 'pf', 'pa'], prRows));
-
   if (d.nemesis) out.push('NEMESIS (worst matchup, min 3 mtgs): ' + Object.keys(d.nemesis).map(function(h) { const n = d.nemesis[h]; return distinctName(h) + '→' + distinctName(n.opponent) + '(' + n.wins + '-' + n.losses + ')'; }).join('; '));
   if (d.bunny)   out.push('BUNNY (best matchup, min 3 mtgs): '   + Object.keys(d.bunny).map(function(h)   { const b = d.bunny[h];   return distinctName(h) + '→' + distinctName(b.opponent) + '(' + b.wins + '-' + b.losses + ')'; }).join('; '));
-
-  const rec = d.records || {};
-  const rl = [];
-  if (rec.highestScore)  rl.push('highest game: ' + g(rec.highestScore));
-  if (rec.lowestScore)   rl.push('lowest game: ' + g(rec.lowestScore));
-  if (rec.biggestWin)    rl.push('biggest blowout: ' + g(rec.biggestWin));
-  if (rec.closestGame)   rl.push('closest game: ' + g(rec.closestGame));
-  if (rec.highestSeason) rl.push('highest season PF: ' + distinctName(rec.highestSeason.manager) + ' ' + rec.highestSeason.pf + ' (' + rec.highestSeason.season + ')');
-  if (rec.lowestSeason)  rl.push('lowest season PF: ' + distinctName(rec.lowestSeason.manager) + ' ' + rec.lowestSeason.pf + ' (' + rec.lowestSeason.season + ')');
-  if (rec.longestWinStreak)  rl.push('longest W streak: ' + distinctName(rec.longestWinStreak.manager) + ' ' + rec.longestWinStreak.streak);
-  if (rec.longestLossStreak) rl.push('longest L streak: ' + distinctName(rec.longestLossStreak.manager) + ' ' + rec.longestLossStreak.streak);
-  if (rl.length) out.push('RECORDS:\n' + rl.join('\n'));
-
-  // Per-season finish trend: "name: 2023 r3 108ppg, 2024 r1 121ppg, ..."
+  if (d.consistencyStats) out.push('CONSISTENCY (SD of weekly scores, lower=steadier; avg):\n' + Object.keys(d.consistencyStats).map(function(h) { const c = d.consistencyStats[h].allTime; return distinctName(h) + ' SD ' + c.stdDev + ' avg ' + c.avg; }).join('\n'));
+  if (d.benchStats && d.benchStats.perManager) out.push('BENCH (avg pts left on bench per game): ' + d.benchStats.perManager.map(function(b) { return distinctName(b.manager) + ' ' + b.avgBenchPts; }).join(', '));
   if (d.seasonalTrends) {
     const tl = Object.keys(d.seasonalTrends).map(function(h) {
-      const arr = d.seasonalTrends[h] || [];
-      return distinctName(h) + ': ' + arr.map(function(t) { return t.season + ' r' + t.rank + ' ' + t.ppg + 'ppg'; }).join(', ');
+      return distinctName(h) + ': ' + (d.seasonalTrends[h] || []).map(function(t) { return t.season + ' r' + t.rank + ' ' + t.ppg + 'ppg'; }).join(', ');
     });
     if (tl.length) out.push('SEASON TREND (r=finish rank, ppg=points/game):\n' + tl.join('\n'));
   }
-
-  // Positional strengths: latest season only, avg pts/game by position.
   if (d.positionalStrengths) {
     const rows = [];
     Object.keys(d.positionalStrengths).forEach(function(h) {
       const seasonsObj = d.positionalStrengths[h] || {};
-      const yrs = Object.keys(seasonsObj).sort();
-      const last = yrs[yrs.length - 1];
+      const last = Object.keys(seasonsObj).sort().pop();
       if (!last) return;
       const p = seasonsObj[last];
       rows.push({ name: distinctName(h), yr: last, QB: p.QB, RB: p.RB, WR: p.WR, TE: p.TE, K: p.K, DEF: p.DEF });
@@ -1531,60 +1499,104 @@ function tradesLines(txns) {
     return t.season + ' wk' + t.week + ': ' + distinctName(t.managerA) + ' gets [' + a + '] ↔ ' + distinctName(t.managerB) + ' gets [' + b + ']';
   }).join('\n');
 }
-// Current-season standings + extremes, compact.
-function currentSeasonBlock(statsData) {
-  if (!statsData) return '(no current-season data)';
-  const st = (statsData.standings || []).map(function(r, i) {
-    return { rk: i + 1, name: distinctName(r.manager), rec: (r.wins || 0) + '-' + (r.losses || 0), pf: r.pf, pa: r.pa };
-  });
-  let s = 'season ' + statsData.season + '\n' + tsv(['rk', 'name', 'rec', 'pf', 'pa'], st);
-  if (statsData.extremes) s += '\nextremes: ' + JSON.stringify(statsData.extremes);
-  return s;
+
+// ── This Week card (Phase 3) — last completed week, straight from the facts ───
+function ThisWeekCard(props) {
+  const tw = useMemo(function() { return thisWeekFacts(props.facts); }, [props.facts]);
+  const [open, setOpen] = useState(true);
+  if (!tw) return null;
+  const line = function(label, r, extra) { return r ? <div className="tw-line"><span className="tw-k">{label}</span> {nm(r.manager) + ' ' + fmt2(r.pf) + (extra ? extra(r) : '')}</div> : null; };
+  return (
+    <div className="tw-card" data-testid="this-week">
+      <div className="tw-head">
+        <button className="tw-toggle" onClick={function() { setOpen(!open); }}>{(open ? '▾ ' : '▸ ') + 'This week · ' + tw.season + ' Week ' + tw.week}</button>
+        <button className="tw-rb" onClick={props.onRecordBook}>Record Book</button>
+      </div>
+      {open && (
+        <div className="tw-body">
+          <div className="tw-games">
+            {tw.games.map(function(g) {
+              return <div key={g.w.gameId} className="tw-game"><b>{nm(g.w.manager)}</b> {fmt2(g.w.pf)} <span className="tw-dim">{g.tie ? 'tied' : 'beat'}</span> {nm(g.l.manager)} {fmt2(g.l.pf)}</div>;
+            })}
+          </div>
+          {line('High', tw.high)}
+          {line('Low', tw.low)}
+          {tw.closest ? <div className="tw-line"><span className="tw-k">Closest</span> {nm(tw.closest.manager) + ' over ' + nm(tw.closest.opponent) + ' by ' + fmt2(tw.closest.margin)}</div> : null}
+          {line('Upset', tw.upset, function(r) { return ' beat ' + nm(r.opponent) + (r.weekRank ? ' (rank ' + r.weekRank + ' that week)' : ''); })}
+          <table className="md-table tw-table">
+            <thead><tr><th>#</th><th>Manager</th><th>W-L</th><th>PF</th><th>Streak</th></tr></thead>
+            <tbody>{tw.standings.map(function(r) {
+              return <tr key={r.manager}><td>{r.rank}</td><td>{nm(r.manager)}</td><td>{r.wins + '-' + r.losses + (r.ties ? '-' + r.ties : '')}</td><td>{fmt2(r.pf)}</td><td>{r.streak}</td></tr>;
+            })}</tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
 }
 
-// Per-season champion + condensed standings (no games) — for the banter prompt.
-function slimHistory(d) {
-  const seasons = (d && d.seasons) ? d.seasons : [];
-  return seasons.map(function(s) {
-    return {
-      season: s.season,
-      champion: s.champion ? distinctName(s.champion) : null,
-      standings: (s.standings || []).map(function(r) { return { manager: distinctName(r.manager), wins: r.wins, losses: r.losses, pf: r.pf }; }),
-    };
-  });
+// ── Record Book panel (Phase 3) — every named record, no model ────────────────
+function RecordBook(props) {
+  const facts = props.facts;
+  const [scope, setScope] = useState('regular');
+  const [season, setSeason] = useState('all');
+  const seasons = useMemo(function() { const s = []; facts.seasons.forEach(function(r) { if (s.indexOf(r.season) === -1) s.push(r.season); }); return s; }, [facts]);
+  const books = useMemo(function() {
+    return RECORD_NAMES.map(function(name) {
+      const v = validateSpec({ v: 2, table: 'record', record: name, where: { phase: scope, seasons: season === 'all' ? undefined : [season] } }, facts);
+      return { name: name, res: v.ok ? runQuery(v.spec, facts, []) : { rows: [] } };
+    });
+  }, [facts, scope, season]);
+  function side(r) {
+    if (r.type) return nm(r.manager) + ' · ' + r.length + r.type + ' · ' + r.from + ' → ' + r.to;
+    if (r.count != null) return nm(r.manager) + ' · ' + r.count;
+    if (r.opponent === undefined) return nm(r.manager) + ' · ' + fmt2(r.pf) + ' · ' + r.season;
+    return nm(r.manager) + ' ' + fmt2(r.pf) + ' – ' + fmt2(r.pa) + ' ' + nm(r.opponent) + ' · ' + r.season + ' wk' + r.week;
+  }
+  return (
+    <div className="rb-panel" data-testid="record-book">
+      <div className="rb-head">
+        <b>Record Book</b>
+        <select value={scope} onChange={function(e) { setScope(e.target.value); }}><option value="regular">Regular season</option><option value="all">All games</option></select>
+        <select value={season} onChange={function(e) { setSeason(e.target.value); }}><option value="all">All seasons</option>{seasons.map(function(s) { return <option key={s} value={s}>{s}</option>; })}</select>
+        <button className="tw-rb" onClick={props.onClose}>Close</button>
+      </div>
+      <div className="rb-list">
+        {books.map(function(b) {
+          return (
+            <div key={b.name} className="rb-item" data-record={b.name}>
+              <div className="rb-label">{RECORD_LABELS[b.name]}</div>
+              {b.res.rows.length ? b.res.rows.slice(0, 8).map(function(r, i) { return <div key={i} className="rb-row">{side(r)}</div>; }) : <div className="rb-row tw-dim">—</div>}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
 
 function StatsTab(props) {
-  const { historyData, statsData, alltimeData, transactionsData, playersData, loreMaster } = props;
-  const analytics = useMemo(function() { return computeAnalytics(historyData); }, [historyData]);
-  const facts = useMemo(function() { return buildFactTable(historyData, canonical); }, [historyData]);
+  const { historyData, facts, alltimeData, transactionsData, playersData, loreMaster } = props;
+  const [book, setBook] = useState(false);
   const loreCtx = loreMaster
     ? '\n\nLEAGUE CONTEXT (names, champions, glossary — for resolving names only, NOT for inventing stats):\n' + loreMaster.slice(0, 2500)
     : '';
-  // Narration prompt: deterministic pre-computed tables ONLY — no raw game dump,
-  // so the model cannot do its own (error-prone) win/loss arithmetic. Anything
-  // not in the tables arrives via the DETERMINISTIC QUERY RESULT block (buildContext).
-  const sp = 'You are the statistician for the Borehamwood Plancy League. Answer ONLY from the data below — NEVER compute or invent numbers yourself.\n\n'
-    + 'CRITICAL: All win/loss/points figures must be read verbatim from the tables below or the DETERMINISTIC QUERY RESULT block. Do NOT add up games or derive records yourself — if a number is not given to you, say you do not have it rather than estimate.\n\n'
-    + 'NAMES: always use the real NAME shown in the tables, never a Sleeper handle. Two Benjys: Lev and Sanford.\n\n'
-    + 'ANSWER FORMAT: 1) ONE short sentence on method. 2) GitHub Markdown table for any ranking. 3) At most ONE closing sentence. No preamble.\n\n'
-    + 'TABLES BELOW are pipe-delimited (header row, then one row per manager). Column key — '
-    + 'rec=record W-L; pf/pa=points for/against; avg=avg score; SD=consistency (lower=steadier); hi/lo=best/worst single game; '
-    + 'allPlay=record vs the whole league each week; apW%=all-play win%; xW=expected wins; luck=actual−expected wins (+lucky, −unlucky).\n\n'
-    + 'ANYTHING NOT IN THESE TABLES — a specific head-to-head, a per-season H2H, a game list, individual NFL player scoring — arrives via the DETERMINISTIC QUERY RESULT block appended below when relevant. Do not guess it from the tables.'
-    + loreCtx
-    + '\n\nCAREER (all-time, regular season):\n' + careerTable(analytics.allTime)
-    + '\n\n' + alltimeSummary(slimAlltime(alltimeData))
-    + '\n\nTRADES:\n' + tradesLines(transactionsData)
-    + '\n\nCURRENT SEASON:\n' + currentSeasonBlock(statsData);
+  // Chat-fallback prompt (non-data questions only): the fact-table recap plus the
+  // alltime-only tables. Numeric questions never reach it — they go through the
+  // query engine — and any number in a chat reply must appear in this prompt.
+  const sp = useMemo(function() {
+    return 'You are the statistician for the Borehamwood Plancy League. Answer ONLY from the data below — NEVER compute or invent numbers. If a number is not given to you, say you do not have it. Use names, never Sleeper handles; two Benjys: Lev and Sanford. Be brief.'
+      + loreCtx
+      + '\n\n' + leagueRecap(facts, historyData)
+      + '\n\n' + alltimeSummary(alltimeData)
+      + '\n\nTRADES:\n' + tradesLines(transactionsData);
+  }, [facts, historyData, alltimeData, transactionsData, loreCtx]);
 
   // Query engine v2: code answers, the model only phrases (answerStatQuestion).
-  // A non-data question (opinion/lore) falls through to chat with the tables
-  // above; any number in that reply must appear in the prompt (number guard).
   async function answer(query, conversation, ctx) {
     const out = await answerStatQuestion(query, ctx, {
       facts: facts, players: playersData,
-      plan: function(prompt) { return claudeCall([{ role: 'user', content: prompt }], 'Output only JSON.'); },
+      plan: function(prompt) { return claudeCall([{ role: 'user', content: prompt }], 'Output only JSON.', { json: true }); },
       narrate: function(prompt) { return claudeCall([{ role: 'user', content: prompt }], 'Reply in one or two plain sentences.'); },
       log: function() { if (DEBUG) console.log.apply(console, ['[stats]'].concat([].slice.call(arguments))); },
     });
@@ -1595,55 +1607,57 @@ function StatsTab(props) {
     return { content: reply, table: null, ctx: ctx };
   }
 
-  return <ChatTab systemPrompt={sp} answer={answer} chips={['All-time standings', 'Unluckiest manager?', 'Most consistent scorer?', 'Biggest bench disasters?']} placeholder="Message…" errorMsg="Something went wrong — try again." intro="The record book — career records, luck ratings, playoff history, consistency. Ask about personal bests, positional strengths, or any head-to-head." />;
+  return (
+    <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
+      {book && <RecordBook facts={facts} onClose={function() { setBook(false); }} />}
+      <ChatTab systemPrompt={sp} answer={answer}
+        header={<ThisWeekCard facts={facts} onRecordBook={function() { setBook(true); }} />}
+        chips={['Most points in a loss?', "This week's upset?", 'Current standings', 'Longest streaks']}
+        placeholder="Message…" errorMsg="Something went wrong — try again."
+        intro="Ask about records, standings, head-to-heads or any week. Numbers come straight from the league data." />
+    </div>
+  );
 }
 
 function BanterTab(props) {
-  const { historyData, statsData, alltimeData, lore } = props;
+  const { historyData, facts, alltimeData, lore } = props;
 
   const banterPrompt = useMemo(function() {
     const rule = [
       '══ PRIME DIRECTIVE ══',
       'You are the resident wind-up merchant of the Borehamwood Plancy League.',
       'STYLE: ESPN mock-grandeur, bone-dry British wit, mock gravity. Punchy 3-5 sentences. Lean on Jewish/Borehamwood texture. Sign off big beats with "a hearty hearty mazel tov."',
-      'Never be cruel — mockery is the love language. Never invent statistics.',
-      '',
-      'CRITICAL OUTPUT RULE: NEVER print tag labels like [FACT], [MYTH], [REAL], or [EVENT] in your response. These are internal reasoning cues only — your output must read as natural chat, no square-bracket annotations of any kind.',
-      '',
-      'VERIFICATION RULE: Before stating any league result, score, record, or season outcome, verify it against RAW HISTORY and CURRENT SEASON below. If the event predates our data (pre-2023), you may reference it but must treat it as unverified lore rather than confirmed fact. Never contradict the data.',
+      'Never be cruel — mockery is the love language. Never invent statistics: every score, record or number you use must appear in the RECAP below (pre-2023 lore is unverified and may be referenced as lore only).',
+      'NEVER print tag labels like [FACT], [MYTH], [REAL], or [EVENT].',
       '',
       '══ LORE MASTER ══',
     ].join('\n');
-
-    // Slim summaries only — raw JSON dumps blew the prompt budget (the repo's
-    // own <20 KB rule). Champions + standings, all-time records, current-season
-    // standings/extremes are enough to verify any claim the bot makes.
-    const statsSummary = statsData ? { league: statsData.league, season: statsData.season, standings: statsData.standings, extremes: statsData.extremes } : null;
-    const dataSection = '\n\n══ VERIFIED DATA (check all facts here first) ══'
-      + '\n\nSEASON HISTORY (champions + standings):\n' + JSON.stringify(slimHistory(historyData))
-      + '\n\nCURRENT SEASON:\n' + JSON.stringify(statsSummary)
-      + '\n\nALL-TIME RECORDS:\n' + JSON.stringify(slimAlltime(alltimeData));
-    if (DEBUG) console.log('banter prompt bytes:', (rule + (lore.master || '') + dataSection).length);
-
-    if (lore.master) return rule + '\n' + lore.master + dataSection;
-
-    // Fallback when lore files haven't loaded yet
-    return rule + '\nChampions (most recent first): Alastair Livingston 2025 (first legit Plancey — beat Polak in final), Saul Freedman 2024+2023+2021+2017 (4 belts, the GOAT), Benjy Levey 2022, Jamie Kay 2020, Josh Gaon 2019, Gideon Sakofsky 2018, Alastair Livingston inaugural (asterisked).'
-      + '\nThe Miriam = wooden spoon. Sanford = king of the Miriam. Lev = autodraft legend ("Does it auto-draft automatically?"). Dan = Commissioner/narrator. Gideon lives in Israel (4am watches). The Plancey = championship belt named after Rabbi Alan Plancey.'
+    // Compact recap from the fact table (Phase 3 diet) — no raw JSON dumps.
+    const recap = '\n\n══ RECAP (verified data — the only source of numbers) ══\n' + leagueRecap(facts, historyData)
+      + (alltimeData && alltimeData.nemesis ? '\n\nNEMESIS: ' + Object.keys(alltimeData.nemesis).map(function(h) { const n = alltimeData.nemesis[h]; return distinctName(h) + '→' + distinctName(n.opponent) + '(' + n.wins + '-' + n.losses + ')'; }).join('; ') : '');
+    if (lore.master) return rule + '\n' + lore.master.slice(0, 12000) + recap;
+    return rule + '\nThe Miriam = wooden spoon. Sanford = king of the Miriam. Lev = autodraft legend ("Does it auto-draft automatically?"). Dan = Commissioner/narrator. Gideon lives in Israel (4am watches). The Plancey = championship belt named after Rabbi Alan Plancey.'
       + '\nTWO BENJYS: benjlev=Lev, sanfbe=Sanford. allyl900=Alastair.'
       + '\nNAME MAP: ' + JSON.stringify(NAMES)
-      + dataSection;
-  }, [lore.master, historyData, statsData, alltimeData]);
+      + recap;
+  }, [lore.master, historyData, facts, alltimeData]);
 
   function buildContext(query) {
     if (!lore.ready) return '';
     const lore_ctx = retrieveLore(query, lore.archive, lore.quotes);
     return lore_ctx ? '--- RETRIEVED LORE ---\n' + lore_ctx : '';
   }
+  // Number guard for roasts: drop any sentence whose numbers are not in the prompt.
+  function postProcess(reply, fullPrompt) {
+    const g = guardSentences(reply, fullPrompt);
+    if (DEBUG && g.dropped) console.log('[banter] number guard dropped', g.dropped, 'sentence(s)');
+    return g.text || "I'll keep the numbers out of this one — ask the Stats tab for the receipts.";
+  }
 
   return <ChatTab
     systemPrompt={banterPrompt}
     buildContext={buildContext}
+    postProcess={postProcess}
     chips={['Roast the 2025 champion', 'Most cursed manager?', "This week's smack bulletin", 'Roast Lev']}
     placeholder="Message…"
     errorMsg="Blimey — give it another go."
@@ -2202,6 +2216,23 @@ const CSS = `
   .plaincy-app{display:flex;flex-direction:column;height:var(--app-h,100dvh);width:100%;max-width:560px;margin:0 auto;background:#090d18;overflow:hidden;}
   @media(min-width:640px){.plaincy-app{max-width:780px;}}
   .rt-wrap{overflow-x:auto;margin:8px -4px 0;}
+  .tw-card{background:#0f1625;border:1px solid #24344e;border-radius:12px;padding:10px 12px;font-size:13px;color:#e8f1ff;}
+  .tw-head{display:flex;align-items:center;gap:8px;justify-content:space-between;}
+  .tw-toggle{background:none;border:none;color:#f59e0b;font-weight:800;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;padding:0;text-align:left;}
+  .tw-rb{background:#1a2640;border:1px solid #304260;color:#e8f1ff;border-radius:8px;padding:5px 10px;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0;}
+  .tw-body{margin-top:8px;display:flex;flex-direction:column;gap:4px;}
+  .tw-game{line-height:1.5;}
+  .tw-k{color:#6e8db0;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.05em;margin-right:4px;}
+  .tw-dim{color:#6e8db0;}
+  .tw-table{margin-top:6px;}
+  .tw-table td,.tw-table th{padding:5px 8px;}
+  .rb-panel{position:absolute;inset:0;z-index:5;background:#090d18;display:flex;flex-direction:column;}
+  .rb-head{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 14px;border-bottom:1px solid #24344e;background:#0f1625;color:#e8f1ff;}
+  .rb-head select{background:#1a2640;color:#e8f1ff;border:1px solid #304260;border-radius:8px;padding:5px 6px;font-size:13px;max-width:44%;}
+  .rb-list{overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:10px;}
+  .rb-item{background:#0f1625;border:1px solid #24344e;border-radius:10px;padding:9px 11px;}
+  .rb-label{color:#f59e0b;font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:3px;}
+  .rb-row{font-size:13px;color:#e8f1ff;line-height:1.5;overflow-wrap:anywhere;}
   .rt td,.rt th{white-space:nowrap;}
   .rt-more{font-size:11px;color:#6e8db0;margin-top:4px;}
   .res{display:inline-block;min-width:18px;text-align:center;border-radius:5px;padding:1px 5px;font-size:11px;font-weight:800;}
@@ -2223,7 +2254,9 @@ const TABS = [
 
 export default function App() {
   const [tab, setTab] = useState('stats');
-  const { history, stats, rosters, trades, alltime, transactions, players, live } = useLeagueData();
+  const { history, stats, rosters, trades, alltime, transactions, players } = useLeagueData();
+  // ONE fact table for the whole app (Stats, Banter, badge) — same builder as the pipeline.
+  const facts = useMemo(function() { return buildFactTable(history, canonical); }, [history]);
   const { keyboardOpen } = useViewport();
   const lore = useLore(tab === 'banter');
 
@@ -2244,9 +2277,8 @@ export default function App() {
           <div style={{ fontWeight: 900, fontSize: 22, color: T.text, letterSpacing: '-0.5px', lineHeight: 1 }}>Pl<span style={{ color: T.indigo }}>AI</span>ncy</div>
           <div style={{ fontSize: 11, color: T.dim, marginTop: 2, letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 600 }}>Borehamwood Plancy League</div>
         </div>
-        <div title={live ? 'Fetched the latest published data' : 'Running on the data baked into this artifact — re-paste to update'} style={{ fontSize: 10.5, color: T.dim, border: '1px solid ' + T.border, borderRadius: 6, padding: '4px 9px', whiteSpace: 'nowrap', flexShrink: 0, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 5 }}>
-          <span style={{ width: 6, height: 6, borderRadius: '50%', background: live ? T.green : T.amber, display: 'inline-block' }} />
-          {(live ? 'Live · ' : 'Snapshot · ') + fmtBuiltAt(BUILT_AT)}
+        <div data-testid="freshness" title={'Data built ' + fmtBuiltAt(BUILT_AT) + ' (' + BUILT_AT + ')'} style={{ fontSize: 10.5, color: T.dim, border: '1px solid ' + T.border, borderRadius: 6, padding: '4px 9px', flexShrink: 1, minWidth: 0, fontWeight: 600, textAlign: 'right', lineHeight: 1.35 }}>
+          {badgeText(facts) || fmtBuiltAt(BUILT_AT)}
         </div>
       </div>
 
@@ -2256,10 +2288,10 @@ export default function App() {
             sandbox, so keep-alive is the only option. Live mounts on demand: it
             fetches Sleeper on mount and is spoiler-safe, so a fresh mount is correct. */}
         <div style={{ display: tab === 'stats' ? 'flex' : 'none', flex: 1, minHeight: 0, flexDirection: 'column' }}>
-          <StatsTab historyData={history} statsData={stats} alltimeData={alltime} transactionsData={transactions} playersData={players} loreMaster={lore.master} />
+          <StatsTab historyData={history} facts={facts} alltimeData={alltime} transactionsData={transactions} playersData={players} loreMaster={lore.master} />
         </div>
         <div style={{ display: tab === 'banter' ? 'flex' : 'none', flex: 1, minHeight: 0, flexDirection: 'column' }}>
-          <BanterTab historyData={history} statsData={stats} alltimeData={alltime} lore={lore} />
+          <BanterTab historyData={history} facts={facts} alltimeData={alltime} lore={lore} />
         </div>
         <div style={{ display: tab === 'trade' ? 'flex' : 'none', flex: 1, minHeight: 0, flexDirection: 'column' }}>
           <TradeGrader rostersData={rosters} tradeValues={trades} />

@@ -638,3 +638,106 @@ async function answerStatQuestion(query, ctx, deps) {
   }
   return { content: sentence, table: result, ctx: next(spec, result), source: source, modelCalls: modelCalls };
 }
+
+// ── Current-season summaries (Phase 3) — pure, built from the fact table ──────
+// The last completed week: results, high/low, closest game, upset, mini standings.
+function thisWeekFacts(facts) {
+  const cur = facts && facts.current;
+  if (!cur || !cur.lastFinalWeek) return null;
+  const rows = facts.games.filter(function(r) { return r.season === cur.season && r.week === cur.lastFinalWeek && r.status === 'final' && !r.bye; });
+  if (!rows.length) return null;
+  const byGame = {};
+  rows.forEach(function(r) { (byGame[r.gameId] = byGame[r.gameId] || []).push(r); });
+  const games = Object.keys(byGame).map(function(k) {
+    const p = byGame[k];
+    const w = p.find(function(r) { return r.result === 'W'; }) || p[0];
+    const l = p.find(function(r) { return r !== w; }) || p[0];
+    return { w: w, l: l, tie: w.result === 'T' };
+  }).sort(function(a, b) { return b.w.pf - a.w.pf; });
+  const high = factBest(rows, function(r) { return r.pf; }, 'max')[0];
+  const low = factBest(rows, function(r) { return r.pf; }, 'min')[0];
+  const winners = rows.filter(function(r) { return r.result === 'W'; });
+  const closest = factBest(winners, function(r) { return r.margin; }, 'min')[0] || null;
+  const ranked = winners.filter(function(r) { return r.weekRank != null; });
+  const upset = ranked.length ? factBest(ranked, function(r) { return r.weekRank; }, 'max')[0] : (factBest(winners, function(r) { return r.pf; }, 'min')[0] || null);
+  const streaks = {};
+  (((facts.records.current || {}).regular || {}).currentStreaks || []).forEach(function(s) { streaks[s.manager] = s.type + s.length; });
+  const standings = facts.seasons.filter(function(r) { return r.season === cur.season; })
+    .sort(function(a, b) { return a.rank - b.rank; })
+    .map(function(r) { return { rank: r.rank, manager: r.manager, wins: r.wins, losses: r.losses, ties: r.ties, pf: r.pf, streak: streaks[r.manager] || '' }; });
+  return { season: cur.season, week: cur.lastFinalWeek, liveWeek: cur.liveWeek, complete: cur.complete, games: games, high: high, low: low, closest: closest, upset: upset, standings: standings };
+}
+
+// Freshness badge: "2026 · through Week 10 · Week 11 live" (last FINAL week).
+function badgeText(facts) {
+  const cur = facts && facts.current;
+  if (!cur) return '';
+  if (cur.complete) return cur.season + ' · season complete';
+  if (!cur.lastFinalWeek) return cur.season + ' · season starting';
+  return cur.season + ' · through Week ' + cur.lastFinalWeek + (cur.liveWeek ? ' · Week ' + cur.liveWeek + ' live' : '');
+}
+
+function recordLine(name, res) {
+  const r = res.rows[0];
+  if (!r) return null;
+  const label = RECORD_LABELS[name];
+  if (r.type) return label + ': ' + res.rows.map(function(x) { return nm(x.manager); }).join(', ') + ' ' + r.length + r.type + ' (' + r.from + ' to ' + r.to + ')';
+  if (r.count != null) return label + ': ' + res.rows.map(function(x) { return nm(x.manager); }).join(', ') + ' ' + r.count;
+  if (r.opponent === undefined) return label + ': ' + nm(r.manager) + ' ' + fmt2(r.pf) + ' (' + r.season + ')';
+  return label + ': ' + nm(r.manager) + ' ' + fmt2(r.pf) + ' v ' + nm(r.opponent) + ' ' + fmt2(r.pa) + ' (' + r.result + ', ' + r.season + ' wk' + r.week + ')';
+}
+
+// Compact, number-safe recap for the Banter and Stats-chat prompts (Phase 3):
+// this week, standings, champions, career lines, named records. Every number a
+// roast may use is in here — the number guard checks replies against it.
+function leagueRecap(facts, history) {
+  if (!facts) return '';
+  const out = [];
+  const tw = thisWeekFacts(facts);
+  if (tw) {
+    out.push('THIS WEEK (' + tw.season + ' week ' + tw.week + '): ' + tw.games.map(function(g) {
+      return nm(g.w.manager) + ' ' + fmt2(g.w.pf) + (g.tie ? ' tied ' : ' beat ') + nm(g.l.manager) + ' ' + fmt2(g.l.pf);
+    }).join('; '));
+    out.push('Week high: ' + nm(tw.high.manager) + ' ' + fmt2(tw.high.pf) + '. Week low: ' + nm(tw.low.manager) + ' ' + fmt2(tw.low.pf) + '.'
+      + (tw.closest ? ' Closest: ' + nm(tw.closest.manager) + ' over ' + nm(tw.closest.opponent) + ' by ' + fmt2(tw.closest.margin) + '.' : '')
+      + (tw.upset ? ' Upset: ' + nm(tw.upset.manager) + ' won with ' + fmt2(tw.upset.pf) + (tw.upset.weekRank ? ' (rank ' + tw.upset.weekRank + ' that week)' : '') + '.' : ''));
+    out.push('STANDINGS ' + tw.season + ' (rank name W-L PF streak):\n' + tw.standings.map(function(r) {
+      return r.rank + ' ' + nm(r.manager) + ' ' + r.wins + '-' + r.losses + (r.ties ? '-' + r.ties : '') + ' ' + fmt2(r.pf) + ' ' + r.streak;
+    }).join('\n'));
+  }
+  const seasons = (history && history.seasons) || [];
+  const champs = seasons.filter(function(s) { return s.champion; }).map(function(s) { return s.season + ' ' + nm(s.champion); });
+  if (champs.length) out.push('CHAMPIONS: ' + champs.join(', '));
+  const career = {};
+  facts.seasons.forEach(function(r) {
+    const c = career[r.manager] = career[r.manager] || { w: 0, l: 0, t: 0, pf: 0, titles: 0, xw: 0 };
+    c.w += r.wins; c.l += r.losses; c.t += r.ties; c.pf += r.pf; c.xw += r.expectedWins;
+    if (r.playoffFinish === 'champion') c.titles++;
+  });
+  out.push('CAREER regular season (name W-L PF titles luck=W-expected):\n' + Object.keys(career).sort(function(a, b) { return career[b].w - career[a].w; }).map(function(m) {
+    const c = career[m];
+    return nm(m) + ' ' + c.w + '-' + c.l + (c.t ? '-' + c.t : '') + ' ' + fmt2(c.pf) + ' ' + c.titles + ' ' + fmt2(c.w - c.xw);
+  }).join('\n'));
+  const lines = [];
+  RECORD_NAMES.forEach(function(name) {
+    if (name === 'currentStreaks') return;
+    const v = validateSpec({ v: 2, table: 'record', record: name }, facts);
+    if (!v.ok) return;
+    const line = recordLine(name, runQuery(v.spec, facts, []));
+    if (line) lines.push(line);
+  });
+  if (lines.length) out.push('RECORDS (regular season):\n' + lines.join('\n'));
+  return out.join('\n\n');
+}
+
+// Banter guard: drop any sentence carrying a number that is not in `allowedText`.
+function guardSentences(text, allowedText) {
+  // Shield decimal points (151.40) so the sentence split only breaks on real stops.
+  const DOT = '\u2024';
+  const shielded = String(text || '').replace(/(\d)\.(\d)/g, '$1' + DOT + '$2');
+  const parts = shielded.match(/[^.!?\n]+[.!?]*\s*|\n+/g) || [];
+  const unshield = function(p) { return p.split(DOT).join('.'); };
+  const kept = parts.map(unshield).filter(function(p) { return numberGuard(p, [], [allowedText]).ok; });
+  const out = kept.join('').trim();
+  return { text: out, dropped: parts.length - kept.length };
+}

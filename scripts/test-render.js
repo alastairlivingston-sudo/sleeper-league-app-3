@@ -156,8 +156,10 @@ async function main() {
   console.log("Journey 1 — online, model bridge mocked:");
   let completeCalls = 0, plannerCalls = 0;
   const isPlanner = (p) => p.includes("translate a fantasy-football question into a JSON query spec");
+  let banterPromptChars = 0;
   const complete = async (prompt) => {
     completeCalls++;
+    if (prompt.includes("wind-up merchant")) banterPromptChars = Math.max(banterPromptChars, prompt.length);
     if (isPlanner(prompt)) { plannerCalls++; return '{"type":"none"}'; }
     if (process.env.MEASURE_PROMPT) console.error(`NARRATION_PROMPT_CHARS=${prompt.length}`);
     return REPLY_SENTINEL;
@@ -188,7 +190,8 @@ async function main() {
   await flush();
   const ta = doc.querySelector("textarea");
   ok("UR-3", !!ta, "chat input (textarea) present in STATS");
-  const chip = [...doc.querySelectorAll("button.chip")][0];
+  // A multi-row recipe answer ("Current standings") is narrated by the model.
+  const chip = [...doc.querySelectorAll("button.chip")].find((c) => /current standings/i.test(c.textContent || ""));
   ok("UR-3", !!chip, "suggestion chip present in STATS");
   const before = completeCalls;
   if (chip) {
@@ -202,14 +205,54 @@ async function main() {
   // "All-time standings" chip calls send(text) directly and its text matches the
   // totals intent client-side, so NO planner call should fire — only narration.
   const p0 = plannerCalls, c0 = completeCalls;
-  const fastChip = [...doc.querySelectorAll("button.chip")].find((c) => /all-?time standings/i.test(c.textContent || ""));
-  ok("UR-5", !!fastChip, "fast-path chip ('All-time standings') present");
+  const fastChip = [...doc.querySelectorAll("button.chip")].find((c) => /longest streaks/i.test(c.textContent || ""));
+  ok("UR-5", !!fastChip, "fast-path chip ('Longest streaks') present");
   if (fastChip) {
     await act(async () => { fastChip.dispatchEvent(new window.Event("click", { bubbles: true })); });
     await flush(); await flush(); await sleep(30); await flush(); await flush();
     ok("UR-5", plannerCalls === p0, `fast-path skipped the planner model call (planner unchanged at ${plannerCalls})`);
-    ok("UR-5", completeCalls > c0, "narration model call still fired (reply produced)");
+    ok("UR-5", completeCalls === c0, "single-row record answered by a JS sentence — no model call at all");
+    ok("UR-5", /straight wins/.test(text()), "templated streak sentence rendered");
   }
+
+  // FR-14: freshness badge shows the last FINAL week (and the live week).
+  const hist = JSON.parse(fs.readFileSync(path.join(ROOT, "docs/data/history.json"), "utf8"));
+  const cur = hist.seasons[hist.seasons.length - 1];
+  const badge = (doc.querySelector("[data-testid=freshness]") || {}).textContent || "";
+  const wantBadge = cur.complete ? `${cur.season} · season complete` : `${cur.season} · through Week ${cur.lastFinalWeek}` + (cur.liveWeek ? ` · Week ${cur.liveWeek} live` : "");
+  ok("FR-14", badge === wantBadge, `badge reads "${badge}" (want "${wantBadge}")`);
+  ok("FR-14", !/Live ·|Snapshot ·/.test(badge), "no misleading live/snapshot state in the badge");
+
+  // FR-12: This Week card renders the last completed week.
+  const card = doc.querySelector("[data-testid=this-week]");
+  ok("FR-12", !!card && (card.textContent || "").includes(`Week ${cur.lastFinalWeek}`), "This Week card shows the last final week");
+  ok("FR-12", !!card && card.querySelectorAll(".tw-game").length === 4 && card.querySelectorAll("tbody tr").length === 8, "card lists 4 results and an 8-row mini standings table");
+
+  // FR-13: Record Book renders every named record.
+  const rbBtn = [...doc.querySelectorAll("button.tw-rb")].find((b) => /record book/i.test(b.textContent || ""));
+  ok("FR-13", !!rbBtn, "Record Book button present");
+  if (rbBtn) {
+    await act(async () => { rbBtn.dispatchEvent(new window.Event("click", { bubbles: true })); });
+    await flush();
+    const items = [...doc.querySelectorAll("[data-testid=record-book] .rb-item")];
+    ok("FR-13", items.length === 17, `Record Book lists all 17 named records (got ${items.length})`);
+    ok("FR-13", items.filter((i) => i.querySelector(".rb-row") && !/^—$/.test(i.querySelector(".rb-row").textContent)).length >= 16, "named records have rows");
+    const mpl = items.find((i) => i.getAttribute("data-record") === "highestScoreInLoss");
+    ok("FR-13", !!mpl && /Alastair 151\.40 – 168\.56 Josh/.test(mpl.textContent), "a record row shows both sides of the game");
+    const close = [...doc.querySelectorAll("[data-testid=record-book] button")].find((b) => /close/i.test(b.textContent || ""));
+    if (close) { await act(async () => { close.dispatchEvent(new window.Event("click", { bubbles: true })); }); await flush(); }
+  }
+
+  // Banter prompt diet: < 20 KB (Phase 3).
+  const banterBtn = navButtons.find((b) => (b.textContent || "").toUpperCase().includes("BANTER"));
+  await act(async () => { banterBtn.dispatchEvent(new window.Event("click", { bubbles: true })); });
+  await flush(); await sleep(20); await flush();
+  const bChip = [...doc.querySelectorAll("button.chip")].find((c) => /roast lev/i.test(c.textContent || ""));
+  if (bChip) {
+    await act(async () => { bChip.dispatchEvent(new window.Event("click", { bubbles: true })); });
+    await flush(); await flush(); await sleep(30); await flush(); await flush();
+  }
+  ok("FR-15", banterPromptChars > 0 && banterPromptChars < 20480, `banter prompt is ${banterPromptChars} chars (< 20 KB)`);
 
   // UR-4: offline — live fetch fails, app must still render from inlined snapshot.
   console.log("Journey 2 — offline (live fetch fails), snapshot fallback:");
@@ -252,6 +295,7 @@ async function main() {
   let ur7Calls = 0;
   const ur7Complete = async (p) => { ur7Calls++; return isPlanner(p) ? '{"table":"none"}' : "Sorry, I fabricated that earlier."; };
   const fixtureMap = { ...DATA_MAP, "history.json": "scripts/fixtures/history-2023-2025.json" };
+  // FR-12 with fixture data: the card follows whatever history is loaded.
   const { window: w4 } = await mountApp({ fetchImpl: localFetch(fixtureMap), complete: ur7Complete });
   const d4 = w4.document;
   const bubbles = () => [...d4.querySelectorAll("table.rt")].map((t) => t.closest("div[style]"));
@@ -267,6 +311,9 @@ async function main() {
   const rowsOf = (t) => t ? [...t.querySelectorAll("tbody tr")].map((tr) => [...tr.querySelectorAll("td")].map((td) => td.textContent)) : [];
   const assistantText = () => { const b = [...d4.querySelectorAll("table.rt")]; return b.length ? b[b.length - 1].parentElement.parentElement.textContent : ""; };
 
+  const card4 = d4.querySelector("[data-testid=this-week]");
+  ok("FR-12", !!card4 && /2025 Week 17/.test(card4.textContent || ""), "This Week card renders from fixture data (2025 Week 17)");
+  ok("FR-14", ((d4.querySelector("[data-testid=freshness]") || {}).textContent || "") === "2025 · season complete", "badge on a completed fixture season");
   await sendText("What is the most points anyone has scored in a loss?");
   const r1 = rowsOf(lastTable())[0] || [];
   ok("UR-7", r1.join("|") === "Alastair|151.40|Josh|168.56|L|-17.16|2023|13|regular", `msg 1 table top row is Alastair 151.40 L v Josh 168.56, 2023 wk 13 (got ${r1.join("|")})`);

@@ -118,6 +118,16 @@ const SEEDS = [
   const np = ctx.narrationPrompt("Top 25 scores ever, including playoffs?", m1.ctx, bigRes);
   ok("QR-3", np.length < 4096, `narration prompt with 25 rows is ${np.length} chars (< 4096)`);
 
+  // Phase 3: recap + banter sentence guard.
+  const recap = ctx.leagueRecap(facts, history);
+  ok("FR-15", /Most points in a loss: Alastair 151\.40 v Josh 168\.56/.test(recap), "recap carries the named records from the fact table");
+  ok("FR-15", /CHAMPIONS: 2023 Saul, 2024 Saul, 2025 Alastair/.test(recap), "recap carries champions");
+  const roast = ctx.guardSentences("Lev is a legend of losing. He once scored 999.99 in a week. A hearty hearty mazel tov!", recap);
+  ok("FR-15", roast.dropped === 1 && !/999/.test(roast.text) && /mazel tov/.test(roast.text), `banter guard drops only the sentence with an unknown number (${roast.text})`);
+  const tw = ctx.thisWeekFacts(facts);
+  ok("FR-12", tw && tw.season === "2025" && tw.week === 17 && tw.standings.length === 8, "thisWeekFacts on the fixture: 2025 week 17, 8 standings rows");
+  ok("FR-14", ctx.badgeText(facts) === "2025 · season complete", "badgeText on a completed season");
+
   // Follow-up season swap.
   const f1 = await ask("Saul's record in 2023");
   const f2 = await ask("and in 2024?", f1.ctx);
