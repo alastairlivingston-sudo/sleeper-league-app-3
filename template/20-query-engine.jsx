@@ -6,6 +6,7 @@ function flattenGames(history) {
   const rows = [];
   for (const s of seasons) {
     for (const g of (s.games || [])) {
+      if (g.status && g.status !== 'final') continue; // live/scheduled (DR-3); no status = final
       if (!(g.pa > 0 || g.pb > 0)) continue; // skip unplayed
       rows.push({ season: s.season, week: g.week, playoff: !!g.playoff, a: canonical(g.a), b: canonical(g.b), pa: g.pa, pb: g.pb });
     }

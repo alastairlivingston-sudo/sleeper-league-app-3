@@ -1,0 +1,203 @@
+{
+ "_note": "Raw Sleeper responses captured 2026-11-21 for test-status.js. wb2024 includes the re-filled 3rd-place slot (t1_original/t2_original).",
+ "state": {
+  "week": 11,
+  "season_type": "regular",
+  "season": "2026"
+ },
+ "leagueInSeason": {
+  "season": "2026",
+  "status": "in_season",
+  "settings": {
+   "playoff_week_start": 15,
+   "last_scored_leg": 10
+  }
+ },
+ "leagueComplete": {
+  "season": "2025",
+  "status": "complete",
+  "settings": {
+   "playoff_week_start": 15,
+   "last_scored_leg": 17
+  }
+ },
+ "leaguePreDraft": {
+  "season": "2027",
+  "status": "pre_draft",
+  "settings": {
+   "playoff_week_start": 15
+  }
+ },
+ "wb2024": [
+  {
+   "m": 1,
+   "r": 1,
+   "l": 7,
+   "w": 1,
+   "t1": 1,
+   "t2": 7
+  },
+  {
+   "m": 2,
+   "r": 1,
+   "l": 5,
+   "w": 3,
+   "t1": 5,
+   "t2": 3
+  },
+  {
+   "m": 3,
+   "r": 2,
+   "l": 1,
+   "w": 4,
+   "t1": 4,
+   "t2": 1,
+   "t2_from": {
+    "w": 1
+   }
+  },
+  {
+   "m": 4,
+   "r": 2,
+   "l": 3,
+   "w": 6,
+   "t1": 6,
+   "t2": 3,
+   "t2_from": {
+    "w": 2
+   }
+  },
+  {
+   "p": 5,
+   "m": 5,
+   "r": 2,
+   "l": 7,
+   "w": 5,
+   "t1": 7,
+   "t2": 5,
+   "t2_from": {
+    "l": 2
+   },
+   "t1_from": {
+    "l": 1
+   }
+  },
+  {
+   "p": 1,
+   "m": 6,
+   "r": 3,
+   "l": 6,
+   "w": 4,
+   "t1": 4,
+   "t2": 6,
+   "t2_from": {
+    "w": 4
+   },
+   "t1_from": {
+    "w": 3
+   }
+  },
+  {
+   "p": 3,
+   "m": 7,
+   "r": 3,
+   "l": 8,
+   "w": 2,
+   "t1": 2,
+   "t2": 8,
+   "t2_from": {
+    "l": 4
+   },
+   "t1_from": {
+    "l": 3
+   },
+   "t1_original": 1,
+   "t2_original": 3
+  }
+ ],
+ "wb2026": [
+  {
+   "m": 1,
+   "r": 1,
+   "l": null,
+   "w": null,
+   "t1": 6,
+   "t2": 4
+  },
+  {
+   "m": 2,
+   "r": 1,
+   "l": null,
+   "w": null,
+   "t1": 5,
+   "t2": 8
+  },
+  {
+   "m": 3,
+   "r": 2,
+   "l": null,
+   "w": null,
+   "t1": 1,
+   "t2": null,
+   "t2_from": {
+    "w": 1
+   }
+  },
+  {
+   "m": 4,
+   "r": 2,
+   "l": null,
+   "w": null,
+   "t1": 7,
+   "t2": null,
+   "t2_from": {
+    "w": 2
+   }
+  },
+  {
+   "p": 5,
+   "m": 5,
+   "r": 2,
+   "l": null,
+   "w": null,
+   "t1": null,
+   "t2": null,
+   "t2_from": {
+    "l": 2
+   },
+   "t1_from": {
+    "l": 1
+   }
+  },
+  {
+   "p": 1,
+   "m": 6,
+   "r": 3,
+   "l": null,
+   "w": null,
+   "t1": null,
+   "t2": null,
+   "t2_from": {
+    "w": 4
+   },
+   "t1_from": {
+    "w": 3
+   }
+  },
+  {
+   "p": 3,
+   "m": 7,
+   "r": 3,
+   "l": null,
+   "w": null,
+   "t1": null,
+   "t2": null,
+   "t2_from": {
+    "l": 4
+   },
+   "t1_from": {
+    "l": 3
+   }
+  }
+ ]
+}

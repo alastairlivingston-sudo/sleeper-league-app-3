@@ -57,6 +57,11 @@ jobs:
       - name: Validate generated data
         run: node scripts/validate.js --fresh
 
+      # DR-3/DR-4: status tagging, bracket phase/bye rules and the in-progress-
+      # season validator against frozen mid-season fixtures (zero-dep).
+      - name: Test game status + in-progress season rules
+        run: node scripts/test-status.js
+
       # Aggregation golden test — locks build-alltime.js math against a fixture.
       - name: Test aggregation math
         run: node scripts/test-alltime.js
