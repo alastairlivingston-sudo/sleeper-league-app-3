@@ -10,24 +10,29 @@
     "fetch-trades":    "node scripts/fetch-trades.js",
     "build-template":  "node scripts/build-template.js",
     "build-lore":      "node scripts/build-lore.js",
+    "build-facts":     "node scripts/build-facts.js",
     "build-alltime":   "node scripts/build-alltime.js",
+    "build-html":      "node scripts/build-html.js",
     "validate":        "node scripts/validate.js",
     "test-artifact":   "node scripts/test-artifact.js",
     "test-render":     "node scripts/test-render.js",
     "test-alltime":    "node scripts/test-alltime.js",
     "test-status":     "node scripts/test-status.js",
-    "test":            "node scripts/validate.js && node scripts/test-status.js && node scripts/test-alltime.js && node scripts/test-artifact.js && node scripts/test-render.js",
-    "build":           "node scripts/build-template.js && node scripts/build-lore.js && node scripts/build-alltime.js && node scripts/build-artifact.js",
-    "refresh":         "node scripts/fetch-history.js && node scripts/fetch-rosters.js && node scripts/fetch-stats.js && node scripts/fetch-fc-values.js && node scripts/fetch-trades.js && node scripts/build-template.js && node scripts/build-lore.js && node scripts/build-alltime.js && node scripts/build-artifact.js && node scripts/validate.js"
+    "test-facts":      "node scripts/test-facts.js",
+    "test-questions":  "node scripts/test-questions.js",
+    "test":            "node scripts/validate.js && node scripts/test-status.js && node scripts/test-facts.js && node scripts/test-questions.js && node scripts/test-alltime.js && node scripts/test-artifact.js && node scripts/test-render.js",
+    "build":           "node scripts/build-template.js && node scripts/build-lore.js && node scripts/build-facts.js && node scripts/build-alltime.js && node scripts/build-artifact.js && node scripts/build-html.js",
+    "refresh":         "node scripts/fetch-history.js && node scripts/fetch-rosters.js && node scripts/fetch-stats.js && node scripts/fetch-fc-values.js && node scripts/fetch-trades.js && node scripts/build-template.js && node scripts/build-lore.js && node scripts/build-facts.js && node scripts/build-alltime.js && node scripts/build-artifact.js && node scripts/build-html.js && node scripts/validate.js"
   },
   "engines": {
     "node": ">=20"
   },
-  "//devDependencies": "Test-only tooling for scripts/test-render.js (the user-journey gate). The data-pipeline scripts remain zero-dependency; these are never imported by anything that runs in production or in the daily refresh's fetch/build path.",
+  "//devDependencies": "Test + bundling tooling: scripts/test-render.js (the user-journey gate) and scripts/build-html.js (esbuild bundles dist/plaincy.html). The data-pipeline scripts remain zero-dependency; these are never imported by the fetch/build-data path.",
   "devDependencies": {
     "@babel/core": "^7.24.0",
     "@babel/preset-env": "^7.24.0",
     "@babel/preset-react": "^7.24.0",
+    "esbuild": "^0.24.2",
     "jsdom": "^29.1.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"

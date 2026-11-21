@@ -18,13 +18,14 @@ const ARTIFACT = process.argv[2] || path.join(ROOT, "commissioner.jsx");
 const TEMPLATE = path.join(ROOT, "commissioner.template.jsx");
 
 const DATA_CONSTS = [
-  "HISTORY_DATA", "STATS_DATA", "ROSTERS_DATA", "TRADE_VALUES",
-  "ALLTIME_DATA", "TRANSACTIONS_DATA", "PLAYER_SCORES",
+  "HISTORY_DATA", "ROSTERS_DATA", "TRADE_VALUES",
+  "ALLTIME_DATA", "TRANSACTIONS_DATA", "PLAYER_SCORES", "LORE_DATA",
 ];
 const REQUIRED_FUNCS = [
   "App", "StatsTab", "BanterTab", "TradeGrader", "LiveTab", "ChatTab",
   "useLeagueData", "useLore", "retrieveLore", "claudeCall",
-  "flattenGames", "runStatQuery", "parseSpec", "formatQueryResult",
+  // FR-6: query engine v2 + fact table (Phase 1/2).
+  "buildFactTable", "validateSpec", "runQuery", "fastPlan", "answerStatQuestion", "numberGuard", "ResultTable",
 ];
 const SIZE_WARN_KB = 150;
 const SIZE_FAIL_KB = 200;
@@ -177,11 +178,51 @@ function babelPresetReact() {
   catch { return require("@babel/preset-react"); }
 }
 
+// ── TR-12: dist/plaincy.html (the published-artifact build) ───────────────────
+// Exists, has the page basics, valid inlined JSON carrying every data key, the
+// bundled app (React included — no CDN script), and stays under the budget.
+const HTML = path.join(ROOT, "dist", "plaincy.html");
+function runHtml() {
+  const errors = [], warns = [];
+  const fail = (m) => errors.push(`[TR-12] ${m}`);
+  const esbuildPresent = (() => { try { require.resolve(path.join(ROOT, "node_modules", "esbuild")); return true; } catch { return false; } })();
+  if (!fs.existsSync(HTML)) {
+    if (esbuildPresent) fail("dist/plaincy.html missing — run node scripts/build-html.js");
+    else warns.push("[TR-12] dist/plaincy.html not checked — esbuild not installed");
+    return { errors, warns };
+  }
+  const html = fs.readFileSync(HTML, "utf8");
+  const bytes = Buffer.byteLength(html);
+  if (bytes > 16 * 1024 * 1024) fail(`${Math.round(bytes / 1024)} KB exceeds the 16 MB artifact limit`);
+  else if (bytes > 2 * 1024 * 1024) warns.push(`[TR-12] dist/plaincy.html is ${Math.round(bytes / 1024)} KB (> 2 MB)`);
+  if (!/^<!doctype html>/i.test(html)) fail("does not start with <!doctype html>");
+  if (!/<title>PlAIncy<\/title>/.test(html)) fail("missing <title>PlAIncy</title>");
+  if (!/<meta name="viewport"/.test(html)) fail("missing viewport meta");
+  if (!/body\{[^}]*\}|html,body\{[^}]*background/.test(html) || !/background:var\(--bg\)/.test(html)) fail("body has no explicit background");
+  if (!/:root\{[^}]*--bg/.test(html)) fail("colour tokens not defined on :root");
+  if (/<script[^>]+src=/i.test(html)) fail("loads an external script (the bundle must be inline)");
+  const m = html.match(/<script type="application\/json" id="plaincy-data">([\s\S]*?)<\/script>/);
+  if (!m) fail("no plaincy-data JSON block");
+  else {
+    try {
+      const data = JSON.parse(m[1]);
+      for (const k of ["history", "rosters", "trades", "alltime", "transactions", "players", "lore"]) {
+        if (!(k in data)) fail(`inlined data missing key "${k}"`);
+      }
+      if (!data.history || !Array.isArray(data.history.seasons) || !data.history.seasons.length) fail("inlined history has no seasons");
+    } catch (e) { fail(`inlined data is not valid JSON (${String(e.message).slice(0, 60)})`); }
+  }
+  if (!/createRoot|hydrateRoot/.test(html)) fail("bundle does not appear to include react-dom");
+  return { errors, warns };
+}
+
 // ── CLI ───────────────────────────────────────────────────────────────────────
 if (require.main === module) {
   if (!fs.existsSync(ARTIFACT)) { console.error(`test-artifact: not found: ${ARTIFACT}`); process.exit(1); }
   const src = fs.readFileSync(ARTIFACT, "utf8");
-  const { errors, warns } = run(src);
+  const jsx = run(src);
+  const h = runHtml();
+  const errors = jsx.errors.concat(h.errors), warns = jsx.warns.concat(h.warns);
   for (const w of warns) console.warn("  warn " + w);
   if (errors.length) {
     console.error(`test-artifact: ${errors.length} requirement(s) FAILED:`);
@@ -191,4 +232,4 @@ if (require.main === module) {
   console.log(`test-artifact: all structural requirements passed${warns.length ? ` (${warns.length} warning(s))` : ""}`);
 }
 
-module.exports = { run, balance };
+module.exports = { run, runHtml, balance };

@@ -39,19 +39,19 @@ function fmtBuiltAt(iso) {
 }
 
 const HISTORY_DATA = __HISTORY__;
-const STATS_DATA = __STATS__;
 const ROSTERS_DATA = __ROSTERS__;
 const TRADE_VALUES = __TRADES__;
 const ALLTIME_DATA = __ALLTIME__;
 const TRANSACTIONS_DATA = __TRANSACTIONS__;
 const PLAYER_SCORES = __PLAYERS__;
+const LORE_DATA = __LORE__;
 
 const REPO = 'alastairlivingston-sudo/sleeper-league-app-3';
 const PAGES_BASE = 'https://alastairlivingston-sudo.github.io/' + REPO.split('/')[1];
 
 const DATA_SOURCES = [
-  { history: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/history.json', stats: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/stats.json', rosters: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/rosters.json', trades: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/fc-values.json', alltime: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/alltime.json', transactions: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/transactions.json', players: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/player-scores.json' },
-  { history: PAGES_BASE + '/data/history.json', stats: PAGES_BASE + '/data/stats.json', rosters: PAGES_BASE + '/data/rosters.json', trades: PAGES_BASE + '/data/fc-values.json', alltime: PAGES_BASE + '/data/alltime.json', transactions: PAGES_BASE + '/data/transactions.json', players: PAGES_BASE + '/data/player-scores.json' },
+  { history: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/history.json', rosters: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/rosters.json', trades: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/fc-values.json', alltime: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/alltime.json', transactions: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/transactions.json', players: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/player-scores.json' },
+  { history: PAGES_BASE + '/data/history.json', rosters: PAGES_BASE + '/data/rosters.json', trades: PAGES_BASE + '/data/fc-values.json', alltime: PAGES_BASE + '/data/alltime.json', transactions: PAGES_BASE + '/data/transactions.json', players: PAGES_BASE + '/data/player-scores.json' },
 ];
 
 const LORE_SOURCES = [
@@ -68,7 +68,6 @@ const T = {
   faint: '#3d5470', indigo: '#6366f1', indigoDk: '#4f46e5',
   green: '#10b981', amber: '#f59e0b', blue: '#60a5fa', red: '#f87171',
 };
-const FF = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif";
 
 // Calling the model from an artifact.
 // The current Claude.ai artifact runtime is a sandboxed iframe (claudeusercontent.com)
@@ -88,13 +87,72 @@ function flattenPrompt(messages, systemPrompt) {
   return systemPrompt + '\n\n' + convo + '\n\nAssistant:';
 }
 
-async function claudeCall(messages, systemPrompt) {
-  // Primary: window.claude.complete (current artifact sandbox).
-  if (typeof window !== 'undefined' && window.claude && typeof window.claude.complete === 'function') {
+// ── Model bridge adapter (Phase 4) ────────────────────────────────────────────
+// Tried in order:
+//   1. claude.use("sample") — published claude.ai artifacts. Resolves async (up
+//      to ~10 s) to the sample function, or null when this view can't sample.
+//   2. window.claude.complete — the legacy paste-in artifact runtime.
+//   3. the proxied Messages API — older runtimes (kept for UR-6).
+// AI state: 'pending' → 'on' | 'off'. The UI renders immediately; AI-only
+// features (Banter, trade verdict, narration) hide when it settles 'off', while
+// deterministic Stats answers keep working.
+let SAMPLE_P = null;
+let AI_STATE = 'pending';
+const AI_LISTENERS = [];
+function setAIState(v) { if (AI_STATE === v) return; AI_STATE = v; AI_LISTENERS.slice().forEach(function(f) { f(v); }); }
+function hasWindowClaude() { return typeof window !== 'undefined' && !!window.claude; }
+function getSample() {
+  if (SAMPLE_P) return SAMPLE_P;
+  if (hasWindowClaude() && typeof window.claude.use === 'function') {
+    SAMPLE_P = Promise.resolve().then(function() { return window.claude.use('sample'); }).catch(function() { return null; });
+  } else {
+    SAMPLE_P = Promise.resolve(null);
+  }
+  SAMPLE_P.then(function(sample) {
+    if (sample) setAIState('on');
+    else if (hasWindowClaude() && typeof window.claude.complete === 'function') setAIState('on');
+    else if (hasWindowClaude()) setAIState('off'); // a Claude viewer that can't sample here
+    else setAIState('on');                         // no bridge at all → legacy Messages API path
+  });
+  return SAMPLE_P;
+}
+function useAIState() {
+  const [v, setV] = useState(AI_STATE);
+  useEffect(function() {
+    getSample();
+    AI_LISTENERS.push(setV);
+    setV(AI_STATE);
+    return function() { const i = AI_LISTENERS.indexOf(setV); if (i !== -1) AI_LISTENERS.splice(i, 1); };
+  }, []);
+  return v;
+}
+const SAMPLE_OFF = ['not_granted', 'sampling_disabled', 'not_declared', 'capability_disabled', 'capability_removed'];
+
+// opts.json → planner (sample.json, quick tier). Narration/chat → sample(), quick
+// tier, cache:false. Always resolves to a string.
+async function claudeCall(messages, systemPrompt, opts) {
+  const sample = await getSample();
+  if (sample) {
+    const turns = (messages || []).filter(function(m) { return (m.role === 'user' || m.role === 'assistant') && m.content; })
+      .map(function(m) { return { role: m.role, content: String(m.content) }; });
+    const input = [{ role: 'user', content: systemPrompt || 'Answer briefly.' }].concat(turns);
+    if (input[input.length - 1].role !== 'user') input.push({ role: 'user', content: 'Continue.' });
+    try {
+      if (opts && opts.json) return JSON.stringify(await sample.json(input, { modelTier: 'quick' }));
+      const r = await sample(input, { modelTier: 'quick', cache: false });
+      return r.text;
+    } catch (e) {
+      if (e && SAMPLE_OFF.indexOf(e.code) !== -1) setAIState('off');
+      throw new Error(e && e.code === 'rate_limited' ? 'MODEL_ERROR' : ((e && e.message) || 'sample failed'));
+    }
+  }
+  // window.claude.complete (legacy paste-in artifact sandbox).
+  if (hasWindowClaude() && typeof window.claude.complete === 'function') {
     const out = await window.claude.complete(flattenPrompt(messages, systemPrompt));
     if (!out) throw new Error('Empty response');
     return out;
   }
+  if (hasWindowClaude()) throw new Error('MODEL_ERROR'); // Claude viewer without sampling
   // Fallback: older runtime that proxied the Messages API directly.
   return messagesApiCall(messages, systemPrompt);
 }
@@ -147,333 +205,1022 @@ async function messagesApiCall(messages, systemPrompt) {
   throw modelIdx >= MODELS.length ? new Error('MODEL_ERROR') : (lastErr || new Error('API failed'));
 }
 
-function r1(n) { return Math.round(n * 10) / 10; }
-function r2(n) { return Math.round(n * 100) / 100; }
-function stdev(arr) {
-  if (arr.length < 2) return 0;
-  const m = arr.reduce(function(a, b) { return a + b; }, 0) / arr.length;
-  return Math.sqrt(arr.reduce(function(a, b) { return a + (b - m) * (b - m); }, 0) / arr.length);
-}
-function blankRow(h) { return { handle: h, w: 0, l: 0, t: 0, pf: 0, pa: 0, scores: [], apW: 0, apL: 0, apT: 0 }; }
-function finalizeRow(m) {
-  const games = m.w + m.l + m.t;
-  const apG = m.apW + m.apL + m.apT;
-  const apPct = apG ? m.apW / apG : 0;
-  const expW = apPct * games;
-  const avg = m.scores.length ? m.scores.reduce(function(a,b){return a+b;},0) / m.scores.length : 0;
-  return {
-    name: displayName(m.handle), alias: distinctName(m.handle), handle: m.handle,
-    record: m.w + '-' + m.l + (m.t ? '-' + m.t : ''),
-    wins: m.w, losses: m.l, pf: r2(m.pf), pa: r2(m.pa),
-    avgScore: r1(avg), consistencySD: r1(stdev(m.scores)),
-    high: m.scores.length ? r2(Math.max.apply(null, m.scores)) : 0,
-    low: m.scores.length ? r2(Math.min.apply(null, m.scores)) : 0,
-    allPlay: m.apW + '-' + m.apL + (m.apT ? '-' + m.apT : ''),
-    allPlayWinPct: r1(apPct * 100), expectedWins: r1(expW), luck: r1(m.w - expW),
-  };
-}
-function computeAnalytics(history) {
-  const seasons = (history && history.seasons) ? history.seasons : [];
-  const perSeason = [];
-  const allAcc = {};
-  for (let si = 0; si < seasons.length; si++) {
-    const s = seasons[si];
-    const acc = {};
-    const weeks = {};
-    const games = s.games || [];
-    for (let gi = 0; gi < games.length; gi++) {
-      const g = games[gi];
-      if (g.playoff || (g.status && g.status !== 'final') || !(g.pa > 0 || g.pb > 0)) continue;
-      if (!weeks[g.week]) weeks[g.week] = [];
-      weeks[g.week].push(g);
-    }
-    const weekKeys = Object.keys(weeks);
-    for (let wi = 0; wi < weekKeys.length; wi++) {
-      const wgames = weeks[weekKeys[wi]];
-      const board = [];
-      for (let gi = 0; gi < wgames.length; gi++) {
-        const g = wgames[gi];
-        const ha = canonical(g.a), hb = canonical(g.b);
-        if (!acc[ha]) acc[ha] = blankRow(ha);
-        if (!acc[hb]) acc[hb] = blankRow(hb);
-        const A = acc[ha], B = acc[hb];
-        A.pf += g.pa; A.pa += g.pb; A.scores.push(g.pa);
-        B.pf += g.pb; B.pa += g.pa; B.scores.push(g.pb);
-        if (g.pa > g.pb) { A.w++; B.l++; } else if (g.pb > g.pa) { B.w++; A.l++; } else { A.t++; B.t++; }
-        board.push([ha, g.pa], [hb, g.pb]);
-      }
-      for (let ai = 0; ai < board.length; ai++) {
-        const h = board[ai][0], sc = board[ai][1];
-        const a = acc[h];
-        for (let bi = 0; bi < board.length; bi++) {
-          const h2 = board[bi][0], sc2 = board[bi][1];
-          if (h2 === h) continue;
-          if (sc > sc2) a.apW++; else if (sc < sc2) a.apL++; else a.apT++;
-        }
-      }
-    }
-    const rows = Object.values(acc);
-    if (rows.length) {
-      perSeason.push({
-        season: s.season,
-        champion: s.champion ? displayName(s.champion) : null,
-        managers: rows.map(finalizeRow).sort(function(a,b){ return b.wins - a.wins || b.pf - a.pf; }),
-      });
-    }
-    for (let ri = 0; ri < rows.length; ri++) {
-      const m = rows[ri];
-      if (!allAcc[m.handle]) allAcc[m.handle] = blankRow(m.handle);
-      const t = allAcc[m.handle];
-      t.w += m.w; t.l += m.l; t.t += m.t; t.pf += m.pf; t.pa += m.pa;
-      t.apW += m.apW; t.apL += m.apL; t.apT += m.apT;
-      for (let si2 = 0; si2 < m.scores.length; si2++) t.scores.push(m.scores[si2]);
-    }
-  }
-  const allTime = Object.values(allAcc).map(finalizeRow).sort(function(a,b){ return b.wins - a.wins || b.pf - a.pf; });
-  return { perSeason: perSeason, allTime: allTime };
+
+// ── Fact table (Phase 1) ─────────────────────────────────────────────────────
+// ONE table behind every record, standing, streak and H2H: two rows per game, one
+// per manager. This partial is PLAIN JS (no JSX, no imports) on purpose:
+// scripts/build-facts.js and the zero-dep tests load this exact file with `vm`,
+// so the browser and the pipeline run identical code (non-negotiable 2).
+//
+// buildFactTable(history, canon) → { games, seasons, records }
+//   history: lean history.json or history-details.json ({ seasons: [...] })
+//   canon:   handle → canonical handle (aliases merged)
+function factRound(n) { return Math.round((Number(n) || 0) * 100) / 100; }
+
+function factPhase(g) {
+  if (g.phase) return g.phase;
+  return g.playoff ? 'playoff' : 'regular';
 }
 
-// ── Deterministic stats query engine ─────────────────────────────────────────
-// Flattens every game (canonicalised handles) into one list the query engine
-// reads from. Never lets the model do arithmetic — JS computes, model narrates.
-function flattenGames(history) {
+function buildFactRows(history, canon) {
   const seasons = (history && history.seasons) ? history.seasons : [];
   const rows = [];
-  for (const s of seasons) {
-    for (const g of (s.games || [])) {
-      if (g.status && g.status !== 'final') continue; // live/scheduled (DR-3); no status = final
-      if (!(g.pa > 0 || g.pb > 0)) continue; // skip unplayed
-      rows.push({ season: s.season, week: g.week, playoff: !!g.playoff, a: canonical(g.a), b: canonical(g.b), pa: g.pa, pb: g.pb });
+  for (let si = 0; si < seasons.length; si++) {
+    const s = seasons[si];
+    const season = String(s.season);
+    const games = s.games || [];
+    const perWeek = {};
+    for (let gi = 0; gi < games.length; gi++) {
+      const g = games[gi];
+      const status = g.status || 'final';
+      if (status !== 'final' && status !== 'live') continue;
+      perWeek[g.week] = (perWeek[g.week] || 0) + 1;
+      const gameId = season + '-' + g.week + '-m' + perWeek[g.week];
+      const phase = factPhase(g);
+      const sides = [
+        { m: g.a, o: g.b, pf: g.pa, pa: g.pb, pos: g.ap, bench: g.ab },
+        { m: g.b, o: g.a, pf: g.pb, pa: g.pa, pos: g.bp, bench: g.bb },
+      ];
+      for (let k = 0; k < 2; k++) {
+        const x = sides[k];
+        const pf = factRound(x.pf), pa = factRound(x.pa);
+        const manager = canon(x.m), opponent = canon(x.o);
+        const result = status !== 'final' ? null : (pf > pa ? 'W' : (pf < pa ? 'L' : 'T'));
+        rows.push({
+          id: season + '-' + g.week + '-' + manager,
+          gameId: gameId, season: season, week: g.week, phase: phase, status: status,
+          manager: manager, opponent: opponent, pf: pf, pa: pa, result: result,
+          margin: factRound(pf - pa), combined: factRound(pf + pa),
+          bye: false, weekRank: null, allPlayW: null, allPlayL: null,
+          benchPts: Array.isArray(x.bench) ? factRound(x.bench.reduce(function(t, p) { return t + (p.pts || 0); }, 0)) : null,
+          pos: (x.pos && typeof x.pos === 'object') ? x.pos : null,
+        });
+      }
+    }
+    const byes = s.byes || [];
+    for (let bi = 0; bi < byes.length; bi++) {
+      const y = byes[bi];
+      const manager = canon(y.manager);
+      rows.push({
+        id: season + '-' + y.week + '-' + manager, gameId: season + '-' + y.week + '-bye-' + manager,
+        season: season, week: y.week, phase: 'playoff', status: 'final',
+        manager: manager, opponent: null, pf: factRound(y.pts), pa: null, result: null,
+        margin: null, combined: null, bye: true, weekRank: null, allPlayW: null, allPlayL: null,
+        benchPts: null, pos: null,
+      });
     }
   }
+  // weekRank + all-play: final regular-season rows, vs every other score that week.
+  const byWeek = {};
+  rows.forEach(function(r) {
+    if (r.status !== 'final' || r.phase !== 'regular' || r.bye) return;
+    const k = r.season + '|' + r.week;
+    (byWeek[k] = byWeek[k] || []).push(r);
+  });
+  Object.keys(byWeek).forEach(function(k) {
+    const wk = byWeek[k];
+    wk.forEach(function(r) {
+      let higher = 0, w = 0, l = 0;
+      wk.forEach(function(o) {
+        if (o === r) return;
+        if (o.pf > r.pf) { higher++; l++; } else if (o.pf < r.pf) { w++; }
+      });
+      r.weekRank = higher + 1;
+      r.allPlayW = w; r.allPlayL = l;
+    });
+  });
+  rows.sort(function(x, y) {
+    return x.season.localeCompare(y.season) || x.week - y.week || x.gameId.localeCompare(y.gameId) || x.manager.localeCompare(y.manager);
+  });
   return rows;
 }
 
-// Executes a constrained query spec against flattened games. Pure + deterministic.
-function runStatQuery(spec, games, players) {
-  if (!spec || spec.type === 'none') return null;
-  const regOnly = spec.regularSeasonOnly !== false; // default true
-  const seasonSet = Array.isArray(spec.seasons) && spec.seasons.length ? new Set(spec.seasons.map(String)) : null;
-  const mgrSet = Array.isArray(spec.managers) && spec.managers.length ? new Set(spec.managers.map(canonical)) : null;
+// A row is a scored, played game side (not a bye, not live).
+function factPlayed(r) { return r.status === 'final' && !r.bye; }
+function factInScope(r, scope) { return scope === 'all' ? true : r.phase === 'regular'; }
 
-  let pool = games.filter(function(g) {
-    if (regOnly && g.playoff) return false;
-    if (seasonSet && !seasonSet.has(String(g.season))) return false;
-    return true;
-  });
-
-  if (spec.type === 'headToHead') {
-    // Build record between every ordered pair, then filter to requested managers.
-    const rec = {};
-    function cell(x, y) { const k = x + '|' + y; if (!rec[k]) rec[k] = { manager: x, opponent: y, wins: 0, losses: 0, ties: 0, pf: 0, pa: 0, games: 0 }; return rec[k]; }
-    for (const g of pool) {
-      const A = cell(g.a, g.b), B = cell(g.b, g.a);
-      A.pf += g.pa; A.pa += g.pb; A.games++;
-      B.pf += g.pb; B.pa += g.pa; B.games++;
-      if (g.pa > g.pb) { A.wins++; B.losses++; }
-      else if (g.pb > g.pa) { B.wins++; A.losses++; }
-      else { A.ties++; B.ties++; }
+// One row per manager per season.
+function buildSeasonRows(history, rows, canon) {
+  const seasons = (history && history.seasons) ? history.seasons : [];
+  const latest = seasons.length ? String(seasons[seasons.length - 1].season) : null;
+  const out = [];
+  seasons.forEach(function(s) {
+    const season = String(s.season);
+    const complete = s.complete != null ? !!s.complete : s.champion != null;
+    const champ = s.champion ? canon(s.champion) : null;
+    const sRows = rows.filter(function(r) { return r.season === season; });
+    const playoffRows = sRows.filter(function(r) { return r.phase === 'playoff' && r.status === 'final'; });
+    const lastPlayoffWeek = playoffRows.reduce(function(m, r) { return Math.max(m, r.week); }, 0);
+    // Runner-up = champion's opponent in their last playoff game.
+    let runnerUp = null;
+    if (champ) {
+      const cg = playoffRows.filter(function(r) { return r.manager === champ && !r.bye; }).sort(function(a, b) { return b.week - a.week; })[0];
+      if (cg) runnerUp = cg.opponent;
     }
-    let rows = Object.values(rec);
-    if (mgrSet) {
-      if (mgrSet.size === 2) {
-        const [m1, m2] = Array.from(mgrSet);
-        rows = rows.filter(function(r) { return (r.manager === m1 && r.opponent === m2) || (r.manager === m2 && r.opponent === m1); });
-      } else {
-        rows = rows.filter(function(r) { return mgrSet.has(r.manager); });
+    const field = {};
+    playoffRows.forEach(function(r) { field[r.manager] = true; });
+    (s.standings || []).forEach(function(st, idx) {
+      const m = canon(st.manager);
+      const reg = sRows.filter(function(r) { return r.manager === m && r.phase === 'regular' && factPlayed(r); });
+      let w = 0, l = 0, t = 0, pf = 0, pa = 0, apW = 0, apL = 0, xw = 0;
+      reg.forEach(function(r) {
+        if (r.result === 'W') w++; else if (r.result === 'L') l++; else if (r.result === 'T') t++;
+        pf += r.pf; pa += r.pa; apW += r.allPlayW || 0; apL += r.allPlayL || 0;
+        const n = (r.allPlayW || 0) + (r.allPlayL || 0);
+        if (n) xw += (r.allPlayW || 0) / n;
+      });
+      let finish = 'missed';
+      if (!complete) finish = null;
+      else if (m === champ) finish = 'champion';
+      else if (m === runnerUp) finish = 'runner-up';
+      else if (field[m]) {
+        // Semi-finalist = last playoff game was in the final or the round before it
+        // (the 3rd-place game is not always played — Sleeper re-filled the 2024 slot).
+        const lastWk = playoffRows.filter(function(r) { return r.manager === m && !r.bye; }).reduce(function(x, r) { return Math.max(x, r.week); }, 0);
+        finish = lastWk >= lastPlayoffWeek - 1 ? 'semi' : 'consolation';
       }
-    }
-    rows.forEach(function(r) { r.pf = Math.round(r.pf * 100) / 100; r.pa = Math.round(r.pa * 100) / 100; r.winPct = r.games ? Math.round(r.wins / r.games * 1000) / 1000 : 0; });
-    rows.sort(function(x, y) { return x.manager.localeCompare(y.manager) || y.games - x.games; });
-    return { type: 'headToHead', rows: rows.slice(0, 25) };
-  }
-
-  if (spec.type === 'totals') {
-    const acc = {};
-    function row(m) { if (!acc[m]) acc[m] = { manager: m, games: 0, wins: 0, losses: 0, ties: 0, pf: 0, pa: 0, high: 0, low: Infinity }; return acc[m]; }
-    for (const g of pool) {
-      if (mgrSet && !mgrSet.has(g.a) && !mgrSet.has(g.b)) continue;
-      const A = row(g.a), B = row(g.b);
-      A.games++; B.games++;
-      A.pf += g.pa; A.pa += g.pb; B.pf += g.pb; B.pa += g.pa;
-      A.high = Math.max(A.high, g.pa); A.low = Math.min(A.low, g.pa);
-      B.high = Math.max(B.high, g.pb); B.low = Math.min(B.low, g.pb);
-      if (g.pa > g.pb) { A.wins++; B.losses++; } else if (g.pb > g.pa) { B.wins++; A.losses++; } else { A.ties++; B.ties++; }
-    }
-    let rows = Object.values(acc);
-    if (mgrSet) rows = rows.filter(function(r) { return mgrSet.has(r.manager); });
-    rows.forEach(function(r) {
-      r.pf = Math.round(r.pf * 100) / 100; r.pa = Math.round(r.pa * 100) / 100;
-      r.avg = r.games ? Math.round(r.pf / r.games * 100) / 100 : 0;
-      if (r.low === Infinity) r.low = 0;
-      r.winPct = r.games ? Math.round(r.wins / r.games * 1000) / 1000 : 0;
+      out.push({
+        id: season + '-' + m, season: season, manager: m,
+        wins: w, losses: l, ties: t, games: reg.length,
+        pf: factRound(pf), pa: factRound(pa), pfAvg: reg.length ? factRound(pf / reg.length) : 0,
+        rank: idx + 1, allPlayW: apW, allPlayL: apL,
+        expectedWins: factRound(xw), luck: factRound(w - xw),
+        playoffFinish: finish, complete: complete, current: season === latest && !complete,
+        sleeperWins: st.wins || 0, sleeperLosses: st.losses || 0,
+      });
     });
-    rows.sort(function(x, y) { return y.wins - x.wins || y.pf - x.pf; });
-    return { type: 'totals', rows: rows.slice(0, 25) };
-  }
-
-  if (spec.type === 'gameList') {
-    let rows = pool.slice();
-    if (mgrSet) rows = rows.filter(function(g) { return mgrSet.has(g.a) || mgrSet.has(g.b); });
-    const by = spec.sortBy || 'combined';
-    function metric(g) {
-      if (by === 'margin') return Math.abs(g.pa - g.pb);
-      if (by === 'high') return Math.max(g.pa, g.pb);
-      if (by === 'low') return Math.min(g.pa, g.pb);
-      return g.pa + g.pb; // combined
-    }
-    const order = spec.order === 'asc' ? 1 : -1;
-    rows.sort(function(x, y) { return (metric(x) - metric(y)) * order; });
-    const limit = Math.min(spec.limit || 10, 25);
-    return { type: 'gameList', rows: rows.slice(0, limit) };
-  }
-
-  if (spec.type === 'player') {
-    // Per-player, per-season starter scoring (name / pos / manager / season /
-    // games / total pts / avg / single-game best). Queried in JS; only matching
-    // rows are handed to the narrator.
-    const nameNeedle = spec.player ? String(spec.player).toLowerCase() : null;
-    const posSet = Array.isArray(spec.positions) && spec.positions.length ? new Set(spec.positions.map(function(p) { return String(p).toUpperCase(); })) : null;
-    const by = spec.sortBy === 'avg' ? 'avg' : (spec.sortBy === 'best' ? 'best' : (spec.sortBy === 'games' ? 'games' : 'pts'));
-    // avg is misleading on tiny samples, so require a floor unless the query set one.
-    const minGames = spec.minGames != null ? spec.minGames : (by === 'avg' ? 4 : 1);
-    let rows = (players || []).filter(function(r) {
-      if (nameNeedle && String(r.player).toLowerCase().indexOf(nameNeedle) === -1) return false;
-      if (posSet && !posSet.has(r.pos)) return false;
-      if (mgrSet && !mgrSet.has(canonical(r.manager))) return false;
-      if (seasonSet && !seasonSet.has(String(r.season))) return false;
-      if (r.games < minGames) return false;
-      return true;
-    });
-    const order = spec.order === 'asc' ? 1 : -1;
-    rows = rows.slice().sort(function(x, y) { return (x[by] - y[by]) * order; });
-    const limit = Math.min(spec.limit || 10, 25);
-    return { type: 'player', rows: rows.slice(0, limit) };
-  }
-
-  return null;
+  });
+  return out;
 }
 
-// Session cache: identical questions cost the model nothing the second time.
-const SPEC_CACHE = {};
-function cacheKey(q) { return String(q || '').toLowerCase().replace(/\s+/g, ' ').trim(); }
+// Rows equal to the best value (ties return every tied row).
+function factBest(list, key, dir) {
+  if (!list.length) return [];
+  let best = null;
+  list.forEach(function(r) {
+    const v = key(r);
+    if (v == null) return;
+    if (best == null || (dir === 'max' ? v > best : v < best)) best = v;
+  });
+  if (best == null) return [];
+  return list.filter(function(r) { return key(r) === best; });
+}
+
+// Streaks over chronological played rows per manager (ties break a streak).
+function factStreaks(rows) {
+  const by = {};
+  rows.forEach(function(r) { (by[r.manager] = by[r.manager] || []).push(r); });
+  const runs = [];
+  Object.keys(by).forEach(function(m) {
+    const list = by[m];
+    let cur = null;
+    list.forEach(function(r) {
+      if (cur && cur.type === r.result) { cur.length++; cur.to = { season: r.season, week: r.week }; }
+      else {
+        if (cur) runs.push(cur);
+        cur = { manager: m, type: r.result, length: 1, from: { season: r.season, week: r.week }, to: { season: r.season, week: r.week }, current: false };
+      }
+    });
+    if (cur) { cur.current = true; runs.push(cur); }
+  });
+  return runs;
+}
+
+function factCountBy(list, pred) {
+  const c = {};
+  list.forEach(function(r) { if (pred(r)) c[r.manager] = (c[r.manager] || 0) + 1; });
+  return Object.keys(c).map(function(m) { return { manager: m, count: c[m] }; });
+}
+
+// Game-level records over one scope of rows.
+function factGameRecords(rows, scope) {
+  const played = rows.filter(function(r) { return factPlayed(r) && factInScope(r, scope); });
+  const W = played.filter(function(r) { return r.result === 'W'; });
+  const L = played.filter(function(r) { return r.result === 'L'; });
+  const oneSide = played.filter(function(r) { return r.result === 'W' || (r.result === 'T' && r.manager < r.opponent); });
+  const ranked = played.filter(function(r) { return r.weekRank != null; });
+  const weekSize = {};
+  ranked.forEach(function(r) { const k = r.season + '|' + r.week; weekSize[k] = (weekSize[k] || 0) + 1; });
+  const streakRows = played.slice();
+  const runs = factStreaks(streakRows);
+  const lossRanked = ranked.filter(function(r) { return r.result === 'L'; });
+  const winRanked = ranked.filter(function(r) { return r.result === 'W'; });
+  const bestRank = lossRanked.length ? Math.min.apply(null, lossRanked.map(function(r) { return r.weekRank; })) : null;
+  const worstRank = winRanked.length ? Math.max.apply(null, winRanked.map(function(r) { return r.weekRank; })) : null;
+  return {
+    highestScore: factBest(played, function(r) { return r.pf; }, 'max'),
+    lowestScore: factBest(played, function(r) { return r.pf; }, 'min'),
+    highestScoreInLoss: factBest(L, function(r) { return r.pf; }, 'max'),
+    lowestScoreInWin: factBest(W, function(r) { return r.pf; }, 'min'),
+    biggestMargin: factBest(W, function(r) { return r.margin; }, 'max'),
+    closestGame: factBest(oneSide, function(r) { return Math.abs(r.margin); }, 'min'),
+    highestCombined: factBest(oneSide, function(r) { return r.combined; }, 'max'),
+    lowestCombined: factBest(oneSide, function(r) { return r.combined; }, 'min'),
+    longestWinStreak: factBest(runs.filter(function(x) { return x.type === 'W'; }), function(x) { return x.length; }, 'max'),
+    longestLossStreak: factBest(runs.filter(function(x) { return x.type === 'L'; }), function(x) { return x.length; }, 'max'),
+    currentStreaks: runs.filter(function(x) { return x.current; }).sort(function(a, b) { return b.length - a.length || a.manager.localeCompare(b.manager); }),
+    mostTopScoreWeeks: factBest(factCountBy(ranked, function(r) { return r.weekRank === 1; }), function(x) { return x.count; }, 'max'),
+    mostBottomScoreWeeks: factBest(factCountBy(ranked, function(r) { return r.weekRank === weekSize[r.season + '|' + r.week]; }), function(x) { return x.count; }, 'max'),
+    unluckiestLoss: bestRank == null ? [] : factBest(lossRanked.filter(function(r) { return r.weekRank === bestRank; }), function(r) { return r.pf; }, 'max'),
+    luckiestWin: worstRank == null ? [] : factBest(winRanked.filter(function(r) { return r.weekRank === worstRank; }), function(r) { return r.pf; }, 'min'),
+  };
+}
+
+const RECORD_NAMES = ['highestScore', 'lowestScore', 'highestScoreInLoss', 'lowestScoreInWin', 'biggestMargin',
+  'closestGame', 'highestCombined', 'lowestCombined', 'bestSeasonPF', 'worstSeasonPF', 'longestWinStreak',
+  'longestLossStreak', 'currentStreaks', 'mostTopScoreWeeks', 'mostBottomScoreWeeks', 'unluckiestLoss', 'luckiestWin'];
+
+function buildRecords(rows, seasonRows) {
+  const complete = seasonRows.filter(function(r) { return r.complete; });
+  const reg = factGameRecords(rows, 'regular');
+  const all = factGameRecords(rows, 'all');
+  const records = {};
+  RECORD_NAMES.forEach(function(name) {
+    if (name === 'bestSeasonPF' || name === 'worstSeasonPF') {
+      const v = factBest(complete, function(r) { return r.pf; }, name === 'bestSeasonPF' ? 'max' : 'min');
+      records[name] = { regular: v, all: v };
+    } else {
+      records[name] = { regular: reg[name], all: all[name] };
+    }
+  });
+  // Per-season variants for the current (in-progress or latest) season.
+  const seasonsList = [];
+  rows.forEach(function(r) { if (seasonsList.indexOf(r.season) === -1) seasonsList.push(r.season); });
+  const cur = seasonsList[seasonsList.length - 1];
+  if (cur) {
+    const curRows = rows.filter(function(r) { return r.season === cur; });
+    records.current = { season: cur, regular: factGameRecords(curRows, 'regular'), all: factGameRecords(curRows, 'all') };
+  }
+  return records;
+}
+
+// Where the league is right now: latest season, last FINAL week, live week.
+function factCurrent(history, rows) {
+  const seasons = (history && history.seasons) ? history.seasons : [];
+  const s = seasons[seasons.length - 1];
+  if (!s) return null;
+  const season = String(s.season);
+  const finals = rows.filter(function(r) { return r.season === season && r.status === 'final' && !r.bye; });
+  const lastFinalWeek = s.lastFinalWeek != null ? s.lastFinalWeek : finals.reduce(function(m, r) { return Math.max(m, r.week); }, 0);
+  const live = rows.filter(function(r) { return r.season === season && r.status === 'live'; });
+  return {
+    season: season, complete: s.complete != null ? !!s.complete : s.champion != null,
+    lastFinalWeek: lastFinalWeek, liveWeek: s.liveWeek != null ? s.liveWeek : (live.length ? live[0].week : null),
+    champion: s.champion || null, schedule: s.schedule || [],
+  };
+}
+
+function buildFactTable(history, canon) {
+  const c = canon || function(h) { return String(h || '').replace(/^@/, '').trim(); };
+  const rows = buildFactRows(history, c);
+  const seasonRows = buildSeasonRows(history, rows, c);
+  return { games: rows, seasons: seasonRows, records: buildRecords(rows, seasonRows), current: factCurrent(history, rows) };
+}
+
+// ── Query engine v2 (Phase 2): code answers, the model only phrases ──────────
+// PLAIN JS (no JSX): scripts/test-questions.js loads this exact file with `vm`.
+// Flow for every Stats question (answerStatQuestion):
+//   follow-up / dispute recipes → fastPlan recipe table → model planner (spec v2)
+//   → validateSpec (whitelist) → runQuery over the fact table → result table
+//   (rendered by code) + ONE or TWO sentences: a JS template for single-row
+//   results (no model call), else model narration passed through numberGuard.
+// Non-negotiable: no number reaches the screen unless JS computed it.
 
 // Which known managers does this query name? Matches distinct display names and
-// first names (case-insensitive, word-boundary) → canonical handles, de-duped.
+// first names (case-insensitive, word-boundary) → canonical handles, in the order
+// they appear in the question.
 function matchManagers(query) {
   const q = ' ' + String(query || '').toLowerCase() + ' ';
   const hits = [];
   Object.keys(NAMES).forEach(function(h) {
-    const names = [distinctName(h), displayName(h)];
-    for (let i = 0; i < names.length; i++) {
+    const names = [distinctName(h), displayName(h), h];
+    let at = -1;
+    for (let i = 0; i < names.length && at === -1; i++) {
       const full = String(names[i] || '').toLowerCase();
       if (!full) continue;
-      const candidates = [full].concat(full.split(' ')); // full name + each token (first name)
+      const candidates = [full].concat(full.split(' '));
       for (let j = 0; j < candidates.length; j++) {
         const w = candidates[j];
         if (w.length < 3) continue;
-        if (new RegExp('(^|[^a-z])' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '([^a-z]|$)').test(q)) {
-          if (hits.indexOf(h) === -1) hits.push(h);
-          return; // this handle counted once
-        }
+        // A bare first name shared by two managers (Benjy) is ambiguous — skip it.
+        if (i === 1 && Object.keys(NAMES).filter(function(o) { return displayName(o).toLowerCase() === w; }).length > 1) continue;
+        const m = new RegExp('(^|[^a-z])' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + "('s)?([^a-z]|$)").exec(q);
+        if (m) { at = m.index; break; }
       }
     }
+    if (at !== -1 && !hits.some(function(x) { return x.h === h; })) hits.push({ h: h, at: at });
   });
-  return hits;
+  hits.sort(function(a, b) { return a.at - b.at; });
+  return hits.map(function(x) { return x.h; });
 }
 
-// Deterministic intent detection for the two common, unambiguous shapes, so the
-// planner MODEL CALL is skipped on the majority path. Returns a spec or null
-// (null → fall through to the model planner). Conservative by design: anything
-// player/position-flavoured or ambiguous is left to the model.
-const PLAYER_HINT = /\b(wr|rb|qb|te|def|kicker|\bk\b|player|players|scorer|scorers|scored|touchdown|position|positions)\b/i;
-const H2H_HINT    = /\b(vs\.?|versus|against|head[\s-]?to[\s-]?head|h2h|beat|beaten|record against)\b/i;
-const TOTALS_HINT = /\b(standings|all[\s-]?time (table|standings|record)|win totals?|most wins|best (record|team)|career (record|wins)|rankings?|league table)\b/i;
-function fastPlan(query) {
-  if (PLAYER_HINT.test(query)) return null;      // player scoring → model
-  const mgrs = matchManagers(query);
-  if (H2H_HINT.test(query) && mgrs.length >= 2) {
-    return { type: 'headToHead', managers: mgrs };
+// Column metadata — drives the ResultTable (labels + number formatting) and the
+// spec whitelist. type: mgr | pts | int | text | result | pct
+const COLUMNS = {
+  manager: { label: 'Manager', type: 'mgr' }, opponent: { label: 'Opponent', type: 'mgr' },
+  pf: { label: 'PF', type: 'pts' }, pa: { label: 'PA', type: 'pts' }, result: { label: 'W/L', type: 'result' },
+  margin: { label: 'Margin', type: 'pts' }, combined: { label: 'Total', type: 'pts' },
+  season: { label: 'Season', type: 'int' }, week: { label: 'Wk', type: 'int' }, phase: { label: 'Phase', type: 'text' },
+  weekRank: { label: 'Wk rank', type: 'int' }, benchPts: { label: 'Bench', type: 'pts' },
+  wins: { label: 'W', type: 'int' }, losses: { label: 'L', type: 'int' }, ties: { label: 'T', type: 'int' },
+  games: { label: 'GP', type: 'int' }, winPct: { label: 'Win%', type: 'pct' },
+  pf_sum: { label: 'PF', type: 'pts' }, pf_avg: { label: 'Avg', type: 'pts' }, pf_max: { label: 'High', type: 'pts' },
+  pf_min: { label: 'Low', type: 'pts' }, pa_sum: { label: 'PA', type: 'pts' }, pa_avg: { label: 'PA avg', type: 'pts' },
+  margin_avg: { label: 'Avg margin', type: 'pts' }, topScoreWeeks: { label: 'Top wks', type: 'int' },
+  rank: { label: 'Rank', type: 'int' }, pfAvg: { label: 'Avg', type: 'pts' }, expectedWins: { label: 'xW', type: 'pts' },
+  luck: { label: 'Luck', type: 'pts' }, playoffFinish: { label: 'Finish', type: 'text' },
+  player: { label: 'Player', type: 'text' }, pos: { label: 'Pos', type: 'text' }, pts: { label: 'Pts', type: 'pts' },
+  avg: { label: 'Avg', type: 'pts' }, best: { label: 'Best', type: 'pts' },
+  type: { label: 'Streak', type: 'text' }, length: { label: 'Len', type: 'int' }, count: { label: 'Count', type: 'int' },
+  from: { label: 'From', type: 'text' }, to: { label: 'To', type: 'text' },
+};
+
+const SPEC_TABLES = ['games', 'seasons', 'players', 'record'];
+const SPEC_GROUPS = ['', 'manager', 'opponent', 'season', 'manager,season', 'week', 'manager,opponent'];
+const SPEC_SELECT = ['games', 'wins', 'losses', 'ties', 'winPct', 'pf_sum', 'pf_avg', 'pf_max', 'pf_min', 'pa_sum', 'pa_avg', 'margin_avg', 'topScoreWeeks'];
+const GAME_COLS = ['manager', 'pf', 'opponent', 'pa', 'result', 'margin', 'combined', 'season', 'week', 'phase', 'weekRank', 'benchPts'];
+const SEASON_COLS = ['manager', 'season', 'rank', 'wins', 'losses', 'ties', 'pf', 'pa', 'pfAvg', 'expectedWins', 'luck', 'playoffFinish'];
+const PLAYER_COLS = ['player', 'pos', 'manager', 'season', 'games', 'pts', 'avg', 'best'];
+
+// Strict validation against whitelists. Returns { ok, spec } (normalised, with
+// defaults) or { ok:false, error }. Unknown table/column/handle/record → rejected.
+function validateSpec(raw, facts) {
+  if (!raw || typeof raw !== 'object') return { ok: false, error: 'not an object' };
+  if (raw.table === 'none' || raw.type === 'none') return { ok: false, error: 'none' };
+  if (raw.v !== 2) return { ok: false, error: 'not a v2 spec' };
+  if (SPEC_TABLES.indexOf(raw.table) === -1) return { ok: false, error: 'unknown table ' + raw.table };
+  const handles = Object.keys(NAMES);
+  const seasonsKnown = {};
+  ((facts && facts.seasons) || []).forEach(function(r) { seasonsKnown[r.season] = true; });
+  const w = raw.where || {};
+  const where = {};
+  function handleList(key) {
+    if (w[key] == null) return true;
+    if (!Array.isArray(w[key])) return false;
+    const out = [];
+    for (let i = 0; i < w[key].length; i++) {
+      const c = canonical(w[key][i]);
+      if (handles.indexOf(c) === -1) return false;
+      out.push(c);
+    }
+    if (out.length) where[key] = out;
+    return true;
   }
-  if (TOTALS_HINT.test(query) && mgrs.length <= 1) {
-    return { type: 'totals', managers: mgrs.length === 1 ? mgrs : undefined };
+  if (!handleList('managers')) return { ok: false, error: 'unknown manager' };
+  if (!handleList('opponents')) return { ok: false, error: 'unknown opponent' };
+  if (w.seasons != null) {
+    if (!Array.isArray(w.seasons)) return { ok: false, error: 'seasons must be a list' };
+    const ss = w.seasons.map(String);
+    for (let i = 0; i < ss.length; i++) if (!seasonsKnown[ss[i]]) return { ok: false, error: 'unknown season ' + ss[i] };
+    if (ss.length) where.seasons = ss;
+  }
+  if (w.weeks != null) {
+    if (!Array.isArray(w.weeks) || w.weeks.some(function(x) { return !(Number(x) >= 1 && Number(x) <= 18); })) return { ok: false, error: 'bad weeks' };
+    if (w.weeks.length) where.weeks = w.weeks.map(Number);
+  }
+  if (w.gameIds != null) {
+    if (!Array.isArray(w.gameIds) || w.gameIds.some(function(g) { return !/^\d{4}-\d{1,2}-(m\d+|bye-[A-Za-z0-9_]+)$/.test(String(g)); })) return { ok: false, error: 'bad gameIds' };
+    if (w.gameIds.length) where.gameIds = w.gameIds.map(String);
+  }
+  where.phase = w.phase == null ? 'regular' : w.phase;
+  if (['regular', 'playoff', 'consolation', 'all'].indexOf(where.phase) === -1) return { ok: false, error: 'bad phase' };
+  if (w.result != null) { if (['W', 'L', 'T'].indexOf(w.result) === -1) return { ok: false, error: 'bad result' }; where.result = w.result; }
+  where.status = w.status == null ? 'final' : w.status;
+  if (['final', 'live', 'any'].indexOf(where.status) === -1) return { ok: false, error: 'bad status' };
+  if (w.playoffFinish != null) {
+    if (['champion', 'runner-up', 'semi', 'consolation', 'missed'].indexOf(w.playoffFinish) === -1) return { ok: false, error: 'bad finish' };
+    where.playoffFinish = w.playoffFinish;
+  }
+  if (w.positions != null) {
+    if (!Array.isArray(w.positions) || w.positions.some(function(p) { return ['QB', 'RB', 'WR', 'TE', 'K', 'DEF'].indexOf(String(p).toUpperCase()) === -1; })) return { ok: false, error: 'bad positions' };
+    if (w.positions.length) where.positions = w.positions.map(function(p) { return String(p).toUpperCase(); });
+  }
+  if (w.player != null) { if (typeof w.player !== 'string' || w.player.length > 40) return { ok: false, error: 'bad player' }; where.player = w.player; }
+
+  const spec = { v: 2, table: raw.table, where: where };
+  if (typeof raw._recipe === 'string' && /^[a-z-]+$/.test(raw._recipe)) spec.recipe = raw._recipe;
+  if (raw.table === 'record') {
+    if (RECORD_NAMES.indexOf(raw.record) === -1) return { ok: false, error: 'unknown record ' + raw.record };
+    spec.record = raw.record;
+  }
+  const gb = Array.isArray(raw.groupBy) ? raw.groupBy.join(',') : '';
+  if (SPEC_GROUPS.indexOf(gb) === -1) return { ok: false, error: 'bad groupBy' };
+  if (gb && raw.table !== 'games') return { ok: false, error: 'groupBy only on games' };
+  spec.groupBy = gb ? gb.split(',') : [];
+  if (raw.select != null) {
+    if (!Array.isArray(raw.select) || raw.select.some(function(c) { return SPEC_SELECT.indexOf(c) === -1; })) return { ok: false, error: 'bad select' };
+  }
+  spec.select = spec.groupBy.length ? ((raw.select && raw.select.length) ? raw.select : ['games', 'wins', 'losses', 'ties', 'pf_sum', 'pf_avg']) : [];
+  const allowedOrder = spec.groupBy.length ? spec.groupBy.concat(SPEC_SELECT)
+    : (raw.table === 'games' ? GAME_COLS : raw.table === 'seasons' ? SEASON_COLS : raw.table === 'players' ? PLAYER_COLS : []);
+  spec.orderBy = [];
+  if (raw.orderBy != null) {
+    if (!Array.isArray(raw.orderBy)) return { ok: false, error: 'orderBy must be a list' };
+    for (let i = 0; i < raw.orderBy.length; i++) {
+      const o = raw.orderBy[i] || {};
+      if (allowedOrder.indexOf(o.col) === -1) return { ok: false, error: 'bad orderBy ' + o.col };
+      if (o.dir != null && o.dir !== 'asc' && o.dir !== 'desc') return { ok: false, error: 'bad dir' };
+      spec.orderBy.push({ col: o.col, dir: o.dir || 'desc' });
+    }
+  }
+  const lim = raw.limit == null ? 10 : Number(raw.limit);
+  if (!(lim >= 1 && lim <= 25)) return { ok: false, error: 'bad limit' };
+  spec.limit = Math.floor(lim);
+  return { ok: true, spec: spec };
+}
+
+function qRound(n) { return Math.round(n * 100) / 100; }
+
+function qSort(rows, orderBy) {
+  if (!orderBy || !orderBy.length) return rows;
+  return rows.slice().sort(function(x, y) {
+    for (let i = 0; i < orderBy.length; i++) {
+      const o = orderBy[i];
+      const a = x[o.col], b = y[o.col];
+      if (a === b) continue;
+      if (a == null) return 1;
+      if (b == null) return -1;
+      const c = (typeof a === 'number' && typeof b === 'number') ? a - b : String(a).localeCompare(String(b));
+      if (c !== 0) return o.dir === 'asc' ? c : -c;
+    }
+    return 0;
+  });
+}
+
+function qGameFilter(spec, facts) {
+  const w = spec.where;
+  const ids = w.gameIds ? w.gameIds : null;
+  return facts.games.filter(function(r) {
+    if (ids) return ids.indexOf(r.gameId) !== -1;
+    if (r.bye) return false;
+    if (w.status !== 'any' && r.status !== w.status) return false;
+    if (w.phase !== 'all' && r.phase !== w.phase) return false;
+    if (w.managers && w.managers.indexOf(r.manager) === -1) return false;
+    if (w.opponents && w.opponents.indexOf(r.opponent) === -1) return false;
+    if (w.seasons && w.seasons.indexOf(r.season) === -1) return false;
+    if (w.weeks && w.weeks.indexOf(r.week) === -1) return false;
+    if (w.result && r.result !== w.result) return false;
+    return true;
+  });
+}
+
+function qAggregate(rows, groupBy, select) {
+  const groups = {};
+  const order = [];
+  rows.forEach(function(r) {
+    const k = groupBy.map(function(g) { return r[g]; }).join('|');
+    if (!groups[k]) { groups[k] = { key: {}, rows: [] }; groupBy.forEach(function(g) { groups[k].key[g] = r[g]; }); order.push(k); }
+    groups[k].rows.push(r);
+  });
+  return order.map(function(k) {
+    const g = groups[k];
+    const rs = g.rows;
+    const out = Object.assign({}, g.key);
+    const pfs = rs.map(function(r) { return r.pf; });
+    const w = rs.filter(function(r) { return r.result === 'W'; }).length;
+    const l = rs.filter(function(r) { return r.result === 'L'; }).length;
+    const t = rs.filter(function(r) { return r.result === 'T'; }).length;
+    const sum = function(f) { return rs.reduce(function(s, r) { return s + (r[f] || 0); }, 0); };
+    const all = {
+      games: rs.length, wins: w, losses: l, ties: t,
+      winPct: rs.length ? Math.round(w / rs.length * 1000) / 1000 : 0,
+      pf_sum: qRound(sum('pf')), pf_avg: rs.length ? qRound(sum('pf') / rs.length) : 0,
+      pf_max: pfs.length ? Math.max.apply(null, pfs) : 0, pf_min: pfs.length ? Math.min.apply(null, pfs) : 0,
+      pa_sum: qRound(sum('pa')), pa_avg: rs.length ? qRound(sum('pa') / rs.length) : 0,
+      margin_avg: rs.length ? qRound(sum('margin') / rs.length) : 0,
+      topScoreWeeks: rs.filter(function(r) { return r.weekRank === 1; }).length,
+    };
+    select.forEach(function(c) { out[c] = all[c]; });
+    return out;
+  });
+}
+
+// Executes a validated spec. Pure + deterministic.
+// → { table, columns, rows, spec, total }
+function runQuery(spec, facts, players) {
+  const w = spec.where;
+  if (spec.table === 'games') {
+    let rows = qGameFilter(spec, facts);
+    if (spec.groupBy.length) {
+      rows = qAggregate(rows, spec.groupBy, spec.select);
+      rows = qSort(rows, spec.orderBy.length ? spec.orderBy : [{ col: 'wins', dir: 'desc' }, { col: 'pf_sum', dir: 'desc' }]);
+      return { table: 'games', columns: spec.groupBy.concat(spec.select), rows: rows.slice(0, spec.limit), total: rows.length, spec: spec };
+    }
+    rows = qSort(rows, spec.orderBy.length ? spec.orderBy : [{ col: 'season', dir: 'desc' }, { col: 'week', dir: 'desc' }, { col: 'pf', dir: 'desc' }]);
+    return { table: 'games', columns: ['manager', 'pf', 'opponent', 'pa', 'result', 'margin', 'season', 'week', 'phase'], rows: rows.slice(0, spec.limit), total: rows.length, spec: spec };
+  }
+  if (spec.table === 'seasons') {
+    let rows = facts.seasons.filter(function(r) {
+      if (w.managers && w.managers.indexOf(r.manager) === -1) return false;
+      if (w.seasons && w.seasons.indexOf(r.season) === -1) return false;
+      if (w.playoffFinish && r.playoffFinish !== w.playoffFinish) return false;
+      return true;
+    });
+    rows = qSort(rows, spec.orderBy.length ? spec.orderBy : [{ col: 'season', dir: 'desc' }, { col: 'rank', dir: 'asc' }]);
+    return { table: 'seasons', columns: ['manager', 'season', 'rank', 'wins', 'losses', 'pf', 'pa', 'playoffFinish'], rows: rows.slice(0, spec.limit), total: rows.length, spec: spec };
+  }
+  if (spec.table === 'players') {
+    const needle = w.player ? w.player.toLowerCase() : null;
+    const by = (spec.orderBy[0] && spec.orderBy[0].col) || 'pts';
+    const minGames = by === 'avg' ? 4 : 1;
+    let rows = (players || []).filter(function(r) {
+      if (needle && String(r.player).toLowerCase().indexOf(needle) === -1) return false;
+      if (w.positions && w.positions.indexOf(r.pos) === -1) return false;
+      if (w.managers && w.managers.indexOf(canonical(r.manager)) === -1) return false;
+      if (w.seasons && w.seasons.indexOf(String(r.season)) === -1) return false;
+      return r.games >= minGames;
+    }).map(function(r) { return Object.assign({}, r, { manager: canonical(r.manager), season: String(r.season) }); });
+    rows = qSort(rows, spec.orderBy.length ? spec.orderBy : [{ col: 'pts', dir: 'desc' }]);
+    return { table: 'players', columns: PLAYER_COLS, rows: rows.slice(0, spec.limit), total: rows.length, spec: spec };
+  }
+  if (spec.table === 'record') {
+    const scope = w.phase === 'all' ? 'all' : 'regular';
+    const name = spec.record;
+    if (name === 'bestSeasonPF' || name === 'worstSeasonPF') {
+      const pool = facts.seasons.filter(function(r) {
+        if (!r.complete && !(w.seasons && w.seasons.indexOf(r.season) !== -1)) return false;
+        if (w.managers && w.managers.indexOf(r.manager) === -1) return false;
+        if (w.seasons && w.seasons.indexOf(r.season) === -1) return false;
+        return true;
+      });
+      const rows = factBest(pool, function(r) { return r.pf; }, name === 'bestSeasonPF' ? 'max' : 'min');
+      return { table: 'record', record: name, columns: ['manager', 'season', 'pf', 'wins', 'losses'], rows: rows, total: rows.length, spec: spec };
+    }
+    // Game records recompute over the filtered rows with the SAME code that built
+    // facts.records, so "X's best week" or "the 2024 closest game" stay one path.
+    const sub = facts.games.filter(function(r) {
+      if (w.managers && w.managers.indexOf(r.manager) === -1) return false;
+      if (w.seasons && w.seasons.indexOf(r.season) === -1) return false;
+      return true;
+    });
+    const rec = factGameRecords(sub, scope)[name] || [];
+    if (name === 'longestWinStreak' || name === 'longestLossStreak' || name === 'currentStreaks') {
+      const rows = rec.map(function(x) { return { manager: x.manager, type: x.type, length: x.length, from: x.from.season + ' wk' + x.from.week, to: x.to.season + ' wk' + x.to.week }; });
+      return { table: 'record', record: name, columns: ['manager', 'type', 'length', 'from', 'to'], rows: rows.slice(0, name === 'currentStreaks' ? 25 : spec.limit), total: rows.length, spec: spec };
+    }
+    if (name === 'mostTopScoreWeeks' || name === 'mostBottomScoreWeeks') {
+      return { table: 'record', record: name, columns: ['manager', 'count'], rows: rec, total: rec.length, spec: spec };
+    }
+    return { table: 'record', record: name, columns: ['manager', 'pf', 'opponent', 'pa', 'result', 'margin', 'season', 'week', 'phase'], rows: rec, total: rec.length, spec: spec };
+  }
+  return { table: spec.table, columns: [], rows: [], total: 0, spec: spec };
+}
+
+// ── Formatting helpers (shared by templates, ResultTable and the guard) ──────
+function fmt2(n) { return n == null ? '' : (Math.round(Number(n) * 100) / 100).toFixed(2); }
+function nm(h) { return h ? distinctName(h) : '—'; }
+function wkLabel(r) { return r.season + ' week ' + r.week; }
+
+const RECORD_LABELS = {
+  highestScore: 'Highest score', lowestScore: 'Lowest score', highestScoreInLoss: 'Most points in a loss',
+  lowestScoreInWin: 'Fewest points in a win', biggestMargin: 'Biggest margin', closestGame: 'Closest game',
+  highestCombined: 'Highest combined score', lowestCombined: 'Lowest combined score', bestSeasonPF: 'Best season PF',
+  worstSeasonPF: 'Worst season PF', longestWinStreak: 'Longest win streak', longestLossStreak: 'Longest losing streak',
+  currentStreaks: 'Current streaks', mostTopScoreWeeks: 'Most top-score weeks', mostBottomScoreWeeks: 'Most bottom-score weeks',
+  unluckiestLoss: 'Unluckiest loss', luckiestWin: 'Luckiest win',
+};
+
+// JS-written sentence for a result — used directly for single-row recipe answers
+// (no model call) and as the fallback whenever the number guard rejects narration.
+function templateSentence(spec, result, ctx) {
+  const rows = (result && result.rows) || [];
+  if (!rows.length) return 'Nothing in the data matches that.';
+  const r = rows[0];
+  const tie = rows.length > 1 ? ' (tied — ' + rows.length + ' share it)' : '';
+  if (result.table === 'record') {
+    switch (result.record) {
+      case 'highestScoreInLoss': return nm(r.manager) + ' scored ' + fmt2(r.pf) + ' and still lost — ' + nm(r.opponent) + ' put up ' + fmt2(r.pa) + ' in ' + wkLabel(r) + '.' + tie;
+      case 'lowestScoreInWin': return nm(r.manager) + ' won with just ' + fmt2(r.pf) + ', beating ' + nm(r.opponent) + "'s " + fmt2(r.pa) + ' in ' + wkLabel(r) + '.' + tie;
+      case 'highestScore': return nm(r.manager) + ' holds it with ' + fmt2(r.pf) + ' against ' + nm(r.opponent) + ' (' + fmt2(r.pa) + ') in ' + wkLabel(r) + '.' + tie;
+      case 'lowestScore': return nm(r.manager) + "'s " + fmt2(r.pf) + ' against ' + nm(r.opponent) + ' (' + fmt2(r.pa) + ') in ' + wkLabel(r) + ' is the low mark.' + tie;
+      case 'biggestMargin': return nm(r.manager) + ' beat ' + nm(r.opponent) + ' by ' + fmt2(r.margin) + ' (' + fmt2(r.pf) + '–' + fmt2(r.pa) + ') in ' + wkLabel(r) + '.' + tie;
+      case 'closestGame': return nm(r.manager) + ' edged ' + nm(r.opponent) + ' ' + fmt2(r.pf) + '–' + fmt2(r.pa) + ', a ' + fmt2(Math.abs(r.margin)) + ' margin, in ' + wkLabel(r) + '.' + tie;
+      case 'highestCombined':
+      case 'lowestCombined': return nm(r.manager) + ' ' + fmt2(r.pf) + ' – ' + fmt2(r.pa) + ' ' + nm(r.opponent) + ' in ' + wkLabel(r) + ': ' + fmt2(r.pf + r.pa) + ' combined.' + tie;
+      case 'unluckiestLoss': return nm(r.manager) + ' scored ' + fmt2(r.pf) + ' — rank ' + r.weekRank + ' that week — and still lost to ' + nm(r.opponent) + ' (' + fmt2(r.pa) + ') in ' + wkLabel(r) + '.' + tie;
+      case 'luckiestWin': return nm(r.manager) + ' won with ' + fmt2(r.pf) + ' — rank ' + r.weekRank + ' that week — because ' + nm(r.opponent) + ' managed ' + fmt2(r.pa) + ' in ' + wkLabel(r) + '.' + tie;
+      case 'bestSeasonPF':
+      case 'worstSeasonPF': return nm(r.manager) + ' scored ' + fmt2(r.pf) + ' over the ' + r.season + ' regular season.' + tie;
+      case 'longestWinStreak':
+      case 'longestLossStreak': return rows.map(function(x) { return nm(x.manager); }).join(' and ') + ': ' + r.length + ' straight ' + (r.type === 'W' ? 'wins' : 'losses') + ' (' + r.from + ' to ' + r.to + ').';
+      case 'currentStreaks': return nm(r.manager) + ' has the longest current run: ' + r.length + ' ' + (r.type === 'W' ? 'straight wins' : r.type === 'L' ? 'straight losses' : 'ties') + '.';
+      case 'mostTopScoreWeeks': return rows.map(function(x) { return nm(x.manager); }).join(' and ') + ' topped the weekly scoring ' + r.count + ' times.';
+      case 'mostBottomScoreWeeks': return rows.map(function(x) { return nm(x.manager); }).join(' and ') + ' finished bottom of the weekly scoring ' + r.count + ' times.';
+    }
+  }
+  const w = spec.where || {};
+  if (result.table === 'games' && w.gameIds && rows.length === 2 && !r.bye) {
+    const win = rows[0].result === 'W' ? rows[0] : rows[1].result === 'W' ? rows[1] : null;
+    const lose = win === rows[0] ? rows[1] : rows[0];
+    const total = fmt2(rows[0].pf + rows[1].pf);
+    if (!win) return nm(rows[0].manager) + ' and ' + nm(rows[1].manager) + ' tied ' + fmt2(rows[0].pf) + '–' + fmt2(rows[1].pf) + ' in ' + wkLabel(r) + ' (' + total + ' total).';
+    return nm(win.manager) + ' ' + fmt2(win.pf) + ' – ' + fmt2(lose.pf) + ' ' + nm(lose.manager) + ' in ' + wkLabel(r) + ': ' + total + ' total points. ' + nm(win.manager) + ' won.';
+  }
+  if (result.table === 'games' && spec.groupBy.join(',') === 'manager,opponent' && rows.length === 1) {
+    return nm(r.manager) + ' is ' + r.wins + '–' + r.losses + (r.ties ? '–' + r.ties : '') + ' against ' + nm(r.opponent) + (w.phase === 'all' ? ' (all games)' : ' in the regular season') + (w.seasons ? ' (' + w.seasons.join(', ') + ')' : '') + '.';
+  }
+  if (result.table === 'games' && spec.groupBy.join(',') === 'manager' && rows.length === 1) {
+    return nm(r.manager) + ' is ' + r.wins + '–' + r.losses + (r.ties ? '–' + r.ties : '') + (w.seasons ? ' in ' + w.seasons.join(', ') : ' all-time') + (w.phase === 'all' ? ' (all games)' : ' in the regular season') + ', ' + fmt2(r.pf_sum) + ' points for.';
+  }
+  if (result.table === 'seasons' && rows.length === 1) {
+    if (w.playoffFinish === 'champion') return nm(r.manager) + ' won the ' + r.season + ' title.';
+    return nm(r.manager) + ' went ' + r.wins + '–' + r.losses + (r.ties ? '–' + r.ties : '') + ' in ' + r.season + ', finishing rank ' + r.rank + ' with ' + fmt2(r.pf) + ' points' + (r.playoffFinish ? ' (' + r.playoffFinish + ')' : '') + '.';
+  }
+  if (result.table === 'seasons' && w.playoffFinish === 'champion' && !rows.length) return 'That season has no champion yet.';
+  if (spec.recipe === 'upset' && rows.length === 1) {
+    return nm(r.manager) + ' pulled the upset of ' + wkLabel(r) + ': ' + fmt2(r.pf) + (r.weekRank ? ' (rank ' + r.weekRank + ' that week)' : '') + ' was enough to beat ' + nm(r.opponent) + ' (' + fmt2(r.pa) + ').';
+  }
+  if (spec.recipe === 'week-top' && rows.length === 1) {
+    return nm(r.manager) + ' topped ' + wkLabel(r) + ' with ' + fmt2(r.pf) + ' against ' + nm(r.opponent) + '.';
+  }
+  if (result.table === 'games' && !spec.groupBy.length && rows.length === 1) {
+    return nm(r.manager) + ' ' + fmt2(r.pf) + ' – ' + fmt2(r.pa) + ' ' + nm(r.opponent) + ' in ' + wkLabel(r) + ' (' + (r.result === 'W' ? 'won' : r.result === 'L' ? 'lost' : r.result === 'T' ? 'tied' : 'in progress') + ').';
+  }
+  if (ctx && ctx.title) return ctx.title + '.';
+  return 'Here is what the data shows.';
+}
+
+// ── Number guard (cause E) ────────────────────────────────────────────────────
+// Every number in a model sentence must be in the result rows (2 dp, or its 1 dp /
+// integer form), a season or week in the rows, or an integer ≤ 20 that appears in
+// the rows as a count/rank. Anything else → the sentence is rejected.
+function guardAllowed(rows, extra) {
+  const nums = [];
+  function add(v) {
+    if (typeof v === 'number' && isFinite(v)) nums.push(v);
+    else if (typeof v === 'string' && /^-?\d+(\.\d+)?$/.test(v)) nums.push(Number(v));
+    else if (typeof v === 'string') { const m = v.match(/\d+(\.\d+)?/g); if (m) m.forEach(function(x) { nums.push(Number(x)); }); }
+    else if (v && typeof v === 'object') Object.keys(v).forEach(function(k) { add(v[k]); });
+  }
+  (rows || []).forEach(add);
+  (extra || []).forEach(add);
+  // Derived pair figures the narrator may legitimately state (game total, gap).
+  (rows || []).forEach(function(r) { if (typeof r.pf === 'number' && typeof r.pa === 'number') { nums.push(qRound(r.pf + r.pa)); nums.push(qRound(Math.abs(r.pf - r.pa))); } });
+  return nums;
+}
+function numberGuard(sentence, rows, extra) {
+  const allowed = guardAllowed(rows, extra);
+  // Drop thousands separators, then take standalone numbers (not parts of handles
+  // like "joshjr11" or ordinals like "3rd"). No lookbehind: older Safari lacks it.
+  const text = String(sentence || '').replace(/(\d),(?=\d{3}\b)/g, '$1');
+  const found = [];
+  const re = /(^|[^A-Za-z0-9.])(\d+(?:\.\d+)?)(?![A-Za-z0-9])/g;
+  let mm;
+  while ((mm = re.exec(text)) !== null) found.push(mm[2]);
+  const bad = [];
+  found.forEach(function(tok) {
+    const n = Number(tok);
+    const dp = (tok.split('.')[1] || '').length;
+    const okNum = allowed.some(function(v) {
+      const a = Math.abs(v);
+      if (dp >= 2) return Math.abs(Math.round(a * 100) / 100 - n) < 1e-9;
+      if (dp === 1) return Math.abs(Math.round(a * 10) / 10 - n) < 1e-9;
+      return a === n || (Number.isInteger(a) && a === n);
+    });
+    if (!okNum) bad.push(tok);
+  });
+  return { ok: bad.length === 0, bad: bad };
+}
+
+// ── Recipes: regex → spec, no model call ─────────────────────────────────────
+const NUMERIC_HINT = /\b(most|highest|lowest|fewest|least|record|how many|points?|pts|average|avg|score[ds]?|scoring|wins?|won|loss(es)?|lost|streaks?|best|worst|margin|blowout|closest|standings|rank(ed|ing)?|total|biggest|largest|smallest)\b|\d/i;
+const PLAYOFF_HINT = /\b(playoffs?|post-?season|including playoffs|all games)\b/i;
+const DISPUTE_HINT = /\b(how could|how can|how did .* (lose|win)|that'?s wrong|that is wrong|are you sure|that can'?t be|not true|incorrect|wrong|fabricat\w*|made (that|it) up|really\?)/i;
+const FOLLOW_GAME_HINT = /\b(total (game )?score|game total|combined( score)?|that game|the game|final score|who won (it|that|the game)|what was the score|full score|both scores)\b/i;
+
+function recipeSpec(table, where, extra) {
+  return Object.assign({ v: 2, table: table, where: Object.assign({}, where || {}) }, extra || {});
+}
+
+// Each recipe: test(q, info) → spec | null. First hit wins. `info` carries the
+// managers named, years named, and the current season.
+const RECIPES = [
+  { id: 'inLoss-high', re: /\b(most|highest|biggest|max(imum)?|best)\b.*\b(loss|losing|lost|defeat)\b|\b(scored|score) .*\b(still|and) (lost|lose)\b/i, make: function(i) { return recipeSpec('record', i.where, { record: 'highestScoreInLoss' }); } },
+  { id: 'inLoss-low', re: /\b(lowest|fewest|least|worst)\b.*\b(loss|losing|lost|defeat)\b/i, make: function(i) { return recipeSpec('games', Object.assign({ result: 'L' }, i.where), { orderBy: [{ col: 'pf', dir: 'asc' }], limit: 5 }); } },
+  { id: 'inWin-low', re: /\b(lowest|fewest|least|worst)\b.*\b(win|won|winning|victory)\b|\b(won|win) with (the )?(lowest|fewest|least)\b/i, make: function(i) { return recipeSpec('record', i.where, { record: 'lowestScoreInWin' }); } },
+  { id: 'inWin-high', re: /\b(most|highest)\b.*\b(in a win|winning (score|effort)|in victory)\b/i, make: function(i) { return recipeSpec('games', Object.assign({ result: 'W' }, i.where), { orderBy: [{ col: 'pf', dir: 'desc' }], limit: 5 }); } },
+  { id: 'unlucky', re: /\bunluck(y|iest)\b.*\b(loss|defeat)\b|\bunluckiest\b/i, make: function(i) { return recipeSpec('record', i.where, { record: 'unluckiestLoss' }); } },
+  { id: 'lucky', re: /\bluck(y|iest)\b.*\b(win|victory)\b|\bluckiest\b/i, make: function(i) { return recipeSpec('record', i.where, { record: 'luckiestWin' }); } },
+  { id: 'closest', re: /\b(closest|narrowest|tightest)\b|\bsmallest (margin|win|victory)\b/i, make: function(i) { return recipeSpec('record', i.where, { record: 'closestGame' }); } },
+  { id: 'blowout', re: /\b(blowouts?|thrashing|hammering|drubbing)\b|\b(biggest|largest|widest) (margin|win|victory|beating)\b/i, make: function(i) { return recipeSpec('record', i.where, { record: 'biggestMargin' }); } },
+  { id: 'combined-high', re: /\b(highest|most|biggest)\b.*\b(combined|total)\b.*\b(game|score|points|matchup)\b|\bhighest[- ]scoring (game|matchup)\b/i, make: function(i) { return recipeSpec('record', i.where, { record: 'highestCombined' }); } },
+  { id: 'combined-low', re: /\b(lowest|fewest)\b.*\b(combined|total)\b|\blowest[- ]scoring (game|matchup)\b/i, make: function(i) { return recipeSpec('record', i.where, { record: 'lowestCombined' }); } },
+  { id: 'season-best', re: /\b(most|highest|best)\b.*\b(points|pf|scoring)\b.*\b(season|year)\b|\bbest season\b/i, make: function(i) { return recipeSpec('record', i.where, { record: 'bestSeasonPF' }); } },
+  { id: 'season-worst', re: /\b(fewest|lowest|worst)\b.*\b(points|pf|scoring)\b.*\b(season|year)\b|\bworst season\b/i, make: function(i) { return recipeSpec('record', i.where, { record: 'worstSeasonPF' }); } },
+  { id: 'streak-current', re: /\b(current|active|right now)\b.*\bstreaks?\b|\bstreaks? (right now|currently)\b|\bon a (win(ning)?|los(ing|s)) streak\b|^\s*streaks\??\s*$/i, make: function(i) { return recipeSpec('record', i.where, { record: 'currentStreaks' }); } },
+  { id: 'streak-loss', re: /\b(longest|worst)\b.*\b(los(ing|s)|skid)\b.*\bstreak|\blongest (losing|loss) (run|streak)\b/i, make: function(i) { return recipeSpec('record', i.where, { record: 'longestLossStreak' }); } },
+  { id: 'streak-win', re: /\blongest\b.*\b(win(ning)?)?\s*streaks?\b|\blongest win(ning)? run\b/i, make: function(i) { return recipeSpec('record', i.where, { record: 'longestWinStreak' }); } },
+  { id: 'top-weeks', re: /\b(most|how many)\b.*\b(top|highest)[- ]scor\w* weeks?\b|\btopped the (weekly )?scoring\b|\bmost weekly (high|top) scores?\b/i, make: function(i) { return recipeSpec('record', i.where, { record: 'mostTopScoreWeeks' }); } },
+  { id: 'bottom-weeks', re: /\b(most|how many)\b.*\b(bottom|lowest)[- ]scor\w* weeks?\b/i, make: function(i) { return recipeSpec('record', i.where, { record: 'mostBottomScoreWeeks' }); } },
+  { id: 'upset', re: /\bupsets?\b/i, make: function(i) { return recipeSpec('games', { seasons: [i.cur.season], weeks: [i.cur.lastFinalWeek], result: 'W', phase: 'all' }, { orderBy: [{ col: 'weekRank', dir: 'desc' }, { col: 'pf', dir: 'asc' }], limit: 1 }); } },
+  { id: 'points-total', re: /\b(most|total|career|all[- ]time) points\b|\bpoints (all[- ]time|overall|in total)\b/i, not: /\b(game|week|single|matchup|in a|loss|lost|win|won|season|year)\b/i, make: function(i) { return recipeSpec('games', { managers: i.where.managers, seasons: i.where.seasons, phase: i.where.phase }, { groupBy: ['manager'], select: ['games', 'pf_sum', 'pf_avg', 'wins', 'losses'], orderBy: [{ col: 'pf_sum', dir: 'desc' }], limit: 10 }); } },
+  { id: 'week-top', re: /\b(top|highest|best) (scorer|score)\b.*\bthis week\b|\bthis week'?s? (top|high(est)?) (scorer|score)\b|\bwho (scored|had) (the )?most (points )?this week\b/i, make: function(i) { return recipeSpec('games', { seasons: [i.cur.season], weeks: [i.cur.lastFinalWeek], phase: 'all' }, { orderBy: [{ col: 'pf', dir: 'desc' }], limit: 1 }); } },
+  { id: 'week-scores', re: /\b(this|last) week'?s? (scores|results|games|matchups)\b|\b(scores|results) (from )?(this|last) week\b|\bweek (\d{1,2}) (scores|results)\b/i, make: function(i, q) {
+    const m = q.match(/\bweek (\d{1,2})\b/i);
+    return recipeSpec('games', { seasons: [i.cur.season], weeks: [m ? Number(m[1]) : i.cur.lastFinalWeek], result: 'W', phase: 'all' }, { orderBy: [{ col: 'pf', dir: 'desc' }], limit: 8 });
+  } },
+  { id: 'champion', re: /\bwho won (the )?(20\d\d|title|league|championship|plancey)\b|\b(20\d\d) (champion|winner|title)\b|\bchampion (in|of) 20\d\d\b/i, make: function(i) { return recipeSpec('seasons', { seasons: i.years.length ? i.years : [i.cur.season], playoffFinish: 'champion' }); } },
+  { id: 'best-week', re: /\b(best|highest|biggest)\b.*\b(week|game|score)\b/i, need: 'oneMgr', make: function(i) { return recipeSpec('record', i.where, { record: 'highestScore' }); } },
+  { id: 'worst-week', re: /\b(worst|lowest)\b.*\b(week|game|score)\b/i, need: 'oneMgr', make: function(i) { return recipeSpec('record', i.where, { record: 'lowestScore' }); } },
+  { id: 'highest-score', re: /\b(highest|most points|biggest|best|max(imum)?|record)\b.*\b(score|points|total|week|game)\b|\bmost points\b/i, make: function(i) { return recipeSpec('record', i.where, { record: 'highestScore' }); } },
+  { id: 'lowest-score', re: /\b(lowest|fewest|worst|least)\b.*\b(score|points|total|week|game)\b/i, make: function(i) { return recipeSpec('record', i.where, { record: 'lowestScore' }); } },
+  { id: 'h2h', re: /\b(vs\.?|versus|v|against|head[\s-]?to[\s-]?head|h2h|beat|record against)\b/i, need: 'twoMgr', make: function(i) {
+    return recipeSpec('games', { managers: [i.mgrs[0]], opponents: [i.mgrs[1]], seasons: i.where.seasons, phase: i.where.phase }, { groupBy: ['manager', 'opponent'], select: ['games', 'wins', 'losses', 'ties', 'pf_sum', 'pa_sum', 'pf_avg'] });
+  } },
+  { id: 'h2h-bare', re: /^\W*\w+\W+(and|&|\/)?\W*\w+\W*\??$/i, need: 'twoMgr', make: function(i) {
+    return recipeSpec('games', { managers: [i.mgrs[0]], opponents: [i.mgrs[1]], phase: i.where.phase }, { groupBy: ['manager', 'opponent'], select: ['games', 'wins', 'losses', 'ties', 'pf_sum', 'pa_sum', 'pf_avg'] });
+  } },
+  { id: 'season-record', re: /\b(record|do|did|go|went|finish(ed)?|fare|season)\b/i, need: 'oneMgrYear', make: function(i) { return recipeSpec('seasons', { managers: i.mgrs, seasons: i.years }); } },
+  { id: 'alltime-standings', re: /\ball[\s-]?time (standings|table|record|rankings?)\b|\bcareer (records?|standings|wins)\b|\bmost wins\b/i, make: function(i) { return recipeSpec('games', { phase: i.where.phase }, { groupBy: ['manager'], select: ['games', 'wins', 'losses', 'ties', 'winPct', 'pf_sum', 'pf_avg'], limit: 10 }); } },
+  { id: 'standings', re: /\b(standings|league table|table|rankings|who'?s top|who is top|leading the league)\b/i, make: function(i) { return recipeSpec('seasons', { seasons: i.years.length ? i.years : [i.cur.season] }, { orderBy: [{ col: 'rank', dir: 'asc' }], limit: 10 }); } },
+  { id: 'mgr-record', re: /\b(record|wins|losses|how many (wins|games)|how good)\b/i, need: 'oneMgr', make: function(i) { return recipeSpec('games', i.where, { groupBy: ['manager'], select: ['games', 'wins', 'losses', 'ties', 'winPct', 'pf_sum', 'pf_avg'] }); } },
+];
+
+function recipeInfo(query, facts) {
+  const mgrs = matchManagers(query);
+  const years = (String(query).match(/\b20\d\d\b/g) || []).filter(function(y, i, a) { return a.indexOf(y) === i; });
+  const cur = (facts && facts.current) || { season: years[0] || '', lastFinalWeek: 1 };
+  const where = {};
+  if (mgrs.length === 1) where.managers = mgrs;
+  if (years.length) where.seasons = years;
+  if (PLAYOFF_HINT.test(query)) where.phase = /\bplayoffs? only\b|\bin the playoffs\b/i.test(query) ? 'playoff' : 'all';
+  return { mgrs: mgrs, years: years, cur: cur, where: where };
+}
+
+// fastPlan: recipe table → v2 spec (or null to fall through to the model planner).
+function fastPlan(query, facts) {
+  const q = String(query || '');
+  if (/\b(wr|rb|qb|te|kicker|player|players|touchdowns?|position)\b/i.test(q)) return null; // player scoring → planner
+  const info = recipeInfo(q, facts);
+  for (let k = 0; k < RECIPES.length; k++) {
+    const r = RECIPES[k];
+    if (r.need === 'oneMgr' && info.mgrs.length !== 1) continue;
+    if (r.need === 'twoMgr' && info.mgrs.length < 2) continue;
+    if (r.need === 'oneMgrYear' && !(info.mgrs.length === 1 && info.years.length)) continue;
+    if (!r.need && info.mgrs.length >= 2) continue; // two names → only the H2H recipes
+    if (!r.re.test(q)) continue;
+    if (r.not && r.not.test(q)) continue;
+    const spec = r.make(info, q);
+    if (spec) { spec._recipe = r.id; return spec; }
   }
   return null;
 }
 
-// Asks the model to translate a question into a query spec (JSON only).
-// Fast-path (no model call) for common H2H/totals questions, then a session
-// cache, then the model planner as the general fallback.
-async function planStatQuery(query, messages) {
-  const key = cacheKey(query);
-  if (SPEC_CACHE[key]) return SPEC_CACHE[key];
-  const fast = fastPlan(query);
-  if (fast) { SPEC_CACHE[key] = fast; return fast; }
-
-  const handles = Object.keys(NAMES);
-  const nameLines = handles.map(function(h) { return h + '=' + distinctName(h); }).join(', ');
-  const planner = [
-    'You translate a fantasy-football question into a JSON query spec. Output ONLY valid JSON, nothing else.',
-    'Manager handles (use these exact strings in "managers"): ' + nameLines + '. Note benjlev=Lev, sanfbe=Sanford, allyl900 maps to AlastairL.',
-    'Schema:',
-    '{ "type": "headToHead" | "totals" | "gameList" | "player" | "none",',
-    '  "managers": [handle, ...]   // optional; for headToHead between two, list both',
-    '  "seasons": ["2023", ...]    // optional; omit for all-time',
-    '  "regularSeasonOnly": true,  // default true; set false to include playoffs',
-    '  "sortBy": "margin"|"high"|"low"|"combined",  // gameList: margin/high/low/combined; player: "pts"|"avg"|"best"|"games"',
-    '  "order": "desc"|"asc",      // gameList & player',
-    '  "limit": 10,                // gameList & player',
-    '  "player": "chase",          // player only: substring of the player name',
-    '  "positions": ["WR"] }       // player only: filter by QB/RB/WR/TE/K/DEF',
-    'headToHead with exactly two managers = the record between that pair. With three or more managers = each listed manager\'s record against ALL opponents. Omit "managers" for the whole league.',
-    'Rules: head-to-head / nemesis / "who beats whom" -> headToHead. Manager records/standings/win totals/points -> totals. "biggest/closest/highest GAME" -> gameList. Individual NFL PLAYERS ("best WR", "top scorers", "most points by a QB", "how did Ja\'Marr Chase do", "who scored most for Lev") -> player (set "player" for a named player, "positions" for a position, "managers" for whose roster, "sortBy":"avg" for per-game rate vs "pts" for totals). If the question is not a numeric data lookup (opinion, definition, lore) -> {"type":"none"}.',
-  ].join('\n');
-  try {
-    const raw = await claudeCall(messages.slice(-6), planner);
-    const spec = parseSpec(raw);
-    SPEC_CACHE[key] = spec;
+// Follow-ups resolve against the previous result (cause D).
+function followUpSpec(query, ctx) {
+  if (!ctx || !ctx.lastResult) return null;
+  const rows = ctx.lastResult.rows || [];
+  const q = String(query || '');
+  if (FOLLOW_GAME_HINT.test(q) && rows.length && rows[0].gameId) {
+    return { v: 2, table: 'games', where: { gameIds: [rows[0].gameId], status: 'any', phase: 'all' }, orderBy: [{ col: 'pf', dir: 'desc' }], _recipe: 'follow-game' };
+  }
+  // "and in 2024?" / "what about Dan?" → previous spec with seasons / managers swapped.
+  const m = q.match(/^\s*(and|what about|how about|same for|now)\b/i);
+  if (m && ctx.lastSpec) {
+    const years = (q.match(/\b20\d\d\b/g) || []);
+    const mgrs = matchManagers(q);
+    if (!years.length && !mgrs.length) return null;
+    const spec = JSON.parse(JSON.stringify(ctx.lastSpec));
+    delete spec._recipe;
+    if (years.length) spec.where.seasons = years;
+    if (mgrs.length && spec.where.managers) spec.where.managers = mgrs.slice(0, Math.max(1, spec.where.managers.length));
+    else if (mgrs.length) spec.where.managers = mgrs.slice(0, 1);
+    spec._recipe = 'follow-swap';
     return spec;
-  } catch (e) {
-    return { type: 'none' };
   }
+  return null;
 }
 
-// Tolerant JSON extraction: whole reply → outermost braces → first {...} match.
-function parseSpec(raw) {
-  if (!raw) return { type: 'none' };
-  try { return JSON.parse(raw.trim()); } catch (e) { /* not bare JSON */ }
-  const first = raw.indexOf('{'), last = raw.lastIndexOf('}');
-  if (first !== -1 && last > first) {
-    try { return JSON.parse(raw.slice(first, last + 1)); } catch (e) { /* fall through */ }
+// "How could Josh score 168.56 and lose?" → re-show the source rows, templated.
+function disputeReply(query, ctx, facts) {
+  if (!ctx || !ctx.lastResult || !DISPUTE_HINT.test(String(query || ''))) return null;
+  const rows = ctx.lastResult.rows || [];
+  const gid = rows.length && rows[0].gameId;
+  if (!gid) {
+    return { content: 'The table above is computed directly from the league data — those are the source rows. Ask about a specific game and I can show both sides of it.', table: ctx.lastResult };
   }
-  const m = raw.match(/\{[\s\S]*\}/);
-  if (m) { try { return JSON.parse(m[0]); } catch (e) { /* fall through */ } }
-  return { type: 'none' };
+  const both = facts.games.filter(function(r) { return r.gameId === gid; });
+  const win = both.find(function(r) { return r.result === 'W'; });
+  const lose = both.find(function(r) { return r.result === 'L'; });
+  const result = { table: 'games', columns: ['manager', 'pf', 'opponent', 'pa', 'result', 'margin', 'season', 'week', 'phase'], rows: both, total: both.length, spec: { v: 2, table: 'games', where: { gameIds: [gid] }, groupBy: [] } };
+  if (!win || !lose) return { content: 'Here are both sides of that game, straight from the data.', table: result };
+  const named = matchManagers(query);
+  let lead = '';
+  if (named.indexOf(win.manager) !== -1 && /\blos(e|t|ing)\b/i.test(query)) lead = nm(win.manager) + " didn't lose. ";
+  else if (named.indexOf(lose.manager) !== -1 && /\bw(in|on)\b/i.test(query)) lead = nm(lose.manager) + " didn't win. ";
+  const label = ctx.lastResult.record ? ' That is the ' + RECORD_LABELS[ctx.lastResult.record].toLowerCase() + ' answer: ' + nm(lose.manager) + ' is the side that scored ' + fmt2(lose.pf) + ' and lost.' : '';
+  return {
+    content: lead + nm(win.manager) + ' won ' + fmt2(win.pf) + '–' + fmt2(lose.pf) + ' against ' + nm(lose.manager) + ' in ' + wkLabel(win) + '.' + label + ' The rows below are the league data itself.',
+    table: result,
+  };
 }
 
-// Renders a query result into a deterministic context block the narrator reads.
-function formatQueryResult(spec, result) {
-  if (!result || !result.rows || !result.rows.length) return '';
-  function nm(h) { return distinctName(h); }
+const CANT_ANSWER = "I can't answer that one from the league data, and I won't guess a number. Try: “Most points in a loss?”, “Dan vs Josh”, “Lev's record in 2024”, “Current standings”, “This week's scores” or “Longest win streak”.";
+
+// Compact pipe table of result rows for prompts (≤ 25 rows, names not handles).
+function rowsPipe(result, max) {
+  const cols = (result && result.columns) || [];
+  const rows = ((result && result.rows) || []).slice(0, max || 25);
+  return [cols.join('|')].concat(rows.map(function(r) {
+    return cols.map(function(c) {
+      const v = r[c];
+      if (v == null) return '';
+      if ((COLUMNS[c] || {}).type === 'mgr') return nm(v);
+      if ((COLUMNS[c] || {}).type === 'pts') return fmt2(v);
+      return String(v);
+    }).join('|');
+  })).join('\n');
+}
+
+function plannerPrompt(query, ctx) {
+  const handles = Object.keys(NAMES).map(function(h) { return h + '=' + distinctName(h); }).join(', ');
+  const lines = [
+    'You translate a fantasy-football question into a JSON query spec. Output ONLY valid JSON, nothing else.',
+    'Manager handles (use these exact strings): ' + handles + '. benjlev=Lev, sanfbe=Sanford, allyl900 maps to AlastairL.',
+    'Spec v2: { "v": 2, "table": "games"|"seasons"|"players"|"record", "record": "<name>" (table=record only),',
+    '  "where": { "managers": [], "opponents": [], "seasons": ["2024"], "weeks": [1], "phase": "regular"|"playoff"|"consolation"|"all", "result": "W"|"L"|"T", "positions": ["WR"], "player": "substring", "playoffFinish": "champion"|"runner-up"|"semi"|"consolation"|"missed" },',
+    '  "groupBy": [] | ["manager"] | ["opponent"] | ["season"] | ["manager","season"] | ["week"] | ["manager","opponent"],   (games table only)',
+    '  "select": ["games","wins","losses","ties","winPct","pf_sum","pf_avg","pf_max","pf_min","pa_sum","pa_avg","margin_avg","topScoreWeeks"],',
+    '  "orderBy": [{ "col": "pf", "dir": "desc" }], "limit": 10 }',
+    'games rows are one per manager per game: manager, pf, opponent, pa, result (W/L/T from that manager\'s side), margin, combined, season, week, phase, weekRank. seasons rows: manager, season, rank, wins, losses, pf, pa, expectedWins, luck, playoffFinish. players rows: player, pos, manager, season, games, pts, avg, best.',
+    'records: ' + RECORD_NAMES.join(', ') + '.',
+    'Defaults: phase regular, final games only, limit 10. If the question is not a data lookup (opinion, lore, definitions) output {"table":"none"}.',
+  ];
+  if (ctx && ctx.lastQ) {
+    lines.push('PREVIOUS QUESTION: ' + ctx.lastQ);
+    if (ctx.lastSpec) lines.push('PREVIOUS SPEC: ' + JSON.stringify(ctx.lastSpec));
+    if (ctx.lastResult) lines.push('PREVIOUS TOP ROWS:\n' + rowsPipe(ctx.lastResult, 3));
+  }
+  lines.push('QUESTION: ' + query);
+  return lines.join('\n');
+}
+
+function narrationPrompt(query, ctx, result) {
+  const names = Object.keys(NAMES).map(function(h) { return h + '=' + distinctName(h); }).join(', ');
+  const parts = [
+    'You are the statistician for the Borehamwood Plancy League.',
+    'Write ONE or TWO short sentences that answer the question using ONLY the rows below. The table is shown to the user under your sentences, so do not repeat it.',
+    'The rows are ground truth computed from the league data. Never claim you fabricated, invented or made up anything, and never apologise for the data. Do not compute new numbers (no sums, averages or differences that are not in the rows). Use names, not handles.',
+    'NAMES: ' + names,
+  ];
+  if (ctx && ctx.lastQ) parts.push('PREVIOUS QUESTION: ' + ctx.lastQ + (ctx.lastResult ? '\nPREVIOUS TOP ROWS:\n' + rowsPipe(ctx.lastResult, 3) : ''));
+  parts.push('QUESTION: ' + query);
+  parts.push('ROWS (' + ((result && result.total) || 0) + ' total, top ' + Math.min(25, ((result && result.rows) || []).length) + ' shown):\n' + rowsPipe(result, 25));
+  parts.push('Answer:');
+  return parts.join('\n\n');
+}
+
+// Tolerant JSON extraction: whole reply → outermost braces.
+function parseSpecJson(raw) {
+  if (!raw) return null;
+  if (typeof raw === 'object') return raw;
+  try { return JSON.parse(String(raw).trim()); } catch (e) { /* not bare JSON */ }
+  const s = String(raw), first = s.indexOf('{'), last = s.lastIndexOf('}');
+  if (first !== -1 && last > first) { try { return JSON.parse(s.slice(first, last + 1)); } catch (e) { /* fall through */ } }
+  return null;
+}
+
+// The whole Stats answer. deps: { facts, players, plan(prompt)→string|object,
+// narrate(prompt)→string, log }. Returns { content, table, ctx, source, modelCalls }.
+async function answerStatQuestion(query, ctx, deps) {
+  const facts = deps.facts;
+  let modelCalls = 0;
+  const log = deps.log || function() {};
+  const next = function(spec, result) { return { lastQ: query, lastSpec: spec, lastResult: result }; };
+
+  const dispute = disputeReply(query, ctx, facts);
+  if (dispute) return { content: dispute.content, table: dispute.table, ctx: next(dispute.table.spec, dispute.table), source: 'dispute', modelCalls: 0 };
+
+  let raw = followUpSpec(query, ctx) || fastPlan(query, facts);
+  let source = raw ? 'recipe' : 'planner';
+  if (!raw && deps.plan) {
+    try { modelCalls++; raw = parseSpecJson(await deps.plan(plannerPrompt(query, ctx))); } catch (e) { raw = null; }
+  }
+  const v = validateSpec(raw, facts);
+  if (!v.ok) {
+    if (v.error !== 'none' || NUMERIC_HINT.test(query)) return { content: CANT_ANSWER, table: null, ctx: ctx, source: 'cant', modelCalls: modelCalls };
+    return { content: null, table: null, ctx: ctx, source: 'chat', modelCalls: modelCalls };
+  }
+  const spec = v.spec;
+  const result = runQuery(spec, facts, deps.players);
+  const tmpl = templateSentence(spec, result);
+  if (!result.rows.length) return { content: tmpl, table: null, ctx: next(spec, result), source: source, modelCalls: modelCalls };
+  const single = result.table === 'record' || result.rows.length === 1 || (spec.where.gameIds && result.rows.length <= 2);
+  if (single || !deps.narrate) return { content: tmpl, table: result, ctx: next(spec, result), source: source, modelCalls: modelCalls };
+  let sentence = null;
+  try { modelCalls++; sentence = String(await deps.narrate(narrationPrompt(query, ctx, result)) || '').trim(); } catch (e) { sentence = null; }
+  const g = sentence ? numberGuard(sentence, result.rows) : { ok: false, bad: [] };
+  if (!sentence || !g.ok || /fabricat|made (that|it) up|invented/i.test(sentence)) {
+    log('number guard rejected narration', g.bad, sentence);
+    sentence = tmpl;
+  }
+  return { content: sentence, table: result, ctx: next(spec, result), source: source, modelCalls: modelCalls };
+}
+
+// ── Current-season summaries (Phase 3) — pure, built from the fact table ──────
+// The last completed week: results, high/low, closest game, upset, mini standings.
+function thisWeekFacts(facts) {
+  const cur = facts && facts.current;
+  if (!cur || !cur.lastFinalWeek) return null;
+  const rows = facts.games.filter(function(r) { return r.season === cur.season && r.week === cur.lastFinalWeek && r.status === 'final' && !r.bye; });
+  if (!rows.length) return null;
+  const byGame = {};
+  rows.forEach(function(r) { (byGame[r.gameId] = byGame[r.gameId] || []).push(r); });
+  const games = Object.keys(byGame).map(function(k) {
+    const p = byGame[k];
+    const w = p.find(function(r) { return r.result === 'W'; }) || p[0];
+    const l = p.find(function(r) { return r !== w; }) || p[0];
+    return { w: w, l: l, tie: w.result === 'T' };
+  }).sort(function(a, b) { return b.w.pf - a.w.pf; });
+  const high = factBest(rows, function(r) { return r.pf; }, 'max')[0];
+  const low = factBest(rows, function(r) { return r.pf; }, 'min')[0];
+  const winners = rows.filter(function(r) { return r.result === 'W'; });
+  const closest = factBest(winners, function(r) { return r.margin; }, 'min')[0] || null;
+  const ranked = winners.filter(function(r) { return r.weekRank != null; });
+  const upset = ranked.length ? factBest(ranked, function(r) { return r.weekRank; }, 'max')[0] : (factBest(winners, function(r) { return r.pf; }, 'min')[0] || null);
+  const streaks = {};
+  (((facts.records.current || {}).regular || {}).currentStreaks || []).forEach(function(s) { streaks[s.manager] = s.type + s.length; });
+  const standings = facts.seasons.filter(function(r) { return r.season === cur.season; })
+    .sort(function(a, b) { return a.rank - b.rank; })
+    .map(function(r) { return { rank: r.rank, manager: r.manager, wins: r.wins, losses: r.losses, ties: r.ties, pf: r.pf, streak: streaks[r.manager] || '' }; });
+  return { season: cur.season, week: cur.lastFinalWeek, liveWeek: cur.liveWeek, complete: cur.complete, games: games, high: high, low: low, closest: closest, upset: upset, standings: standings };
+}
+
+// Freshness badge: "2026 · through Week 10 · Week 11 live" (last FINAL week).
+function badgeText(facts) {
+  const cur = facts && facts.current;
+  if (!cur) return '';
+  if (cur.complete) return cur.season + ' · season complete';
+  if (!cur.lastFinalWeek) return cur.season + ' · season starting';
+  return cur.season + ' · through Week ' + cur.lastFinalWeek + (cur.liveWeek ? ' · Week ' + cur.liveWeek + ' live' : '');
+}
+
+function recordLine(name, res) {
+  const r = res.rows[0];
+  if (!r) return null;
+  const label = RECORD_LABELS[name];
+  if (r.type) return label + ': ' + res.rows.map(function(x) { return nm(x.manager); }).join(', ') + ' ' + r.length + r.type + ' (' + r.from + ' to ' + r.to + ')';
+  if (r.count != null) return label + ': ' + res.rows.map(function(x) { return nm(x.manager); }).join(', ') + ' ' + r.count;
+  if (r.opponent === undefined) return label + ': ' + nm(r.manager) + ' ' + fmt2(r.pf) + ' (' + r.season + ')';
+  return label + ': ' + nm(r.manager) + ' ' + fmt2(r.pf) + ' v ' + nm(r.opponent) + ' ' + fmt2(r.pa) + ' (' + r.result + ', ' + r.season + ' wk' + r.week + ')';
+}
+
+// Compact, number-safe recap for the Banter and Stats-chat prompts (Phase 3):
+// this week, standings, champions, career lines, named records. Every number a
+// roast may use is in here — the number guard checks replies against it.
+function leagueRecap(facts, history) {
+  if (!facts) return '';
+  const out = [];
+  const tw = thisWeekFacts(facts);
+  if (tw) {
+    out.push('THIS WEEK (' + tw.season + ' week ' + tw.week + '): ' + tw.games.map(function(g) {
+      return nm(g.w.manager) + ' ' + fmt2(g.w.pf) + (g.tie ? ' tied ' : ' beat ') + nm(g.l.manager) + ' ' + fmt2(g.l.pf);
+    }).join('; '));
+    out.push('Week high: ' + nm(tw.high.manager) + ' ' + fmt2(tw.high.pf) + '. Week low: ' + nm(tw.low.manager) + ' ' + fmt2(tw.low.pf) + '.'
+      + (tw.closest ? ' Closest: ' + nm(tw.closest.manager) + ' over ' + nm(tw.closest.opponent) + ' by ' + fmt2(tw.closest.margin) + '.' : '')
+      + (tw.upset ? ' Upset: ' + nm(tw.upset.manager) + ' won with ' + fmt2(tw.upset.pf) + (tw.upset.weekRank ? ' (rank ' + tw.upset.weekRank + ' that week)' : '') + '.' : ''));
+    out.push('STANDINGS ' + tw.season + ' (rank name W-L PF streak):\n' + tw.standings.map(function(r) {
+      return r.rank + ' ' + nm(r.manager) + ' ' + r.wins + '-' + r.losses + (r.ties ? '-' + r.ties : '') + ' ' + fmt2(r.pf) + ' ' + r.streak;
+    }).join('\n'));
+  }
+  const seasons = (history && history.seasons) || [];
+  const champs = seasons.filter(function(s) { return s.champion; }).map(function(s) { return s.season + ' ' + nm(s.champion); });
+  if (champs.length) out.push('CHAMPIONS: ' + champs.join(', '));
+  const career = {};
+  facts.seasons.forEach(function(r) {
+    const c = career[r.manager] = career[r.manager] || { w: 0, l: 0, t: 0, pf: 0, titles: 0, xw: 0 };
+    c.w += r.wins; c.l += r.losses; c.t += r.ties; c.pf += r.pf; c.xw += r.expectedWins;
+    if (r.playoffFinish === 'champion') c.titles++;
+  });
+  out.push('CAREER regular season (name W-L PF titles luck=W-expected):\n' + Object.keys(career).sort(function(a, b) { return career[b].w - career[a].w; }).map(function(m) {
+    const c = career[m];
+    return nm(m) + ' ' + c.w + '-' + c.l + (c.t ? '-' + c.t : '') + ' ' + fmt2(c.pf) + ' ' + c.titles + ' ' + fmt2(c.w - c.xw);
+  }).join('\n'));
   const lines = [];
-  if (result.type === 'headToHead') {
-    lines.push('Head-to-head records (regular season unless stated):');
-    result.rows.forEach(function(r) { lines.push('- ' + nm(r.manager) + ' vs ' + nm(r.opponent) + ': ' + r.wins + '-' + r.losses + (r.ties ? '-' + r.ties : '') + ', PF ' + r.pf + ' / PA ' + r.pa + ' (' + r.games + ' games)'); });
-  } else if (result.type === 'totals') {
-    lines.push('Aggregate records:');
-    result.rows.forEach(function(r) { lines.push('- ' + nm(r.manager) + ': ' + r.wins + '-' + r.losses + (r.ties ? '-' + r.ties : '') + ', PF ' + r.pf + ', avg ' + r.avg + ', high ' + r.high + ', low ' + r.low + ' (' + r.games + ' games)'); });
-  } else if (result.type === 'gameList') {
-    lines.push('Matching games:');
-    result.rows.forEach(function(g) { lines.push('- ' + g.season + ' wk' + g.week + (g.playoff ? ' (playoff)' : '') + ': ' + nm(g.a) + ' ' + g.pa + ' – ' + g.pb + ' ' + nm(g.b)); });
-  } else if (result.type === 'player') {
-    lines.push('Player scoring (starter points, per player · season · manager):');
-    result.rows.forEach(function(p) { lines.push('- ' + p.player + ' (' + p.pos + ', ' + nm(p.manager) + ' ' + p.season + '): ' + p.pts + ' pts over ' + p.games + ' games, ' + p.avg + '/game, best ' + p.best); });
-  }
-  return '══ DETERMINISTIC QUERY RESULT (authoritative — narrate ONLY these numbers, do not recompute) ══\n' + lines.join('\n');
+  RECORD_NAMES.forEach(function(name) {
+    if (name === 'currentStreaks') return;
+    const v = validateSpec({ v: 2, table: 'record', record: name }, facts);
+    if (!v.ok) return;
+    const line = recordLine(name, runQuery(v.spec, facts, []));
+    if (line) lines.push(line);
+  });
+  if (lines.length) out.push('RECORDS (regular season):\n' + lines.join('\n'));
+  return out.join('\n\n');
 }
 
+// Banter guard: drop any sentence carrying a number that is not in `allowedText`.
+function guardSentences(text, allowedText) {
+  // Shield decimal points (151.40) so the sentence split only breaks on real stops.
+  const DOT = '\u2024';
+  const shielded = String(text || '').replace(/(\d)\.(\d)/g, '$1' + DOT + '$2');
+  const parts = shielded.match(/[^.!?\n]+[.!?]*\s*|\n+/g) || [];
+  const unshield = function(p) { return p.split(DOT).join('.'); };
+  const kept = parts.map(unshield).filter(function(p) { return numberGuard(p, [], [allowedText]).ok; });
+  const out = kept.join('').trim();
+  return { text: out, dropped: parts.length - kept.length };
+}
 function useLeagueData() {
-  const [data, setData] = useState({ history: HISTORY_DATA, stats: STATS_DATA, rosters: ROSTERS_DATA, trades: TRADE_VALUES, alltime: ALLTIME_DATA, transactions: TRANSACTIONS_DATA, players: PLAYER_SCORES, live: false });
+  const [data, setData] = useState({ history: HISTORY_DATA, rosters: ROSTERS_DATA, trades: TRADE_VALUES, alltime: ALLTIME_DATA, transactions: TRANSACTIONS_DATA, players: PLAYER_SCORES, live: false });
   useEffect(function() {
     let cancelled = false;
     (async function() {
@@ -486,6 +1233,10 @@ function useLeagueData() {
           }));
           const result = { live: true };
           keys.forEach(function(k, idx) { result[k] = fetched[idx]; });
+          // The inlined data is primary: a CDN copy is only taken when it is at
+          // least as new (jsDelivr can serve a cached, older history.json).
+          const gen = function(h) { return Date.parse((h && h.meta && h.meta.generated) || '') || 0; };
+          if (HISTORY_DATA && gen(result.history) && gen(result.history) < gen(HISTORY_DATA)) return;
           if (!cancelled) setData(result);
           return;
         } catch (e) { /* try next */ }
@@ -497,10 +1248,13 @@ function useLeagueData() {
 }
 
 function useLore(active) {
-  const [lore, setLore] = useState({ master: '', archive: [], quotes: [], ready: false });
+  // Inlined lore (the HTML build carries it; the paste build inlines null).
+  const [lore, setLore] = useState(LORE_DATA
+    ? { master: (LORE_DATA.master && LORE_DATA.master.text) || '', archive: LORE_DATA.archive || [], quotes: LORE_DATA.quotes || [], ready: true }
+    : { master: '', archive: [], quotes: [], ready: false });
   const fetchedRef = useRef(false);
   useEffect(function() {
-    if (!active || fetchedRef.current) return;
+    if (!active || fetchedRef.current || LORE_DATA) return;
     fetchedRef.current = true;
     let cancelled = false;
     (async function() {
@@ -642,9 +1396,44 @@ function MarkdownMessage(props) {
   return React.createElement(React.Fragment, null, out);
 }
 
+// Code-rendered answer table (Phase 2): labels + number formatting come from
+// COLUMNS, never from model-written markdown.
+function fmtCell(col, v) {
+  const t = (COLUMNS[col] || {}).type;
+  if (v == null || v === '') return '—';
+  if (t === 'mgr') return distinctName(v);
+  if (t === 'pts') return fmt2(v);
+  if (t === 'pct') return (Number(v) * 100).toFixed(1) + '%';
+  return String(v);
+}
+function ResultTable(props) {
+  const result = props.result;
+  if (!result || !result.rows || !result.rows.length) return null;
+  const cols = result.columns || [];
+  return (
+    <div className="rt-wrap">
+      <table className="md-table rt">
+        <thead><tr>{cols.map(function(c) { return <th key={c}>{(COLUMNS[c] || {}).label || c}</th>; })}</tr></thead>
+        <tbody>
+          {result.rows.map(function(r, i) {
+            return <tr key={r.id || (r.gameId ? r.gameId + i : i)}>{cols.map(function(c) {
+              if (c === 'result') return <td key={c}><span className={'res res-' + (r.result || 'x')}>{r.result || '·'}</span></td>;
+              return <td key={c}>{fmtCell(c, r[c])}</td>;
+            })}</tr>;
+          })}
+        </tbody>
+      </table>
+      {result.total > result.rows.length ? <div className="rt-more">{'Top ' + result.rows.length + ' of ' + result.total}</div> : null}
+    </div>
+  );
+}
+
 function ChatTab(props) {
-  const { systemPrompt, chips, placeholder, errorMsg, intro, buildContext } = props;
+  const { systemPrompt, chips, placeholder, errorMsg, intro, buildContext, answer, header, postProcess } = props;
   const [messages, setMessages] = useState([]);
+  // Conversation context per tab (cause D): the previous question, spec and
+  // result, so follow-ups ("that game", "and in 2024?") have a referent.
+  const ctxRef = useRef(null);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const bottomRef = useRef(null);
@@ -666,10 +1455,19 @@ function ChatTab(props) {
     setMessages(next); setInput(''); setLoading(true);
     if (taRef.current) taRef.current.style.height = 'auto';
     try {
+      if (answer) {
+        const out = await answer(t, next, ctxRef.current);
+        if (out && out.content != null) {
+          ctxRef.current = out.ctx || ctxRef.current;
+          setMessages(function(p) { return p.concat([{ role: 'assistant', content: out.content, table: out.table || null }]); });
+          return;
+        }
+      }
       const extra = buildContext ? await buildContext(t, next) : '';
       const fullPrompt = extra ? systemPrompt + '\n\n' + extra : systemPrompt;
       const raw = await claudeCall(next.filter(function(m) { return m.role === 'user' || m.role === 'assistant'; }), fullPrompt);
-      const reply = raw.replace(/\[(FACT|MYTH|REAL|EVENT)\]/g, '').replace(/  +/g, ' ').trim();
+      let reply = raw.replace(/\[(FACT|MYTH|REAL|EVENT)\]/g, '').replace(/  +/g, ' ').trim();
+      if (postProcess) reply = postProcess(reply, fullPrompt);
       setMessages(function(p) { return p.concat([{ role: 'assistant', content: reply }]); });
     } catch (e) {
       const txt = (e && e.message === 'MODEL_ERROR') ? 'Model hiccup — try again.' : errorMsg;
@@ -689,11 +1487,12 @@ function ChatTab(props) {
         })}
       </div>
       <div style={{ flexGrow: 1, overflowY: 'auto', padding: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
+        {typeof header === 'function' ? header(messages.length) : (header || null)}
         {messages.length === 0 && !loading && (
           <div style={{ margin: 'auto', textAlign: 'center', color: T.faint, fontSize: 14, maxWidth: 300, lineHeight: 1.7, padding: '20px 8px' }}>{intro}</div>
         )}
         {messages.map(function(m, i) {
-          if (m.role === 'assistant') return <div key={i} style={bubAsst}><MarkdownMessage text={m.content} /></div>;
+          if (m.role === 'assistant') return <div key={i} style={bubAsst}><MarkdownMessage text={m.content} />{m.table ? <ResultTable result={m.table} /> : null}</div>;
           if (m.role === 'error') return <div key={i} style={bubErr}>{m.content}</div>;
           return <div key={i} style={bubUser}>{m.content}</div>;
         })}
@@ -718,87 +1517,36 @@ function ChatTab(props) {
   );
 }
 
-function slimAlltime(d) {
-  if (!d) return d;
-  // weeklyScores (raw per-game scores) and h2hBySeason (covered by deterministic query layer)
-  // are excluded to keep the system prompt within the artifact runtime's prompt budget.
-  // records games have player-name arrays stripped — scores and teams are sufficient for narration.
-  function stripGame(g) {
-    if (!g || typeof g !== 'object') return g;
-    const { as, bs, ab, bb, ...rest } = g;
-    return rest;
-  }
-  const records = {};
-  for (const [k, v] of Object.entries(d.records || {})) {
-    records[k] = Array.isArray(v) ? v.map(stripGame) : stripGame(v);
-  }
-  const { weeklyScores, h2hBySeason, records: _r, ...rest } = d;
-  return { ...rest, records };
-}
-
 // ── Compact prompt encoders (token-lean: no repeated JSON keys) ───────────────
-// Pipe-delimited tables beat JSON for tabular data — one header line, then rows,
-// so a field name is paid for once instead of once per manager. The big matrices
-// (allTimeH2H, weeklyScores, per-season boards) are dropped from the prompt
-// entirely — the deterministic query engine answers those exactly on demand.
 function tsv(cols, rows) {
   return [cols.join('|')].concat((rows || []).map(function(r) {
     return cols.map(function(c) { const v = r[c]; return v == null ? '' : v; }).join('|');
   })).join('\n');
 }
-// Career table from computeAnalytics().allTime — carries record, pf/pa, avg, the
-// consistency SD, all-time high/low, all-play and the luck (actual−expected wins).
-function careerTable(allTime) {
-  return tsv(['name', 'rec', 'pf', 'pa', 'avg', 'SD', 'hi', 'lo', 'allPlay', 'apW%', 'xW', 'luck'],
-    (allTime || []).map(function(m) {
-      return { name: m.alias || m.name, rec: m.record, pf: m.pf, pa: m.pa, avg: m.avgScore,
-        SD: m.consistencySD, hi: m.high, lo: m.low, allPlay: m.allPlay, 'apW%': m.allPlayWinPct,
-        xW: m.expectedWins, luck: m.luck };
-    }));
-}
-// Everything from alltime.json that the career table does NOT already cover,
-// encoded compactly: playoff records, nemesis/bunny, all-time record games,
-// per-season finish trend, and positional strengths.
+// alltime.json tables the fact-table recap does NOT carry: playoff records,
+// nemesis/bunny, season trend, positional strengths, consistency, bench waste.
+// (W/L, PF, records and streaks come from the recap — one source.)
 function alltimeSummary(d) {
   if (!d) return '';
   const out = [];
-  const g = function(x) { return x ? (distinctName(x.a) + ' ' + x.pa + '-' + x.pb + ' ' + distinctName(x.b) + ' [' + x.season + ' wk' + x.week + ']') : ''; };
-
   const pr = d.playoffRecords || {};
   const prRows = Object.keys(pr).map(function(h) { const r = pr[h]; return { name: distinctName(h), rec: r.wins + '-' + r.losses, apps: r.appearances, pf: r.pf, pa: r.pa }; });
   if (prRows.length) out.push('PLAYOFFS (W-L, apps=appearances):\n' + tsv(['name', 'rec', 'apps', 'pf', 'pa'], prRows));
-
   if (d.nemesis) out.push('NEMESIS (worst matchup, min 3 mtgs): ' + Object.keys(d.nemesis).map(function(h) { const n = d.nemesis[h]; return distinctName(h) + '→' + distinctName(n.opponent) + '(' + n.wins + '-' + n.losses + ')'; }).join('; '));
   if (d.bunny)   out.push('BUNNY (best matchup, min 3 mtgs): '   + Object.keys(d.bunny).map(function(h)   { const b = d.bunny[h];   return distinctName(h) + '→' + distinctName(b.opponent) + '(' + b.wins + '-' + b.losses + ')'; }).join('; '));
-
-  const rec = d.records || {};
-  const rl = [];
-  if (rec.highestScore)  rl.push('highest game: ' + g(rec.highestScore));
-  if (rec.lowestScore)   rl.push('lowest game: ' + g(rec.lowestScore));
-  if (rec.biggestWin)    rl.push('biggest blowout: ' + g(rec.biggestWin));
-  if (rec.closestGame)   rl.push('closest game: ' + g(rec.closestGame));
-  if (rec.highestSeason) rl.push('highest season PF: ' + distinctName(rec.highestSeason.manager) + ' ' + rec.highestSeason.pf + ' (' + rec.highestSeason.season + ')');
-  if (rec.lowestSeason)  rl.push('lowest season PF: ' + distinctName(rec.lowestSeason.manager) + ' ' + rec.lowestSeason.pf + ' (' + rec.lowestSeason.season + ')');
-  if (rec.longestWinStreak)  rl.push('longest W streak: ' + distinctName(rec.longestWinStreak.manager) + ' ' + rec.longestWinStreak.streak);
-  if (rec.longestLossStreak) rl.push('longest L streak: ' + distinctName(rec.longestLossStreak.manager) + ' ' + rec.longestLossStreak.streak);
-  if (rl.length) out.push('RECORDS:\n' + rl.join('\n'));
-
-  // Per-season finish trend: "name: 2023 r3 108ppg, 2024 r1 121ppg, ..."
+  if (d.consistencyStats) out.push('CONSISTENCY (SD of weekly scores, lower=steadier; avg):\n' + Object.keys(d.consistencyStats).map(function(h) { const c = d.consistencyStats[h].allTime; return distinctName(h) + ' SD ' + c.stdDev + ' avg ' + c.avg; }).join('\n'));
+  if (d.benchStats && d.benchStats.perManager) out.push('BENCH (avg pts left on bench per game): ' + d.benchStats.perManager.map(function(b) { return distinctName(b.manager) + ' ' + b.avgBenchPts; }).join(', '));
   if (d.seasonalTrends) {
     const tl = Object.keys(d.seasonalTrends).map(function(h) {
-      const arr = d.seasonalTrends[h] || [];
-      return distinctName(h) + ': ' + arr.map(function(t) { return t.season + ' r' + t.rank + ' ' + t.ppg + 'ppg'; }).join(', ');
+      return distinctName(h) + ': ' + (d.seasonalTrends[h] || []).map(function(t) { return t.season + ' r' + t.rank + ' ' + t.ppg + 'ppg'; }).join(', ');
     });
     if (tl.length) out.push('SEASON TREND (r=finish rank, ppg=points/game):\n' + tl.join('\n'));
   }
-
-  // Positional strengths: latest season only, avg pts/game by position.
   if (d.positionalStrengths) {
     const rows = [];
     Object.keys(d.positionalStrengths).forEach(function(h) {
       const seasonsObj = d.positionalStrengths[h] || {};
-      const yrs = Object.keys(seasonsObj).sort();
-      const last = yrs[yrs.length - 1];
+      const last = Object.keys(seasonsObj).sort().pop();
       if (!last) return;
       const p = seasonsObj[last];
       rows.push({ name: distinctName(h), yr: last, QB: p.QB, RB: p.RB, WR: p.WR, TE: p.TE, K: p.K, DEF: p.DEF });
@@ -816,114 +1564,174 @@ function tradesLines(txns) {
     return t.season + ' wk' + t.week + ': ' + distinctName(t.managerA) + ' gets [' + a + '] ↔ ' + distinctName(t.managerB) + ' gets [' + b + ']';
   }).join('\n');
 }
-// Current-season standings + extremes, compact.
-function currentSeasonBlock(statsData) {
-  if (!statsData) return '(no current-season data)';
-  const st = (statsData.standings || []).map(function(r, i) {
-    return { rk: i + 1, name: distinctName(r.manager), rec: (r.wins || 0) + '-' + (r.losses || 0), pf: r.pf, pa: r.pa };
-  });
-  let s = 'season ' + statsData.season + '\n' + tsv(['rk', 'name', 'rec', 'pf', 'pa'], st);
-  if (statsData.extremes) s += '\nextremes: ' + JSON.stringify(statsData.extremes);
-  return s;
+
+// ── This Week card (Phase 3) — last completed week, straight from the facts ───
+function ThisWeekCard(props) {
+  const tw = useMemo(function() { return thisWeekFacts(props.facts); }, [props.facts]);
+  const [open, setOpen] = useState(true);
+  // Collapse once the conversation starts so answers stay in view on a phone.
+  useEffect(function() { if (props.started) setOpen(false); }, [props.started]);
+  if (!tw) return null;
+  const line = function(label, r, extra) { return r ? <div className="tw-line"><span className="tw-k">{label}</span> {nm(r.manager) + ' ' + fmt2(r.pf) + (extra ? extra(r) : '')}</div> : null; };
+  return (
+    <div className="tw-card" data-testid="this-week">
+      <div className="tw-head">
+        <button className="tw-toggle" onClick={function() { setOpen(!open); }}>{(open ? '▾ ' : '▸ ') + 'This week · ' + tw.season + ' Week ' + tw.week}</button>
+        <button className="tw-rb" onClick={props.onRecordBook}>Record Book</button>
+      </div>
+      {open && (
+        <div className="tw-body">
+          <div className="tw-games">
+            {tw.games.map(function(g) {
+              return <div key={g.w.gameId} className="tw-game"><b>{nm(g.w.manager)}</b> {fmt2(g.w.pf)} <span className="tw-dim">{g.tie ? 'tied' : 'beat'}</span> {nm(g.l.manager)} {fmt2(g.l.pf)}</div>;
+            })}
+          </div>
+          {line('High', tw.high)}
+          {line('Low', tw.low)}
+          {tw.closest ? <div className="tw-line"><span className="tw-k">Closest</span> {nm(tw.closest.manager) + ' over ' + nm(tw.closest.opponent) + ' by ' + fmt2(tw.closest.margin)}</div> : null}
+          {line('Upset', tw.upset, function(r) { return ' beat ' + nm(r.opponent) + (r.weekRank ? ' (rank ' + r.weekRank + ' that week)' : ''); })}
+          <table className="md-table tw-table">
+            <thead><tr><th>#</th><th>Manager</th><th>W-L</th><th>PF</th><th>Streak</th></tr></thead>
+            <tbody>{tw.standings.map(function(r) {
+              return <tr key={r.manager}><td>{r.rank}</td><td>{nm(r.manager)}</td><td>{r.wins + '-' + r.losses + (r.ties ? '-' + r.ties : '')}</td><td>{fmt2(r.pf)}</td><td>{r.streak}</td></tr>;
+            })}</tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
 }
 
-// Per-season champion + condensed standings (no games) — for the banter prompt.
-function slimHistory(d) {
-  const seasons = (d && d.seasons) ? d.seasons : [];
-  return seasons.map(function(s) {
-    return {
-      season: s.season,
-      champion: s.champion ? distinctName(s.champion) : null,
-      standings: (s.standings || []).map(function(r) { return { manager: distinctName(r.manager), wins: r.wins, losses: r.losses, pf: r.pf }; }),
-    };
-  });
+// ── Record Book panel (Phase 3) — every named record, no model ────────────────
+function RecordBook(props) {
+  const facts = props.facts;
+  const [scope, setScope] = useState('regular');
+  const [season, setSeason] = useState('all');
+  const seasons = useMemo(function() { const s = []; facts.seasons.forEach(function(r) { if (s.indexOf(r.season) === -1) s.push(r.season); }); return s; }, [facts]);
+  const books = useMemo(function() {
+    return RECORD_NAMES.map(function(name) {
+      const v = validateSpec({ v: 2, table: 'record', record: name, where: { phase: scope, seasons: season === 'all' ? undefined : [season] } }, facts);
+      return { name: name, res: v.ok ? runQuery(v.spec, facts, []) : { rows: [] } };
+    });
+  }, [facts, scope, season]);
+  function side(r) {
+    if (r.type) return nm(r.manager) + ' · ' + r.length + r.type + ' · ' + r.from + ' → ' + r.to;
+    if (r.count != null) return nm(r.manager) + ' · ' + r.count;
+    if (r.opponent === undefined) return nm(r.manager) + ' · ' + fmt2(r.pf) + ' · ' + r.season;
+    return nm(r.manager) + ' ' + fmt2(r.pf) + ' – ' + fmt2(r.pa) + ' ' + nm(r.opponent) + ' · ' + r.season + ' wk' + r.week;
+  }
+  return (
+    <div className="rb-panel" data-testid="record-book">
+      <div className="rb-head">
+        <b>Record Book</b>
+        <select value={scope} onChange={function(e) { setScope(e.target.value); }}><option value="regular">Regular season</option><option value="all">All games</option></select>
+        <select value={season} onChange={function(e) { setSeason(e.target.value); }}><option value="all">All seasons</option>{seasons.map(function(s) { return <option key={s} value={s}>{s}</option>; })}</select>
+        <button className="tw-rb" onClick={props.onClose}>Close</button>
+      </div>
+      <div className="rb-list">
+        {books.map(function(b) {
+          return (
+            <div key={b.name} className="rb-item" data-record={b.name}>
+              <div className="rb-label">{RECORD_LABELS[b.name]}</div>
+              {b.res.rows.length ? b.res.rows.slice(0, 8).map(function(r, i) { return <div key={i} className="rb-row">{side(r)}</div>; }) : <div className="rb-row tw-dim">—</div>}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
 
 function StatsTab(props) {
-  const { historyData, statsData, alltimeData, transactionsData, playersData, loreMaster } = props;
-  const analytics = useMemo(function() { return computeAnalytics(historyData); }, [historyData]);
-  const games = useMemo(function() { return flattenGames(historyData); }, [historyData]);
+  const { historyData, facts, alltimeData, transactionsData, playersData, loreMaster } = props;
+  const [book, setBook] = useState(false);
+  const ai = useAIState();
   const loreCtx = loreMaster
     ? '\n\nLEAGUE CONTEXT (names, champions, glossary — for resolving names only, NOT for inventing stats):\n' + loreMaster.slice(0, 2500)
     : '';
-  // Narration prompt: deterministic pre-computed tables ONLY — no raw game dump,
-  // so the model cannot do its own (error-prone) win/loss arithmetic. Anything
-  // not in the tables arrives via the DETERMINISTIC QUERY RESULT block (buildContext).
-  const sp = 'You are the statistician for the Borehamwood Plancy League. Answer ONLY from the data below — NEVER compute or invent numbers yourself.\n\n'
-    + 'CRITICAL: All win/loss/points figures must be read verbatim from the tables below or the DETERMINISTIC QUERY RESULT block. Do NOT add up games or derive records yourself — if a number is not given to you, say you do not have it rather than estimate.\n\n'
-    + 'NAMES: always use the real NAME shown in the tables, never a Sleeper handle. Two Benjys: Lev and Sanford.\n\n'
-    + 'ANSWER FORMAT: 1) ONE short sentence on method. 2) GitHub Markdown table for any ranking. 3) At most ONE closing sentence. No preamble.\n\n'
-    + 'TABLES BELOW are pipe-delimited (header row, then one row per manager). Column key — '
-    + 'rec=record W-L; pf/pa=points for/against; avg=avg score; SD=consistency (lower=steadier); hi/lo=best/worst single game; '
-    + 'allPlay=record vs the whole league each week; apW%=all-play win%; xW=expected wins; luck=actual−expected wins (+lucky, −unlucky).\n\n'
-    + 'ANYTHING NOT IN THESE TABLES — a specific head-to-head, a per-season H2H, a game list, individual NFL player scoring — arrives via the DETERMINISTIC QUERY RESULT block appended below when relevant. Do not guess it from the tables.'
-    + loreCtx
-    + '\n\nCAREER (all-time, regular season):\n' + careerTable(analytics.allTime)
-    + '\n\n' + alltimeSummary(slimAlltime(alltimeData))
-    + '\n\nTRADES:\n' + tradesLines(transactionsData)
-    + '\n\nCURRENT SEASON:\n' + currentSeasonBlock(statsData);
+  // Chat-fallback prompt (non-data questions only): the fact-table recap plus the
+  // alltime-only tables. Numeric questions never reach it — they go through the
+  // query engine — and any number in a chat reply must appear in this prompt.
+  const sp = useMemo(function() {
+    return 'You are the statistician for the Borehamwood Plancy League. Answer ONLY from the data below — NEVER compute or invent numbers. If a number is not given to you, say you do not have it. Use names, never Sleeper handles; two Benjys: Lev and Sanford. Be brief.'
+      + loreCtx
+      + '\n\n' + leagueRecap(facts, historyData)
+      + '\n\n' + alltimeSummary(alltimeData)
+      + '\n\nTRADES:\n' + tradesLines(transactionsData);
+  }, [facts, historyData, alltimeData, transactionsData, loreCtx]);
 
-  // buildContext: deterministic query layer. Plan → execute in JS → inject result.
-  // Plans from the running conversation (not just the latest line) so follow-ups
-  // like "and in 2024?" resolve their referents.
-  async function buildContext(query, conversation) {
-    try {
-      const convo = (conversation && conversation.length) ? conversation : [{ role: 'user', content: query }];
-      const spec = await planStatQuery(query, convo);
-      const result = runStatQuery(spec, games, playersData);
-      return formatQueryResult(spec, result);
-    } catch (e) { return ''; }
+  // Query engine v2: code answers, the model only phrases (answerStatQuestion).
+  async function answer(query, conversation, ctx) {
+    const aiOn = ai !== 'off';
+    const out = await answerStatQuestion(query, ctx, {
+      facts: facts, players: playersData,
+      plan: aiOn ? function(prompt) { return claudeCall([{ role: 'user', content: prompt }], 'Output only JSON.', { json: true }); } : null,
+      narrate: aiOn ? function(prompt) { return claudeCall([{ role: 'user', content: prompt }], 'Reply in one or two plain sentences.'); } : null,
+      log: function() { if (DEBUG) console.log.apply(console, ['[stats]'].concat([].slice.call(arguments))); },
+    });
+    if (out.content != null) return out;
+    if (!aiOn) return { content: CANT_ANSWER, table: null, ctx: ctx };
+    const reply = await claudeCall(conversation.filter(function(m) { return m.role === 'user' || m.role === 'assistant'; }), sp);
+    const g = numberGuard(reply, [], [sp]);
+    if (!g.ok) { if (DEBUG) console.log('[stats] chat reply rejected by number guard', g.bad); return { content: CANT_ANSWER, table: null, ctx: ctx }; }
+    return { content: reply, table: null, ctx: ctx };
   }
 
-  return <ChatTab systemPrompt={sp} buildContext={buildContext} chips={['All-time standings', 'Unluckiest manager?', 'Most consistent scorer?', 'Biggest bench disasters?']} placeholder="Message…" errorMsg="Something went wrong — try again." intro="The record book — career records, luck ratings, playoff history, consistency. Ask about personal bests, positional strengths, or any head-to-head." />;
+  return (
+    <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
+      {book && <RecordBook facts={facts} onClose={function() { setBook(false); }} />}
+      <ChatTab systemPrompt={sp} answer={answer}
+        header={function(n) { return <ThisWeekCard facts={facts} started={n > 0} onRecordBook={function() { setBook(true); }} />; }}
+        chips={['Most points in a loss?', "This week's upset?", 'Current standings', 'Longest streaks']}
+        placeholder="Message…" errorMsg="Something went wrong — try again."
+        intro="Ask about records, standings, head-to-heads or any week. Numbers come straight from the league data." />
+    </div>
+  );
 }
 
 function BanterTab(props) {
-  const { historyData, statsData, alltimeData, lore } = props;
+  const { historyData, facts, alltimeData, lore } = props;
+  const ai = useAIState();
 
   const banterPrompt = useMemo(function() {
     const rule = [
       '══ PRIME DIRECTIVE ══',
       'You are the resident wind-up merchant of the Borehamwood Plancy League.',
       'STYLE: ESPN mock-grandeur, bone-dry British wit, mock gravity. Punchy 3-5 sentences. Lean on Jewish/Borehamwood texture. Sign off big beats with "a hearty hearty mazel tov."',
-      'Never be cruel — mockery is the love language. Never invent statistics.',
-      '',
-      'CRITICAL OUTPUT RULE: NEVER print tag labels like [FACT], [MYTH], [REAL], or [EVENT] in your response. These are internal reasoning cues only — your output must read as natural chat, no square-bracket annotations of any kind.',
-      '',
-      'VERIFICATION RULE: Before stating any league result, score, record, or season outcome, verify it against RAW HISTORY and CURRENT SEASON below. If the event predates our data (pre-2023), you may reference it but must treat it as unverified lore rather than confirmed fact. Never contradict the data.',
+      'Never be cruel — mockery is the love language. Never invent statistics: every score, record or number you use must appear in the RECAP below (pre-2023 lore is unverified and may be referenced as lore only).',
+      'NEVER print tag labels like [FACT], [MYTH], [REAL], or [EVENT].',
       '',
       '══ LORE MASTER ══',
     ].join('\n');
-
-    // Slim summaries only — raw JSON dumps blew the prompt budget (the repo's
-    // own <20 KB rule). Champions + standings, all-time records, current-season
-    // standings/extremes are enough to verify any claim the bot makes.
-    const statsSummary = statsData ? { league: statsData.league, season: statsData.season, standings: statsData.standings, extremes: statsData.extremes } : null;
-    const dataSection = '\n\n══ VERIFIED DATA (check all facts here first) ══'
-      + '\n\nSEASON HISTORY (champions + standings):\n' + JSON.stringify(slimHistory(historyData))
-      + '\n\nCURRENT SEASON:\n' + JSON.stringify(statsSummary)
-      + '\n\nALL-TIME RECORDS:\n' + JSON.stringify(slimAlltime(alltimeData));
-    if (DEBUG) console.log('banter prompt bytes:', (rule + (lore.master || '') + dataSection).length);
-
-    if (lore.master) return rule + '\n' + lore.master + dataSection;
-
-    // Fallback when lore files haven't loaded yet
-    return rule + '\nChampions (most recent first): Alastair Livingston 2025 (first legit Plancey — beat Polak in final), Saul Freedman 2024+2023+2021+2017 (4 belts, the GOAT), Benjy Levey 2022, Jamie Kay 2020, Josh Gaon 2019, Gideon Sakofsky 2018, Alastair Livingston inaugural (asterisked).'
-      + '\nThe Miriam = wooden spoon. Sanford = king of the Miriam. Lev = autodraft legend ("Does it auto-draft automatically?"). Dan = Commissioner/narrator. Gideon lives in Israel (4am watches). The Plancey = championship belt named after Rabbi Alan Plancey.'
+    // Compact recap from the fact table (Phase 3 diet) — no raw JSON dumps.
+    const recap = '\n\n══ RECAP (verified data — the only source of numbers) ══\n' + leagueRecap(facts, historyData)
+      + (alltimeData && alltimeData.nemesis ? '\n\nNEMESIS: ' + Object.keys(alltimeData.nemesis).map(function(h) { const n = alltimeData.nemesis[h]; return distinctName(h) + '→' + distinctName(n.opponent) + '(' + n.wins + '-' + n.losses + ')'; }).join('; ') : '');
+    if (lore.master) return rule + '\n' + lore.master.slice(0, 12000) + recap;
+    return rule + '\nThe Miriam = wooden spoon. Sanford = king of the Miriam. Lev = autodraft legend ("Does it auto-draft automatically?"). Dan = Commissioner/narrator. Gideon lives in Israel (4am watches). The Plancey = championship belt named after Rabbi Alan Plancey.'
       + '\nTWO BENJYS: benjlev=Lev, sanfbe=Sanford. allyl900=Alastair.'
       + '\nNAME MAP: ' + JSON.stringify(NAMES)
-      + dataSection;
-  }, [lore.master, historyData, statsData, alltimeData]);
+      + recap;
+  }, [lore.master, historyData, facts, alltimeData]);
 
   function buildContext(query) {
     if (!lore.ready) return '';
     const lore_ctx = retrieveLore(query, lore.archive, lore.quotes);
     return lore_ctx ? '--- RETRIEVED LORE ---\n' + lore_ctx : '';
   }
+  // Number guard for roasts: drop any sentence whose numbers are not in the prompt.
+  function postProcess(reply, fullPrompt) {
+    const g = guardSentences(reply, fullPrompt);
+    if (DEBUG && g.dropped) console.log('[banter] number guard dropped', g.dropped, 'sentence(s)');
+    return g.text || "I'll keep the numbers out of this one — ask the Stats tab for the receipts.";
+  }
 
+  if (ai === 'off') {
+    return <div data-testid="ai-off" style={{ margin: 'auto', padding: '24px 16px', textAlign: 'center', color: T.dim, fontSize: 14, lineHeight: 1.7, maxWidth: 320 }}>Banter needs Claude, which isn't available in this view. The Stats tab still answers every record and standings question from the league data.</div>;
+  }
   return <ChatTab
     systemPrompt={banterPrompt}
     buildContext={buildContext}
+    postProcess={postProcess}
     chips={['Roast the 2025 champion', 'Most cursed manager?', "This week's smack bulletin", 'Roast Lev']}
     placeholder="Message…"
     errorMsg="Blimey — give it another go."
@@ -935,6 +1743,7 @@ function normalizeName(str) { return str.toLowerCase().replace(/[^a-z0-9 ]/g, ''
 
 function TradeGrader(props) {
   const { rostersData, tradeValues } = props;
+  const ai = useAIState();
   const teamKeys = useMemo(function() { return Object.keys(rostersData || {}); }, [rostersData]);
   const [teamA, setTeamA] = useState(teamKeys[0] || '');
   const [teamB, setTeamB] = useState(teamKeys[1] || '');
@@ -1159,9 +1968,9 @@ function TradeGrader(props) {
               </div>
             )}
 
-            <button onClick={getVerdict} disabled={vLoading} style={{ width: '100%', background: T.panel, border: '1px solid ' + T.amber, color: T.amber, borderRadius: 11, padding: '13px 20px', fontSize: 13.5, fontWeight: 700, letterSpacing: '0.5px', textTransform: 'uppercase', cursor: vLoading ? 'default' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9, opacity: vLoading ? 0.7 : 1 }}>
+            {ai !== 'off' && <button onClick={getVerdict} disabled={vLoading} style={{ width: '100%', background: T.panel, border: '1px solid ' + T.amber, color: T.amber, borderRadius: 11, padding: '13px 20px', fontSize: 13.5, fontWeight: 700, letterSpacing: '0.5px', textTransform: 'uppercase', cursor: vLoading ? 'default' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9, opacity: vLoading ? 0.7 : 1 }}>
               {vLoading ? <span style={spin} /> : "🎙"} The Commissioner's Verdict
-            </button>
+            </button>}
 
             {(verdict || vError) && (
               <div style={{ background: T.panel2, border: '1px solid ' + (vError ? T.amber : T.border), borderLeft: '3px solid ' + (vError ? T.amber : T.indigo), borderRadius: '4px 12px 12px 4px', padding: 14, color: vError ? T.amber : T.text, marginTop: 10, fontSize: 14, lineHeight: 1.6 }}>
@@ -1481,6 +2290,30 @@ const CSS = `
   .nav-lab{font-size:10px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;}
   .plaincy-app{display:flex;flex-direction:column;height:var(--app-h,100dvh);width:100%;max-width:560px;margin:0 auto;background:#090d18;overflow:hidden;}
   @media(min-width:640px){.plaincy-app{max-width:780px;}}
+  .rt-wrap{overflow-x:auto;margin:8px -4px 0;}
+  .tw-card{background:#0f1625;border:1px solid #24344e;border-radius:12px;padding:10px 12px;font-size:13px;color:#e8f1ff;}
+  .tw-head{display:flex;align-items:center;gap:8px;justify-content:space-between;}
+  .tw-toggle{background:none;border:none;color:#f59e0b;font-weight:800;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;padding:0;text-align:left;}
+  .tw-rb{background:#1a2640;border:1px solid #304260;color:#e8f1ff;border-radius:8px;padding:5px 10px;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0;}
+  .tw-body{margin-top:8px;display:flex;flex-direction:column;gap:4px;}
+  .tw-game{line-height:1.5;}
+  .tw-k{color:#6e8db0;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.05em;margin-right:4px;}
+  .tw-dim{color:#6e8db0;}
+  .tw-table{margin-top:6px;}
+  .tw-table td,.tw-table th{padding:5px 8px;}
+  .rb-panel{position:absolute;inset:0;z-index:5;background:#090d18;display:flex;flex-direction:column;}
+  .rb-head{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 14px;border-bottom:1px solid #24344e;background:#0f1625;color:#e8f1ff;}
+  .rb-head select{background:#1a2640;color:#e8f1ff;border:1px solid #304260;border-radius:8px;padding:5px 6px;font-size:13px;max-width:44%;}
+  .rb-list{overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:10px;}
+  .rb-item{background:#0f1625;border:1px solid #24344e;border-radius:10px;padding:9px 11px;}
+  .rb-label{color:#f59e0b;font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:3px;}
+  .rb-row{font-size:13px;color:#e8f1ff;line-height:1.5;overflow-wrap:anywhere;}
+  .rt td,.rt th{white-space:nowrap;}
+  .rt-more{font-size:11px;color:#6e8db0;margin-top:4px;}
+  .res{display:inline-block;min-width:18px;text-align:center;border-radius:5px;padding:1px 5px;font-size:11px;font-weight:800;}
+  .res-W{background:rgba(16,185,129,0.18);color:#10b981;}
+  .res-L{background:rgba(248,113,113,0.18);color:#f87171;}
+  .res-T,.res-x{background:rgba(110,141,176,0.18);color:#6e8db0;}
   button{font-family:inherit;}
   textarea,select{font-family:inherit;font-size:16px;}
   textarea:focus,select:focus{outline:none;}
@@ -1496,7 +2329,9 @@ const TABS = [
 
 export default function App() {
   const [tab, setTab] = useState('stats');
-  const { history, stats, rosters, trades, alltime, transactions, players, live } = useLeagueData();
+  const { history, rosters, trades, alltime, transactions, players } = useLeagueData();
+  // ONE fact table for the whole app (Stats, Banter, badge) — same builder as the pipeline.
+  const facts = useMemo(function() { return buildFactTable(history, canonical); }, [history]);
   const { keyboardOpen } = useViewport();
   const lore = useLore(tab === 'banter');
 
@@ -1515,11 +2350,10 @@ export default function App() {
         <div style={{ width: 40, height: 40, borderRadius: 12, background: 'linear-gradient(135deg,#6366f1,#4f46e5)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: 22, color: '#fff', flexShrink: 0 }}>P</div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontWeight: 900, fontSize: 22, color: T.text, letterSpacing: '-0.5px', lineHeight: 1 }}>Pl<span style={{ color: T.indigo }}>AI</span>ncy</div>
-          <div style={{ fontSize: 11, color: T.dim, marginTop: 2, letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 600 }}>Borehamwood Plancy League</div>
+          <div style={{ fontSize: 11, color: T.dim, marginTop: 2, letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Borehamwood Plancy League</div>
         </div>
-        <div title={live ? 'Fetched the latest published data' : 'Running on the data baked into this artifact — re-paste to update'} style={{ fontSize: 10.5, color: T.dim, border: '1px solid ' + T.border, borderRadius: 6, padding: '4px 9px', whiteSpace: 'nowrap', flexShrink: 0, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 5 }}>
-          <span style={{ width: 6, height: 6, borderRadius: '50%', background: live ? T.green : T.amber, display: 'inline-block' }} />
-          {(live ? 'Live · ' : 'Snapshot · ') + fmtBuiltAt(BUILT_AT)}
+        <div data-testid="freshness" title={'Data built ' + fmtBuiltAt(BUILT_AT) + ' (' + BUILT_AT + ')'} style={{ fontSize: 10.5, color: T.dim, border: '1px solid ' + T.border, borderRadius: 6, padding: '4px 9px', flexShrink: 0, maxWidth: '44%', fontWeight: 600, textAlign: 'right', lineHeight: 1.35 }}>
+          {badgeText(facts) || fmtBuiltAt(BUILT_AT)}
         </div>
       </div>
 
@@ -1529,10 +2363,10 @@ export default function App() {
             sandbox, so keep-alive is the only option. Live mounts on demand: it
             fetches Sleeper on mount and is spoiler-safe, so a fresh mount is correct. */}
         <div style={{ display: tab === 'stats' ? 'flex' : 'none', flex: 1, minHeight: 0, flexDirection: 'column' }}>
-          <StatsTab historyData={history} statsData={stats} alltimeData={alltime} transactionsData={transactions} playersData={players} loreMaster={lore.master} />
+          <StatsTab historyData={history} facts={facts} alltimeData={alltime} transactionsData={transactions} playersData={players} loreMaster={lore.master} />
         </div>
         <div style={{ display: tab === 'banter' ? 'flex' : 'none', flex: 1, minHeight: 0, flexDirection: 'column' }}>
-          <BanterTab historyData={history} statsData={stats} alltimeData={alltime} lore={lore} />
+          <BanterTab historyData={history} facts={facts} alltimeData={alltime} lore={lore} />
         </div>
         <div style={{ display: tab === 'trade' ? 'flex' : 'none', flex: 1, minHeight: 0, flexDirection: 'column' }}>
           <TradeGrader rostersData={rosters} tradeValues={trades} />

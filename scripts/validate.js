@@ -75,6 +75,54 @@ if (fs.existsSync(playersPath)) {
 const playedSeasons = (history.seasons || []).filter((s) => (s.games || []).length > 0);
 const latest = playedSeasons[playedSeasons.length - 1];
 
+// ── games.json (fact table, Phase 1) ─────────────────────────────────────────
+const factsPath = path.join(DATA, "games.json");
+if (fs.existsSync(factsPath)) {
+  const facts = readJson(factsPath);
+  const rows = facts.games || [];
+  check(rows.length > 0, "facts.nonempty", "games.json has no rows");
+  const byGame = {};
+  for (const r of rows) (byGame[r.gameId] = byGame[r.gameId] || []).push(r);
+  const ids = new Set(rows.map((r) => r.id));
+  check(ids.size === rows.length, "facts.id.unique", "games.json row ids are not unique");
+  const comp = { W: "L", L: "W", T: "T" };
+  for (const [gid, pair] of Object.entries(byGame)) {
+    if (pair[0].bye) { check(pair.length === 1 && pair[0].opponent == null, "facts.bye", `${gid} bye row malformed`); continue; }
+    if (!check(pair.length === 2, "facts.pair", `${gid} has ${pair.length} rows, expected 2`)) continue;
+    const [x, y] = pair;
+    check(x.manager === y.opponent && y.manager === x.opponent, "facts.mirror.managers", `${gid} manager/opponent do not mirror`);
+    check(x.pf === y.pa && x.pa === y.pf, "facts.mirror.points", `${gid} pf/pa do not mirror`);
+    if (x.status === "final") check(comp[x.result] === y.result, "facts.result", `${gid} results ${x.result}/${y.result} not complementary`);
+    else check(x.result == null && y.result == null, "facts.result.live", `${gid} live game has a result`);
+  }
+  // Per manager-season: game count from rows == Sleeper W+L+T (hard); exact W/L
+  // is a warning (Sleeper W/L vs stored scores drift — the 2023 stat-correction quirk).
+  for (const sr of facts.seasons || []) {
+    const s = (history.seasons || []).find((x) => String(x.season) === sr.season);
+    const st = s && (s.standings || []).find((r) => canon(r.manager) === sr.manager);
+    if (!st) { check(false, "facts.seasons.standings", `${sr.season} ${sr.manager} not in history standings`); continue; }
+    const sleeperGames = (st.wins || 0) + (st.losses || 0) + (st.ties || 0);
+    check(sr.games === sleeperGames, "facts.seasons.games",
+      `${sr.season} ${sr.manager}: ${sr.games} final regular rows != Sleeper record ${sleeperGames}`);
+    warn(sr.wins === (st.wins || 0) && sr.losses === (st.losses || 0), "facts.seasons.wl",
+      `${sr.season} ${sr.manager}: rows ${sr.wins}-${sr.losses} vs Sleeper ${st.wins}-${st.losses}`);
+  }
+  // Every record row must exist in the table (records are derived, never invented).
+  const recs = facts.records || {};
+  const checkRec = (label, list) => {
+    for (const r of list || []) {
+      if (r && r.id && r.gameId) check(ids.has(r.id), "facts.records.exist", `${label} row ${r.id} not in games table`);
+    }
+  };
+  for (const [name, scoped] of Object.entries(recs)) {
+    if (name === "current") continue;
+    checkRec(name + ".regular", scoped.regular);
+    checkRec(name + ".all", scoped.all);
+  }
+  check(recs.highestScoreInLoss && recs.highestScoreInLoss.regular.every((r) => r.result === "L"),
+    "facts.records.loss", "highestScoreInLoss contains a non-loss row");
+}
+
 // ── stats.json ──────────────────────────────────────────────────────────────
 const stats = readJson(path.join(DATA, "stats.json"));
 if (latest) {

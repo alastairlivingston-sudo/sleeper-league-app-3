@@ -304,6 +304,30 @@ const CSS = `
   .nav-lab{font-size:10px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;}
   .plaincy-app{display:flex;flex-direction:column;height:var(--app-h,100dvh);width:100%;max-width:560px;margin:0 auto;background:#090d18;overflow:hidden;}
   @media(min-width:640px){.plaincy-app{max-width:780px;}}
+  .rt-wrap{overflow-x:auto;margin:8px -4px 0;}
+  .tw-card{background:#0f1625;border:1px solid #24344e;border-radius:12px;padding:10px 12px;font-size:13px;color:#e8f1ff;}
+  .tw-head{display:flex;align-items:center;gap:8px;justify-content:space-between;}
+  .tw-toggle{background:none;border:none;color:#f59e0b;font-weight:800;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;padding:0;text-align:left;}
+  .tw-rb{background:#1a2640;border:1px solid #304260;color:#e8f1ff;border-radius:8px;padding:5px 10px;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0;}
+  .tw-body{margin-top:8px;display:flex;flex-direction:column;gap:4px;}
+  .tw-game{line-height:1.5;}
+  .tw-k{color:#6e8db0;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.05em;margin-right:4px;}
+  .tw-dim{color:#6e8db0;}
+  .tw-table{margin-top:6px;}
+  .tw-table td,.tw-table th{padding:5px 8px;}
+  .rb-panel{position:absolute;inset:0;z-index:5;background:#090d18;display:flex;flex-direction:column;}
+  .rb-head{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 14px;border-bottom:1px solid #24344e;background:#0f1625;color:#e8f1ff;}
+  .rb-head select{background:#1a2640;color:#e8f1ff;border:1px solid #304260;border-radius:8px;padding:5px 6px;font-size:13px;max-width:44%;}
+  .rb-list{overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:10px;}
+  .rb-item{background:#0f1625;border:1px solid #24344e;border-radius:10px;padding:9px 11px;}
+  .rb-label{color:#f59e0b;font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:3px;}
+  .rb-row{font-size:13px;color:#e8f1ff;line-height:1.5;overflow-wrap:anywhere;}
+  .rt td,.rt th{white-space:nowrap;}
+  .rt-more{font-size:11px;color:#6e8db0;margin-top:4px;}
+  .res{display:inline-block;min-width:18px;text-align:center;border-radius:5px;padding:1px 5px;font-size:11px;font-weight:800;}
+  .res-W{background:rgba(16,185,129,0.18);color:#10b981;}
+  .res-L{background:rgba(248,113,113,0.18);color:#f87171;}
+  .res-T,.res-x{background:rgba(110,141,176,0.18);color:#6e8db0;}
   button{font-family:inherit;}
   textarea,select{font-family:inherit;font-size:16px;}
   textarea:focus,select:focus{outline:none;}
@@ -319,7 +343,9 @@ const TABS = [
 
 export default function App() {
   const [tab, setTab] = useState('stats');
-  const { history, stats, rosters, trades, alltime, transactions, players, live } = useLeagueData();
+  const { history, rosters, trades, alltime, transactions, players } = useLeagueData();
+  // ONE fact table for the whole app (Stats, Banter, badge) — same builder as the pipeline.
+  const facts = useMemo(function() { return buildFactTable(history, canonical); }, [history]);
   const { keyboardOpen } = useViewport();
   const lore = useLore(tab === 'banter');
 
@@ -338,11 +364,10 @@ export default function App() {
         <div style={{ width: 40, height: 40, borderRadius: 12, background: 'linear-gradient(135deg,#6366f1,#4f46e5)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: 22, color: '#fff', flexShrink: 0 }}>P</div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontWeight: 900, fontSize: 22, color: T.text, letterSpacing: '-0.5px', lineHeight: 1 }}>Pl<span style={{ color: T.indigo }}>AI</span>ncy</div>
-          <div style={{ fontSize: 11, color: T.dim, marginTop: 2, letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 600 }}>Borehamwood Plancy League</div>
+          <div style={{ fontSize: 11, color: T.dim, marginTop: 2, letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Borehamwood Plancy League</div>
         </div>
-        <div title={live ? 'Fetched the latest published data' : 'Running on the data baked into this artifact — re-paste to update'} style={{ fontSize: 10.5, color: T.dim, border: '1px solid ' + T.border, borderRadius: 6, padding: '4px 9px', whiteSpace: 'nowrap', flexShrink: 0, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 5 }}>
-          <span style={{ width: 6, height: 6, borderRadius: '50%', background: live ? T.green : T.amber, display: 'inline-block' }} />
-          {(live ? 'Live · ' : 'Snapshot · ') + fmtBuiltAt(BUILT_AT)}
+        <div data-testid="freshness" title={'Data built ' + fmtBuiltAt(BUILT_AT) + ' (' + BUILT_AT + ')'} style={{ fontSize: 10.5, color: T.dim, border: '1px solid ' + T.border, borderRadius: 6, padding: '4px 9px', flexShrink: 0, maxWidth: '44%', fontWeight: 600, textAlign: 'right', lineHeight: 1.35 }}>
+          {badgeText(facts) || fmtBuiltAt(BUILT_AT)}
         </div>
       </div>
 
@@ -352,10 +377,10 @@ export default function App() {
             sandbox, so keep-alive is the only option. Live mounts on demand: it
             fetches Sleeper on mount and is spoiler-safe, so a fresh mount is correct. */}
         <div style={{ display: tab === 'stats' ? 'flex' : 'none', flex: 1, minHeight: 0, flexDirection: 'column' }}>
-          <StatsTab historyData={history} statsData={stats} alltimeData={alltime} transactionsData={transactions} playersData={players} loreMaster={lore.master} />
+          <StatsTab historyData={history} facts={facts} alltimeData={alltime} transactionsData={transactions} playersData={players} loreMaster={lore.master} />
         </div>
         <div style={{ display: tab === 'banter' ? 'flex' : 'none', flex: 1, minHeight: 0, flexDirection: 'column' }}>
-          <BanterTab historyData={history} statsData={stats} alltimeData={alltime} lore={lore} />
+          <BanterTab historyData={history} facts={facts} alltimeData={alltime} lore={lore} />
         </div>
         <div style={{ display: tab === 'trade' ? 'flex' : 'none', flex: 1, minHeight: 0, flexDirection: 'column' }}>
           <TradeGrader rostersData={rosters} tradeValues={trades} />

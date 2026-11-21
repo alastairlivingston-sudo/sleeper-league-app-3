@@ -93,6 +93,22 @@ function runChecks(history) {
   eq(runChecks(h6).includes("history.complete.past"), true, "an older season may not be in progress");
 }
 
+// ── DR-6: stat corrections are allowed and reported, never a failure ─────────
+{
+  const { diffFinalScores, summary } = require("./stat-corrections");
+  const before = histFixture();
+  const after = histFixture();
+  const g = after.seasons.find((x) => x.season === "2026").games.find((x) => x.week === 9);
+  g.pa = Math.round((g.pa + 1.3) * 100) / 100;               // a final week's score revised
+  const liveG = after.seasons.find((x) => x.season === "2026").games.find((x) => x.status === "live");
+  liveG.pb += 5;                                               // live scores moving is not a correction
+  const d = diffFinalScores(before, after);
+  eq(d.map((x) => x.season + ":" + x.week + ":" + x.games), ["2026:9:1"], "DR-6 only the corrected FINAL week is reported");
+  eq(summary(d), "2026 wk 9 stat corrections", "DR-6 commit-message summary");
+  eq(summary(diffFinalScores(before, histFixture())), "", "DR-6 no change → empty summary");
+  eq(runChecks(after).filter((id) => id !== "history.standings.high"), [], "DR-6 a corrected final score does not fail validation");
+}
+
 if (failures) {
   console.error(`test-status.js: ${failures} assertion(s) FAILED`);
   process.exit(1);

@@ -25,9 +25,16 @@ function tryReq(name) {
 const babel   = tryReq("@babel/core");
 const presetEnv   = tryReq("@babel/preset-env");
 const presetReact = tryReq("@babel/preset-react");
+const jsdomMod = tryReq("jsdom");
+// React DOM feature-detects the browser ONCE at module load (e.g. whether the
+// `input` event exists). Loaded with no window it falls back to legacy polyfill
+// events and typed text never reaches onChange — so give it a window first.
+if (jsdomMod && typeof global.window === "undefined") {
+  const boot = new jsdomMod.JSDOM("<!doctype html><html><body></body></html>", { url: "https://x.claudeusercontent.com/" });
+  global.window = boot.window; global.document = boot.window.document; global.navigator = boot.window.navigator;
+}
 const React   = tryReq("react");
 const ReactDOM = tryReq("react-dom/client") || tryReq("react-dom");
-const jsdomMod = tryReq("jsdom");
 
 if (!babel || !presetEnv || !presetReact || !React || !ReactDOM || !jsdomMod) {
   console.log("test-render: SKIP — dev deps not installed (@babel/*, react, react-dom, jsdom).");
@@ -121,7 +128,6 @@ function localFetch(urlToFile) {
 }
 const DATA_MAP = {
   "history.json": "docs/data/history.json",
-  "stats.json": "docs/data/stats.json",
   "rosters.json": "docs/data/rosters.json",
   "fc-values.json": "docs/data/fc-values.json",
   "alltime.json": "docs/data/alltime.json",
@@ -135,7 +141,8 @@ const rejectFetch = async () => { throw new Error("offline"); };
 
 // A reply string that cannot already exist anywhere on the page, so matching it
 // proves it came from the mocked model bridge (not pre-existing data/intro text).
-const REPLY_SENTINEL = "ZZTOP_COMMISSIONER_REPLY_4242";
+// No digits: the number guard (Phase 2) would rightly reject an unknown number.
+const REPLY_SENTINEL = "ZZTOP COMMISSIONER REPLY SENTINEL";
 
 // ── Tests ─────────────────────────────────────────────────────────────────────
 async function main() {
@@ -148,8 +155,10 @@ async function main() {
   console.log("Journey 1 — online, model bridge mocked:");
   let completeCalls = 0, plannerCalls = 0;
   const isPlanner = (p) => p.includes("translate a fantasy-football question into a JSON query spec");
+  let banterPromptChars = 0;
   const complete = async (prompt) => {
     completeCalls++;
+    if (prompt.includes("wind-up merchant")) banterPromptChars = Math.max(banterPromptChars, prompt.length);
     if (isPlanner(prompt)) { plannerCalls++; return '{"type":"none"}'; }
     if (process.env.MEASURE_PROMPT) console.error(`NARRATION_PROMPT_CHARS=${prompt.length}`);
     return REPLY_SENTINEL;
@@ -180,7 +189,8 @@ async function main() {
   await flush();
   const ta = doc.querySelector("textarea");
   ok("UR-3", !!ta, "chat input (textarea) present in STATS");
-  const chip = [...doc.querySelectorAll("button.chip")][0];
+  // A multi-row recipe answer ("Current standings") is narrated by the model.
+  const chip = [...doc.querySelectorAll("button.chip")].find((c) => /current standings/i.test(c.textContent || ""));
   ok("UR-3", !!chip, "suggestion chip present in STATS");
   const before = completeCalls;
   if (chip) {
@@ -194,14 +204,59 @@ async function main() {
   // "All-time standings" chip calls send(text) directly and its text matches the
   // totals intent client-side, so NO planner call should fire — only narration.
   const p0 = plannerCalls, c0 = completeCalls;
-  const fastChip = [...doc.querySelectorAll("button.chip")].find((c) => /all-?time standings/i.test(c.textContent || ""));
-  ok("UR-5", !!fastChip, "fast-path chip ('All-time standings') present");
+  const fastChip = [...doc.querySelectorAll("button.chip")].find((c) => /longest streaks/i.test(c.textContent || ""));
+  ok("UR-5", !!fastChip, "fast-path chip ('Longest streaks') present");
   if (fastChip) {
     await act(async () => { fastChip.dispatchEvent(new window.Event("click", { bubbles: true })); });
     await flush(); await flush(); await sleep(30); await flush(); await flush();
     ok("UR-5", plannerCalls === p0, `fast-path skipped the planner model call (planner unchanged at ${plannerCalls})`);
-    ok("UR-5", completeCalls > c0, "narration model call still fired (reply produced)");
+    ok("UR-5", completeCalls === c0, "single-row record answered by a JS sentence — no model call at all");
+    ok("UR-5", /straight wins/.test(text()), "templated streak sentence rendered");
   }
+
+  // FR-14: freshness badge shows the last FINAL week (and the live week).
+  const hist = JSON.parse(fs.readFileSync(path.join(ROOT, "docs/data/history.json"), "utf8"));
+  const cur = hist.seasons[hist.seasons.length - 1];
+  const badge = (doc.querySelector("[data-testid=freshness]") || {}).textContent || "";
+  const wantBadge = cur.complete ? `${cur.season} · season complete` : `${cur.season} · through Week ${cur.lastFinalWeek}` + (cur.liveWeek ? ` · Week ${cur.liveWeek} live` : "");
+  ok("FR-14", badge === wantBadge, `badge reads "${badge}" (want "${wantBadge}")`);
+  ok("FR-14", !/Live ·|Snapshot ·/.test(badge), "no misleading live/snapshot state in the badge");
+
+  // FR-12: This Week card renders the last completed week.
+  const card = doc.querySelector("[data-testid=this-week]");
+  // The card auto-collapses once a conversation starts — expand it to inspect.
+  if (card && !card.querySelector(".tw-game")) {
+    await act(async () => { card.querySelector(".tw-toggle").dispatchEvent(new window.Event("click", { bubbles: true })); });
+    await flush();
+  }
+  ok("FR-12", !!card && (card.textContent || "").includes(`Week ${cur.lastFinalWeek}`), "This Week card shows the last final week");
+  ok("FR-12", !!card && card.querySelectorAll(".tw-game").length === 4 && card.querySelectorAll("tbody tr").length === 8, "card lists 4 results and an 8-row mini standings table");
+
+  // FR-13: Record Book renders every named record.
+  const rbBtn = [...doc.querySelectorAll("button.tw-rb")].find((b) => /record book/i.test(b.textContent || ""));
+  ok("FR-13", !!rbBtn, "Record Book button present");
+  if (rbBtn) {
+    await act(async () => { rbBtn.dispatchEvent(new window.Event("click", { bubbles: true })); });
+    await flush();
+    const items = [...doc.querySelectorAll("[data-testid=record-book] .rb-item")];
+    ok("FR-13", items.length === 17, `Record Book lists all 17 named records (got ${items.length})`);
+    ok("FR-13", items.filter((i) => i.querySelector(".rb-row") && !/^—$/.test(i.querySelector(".rb-row").textContent)).length >= 16, "named records have rows");
+    const mpl = items.find((i) => i.getAttribute("data-record") === "highestScoreInLoss");
+    ok("FR-13", !!mpl && /Alastair 151\.40 – 168\.56 Josh/.test(mpl.textContent), "a record row shows both sides of the game");
+    const close = [...doc.querySelectorAll("[data-testid=record-book] button")].find((b) => /close/i.test(b.textContent || ""));
+    if (close) { await act(async () => { close.dispatchEvent(new window.Event("click", { bubbles: true })); }); await flush(); }
+  }
+
+  // Banter prompt diet: < 20 KB (Phase 3).
+  const banterBtn = navButtons.find((b) => (b.textContent || "").toUpperCase().includes("BANTER"));
+  await act(async () => { banterBtn.dispatchEvent(new window.Event("click", { bubbles: true })); });
+  await flush(); await sleep(20); await flush();
+  const bChip = [...doc.querySelectorAll("button.chip")].find((c) => /roast lev/i.test(c.textContent || ""));
+  if (bChip) {
+    await act(async () => { bChip.dispatchEvent(new window.Event("click", { bubbles: true })); });
+    await flush(); await flush(); await sleep(30); await flush(); await flush();
+  }
+  ok("FR-15", banterPromptChars > 0 && banterPromptChars < 20480, `banter prompt is ${banterPromptChars} chars (< 20 KB)`);
 
   // UR-4: offline — live fetch fails, app must still render from inlined snapshot.
   console.log("Journey 2 — offline (live fetch fails), snapshot fallback:");
@@ -237,6 +292,56 @@ async function main() {
   ok("UR-6", seenModels[0] !== seenModels[1], "the second attempt used a DIFFERENT model id (chain advanced)");
   ok("UR-6", !uncaught, "no uncaught error on the legacy model-fallback path" + (uncaught ? `: ${uncaught.message}` : ""));
 
+  // UR-7: the screenshot conversation, typed into the real Stats ChatTab. Live
+  // data is the frozen 2023–25 fixture so the answer can't drift as 2026 lands.
+  console.log("Journey 4 — screenshot replay (UR-7):");
+  uncaught = null;
+  let ur7Calls = 0;
+  const ur7Complete = async (p) => { ur7Calls++; return isPlanner(p) ? '{"table":"none"}' : "Sorry, I fabricated that earlier."; };
+  const fixtureMap = { ...DATA_MAP, "history.json": "scripts/fixtures/history-2023-2025.json" };
+  // FR-12 with fixture data: the card follows whatever history is loaded.
+  const { window: w4 } = await mountApp({ fetchImpl: localFetch(fixtureMap), complete: ur7Complete });
+  const d4 = w4.document;
+  const bubbles = () => [...d4.querySelectorAll("table.rt")].map((t) => t.closest("div[style]"));
+  async function sendText(text) {
+    const area = d4.querySelector("textarea");
+    const setter = Object.getOwnPropertyDescriptor(w4.HTMLTextAreaElement.prototype, "value").set;
+    await act(async () => { setter.call(area, text); area.dispatchEvent(new w4.Event("input", { bubbles: true })); });
+    const send = [...d4.querySelectorAll("button.send-btn")][0];
+    await act(async () => { send.dispatchEvent(new w4.Event("click", { bubbles: true })); });
+    await flush(); await flush(); await sleep(30); await flush(); await flush();
+  }
+  const lastTable = () => { const ts = [...d4.querySelectorAll("table.rt")]; return ts[ts.length - 1]; };
+  const rowsOf = (t) => t ? [...t.querySelectorAll("tbody tr")].map((tr) => [...tr.querySelectorAll("td")].map((td) => td.textContent)) : [];
+  const assistantText = () => { const b = [...d4.querySelectorAll("table.rt")]; return b.length ? b[b.length - 1].parentElement.parentElement.textContent : ""; };
+
+  const card4 = d4.querySelector("[data-testid=this-week]");
+  ok("FR-12", !!card4 && /2025 Week 17/.test(card4.textContent || ""), "This Week card renders from fixture data (2025 Week 17)");
+  ok("FR-14", ((d4.querySelector("[data-testid=freshness]") || {}).textContent || "") === "2025 · season complete", "badge on a completed fixture season");
+  await sendText("What is the most points anyone has scored in a loss?");
+  const r1 = rowsOf(lastTable())[0] || [];
+  ok("UR-7", r1.join("|") === "Alastair|151.40|Josh|168.56|L|-17.16|2023|13|regular", `msg 1 table top row is Alastair 151.40 L v Josh 168.56, 2023 wk 13 (got ${r1.join("|")})`);
+  await sendText("What was the total game score?");
+  ok("UR-7", /319\.96/.test(assistantText()), "msg 2 answer contains 319.96");
+  const r2 = rowsOf(lastTable());
+  ok("UR-7", r2.length === 2 && r2.some((r) => r[0] === "Josh") && r2.some((r) => r[0] === "Alastair"), `msg 2 shows both rows of that game (${r2.map((r) => r.slice(0, 4).join(" ")).join(" / ")})`);
+  await sendText("How could Josh score 168.56 and lose?");
+  const t3 = assistantText();
+  ok("UR-7", /Josh won 168\.56–151\.40/.test(t3), "msg 3 explains Josh won 168.56–151.40");
+  ok("UR-7", !/fabricat/i.test(d4.body.textContent || ""), "no 'fabricat' text anywhere in the conversation");
+  ok("UR-7", ur7Calls === 0, `the whole conversation needed zero model calls (made ${ur7Calls})`);
+  ok("UR-7", !uncaught, "no uncaught error during the replay" + (uncaught ? `: ${uncaught.message}` : ""));
+
+  // UR-8: the published-artifact build (dist/plaincy.html) in jsdom, scripts run
+  // as a browser would. Run A: window.claude.use("sample") → a stub. Run B:
+  // use() → null — the page still renders and answers recipe questions, AI hides.
+  const HTML = path.join(ROOT, "dist", "plaincy.html");
+  if (!fs.existsSync(HTML)) {
+    console.log("Journey 5 — dist/plaincy.html: SKIP (not built; needs esbuild)");
+  } else {
+    await htmlJourneys(HTML);
+  }
+
   process.off("uncaughtException", onErr);
   process.off("unhandledRejection", onErr);
 
@@ -246,6 +351,106 @@ async function main() {
     process.exit(1);
   }
   console.log("\ntest-render: all user-journey checks passed ✓");
+}
+
+// Expected answers for the HTML journeys, computed from the CURRENT data by the
+// same engine the page runs (so 2026 games can't make this test stale).
+function expectedFromData() {
+  const { loadPartials } = require("./load-partials");
+  const ctx = loadPartials(["15-facts.jsx", "20-query-v2.jsx"]);
+  const hist = JSON.parse(fs.readFileSync(path.join(ROOT, "docs/data/history.json"), "utf8"));
+  const facts = ctx.buildFactTable(hist, ctx.canonical);
+  const r = facts.records.highestScoreInLoss.regular[0];
+  const nm = (h) => ctx.distinctName(h);
+  return { loser: nm(r.manager), winner: nm(r.opponent), lpf: r.pf.toFixed(2), wpf: r.pa.toFixed(2), total: (Math.round((r.pf + r.pa) * 100) / 100).toFixed(2) };
+}
+
+async function htmlJourneys(file) {
+  const exp = expectedFromData();
+  const html = fs.readFileSync(file, "utf8");
+  const waitFor = async (fn, ms = 8000) => { const t0 = Date.now(); while (Date.now() - t0 < ms) { try { if (fn()) return true; } catch {} await sleep(25); } return false; };
+
+  async function open(useImpl) {
+    const errors = [];
+    const dom = new JSDOM(html, {
+      url: "https://x.claudeusercontent.com/", runScripts: "dangerously", pretendToBeVisual: true,
+      beforeParse(w) {
+        w.HTMLElement.prototype.scrollIntoView = function () {};
+        w.HTMLElement.prototype.scrollTo = function () {};
+        w.fetch = async () => { throw new Error("offline"); };
+        w.claude = { use: useImpl };
+        w.addEventListener("error", (e) => errors.push(e.message || String(e.error)));
+      },
+    });
+    const w = dom.window;
+    await waitFor(() => w.document.querySelector("[data-testid=this-week]"));
+    // Read the app's own DOM (#root): body text also holds the inlined JSON.
+    return { w, d: w.document, root: () => w.document.getElementById("root"), errors };
+  }
+  async function say(env, text) {
+    const { w, d } = env;
+    const area = d.querySelector("textarea");
+    const setter = Object.getOwnPropertyDescriptor(w.HTMLTextAreaElement.prototype, "value").set;
+    setter.call(area, text);
+    area.dispatchEvent(new w.Event("input", { bubbles: true }));
+    await sleep(10);
+    const before = d.querySelectorAll(".rt, [data-testid=answer]").length + d.body.textContent.length;
+    d.querySelector("button.send-btn").dispatchEvent(new w.MouseEvent("click", { bubbles: true }));
+    await waitFor(() => !d.querySelector(".ld") && d.body.textContent.length !== before, 8000);
+    await sleep(50);
+  }
+  const lastBubble = (d) => { const ts = [...d.querySelectorAll("table.rt")]; return ts.length ? ts[ts.length - 1].closest("div[style]").parentElement : null; };
+
+  // Run A — sample stub.
+  console.log("Journey 5 — dist/plaincy.html with claude.use('sample') (UR-8):");
+  const calls = { text: [], json: [] };
+  const sampleStub = Object.assign(async (input, opts) => { calls.text.push({ input, opts }); return { text: "ZZTOP COMMISSIONER REPLY SENTINEL", truncated: false, modelTierApplied: "quick" }; }, {
+    json: async (input, opts) => { calls.json.push({ input, opts }); return { v: 2, table: "games", where: { managers: ["GSac"] }, groupBy: ["manager"], select: ["games", "wins", "losses"] }; },
+    limits: async () => ({ maxPromptBytes: 262144 }),
+  });
+  const A = await open(async (name) => (name === "sample" ? sampleStub : null));
+  ok("UR-8", /PlAIncy/.test(A.d.body.textContent) && !!A.d.querySelector("[data-testid=freshness]"), "HTML build renders the app shell + badge (UR-1)");
+  for (const label of ["BANTER", "TRADES", "SCORES", "STATS"]) {
+    const btn = [...A.d.querySelectorAll("button.nav-btn")].find((b) => b.textContent.toUpperCase().includes(label));
+    btn.dispatchEvent(new A.w.MouseEvent("click", { bubbles: true }));
+    await sleep(30);
+  }
+  ok("UR-8", A.errors.length === 0, "switched every tab without a script error (UR-2)" + (A.errors.length ? `: ${A.errors[0]}` : ""));
+  await say(A, "What is the most points anyone has scored in a loss?");
+  const row = [...(lastBubble(A.d) || A.d).querySelectorAll("table.rt tbody tr:first-child td")].map((t) => t.textContent);
+  ok("UR-8", row[0] === exp.loser && row[1] === exp.lpf && row[2] === exp.winner && row[3] === exp.wpf && row[4] === "L", `UR-7 msg 1 top row ${row.slice(0, 5).join(" ")} (want ${exp.loser} ${exp.lpf} ${exp.winner} ${exp.wpf} L)`);
+  await say(A, "What was the total game score?");
+  ok("UR-8", A.root().textContent.includes(exp.total + " total points"), `UR-7 msg 2 total ${exp.total}`);
+  await say(A, `How could ${exp.winner} score ${exp.wpf} and lose?`);
+  ok("UR-8", A.root().textContent.includes(`${exp.winner} won ${exp.wpf}–${exp.lpf}`) && !/fabricat/i.test(A.root().textContent), "UR-7 msg 3 explains who won, no 'fabricat'");
+  ok("UR-8", calls.text.length === 0 && calls.json.length === 0, `recipe + follow-up + dispute made zero sample calls (text ${calls.text.length}, json ${calls.json.length})`);
+  await say(A, "Current standings");
+  ok("UR-8", calls.text.length === 1 && calls.text[0].opts.modelTier === "quick" && calls.text[0].opts.cache === false, "multi-row narration uses sample() with modelTier quick, cache false (UR-3)");
+  ok("UR-8", A.root().textContent.includes("ZZTOP COMMISSIONER REPLY SENTINEL"), "narrated sentence rendered");
+  await say(A, "How did Gideon get on overall in his career here?");
+  ok("UR-8", calls.json.length === 1 && calls.json[0].opts.modelTier === "quick", "planner uses sample.json with modelTier quick");
+  ok("UR-8", Array.isArray(calls.text[0].input) && calls.text[0].input[0].role === "user" && calls.text[0].input[calls.text[0].input.length - 1].role === "user", "sample input is a turn list that starts and ends on a user turn");
+  ok("UR-8", A.errors.length === 0, "no script errors in run A" + (A.errors.length ? `: ${A.errors[0]}` : ""));
+  A.w.close();
+
+  // Run B — use() resolves null: deterministic answers still work, AI hides.
+  console.log("Journey 6 — dist/plaincy.html with claude.use() → null (UR-8):");
+  const B = await open(async () => null);
+  await say(B, "What is the most points anyone has scored in a loss?");
+  const rowB = [...B.d.querySelectorAll("table.rt tbody tr:first-child td")].map((t) => t.textContent);
+  ok("UR-8", rowB[0] === exp.loser && rowB[1] === exp.lpf, "recipe question answered with no AI available");
+  await say(B, "Current standings");
+  ok("UR-8", B.d.querySelectorAll("table.rt").length === 2, "multi-row recipe answered with its JS sentence + table");
+  const banter = [...B.d.querySelectorAll("button.nav-btn")].find((b) => b.textContent.toUpperCase().includes("BANTER"));
+  banter.dispatchEvent(new B.w.MouseEvent("click", { bubbles: true }));
+  await waitFor(() => B.d.querySelector("[data-testid=ai-off]"), 3000);
+  ok("UR-8", !!B.d.querySelector("[data-testid=ai-off]"), "Banter shows the 'AI not available' notice instead of a chat box");
+  const trades = [...B.d.querySelectorAll("button.nav-btn")].find((b) => b.textContent.toUpperCase().includes("TRADES"));
+  trades.dispatchEvent(new B.w.MouseEvent("click", { bubbles: true }));
+  await sleep(30);
+  ok("UR-8", !/Commissioner's Verdict/.test(B.root().textContent), "trade verdict button hidden when AI is unavailable");
+  ok("UR-8", B.errors.length === 0, "no script errors in run B" + (B.errors.length ? `: ${B.errors[0]}` : ""));
+  B.w.close();
 }
 
 main().catch((e) => { console.error("test-render: harness error:", e); process.exit(1); });

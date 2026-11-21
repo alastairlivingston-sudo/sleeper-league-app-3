@@ -8,6 +8,7 @@ on:
     branches: [main]
     paths:
       - "commissioner.template.jsx"
+      - "template/**"
       - "scripts/**"
       - "league-config.json"
       - "package.json"
@@ -15,6 +16,7 @@ on:
   pull_request:
     paths:
       - "commissioner.template.jsx"
+      - "template/**"
       - "scripts/**"
       - "league-config.json"
       - "package.json"
@@ -34,13 +36,19 @@ jobs:
       - name: Template in sync with partials
         run: node scripts/build-template.js --check
 
-      # Rebuild derived tables + artifact from the CURRENT template/scripts, so the
-      # gates run against exactly what this change would produce.
-      - name: Rebuild derived data + artifact
+      # Dev tooling (test + bundling only; the data pipeline stays zero-dep).
+      - name: Install dev tools
+        run: npm install --no-save @babel/core @babel/preset-env @babel/preset-react react react-dom jsdom esbuild@0.24.2
+
+      # Rebuild derived tables + both artifacts from the CURRENT template/scripts,
+      # so the gates run against exactly what this change would produce.
+      - name: Rebuild derived data + artifacts
         run: |
           node scripts/build-lore.js || true
+          node scripts/build-facts.js
           node scripts/build-alltime.js
           node scripts/build-artifact.js
+          node scripts/build-html.js
 
       - name: Data contract
         run: node scripts/validate.js
@@ -48,15 +56,17 @@ jobs:
       - name: Game status + in-progress season rules (DR-3/DR-4)
         run: node scripts/test-status.js
 
+      - name: Fact table (DR-5)
+        run: node scripts/test-facts.js
+
+      - name: Question engine (QR-1..3, UR-7 engine)
+        run: node scripts/test-questions.js
+
       - name: Aggregation golden test
         run: node scripts/test-alltime.js
 
-      - name: Artifact structure
+      - name: Artifact structure (FR/TR incl. TR-12 dist/plaincy.html)
         run: node scripts/test-artifact.js
 
-      # User-journey render gate needs dev tooling (test-only; pipeline stays zero-dep).
-      - name: Install test deps
-        run: npm install --no-save @babel/core @babel/preset-env @babel/preset-react react react-dom jsdom
-
-      - name: Artifact render (user journey)
+      - name: Artifact render (user journeys incl. UR-7, UR-8)
         run: node scripts/test-render.js

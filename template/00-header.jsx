@@ -39,19 +39,19 @@ function fmtBuiltAt(iso) {
 }
 
 const HISTORY_DATA = __HISTORY__;
-const STATS_DATA = __STATS__;
 const ROSTERS_DATA = __ROSTERS__;
 const TRADE_VALUES = __TRADES__;
 const ALLTIME_DATA = __ALLTIME__;
 const TRANSACTIONS_DATA = __TRANSACTIONS__;
 const PLAYER_SCORES = __PLAYERS__;
+const LORE_DATA = __LORE__;
 
 const REPO = 'alastairlivingston-sudo/sleeper-league-app-3';
 const PAGES_BASE = 'https://alastairlivingston-sudo.github.io/' + REPO.split('/')[1];
 
 const DATA_SOURCES = [
-  { history: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/history.json', stats: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/stats.json', rosters: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/rosters.json', trades: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/fc-values.json', alltime: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/alltime.json', transactions: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/transactions.json', players: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/player-scores.json' },
-  { history: PAGES_BASE + '/data/history.json', stats: PAGES_BASE + '/data/stats.json', rosters: PAGES_BASE + '/data/rosters.json', trades: PAGES_BASE + '/data/fc-values.json', alltime: PAGES_BASE + '/data/alltime.json', transactions: PAGES_BASE + '/data/transactions.json', players: PAGES_BASE + '/data/player-scores.json' },
+  { history: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/history.json', rosters: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/rosters.json', trades: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/fc-values.json', alltime: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/alltime.json', transactions: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/transactions.json', players: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/player-scores.json' },
+  { history: PAGES_BASE + '/data/history.json', rosters: PAGES_BASE + '/data/rosters.json', trades: PAGES_BASE + '/data/fc-values.json', alltime: PAGES_BASE + '/data/alltime.json', transactions: PAGES_BASE + '/data/transactions.json', players: PAGES_BASE + '/data/player-scores.json' },
 ];
 
 const LORE_SOURCES = [
@@ -68,7 +68,6 @@ const T = {
   faint: '#3d5470', indigo: '#6366f1', indigoDk: '#4f46e5',
   green: '#10b981', amber: '#f59e0b', blue: '#60a5fa', red: '#f87171',
 };
-const FF = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif";
 
 // Calling the model from an artifact.
 // The current Claude.ai artifact runtime is a sandboxed iframe (claudeusercontent.com)
@@ -88,13 +87,72 @@ function flattenPrompt(messages, systemPrompt) {
   return systemPrompt + '\n\n' + convo + '\n\nAssistant:';
 }
 
-async function claudeCall(messages, systemPrompt) {
-  // Primary: window.claude.complete (current artifact sandbox).
-  if (typeof window !== 'undefined' && window.claude && typeof window.claude.complete === 'function') {
+// ── Model bridge adapter (Phase 4) ────────────────────────────────────────────
+// Tried in order:
+//   1. claude.use("sample") — published claude.ai artifacts. Resolves async (up
+//      to ~10 s) to the sample function, or null when this view can't sample.
+//   2. window.claude.complete — the legacy paste-in artifact runtime.
+//   3. the proxied Messages API — older runtimes (kept for UR-6).
+// AI state: 'pending' → 'on' | 'off'. The UI renders immediately; AI-only
+// features (Banter, trade verdict, narration) hide when it settles 'off', while
+// deterministic Stats answers keep working.
+let SAMPLE_P = null;
+let AI_STATE = 'pending';
+const AI_LISTENERS = [];
+function setAIState(v) { if (AI_STATE === v) return; AI_STATE = v; AI_LISTENERS.slice().forEach(function(f) { f(v); }); }
+function hasWindowClaude() { return typeof window !== 'undefined' && !!window.claude; }
+function getSample() {
+  if (SAMPLE_P) return SAMPLE_P;
+  if (hasWindowClaude() && typeof window.claude.use === 'function') {
+    SAMPLE_P = Promise.resolve().then(function() { return window.claude.use('sample'); }).catch(function() { return null; });
+  } else {
+    SAMPLE_P = Promise.resolve(null);
+  }
+  SAMPLE_P.then(function(sample) {
+    if (sample) setAIState('on');
+    else if (hasWindowClaude() && typeof window.claude.complete === 'function') setAIState('on');
+    else if (hasWindowClaude()) setAIState('off'); // a Claude viewer that can't sample here
+    else setAIState('on');                         // no bridge at all → legacy Messages API path
+  });
+  return SAMPLE_P;
+}
+function useAIState() {
+  const [v, setV] = useState(AI_STATE);
+  useEffect(function() {
+    getSample();
+    AI_LISTENERS.push(setV);
+    setV(AI_STATE);
+    return function() { const i = AI_LISTENERS.indexOf(setV); if (i !== -1) AI_LISTENERS.splice(i, 1); };
+  }, []);
+  return v;
+}
+const SAMPLE_OFF = ['not_granted', 'sampling_disabled', 'not_declared', 'capability_disabled', 'capability_removed'];
+
+// opts.json → planner (sample.json, quick tier). Narration/chat → sample(), quick
+// tier, cache:false. Always resolves to a string.
+async function claudeCall(messages, systemPrompt, opts) {
+  const sample = await getSample();
+  if (sample) {
+    const turns = (messages || []).filter(function(m) { return (m.role === 'user' || m.role === 'assistant') && m.content; })
+      .map(function(m) { return { role: m.role, content: String(m.content) }; });
+    const input = [{ role: 'user', content: systemPrompt || 'Answer briefly.' }].concat(turns);
+    if (input[input.length - 1].role !== 'user') input.push({ role: 'user', content: 'Continue.' });
+    try {
+      if (opts && opts.json) return JSON.stringify(await sample.json(input, { modelTier: 'quick' }));
+      const r = await sample(input, { modelTier: 'quick', cache: false });
+      return r.text;
+    } catch (e) {
+      if (e && SAMPLE_OFF.indexOf(e.code) !== -1) setAIState('off');
+      throw new Error(e && e.code === 'rate_limited' ? 'MODEL_ERROR' : ((e && e.message) || 'sample failed'));
+    }
+  }
+  // window.claude.complete (legacy paste-in artifact sandbox).
+  if (hasWindowClaude() && typeof window.claude.complete === 'function') {
     const out = await window.claude.complete(flattenPrompt(messages, systemPrompt));
     if (!out) throw new Error('Empty response');
     return out;
   }
+  if (hasWindowClaude()) throw new Error('MODEL_ERROR'); // Claude viewer without sampling
   // Fallback: older runtime that proxied the Messages API directly.
   return messagesApiCall(messages, systemPrompt);
 }

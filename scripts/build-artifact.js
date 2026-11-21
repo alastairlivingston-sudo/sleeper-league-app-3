@@ -21,16 +21,35 @@ const OUT  = path.join(ROOT, "commissioner.jsx");
 // reliably when pasted into a Claude artifact.
 const dropLargeFallback = () => null;
 
+// history.json inlined lean: `status: "final"` and a `phase` derivable from the
+// playoff flag are the defaults every reader assumes when absent (fact table:
+// missing status = final, missing phase = playoff ? "playoff" : "regular"), so
+// they are dropped here only. Consolation phase and live status are kept.
+const leanHistory = (h) => ({
+  ...h,
+  seasons: (h.seasons || []).map((s) => ({
+    ...s,
+    games: (s.games || []).map((g) => {
+      const o = { ...g };
+      if (o.status === "final") delete o.status;
+      if ((o.phase === "regular" && !o.playoff) || (o.phase === "playoff" && o.playoff)) delete o.phase;
+      if (o.playoff === false) delete o.playoff; // readers treat a missing flag as false
+      return o;
+    }),
+  })),
+});
+
 const DATA = {
   // history.json is already lean (produced without the per-game player arrays);
   // it is the offline fallback verbatim.
-  __HISTORY__:      { file: path.join(ROOT, "docs/data/history.json") },
-  __STATS__:        { file: path.join(ROOT, "docs/data/stats.json") },
+  __HISTORY__:      { file: path.join(ROOT, "docs/data/history.json"), transform: leanHistory },
   __ROSTERS__:      { file: path.join(ROOT, "docs/data/rosters.json") },
   __TRADES__:       { file: path.join(ROOT, "docs/data/fc-values.json") },
   __ALLTIME__:      { file: path.join(ROOT, "docs/data/alltime.json"), transform: dropLargeFallback },
   __TRANSACTIONS__: { file: path.join(ROOT, "docs/data/transactions.json"), optional: true },
   __PLAYERS__:      { file: path.join(ROOT, "docs/data/player-scores.json"), optional: true, transform: dropLargeFallback },
+  // Lore is fetched at runtime in the paste build (inlined only in dist/plaincy.html).
+  __LORE__:         { file: path.join(ROOT, "docs/lore/master.json"), optional: true, transform: dropLargeFallback },
 };
 
 const SCALARS = {
