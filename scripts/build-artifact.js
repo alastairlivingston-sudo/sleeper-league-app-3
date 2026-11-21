@@ -38,20 +38,11 @@ const leanHistory = (h) => ({
     }),
   })),
 });
-// stats.json: the template reads standings + extremes scores only (head-to-head
-// now comes from the fact table), so drop headToHead and per-player arrays.
-const leanStats = (st) => {
-  const strip = (g) => (g ? { week: g.week, playoff: g.playoff, a: g.a, b: g.b, pa: g.pa, pb: g.pb } : g);
-  const ex = st.extremes || {};
-  const { headToHead, ...rest } = st;
-  return { ...rest, extremes: { closestGame: strip(ex.closestGame), biggestBlowout: strip(ex.biggestBlowout), highestScoringGame: strip(ex.highestScoringGame) } };
-};
 
 const DATA = {
   // history.json is already lean (produced without the per-game player arrays);
   // it is the offline fallback verbatim.
   __HISTORY__:      { file: path.join(ROOT, "docs/data/history.json"), transform: leanHistory },
-  __STATS__:        { file: path.join(ROOT, "docs/data/stats.json"), transform: leanStats },
   __ROSTERS__:      { file: path.join(ROOT, "docs/data/rosters.json") },
   __TRADES__:       { file: path.join(ROOT, "docs/data/fc-values.json") },
   __ALLTIME__:      { file: path.join(ROOT, "docs/data/alltime.json"), transform: dropLargeFallback },

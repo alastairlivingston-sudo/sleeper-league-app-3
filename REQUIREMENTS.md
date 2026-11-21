@@ -55,7 +55,7 @@ file that the paste truncated. `validate.js` gates the *data*; this harness gate
 | ID | Requirement | Rationale | Test |
 |----|-------------|-----------|------|
 | TR-1  | No unfilled `__PLACEHOLDER__` tokens remain. | A leftover token is a syntax error. | test-artifact |
-| TR-2  | Every inlined data constant (`HISTORY_DATA`, `STATS_DATA`, `ROSTERS_DATA`, `TRADE_VALUES`, `ALLTIME_DATA`, `TRANSACTIONS_DATA`, `PLAYER_SCORES`) is syntactically valid JSON or `null`. | Truncated/corrupt data is the #1 load failure. | test-artifact |
+| TR-2  | Every inlined data constant (`HISTORY_DATA`, `ROSTERS_DATA`, `TRADE_VALUES`, `ALLTIME_DATA`, `TRANSACTIONS_DATA`, `PLAYER_SCORES`, `LORE_DATA`) is syntactically valid JSON or `null`. | Truncated/corrupt data is the #1 load failure. | test-artifact |
 | TR-3  | Braces `{}`, brackets `[]`, and parens `()` are balanced across the whole file. | An unbalanced pair from a bad substitution breaks parsing. | test-artifact |
 | TR-4  | `import React, { … } from "react";` is present (React is imported, not global, in the sandbox). | Bare `React.useState` fails to render under the current runtime. | test-artifact |
 | TR-5  | The file transpiles cleanly with `@babel/preset-react` (no JSX/syntax errors). | Direct proof it will parse in the host. | test-render (and test-artifact when Babel is available) |
@@ -64,7 +64,7 @@ file that the paste truncated. `validate.js` gates the *data*; this harness gate
 | TR-8  | The model list is bare aliases only — no date-pinned IDs (`claude-*-YYYYMMDD`). | A retired date-pinned ID 404s every AI feature. | test-artifact |
 | TR-9  | No `api.anthropic.com` raw-fetch is the *sole* model path (bridge must be primary). | Raw fetch is CSP-blocked in the sandbox. | test-artifact |
 | TR-10 | `commissioner.jsx` is byte-identical to the template except on inlined-data / `BUILT_AT` lines. | Guarantees the artifact was built, never hand-edited. | test-artifact |
-| TR-12 | `dist/plaincy.html` (built by `scripts/build-html.js`, esbuild IIFE with React inside — no external scripts) exists, has `<title>PlAIncy</title>`, a viewport meta, `:root` colour tokens and an explicit body background; its `plaincy-data` JSON parses and carries history/stats/rosters/trades/alltime/transactions/players/lore; size warns > 2 MB, fails > 16 MB. | test-artifact |
+| TR-12 | `dist/plaincy.html` (built by `scripts/build-html.js`, esbuild IIFE with React inside — no external scripts) exists, has `<title>PlAIncy</title>`, a viewport meta, `:root` colour tokens and an explicit body background; its `plaincy-data` JSON parses and carries history/rosters/trades/alltime/transactions/players/lore; size warns > 2 MB, fails > 16 MB. | test-artifact |
 | TR-11 | `commissioner.template.jsx` equals the byte-exact concatenation of `template/*.jsx` (partials are source of truth). | Prevents a hand-edit to the generated monolith from being silently lost on the next assemble. | build-template --check (CI) |
 
 ## User-journey requirements (UR) — the "general user test"
@@ -96,6 +96,7 @@ file that the paste truncated. `validate.js` gates the *data*; this harness gate
 | DR-2 | Aliases are merged before aggregation (no un-canonicalized handle survives into `careerRankings`). | test-alltime |
 | DR-3 | Every game carries `status` (`final`/`live`) and `phase` (`regular`/`playoff`/`consolation`, from the brackets; `playoff` boolean kept = phase ≠ regular). Scheduled (0-0 future) pairings live in the season's `schedule[]`, never `games[]`. An in-progress season validates with: champion may be null, no playoff games required, contiguous FINAL weeks, per-manager FINAL regular-season game count == Sleeper W+L+T, live games only in the week after the last final week. Readers (`build-alltime`, template `flattenGames`/analytics, `fetch-stats`) use final games only; a missing status counts as final. | test-status (fixtures `history-midseason.json`, `sleeper-midseason.json`) + validate |
 | DR-5 | The fact table (`docs/data/games.json`, built by the shared `template/15-facts.jsx`) has 2 mirrored rows per game, complementary results, per manager-season game counts == Sleeper W+L+T, and every named record row exists in the table. An independent plain-loop recompute matches every named record on the frozen 2023–25 fixture, plus the PLAN seed answers (Alastair 151.40 L v Josh 168.56 2023 wk13; Saul 86.94 W v Lev 79.32 2025 wk7; Gideon 202.36; Josh 54.84; Dan 131.86–131.84; Saul 189.76–76.00; Dan v Josh 6–0; Lev 2024 0–14). | test-facts (fixture `history-2023-2025.json`) + validate |
+| DR-6 | Stat corrections: a FINAL week's scores changing between runs is allowed (never a validation failure) and reported — `stat-corrections.js` names the corrected weeks in the refresh commit message; live-week movement is not a correction. | test-status |
 | DR-4 | Standings `high` == max FINAL score in that season's games list plus round-1 playoff byes (`byes[]`). Null-matchup entries for eliminated teams / beyond-bracket weeks (wk 18) are not games and never count. | test-status + validate |
 
 ---
@@ -103,6 +104,8 @@ file that the paste truncated. `validate.js` gates the *data*; this harness gate
 ## How the gate runs
 - **Every generation:** `build-artifact.js` writes the file, then runs `test-artifact.js`
   in-process; a failure deletes/rejects the build with a non-zero exit.
-- **CI:** `refresh.yml` runs `validate.js --fresh` (data) and `test-artifact.js`
-  (artifact) before the commit step; optionally `test-render.js` when dev deps are installed.
-- **Local full check:** `npm test` → data contract + artifact structure + render.
+- **CI (`refresh.yml`, daily):** fetch → build-facts → build-alltime → build-artifact → build-html →
+  validate `--fresh` → test-status → test-facts → test-questions → test-alltime → test-artifact →
+  test-render → commit. **`test.yml`** runs the same gates on every code change / PR.
+- **Local full check:** `npm test` → validate → test-status → test-facts → test-questions → test-alltime →
+  test-artifact → test-render (dev deps: `npm install`).

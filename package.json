@@ -22,7 +22,7 @@
     "test-questions":  "node scripts/test-questions.js",
     "test":            "node scripts/validate.js && node scripts/test-status.js && node scripts/test-facts.js && node scripts/test-questions.js && node scripts/test-alltime.js && node scripts/test-artifact.js && node scripts/test-render.js",
     "build":           "node scripts/build-template.js && node scripts/build-lore.js && node scripts/build-facts.js && node scripts/build-alltime.js && node scripts/build-artifact.js && node scripts/build-html.js",
-    "refresh":         "node scripts/fetch-history.js && node scripts/fetch-rosters.js && node scripts/fetch-stats.js && node scripts/fetch-fc-values.js && node scripts/fetch-trades.js && node scripts/build-template.js && node scripts/build-lore.js && node scripts/build-facts.js && node scripts/build-alltime.js && node scripts/build-artifact.js && node scripts/validate.js"
+    "refresh":         "node scripts/fetch-history.js && node scripts/fetch-rosters.js && node scripts/fetch-stats.js && node scripts/fetch-fc-values.js && node scripts/fetch-trades.js && node scripts/build-template.js && node scripts/build-lore.js && node scripts/build-facts.js && node scripts/build-alltime.js && node scripts/build-artifact.js && node scripts/build-html.js && node scripts/validate.js"
   },
   "engines": {
     "node": ">=20"

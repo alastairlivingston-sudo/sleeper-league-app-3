@@ -18,7 +18,7 @@ const ARTIFACT = process.argv[2] || path.join(ROOT, "commissioner.jsx");
 const TEMPLATE = path.join(ROOT, "commissioner.template.jsx");
 
 const DATA_CONSTS = [
-  "HISTORY_DATA", "STATS_DATA", "ROSTERS_DATA", "TRADE_VALUES",
+  "HISTORY_DATA", "ROSTERS_DATA", "TRADE_VALUES",
   "ALLTIME_DATA", "TRANSACTIONS_DATA", "PLAYER_SCORES", "LORE_DATA",
 ];
 const REQUIRED_FUNCS = [
@@ -206,7 +206,7 @@ function runHtml() {
   else {
     try {
       const data = JSON.parse(m[1]);
-      for (const k of ["history", "stats", "rosters", "trades", "alltime", "transactions", "players", "lore"]) {
+      for (const k of ["history", "rosters", "trades", "alltime", "transactions", "players", "lore"]) {
         if (!(k in data)) fail(`inlined data missing key "${k}"`);
       }
       if (!data.history || !Array.isArray(data.history.seasons) || !data.history.seasons.length) fail("inlined history has no seasons");

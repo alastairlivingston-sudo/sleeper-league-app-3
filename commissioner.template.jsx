@@ -39,7 +39,6 @@ function fmtBuiltAt(iso) {
 }
 
 const HISTORY_DATA = __HISTORY__;
-const STATS_DATA = __STATS__;
 const ROSTERS_DATA = __ROSTERS__;
 const TRADE_VALUES = __TRADES__;
 const ALLTIME_DATA = __ALLTIME__;
@@ -51,8 +50,8 @@ const REPO = 'alastairlivingston-sudo/sleeper-league-app-3';
 const PAGES_BASE = 'https://alastairlivingston-sudo.github.io/' + REPO.split('/')[1];
 
 const DATA_SOURCES = [
-  { history: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/history.json', stats: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/stats.json', rosters: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/rosters.json', trades: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/fc-values.json', alltime: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/alltime.json', transactions: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/transactions.json', players: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/player-scores.json' },
-  { history: PAGES_BASE + '/data/history.json', stats: PAGES_BASE + '/data/stats.json', rosters: PAGES_BASE + '/data/rosters.json', trades: PAGES_BASE + '/data/fc-values.json', alltime: PAGES_BASE + '/data/alltime.json', transactions: PAGES_BASE + '/data/transactions.json', players: PAGES_BASE + '/data/player-scores.json' },
+  { history: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/history.json', rosters: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/rosters.json', trades: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/fc-values.json', alltime: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/alltime.json', transactions: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/transactions.json', players: 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/docs/data/player-scores.json' },
+  { history: PAGES_BASE + '/data/history.json', rosters: PAGES_BASE + '/data/rosters.json', trades: PAGES_BASE + '/data/fc-values.json', alltime: PAGES_BASE + '/data/alltime.json', transactions: PAGES_BASE + '/data/transactions.json', players: PAGES_BASE + '/data/player-scores.json' },
 ];
 
 const LORE_SOURCES = [
@@ -69,7 +68,6 @@ const T = {
   faint: '#3d5470', indigo: '#6366f1', indigoDk: '#4f46e5',
   green: '#10b981', amber: '#f59e0b', blue: '#60a5fa', red: '#f87171',
 };
-const FF = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif";
 
 // Calling the model from an artifact.
 // The current Claude.ai artifact runtime is a sandboxed iframe (claudeusercontent.com)
@@ -1222,7 +1220,7 @@ function guardSentences(text, allowedText) {
   return { text: out, dropped: parts.length - kept.length };
 }
 function useLeagueData() {
-  const [data, setData] = useState({ history: HISTORY_DATA, stats: STATS_DATA, rosters: ROSTERS_DATA, trades: TRADE_VALUES, alltime: ALLTIME_DATA, transactions: TRANSACTIONS_DATA, players: PLAYER_SCORES, live: false });
+  const [data, setData] = useState({ history: HISTORY_DATA, rosters: ROSTERS_DATA, trades: TRADE_VALUES, alltime: ALLTIME_DATA, transactions: TRANSACTIONS_DATA, players: PLAYER_SCORES, live: false });
   useEffect(function() {
     let cancelled = false;
     (async function() {
@@ -2331,7 +2329,7 @@ const TABS = [
 
 export default function App() {
   const [tab, setTab] = useState('stats');
-  const { history, stats, rosters, trades, alltime, transactions, players } = useLeagueData();
+  const { history, rosters, trades, alltime, transactions, players } = useLeagueData();
   // ONE fact table for the whole app (Stats, Banter, badge) — same builder as the pipeline.
   const facts = useMemo(function() { return buildFactTable(history, canonical); }, [history]);
   const { keyboardOpen } = useViewport();

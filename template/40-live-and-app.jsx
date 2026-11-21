@@ -343,7 +343,7 @@ const TABS = [
 
 export default function App() {
   const [tab, setTab] = useState('stats');
-  const { history, stats, rosters, trades, alltime, transactions, players } = useLeagueData();
+  const { history, rosters, trades, alltime, transactions, players } = useLeagueData();
   // ONE fact table for the whole app (Stats, Banter, badge) — same builder as the pipeline.
   const facts = useMemo(function() { return buildFactTable(history, canonical); }, [history]);
   const { keyboardOpen } = useViewport();

@@ -34,14 +34,13 @@ const readJson = (rel, optional) => {
 
 // placeholder → key in the inlined data object
 const KEYS = {
-  __HISTORY__: "history", __STATS__: "stats", __ROSTERS__: "rosters", __TRADES__: "trades",
+  __HISTORY__: "history", __ROSTERS__: "rosters", __TRADES__: "trades",
   __ALLTIME__: "alltime", __TRANSACTIONS__: "transactions", __PLAYERS__: "players", __LORE__: "lore",
 };
 
 function collectData() {
   return {
     history: readJson("docs/data/history.json"),
-    stats: readJson("docs/data/stats.json"),
     rosters: readJson("docs/data/rosters.json"),
     trades: readJson("docs/data/fc-values.json"),
     alltime: readJson("docs/data/alltime.json"),

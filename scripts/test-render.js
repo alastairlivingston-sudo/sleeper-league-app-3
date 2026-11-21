@@ -128,7 +128,6 @@ function localFetch(urlToFile) {
 }
 const DATA_MAP = {
   "history.json": "docs/data/history.json",
-  "stats.json": "docs/data/stats.json",
   "rosters.json": "docs/data/rosters.json",
   "fc-values.json": "docs/data/fc-values.json",
   "alltime.json": "docs/data/alltime.json",

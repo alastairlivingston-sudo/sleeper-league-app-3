@@ -8,6 +8,7 @@ on:
     branches: [main]
     paths:
       - "commissioner.template.jsx"
+      - "template/**"
       - "scripts/**"
       - "league-config.json"
       - "package.json"
@@ -15,6 +16,7 @@ on:
   pull_request:
     paths:
       - "commissioner.template.jsx"
+      - "template/**"
       - "scripts/**"
       - "league-config.json"
       - "package.json"
