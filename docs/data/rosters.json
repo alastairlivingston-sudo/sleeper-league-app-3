@@ -533,11 +533,6 @@
   ],
   "Jewish McCaffrey (@GSac)": [
     {
-      "id": "10219",
-      "name": "Chris Rodriguez Jr.",
-      "pos": "RB"
-    },
-    {
       "id": "10229",
       "name": "Rashee Rice",
       "pos": "WR"
@@ -558,6 +553,16 @@
       "pos": "TE"
     },
     {
+      "id": "12533",
+      "name": "Jacory Croskey-Merritt",
+      "pos": "RB"
+    },
+    {
+      "id": "12718",
+      "name": "Konata Mumpfield",
+      "pos": "WR"
+    },
+    {
       "id": "3198",
       "name": "Derrick Henry",
       "pos": "RB"
@@ -566,11 +571,6 @@
       "id": "4199",
       "name": "Aaron Jones Sr.",
       "pos": "RB"
-    },
-    {
-      "id": "5859",
-      "name": "A.J. Brown",
-      "pos": "WR"
     },
     {
       "id": "5872",
@@ -625,6 +625,11 @@
       "pos": "QB"
     },
     {
+      "id": "11625",
+      "name": "Adonai Mitchell",
+      "pos": "WR"
+    },
+    {
       "id": "11646",
       "name": "Jalen Coker",
       "pos": "WR"
@@ -673,11 +678,6 @@
       "id": "8130",
       "name": "Trey McBride",
       "pos": "TE"
-    },
-    {
-      "id": "8136",
-      "name": "Rachaad White",
-      "pos": "RB"
     },
     {
       "id": "8138",

@@ -47509,12 +47509,12 @@
               "pts": 0
             },
             {
-              "n": "Darren Waller",
-              "pos": "TE",
+              "n": "Jaylen Waddle",
+              "pos": "WR",
               "pts": 0
             },
             {
-              "n": "Elic Ayomanor",
+              "n": "Adonai Mitchell",
               "pos": "WR",
               "pts": 0
             },
@@ -47583,17 +47583,17 @@
               "pts": 0
             },
             {
-              "n": "Jaylen Waddle",
+              "n": "Elic Ayomanor",
               "pos": "WR",
               "pts": 0
             },
             {
-              "n": "Rhamondre Stevenson",
-              "pos": "RB",
+              "n": "Darren Waller",
+              "pos": "TE",
               "pts": 0
             },
             {
-              "n": "Rachaad White",
+              "n": "Rhamondre Stevenson",
               "pos": "RB",
               "pts": 0
             },
@@ -47623,7 +47623,8 @@
             "RB": 0,
             "WR": 0,
             "TE": 0,
-            "K": 0
+            "K": 0,
+            "DEF": 0
           },
           "bp": {
             "QB": 0,
@@ -47677,6 +47678,11 @@
             {
               "n": "Cairo Santos",
               "pos": "K",
+              "pts": 0
+            },
+            {
+              "n": "DET",
+              "pos": "DEF",
               "pts": 0
             }
           ],
@@ -47864,7 +47870,7 @@
               "pts": 0
             },
             {
-              "n": "Parker Washington",
+              "n": "George Pickens",
               "pos": "WR",
               "pts": 0
             },
@@ -47879,8 +47885,8 @@
               "pts": 0
             },
             {
-              "n": "George Pickens",
-              "pos": "WR",
+              "n": "Emmett Johnson",
+              "pos": "RB",
               "pts": 0
             },
             {
@@ -47958,11 +47964,6 @@
               "pts": 2.7
             },
             {
-              "n": "Emmett Johnson",
-              "pos": "RB",
-              "pts": 0
-            },
-            {
               "n": "DJ Moore",
               "pos": "WR",
               "pts": 0
@@ -47975,6 +47976,11 @@
             {
               "n": "Chase Brown",
               "pos": "RB",
+              "pts": 0
+            },
+            {
+              "n": "Parker Washington",
+              "pos": "WR",
               "pts": 0
             }
           ],
@@ -48125,8 +48131,8 @@
               "pts": 0
             },
             {
-              "n": "Deebo Samuel Sr.",
-              "pos": "WR",
+              "n": "Jacory Croskey-Merritt",
+              "pos": "RB",
               "pts": 0
             },
             {
@@ -48179,11 +48185,6 @@
           ],
           "bb": [
             {
-              "n": "Chris Rodriguez Jr.",
-              "pos": "RB",
-              "pts": 0
-            },
-            {
               "n": "Ladd McConkey",
               "pos": "WR",
               "pts": 0
@@ -48194,7 +48195,12 @@
               "pts": 0
             },
             {
-              "n": "A.J. Brown",
+              "n": "Konata Mumpfield",
+              "pos": "WR",
+              "pts": 0
+            },
+            {
+              "n": "Deebo Samuel Sr.",
               "pos": "WR",
               "pts": 0
             },
@@ -48282,6 +48288,6 @@
     }
   ],
   "meta": {
-    "generated": "2026-11-21T15:54:10.097Z"
+    "generated": "2026-11-22T15:55:02.230Z"
   }
 }
