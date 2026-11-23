@@ -185,11 +185,6 @@
       "pos": "K"
     },
     {
-      "id": "12518",
-      "name": "Tyler Warren",
-      "pos": "TE"
-    },
-    {
       "id": "13337",
       "name": "Emmett Johnson",
       "pos": "RB"
@@ -210,14 +205,14 @@
       "pos": "TE"
     },
     {
-      "id": "5846",
-      "name": "DK Metcalf",
-      "pos": "WR"
-    },
-    {
       "id": "6794",
       "name": "Justin Jefferson",
       "pos": "WR"
+    },
+    {
+      "id": "6804",
+      "name": "Jordan Love",
+      "pos": "QB"
     },
     {
       "id": "7594",
@@ -258,6 +253,11 @@
       "id": "MIN",
       "name": "Minnesota Vikings",
       "pos": "DEF"
+    },
+    {
+      "id": "SEA",
+      "name": "Seattle Seahawks",
+      "pos": "DEF"
     }
   ],
   "A jeanty angle  (@saulgoat)": [
@@ -297,6 +297,11 @@
       "pos": "WR"
     },
     {
+      "id": "12545",
+      "name": "Tyler Shough",
+      "pos": "QB"
+    },
+    {
       "id": "13424",
       "name": "Seth McGowan",
       "pos": "RB"
@@ -309,11 +314,6 @@
     {
       "id": "5892",
       "name": "David Montgomery",
-      "pos": "RB"
-    },
-    {
-      "id": "6130",
-      "name": "Devin Singletary",
       "pos": "RB"
     },
     {

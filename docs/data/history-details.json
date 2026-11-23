@@ -47402,81 +47402,116 @@
           "playoff": false,
           "a": "AlastairL",
           "b": "sanfbe",
-          "pa": 0,
-          "pb": 16.7,
+          "pa": 96.1,
+          "pb": 92.7,
           "ap": {
             "QB": 0,
-            "RB": 0,
-            "WR": 0,
-            "TE": 0,
-            "K": 0,
-            "DEF": 0
+            "RB": 20,
+            "WR": 20.5,
+            "TE": 32.8,
+            "K": 13.8,
+            "DEF": 9
           },
           "bp": {
-            "QB": 0,
-            "RB": 0,
-            "WR": 13.3,
-            "TE": 0,
+            "QB": 11.5,
+            "RB": 27.2,
+            "WR": 37.3,
+            "TE": 10.3,
             "K": 3.4,
-            "DEF": 0
+            "DEF": 3
           },
           "as": [
             {
-              "n": "Jayden Daniels",
-              "pos": "QB",
-              "pts": 0
-            },
-            {
-              "n": "Bhayshul Tuten",
-              "pos": "RB",
-              "pts": 0
-            },
-            {
-              "n": "Christian McCaffrey",
-              "pos": "RB",
-              "pts": 0
-            },
-            {
-              "n": "Jordyn Tyson",
-              "pos": "WR",
-              "pts": 0
+              "n": "Travis Kelce",
+              "pos": "TE",
+              "pts": 22.4
             },
             {
               "n": "Malik Nabers",
               "pos": "WR",
-              "pts": 0
-            },
-            {
-              "n": "Colston Loveland",
-              "pos": "TE",
-              "pts": 0
-            },
-            {
-              "n": "Travis Kelce",
-              "pos": "TE",
-              "pts": 0
-            },
-            {
-              "n": "Caleb Douglas",
-              "pos": "WR",
-              "pts": 0
+              "pts": 15
             },
             {
               "n": "Cam Little",
               "pos": "K",
-              "pts": 0
+              "pts": 13.8
+            },
+            {
+              "n": "Christian McCaffrey",
+              "pos": "RB",
+              "pts": 13.2
+            },
+            {
+              "n": "Colston Loveland",
+              "pos": "TE",
+              "pts": 10.4
             },
             {
               "n": "BUF",
               "pos": "DEF",
+              "pts": 9
+            },
+            {
+              "n": "Bhayshul Tuten",
+              "pos": "RB",
+              "pts": 6.8
+            },
+            {
+              "n": "Caleb Douglas",
+              "pos": "WR",
+              "pts": 4
+            },
+            {
+              "n": "Jordyn Tyson",
+              "pos": "WR",
+              "pts": 1.5
+            },
+            {
+              "n": "Jayden Daniels",
+              "pos": "QB",
               "pts": 0
             }
           ],
           "bs": [
             {
+              "n": "James Cook III",
+              "pos": "RB",
+              "pts": 16.2
+            },
+            {
               "n": "Nico Collins",
               "pos": "WR",
               "pts": 13.3
+            },
+            {
+              "n": "Zay Flowers",
+              "pos": "WR",
+              "pts": 12.4
+            },
+            {
+              "n": "Bo Nix",
+              "pos": "QB",
+              "pts": 11.5
+            },
+            {
+              "n": "Tony Pollard",
+              "pos": "RB",
+              "pts": 11
+            },
+            {
+              "n": "Trey McBride",
+              "pos": "TE",
+              "pts": 10.3
+            },
+            {
+              "n": "Jaylen Waddle",
+              "pos": "WR",
+              "pts": 7.6
+            },
+            {
+              "n": "Adonai Mitchell",
+              "pos": "WR",
+              "pts": 4
             },
             {
               "n": "Spencer Shrader",
@@ -47484,47 +47519,22 @@
               "pts": 3.4
             },
             {
-              "n": "Bo Nix",
-              "pos": "QB",
-              "pts": 0
-            },
-            {
-              "n": "Tony Pollard",
-              "pos": "RB",
-              "pts": 0
-            },
-            {
-              "n": "James Cook III",
-              "pos": "RB",
-              "pts": 0
-            },
-            {
-              "n": "Zay Flowers",
-              "pos": "WR",
-              "pts": 0
-            },
-            {
-              "n": "Trey McBride",
-              "pos": "TE",
-              "pts": 0
-            },
-            {
-              "n": "Jaylen Waddle",
-              "pos": "WR",
-              "pts": 0
-            },
-            {
-              "n": "Adonai Mitchell",
-              "pos": "WR",
-              "pts": 0
-            },
-            {
               "n": "JAX",
               "pos": "DEF",
-              "pts": 0
+              "pts": 3
             }
           ],
           "ab": [
+            {
+              "n": "Germie Bernard",
+              "pos": "WR",
+              "pts": 7
+            },
+            {
+              "n": "Kaelon Black",
+              "pos": "RB",
+              "pts": 2
+            },
             {
               "n": "Drake Maye",
               "pos": "QB",
@@ -47541,11 +47551,6 @@
               "pts": 0
             },
             {
-              "n": "Germie Bernard",
-              "pos": "WR",
-              "pts": 0
-            },
-            {
               "n": "Jeremiyah Love",
               "pos": "RB",
               "pts": 0
@@ -47553,11 +47558,6 @@
             {
               "n": "KC Concepcion Jr.",
               "pos": "WR",
-              "pts": 0
-            },
-            {
-              "n": "Kaelon Black",
-              "pos": "RB",
               "pts": 0
             },
             {
@@ -47573,24 +47573,24 @@
           ],
           "bb": [
             {
-              "n": "Jalen Coker",
-              "pos": "WR",
-              "pts": 0
-            },
-            {
               "n": "Kirk Cousins",
               "pos": "QB",
-              "pts": 0
+              "pts": 7.4
             },
             {
-              "n": "Elic Ayomanor",
+              "n": "Jalen Coker",
               "pos": "WR",
-              "pts": 0
+              "pts": 6.7
             },
             {
               "n": "Darren Waller",
               "pos": "TE",
-              "pts": 0
+              "pts": 5.7
+            },
+            {
+              "n": "Elic Ayomanor",
+              "pos": "WR",
+              "pts": 4.2
             },
             {
               "n": "Rhamondre Stevenson",
@@ -47616,133 +47616,138 @@
           "playoff": false,
           "a": "benjlev",
           "b": "drjkay",
-          "pa": 0,
-          "pb": 4.7,
+          "pa": 81.6,
+          "pb": 118.96,
           "ap": {
             "QB": 0,
-            "RB": 0,
-            "WR": 0,
+            "RB": 31,
+            "WR": 39,
             "TE": 0,
-            "K": 0,
-            "DEF": 0
+            "K": 7.6,
+            "DEF": 4
           },
           "bp": {
-            "QB": 0,
-            "RB": 4.7,
-            "WR": 0,
-            "TE": 0,
-            "K": 0,
-            "DEF": 0
+            "QB": 12.16,
+            "RB": 48.5,
+            "WR": 22.4,
+            "TE": 16.9,
+            "K": 11,
+            "DEF": 8
           },
           "as": [
+            {
+              "n": "Breece Hall",
+              "pos": "RB",
+              "pts": 17.5
+            },
+            {
+              "n": "Tetairoa McMillan",
+              "pos": "WR",
+              "pts": 16.1
+            },
+            {
+              "n": "Saquon Barkley",
+              "pos": "RB",
+              "pts": 13.5
+            },
+            {
+              "n": "Amon-Ra St. Brown",
+              "pos": "WR",
+              "pts": 12.2
+            },
+            {
+              "n": "Josh Downs",
+              "pos": "WR",
+              "pts": 7.9
+            },
+            {
+              "n": "Cairo Santos",
+              "pos": "K",
+              "pts": 7.6
+            },
+            {
+              "n": "DET",
+              "pos": "DEF",
+              "pts": 4
+            },
+            {
+              "n": "Emeka Egbuka",
+              "pos": "WR",
+              "pts": 2.8
+            },
             {
               "n": "Joe Burrow",
               "pos": "QB",
               "pts": 0
             },
             {
-              "n": "Breece Hall",
-              "pos": "RB",
-              "pts": 0
-            },
-            {
-              "n": "Saquon Barkley",
-              "pos": "RB",
-              "pts": 0
-            },
-            {
-              "n": "Tetairoa McMillan",
-              "pos": "WR",
-              "pts": 0
-            },
-            {
-              "n": "Amon-Ra St. Brown",
-              "pos": "WR",
-              "pts": 0
-            },
-            {
               "n": "Mike Gesicki",
               "pos": "TE",
-              "pts": 0
-            },
-            {
-              "n": "Emeka Egbuka",
-              "pos": "WR",
-              "pts": 0
-            },
-            {
-              "n": "Josh Downs",
-              "pos": "WR",
-              "pts": 0
-            },
-            {
-              "n": "Cairo Santos",
-              "pos": "K",
-              "pts": 0
-            },
-            {
-              "n": "DET",
-              "pos": "DEF",
               "pts": 0
             }
           ],
           "bs": [
+            {
+              "n": "Jonah Coleman",
+              "pos": "RB",
+              "pts": 32.9
+            },
+            {
+              "n": "George Kittle",
+              "pos": "TE",
+              "pts": 16.9
+            },
+            {
+              "n": "Chris Olave",
+              "pos": "WR",
+              "pts": 14.7
+            },
+            {
+              "n": "Josh Allen",
+              "pos": "QB",
+              "pts": 12.16
+            },
+            {
+              "n": "Jason Sanders",
+              "pos": "K",
+              "pts": 11
+            },
+            {
+              "n": "D'Andre Swift",
+              "pos": "RB",
+              "pts": 10.9
+            },
+            {
+              "n": "KC",
+              "pos": "DEF",
+              "pts": 8
+            },
+            {
+              "n": "Garrett Wilson",
+              "pos": "WR",
+              "pts": 5.4
+            },
             {
               "n": "Jonathan Taylor",
               "pos": "RB",
               "pts": 4.7
             },
             {
-              "n": "Josh Allen",
-              "pos": "QB",
-              "pts": 0
-            },
-            {
-              "n": "D'Andre Swift",
-              "pos": "RB",
-              "pts": 0
-            },
-            {
-              "n": "Chris Olave",
-              "pos": "WR",
-              "pts": 0
-            },
-            {
-              "n": "Garrett Wilson",
-              "pos": "WR",
-              "pts": 0
-            },
-            {
-              "n": "George Kittle",
-              "pos": "TE",
-              "pts": 0
-            },
-            {
-              "n": "Jonah Coleman",
-              "pos": "RB",
-              "pts": 0
-            },
-            {
               "n": "Luther Burden III",
               "pos": "WR",
-              "pts": 0
-            },
-            {
-              "n": "Jason Sanders",
-              "pos": "K",
-              "pts": 0
-            },
-            {
-              "n": "KC",
-              "pos": "DEF",
-              "pts": 0
+              "pts": 2.3
             }
           ],
           "ab": [
             {
+              "n": "Dak Prescott",
+              "pos": "QB",
+              "pts": 35.9
+            },
+            {
               "n": "Ryan Flournoy",
               "pos": "WR",
-              "pts": 0
+              "pts": 1.6
             },
             {
               "n": "RJ Harvey",
@@ -47752,11 +47757,6 @@
             {
               "n": "Omar Cooper Jr.",
               "pos": "WR",
-              "pts": 0
-            },
-            {
-              "n": "Dak Prescott",
-              "pos": "QB",
               "pts": 0
             },
             {
@@ -47787,6 +47787,21 @@
           ],
           "bb": [
             {
+              "n": "Mike Evans",
+              "pos": "WR",
+              "pts": 19.9
+            },
+            {
+              "n": "Omarion Hampton",
+              "pos": "RB",
+              "pts": 9.8
+            },
+            {
+              "n": "Kyle Monangai",
+              "pos": "RB",
+              "pts": 1.8
+            },
+            {
               "n": "Audric Estime",
               "pos": "RB",
               "pts": 0
@@ -47797,27 +47812,12 @@
               "pts": 0
             },
             {
-              "n": "Omarion Hampton",
-              "pos": "RB",
-              "pts": 0
-            },
-            {
-              "n": "Kyle Monangai",
-              "pos": "RB",
-              "pts": 0
-            },
-            {
               "n": "Denzel Boston",
               "pos": "WR",
               "pts": 0
             },
             {
               "n": "Davante Adams",
-              "pos": "WR",
-              "pts": 0
-            },
-            {
-              "n": "Mike Evans",
               "pos": "WR",
               "pts": 0
             }
@@ -47830,69 +47830,69 @@
           "playoff": false,
           "a": "dpol",
           "b": "saulgoat",
-          "pa": 0,
-          "pb": 13.9,
+          "pa": 147.76,
+          "pb": 103.08,
           "ap": {
-            "QB": 0,
-            "RB": 0,
-            "WR": 0,
-            "TE": 0,
-            "K": 0,
+            "QB": 24.96,
+            "RB": 78,
+            "WR": 30.5,
+            "TE": 8.5,
+            "K": 5.8,
             "DEF": 0
           },
           "bp": {
-            "QB": 0,
-            "RB": 13.9,
-            "WR": 0,
-            "TE": 0,
-            "K": 0,
-            "DEF": 0
+            "QB": 14.28,
+            "RB": 25.9,
+            "WR": 31.3,
+            "TE": 7.7,
+            "K": 10.9,
+            "DEF": 13
           },
           "as": [
             {
-              "n": "Patrick Mahomes",
-              "pos": "QB",
-              "pts": 0
+              "n": "Chuba Hubbard",
+              "pos": "RB",
+              "pts": 26
             },
             {
               "n": "Jahmyr Gibbs",
               "pos": "RB",
-              "pts": 0
+              "pts": 25.8
             },
             {
-              "n": "Chuba Hubbard",
-              "pos": "RB",
-              "pts": 0
-            },
-            {
-              "n": "Justin Jefferson",
-              "pos": "WR",
-              "pts": 0
-            },
-            {
-              "n": "George Pickens",
-              "pos": "WR",
-              "pts": 0
-            },
-            {
-              "n": "T.J. Hockenson",
-              "pos": "TE",
-              "pts": 0
-            },
-            {
-              "n": "Jaylen Warren",
-              "pos": "RB",
-              "pts": 0
+              "n": "Patrick Mahomes",
+              "pos": "QB",
+              "pts": 24.96
             },
             {
               "n": "Emmett Johnson",
               "pos": "RB",
-              "pts": 0
+              "pts": 22.3
+            },
+            {
+              "n": "George Pickens",
+              "pos": "WR",
+              "pts": 20.3
+            },
+            {
+              "n": "Justin Jefferson",
+              "pos": "WR",
+              "pts": 10.2
+            },
+            {
+              "n": "T.J. Hockenson",
+              "pos": "TE",
+              "pts": 8.5
             },
             {
               "n": "Will Reichard",
               "pos": "K",
-              "pts": 0
+              "pts": 5.8
+            },
+            {
+              "n": "Jaylen Warren",
+              "pos": "RB",
+              "pts": 3.9
             },
             {
               "n": "MIN",
@@ -47902,57 +47902,67 @@
           ],
           "bs": [
             {
+              "n": "CeeDee Lamb",
+              "pos": "WR",
+              "pts": 24.7
+            },
+            {
+              "n": "Tyler Shough",
+              "pos": "QB",
+              "pts": 14.28
+            },
+            {
               "n": "David Montgomery",
               "pos": "RB",
               "pts": 13.9
             },
             {
-              "n": "Jared Goff",
-              "pos": "QB",
-              "pts": 0
+              "n": "DEN",
+              "pos": "DEF",
+              "pts": 13
             },
             {
-              "n": "Cam Skattebo",
-              "pos": "RB",
-              "pts": 0
+              "n": "Brandon Aubrey",
+              "pos": "K",
+              "pts": 10.9
             },
             {
               "n": "Ollie Gordon II",
               "pos": "RB",
-              "pts": 0
+              "pts": 7.7
+            },
+            {
+              "n": "Sam LaPorta",
+              "pos": "TE",
+              "pts": 7.7
+            },
+            {
+              "n": "DeVonta Smith",
+              "pos": "WR",
+              "pts": 6.6
+            },
+            {
+              "n": "Cam Skattebo",
+              "pos": "RB",
+              "pts": 4.3
             },
             {
               "n": "Tee Higgins",
               "pos": "WR",
               "pts": 0
-            },
-            {
-              "n": "CeeDee Lamb",
-              "pos": "WR",
-              "pts": 0
-            },
-            {
-              "n": "Sam LaPorta",
-              "pos": "TE",
-              "pts": 0
-            },
-            {
-              "n": "DeVonta Smith",
-              "pos": "WR",
-              "pts": 0
-            },
-            {
-              "n": "Brandon Aubrey",
-              "pos": "K",
-              "pts": 0
-            },
-            {
-              "n": "DEN",
-              "pos": "DEF",
-              "pts": 0
             }
           ],
           "ab": [
+            {
+              "n": "DJ Moore",
+              "pos": "WR",
+              "pts": 19.1
+            },
+            {
+              "n": "Parker Washington",
+              "pos": "WR",
+              "pts": 14.3
+            },
             {
               "n": "Tank Dell",
               "pos": "WR",
@@ -47964,27 +47974,37 @@
               "pts": 2.7
             },
             {
-              "n": "DJ Moore",
-              "pos": "WR",
-              "pts": 0
-            },
-            {
               "n": "DK Metcalf",
               "pos": "WR",
+              "pts": 0.7
+            },
+            {
+              "n": "Jordan Love",
+              "pos": "QB",
               "pts": 0
             },
             {
               "n": "Chase Brown",
               "pos": "RB",
               "pts": 0
-            },
-            {
-              "n": "Parker Washington",
-              "pos": "WR",
-              "pts": 0
             }
           ],
           "bb": [
+            {
+              "n": "Ashton Jeanty",
+              "pos": "RB",
+              "pts": 25.4
+            },
+            {
+              "n": "Jared Goff",
+              "pos": "QB",
+              "pts": 20.36
+            },
+            {
+              "n": "Chimere Dike",
+              "pos": "WR",
+              "pts": 10.3
+            },
             {
               "n": "Seth McGowan",
               "pos": "RB",
@@ -47992,21 +48012,6 @@
             },
             {
               "n": "Blake Corum",
-              "pos": "RB",
-              "pts": 0
-            },
-            {
-              "n": "Ashton Jeanty",
-              "pos": "RB",
-              "pts": 0
-            },
-            {
-              "n": "Chimere Dike",
-              "pos": "WR",
-              "pts": 0
-            },
-            {
-              "n": "Devin Singletary",
               "pos": "RB",
               "pts": 0
             },
@@ -48029,29 +48034,54 @@
           "playoff": false,
           "a": "joshjr11",
           "b": "GSac",
-          "pa": 21,
-          "pb": 0,
+          "pa": 94.04,
+          "pb": 105.14,
           "ap": {
-            "QB": 0,
-            "RB": 0,
-            "WR": 0,
-            "TE": 0,
+            "QB": 12.74,
+            "RB": 40.1,
+            "WR": 19.3,
+            "TE": 0.9,
             "K": 6,
             "DEF": 15
           },
           "bp": {
-            "QB": 0,
-            "RB": 0,
-            "WR": 0,
-            "TE": 0,
-            "K": 0,
-            "DEF": 0
+            "QB": 14.34,
+            "RB": 35.5,
+            "WR": 25.6,
+            "TE": 4,
+            "K": 18.7,
+            "DEF": 7
           },
           "as": [
+            {
+              "n": "Javonte Williams",
+              "pos": "RB",
+              "pts": 22.6
+            },
+            {
+              "n": "Bucky Irving",
+              "pos": "RB",
+              "pts": 17.5
+            },
             {
               "n": "HOU",
               "pos": "DEF",
               "pts": 15
+            },
+            {
+              "n": "Carnell Tate",
+              "pos": "WR",
+              "pts": 12.8
+            },
+            {
+              "n": "Trevor Lawrence",
+              "pos": "QB",
+              "pts": 12.74
+            },
+            {
+              "n": "Rome Odunze",
+              "pos": "WR",
+              "pts": 6.5
             },
             {
               "n": "Ka'imi Fairbairn",
@@ -48059,37 +48089,12 @@
               "pts": 6
             },
             {
-              "n": "Trevor Lawrence",
-              "pos": "QB",
-              "pts": 0
-            },
-            {
-              "n": "Javonte Williams",
-              "pos": "RB",
-              "pts": 0
-            },
-            {
-              "n": "Bucky Irving",
-              "pos": "RB",
-              "pts": 0
-            },
-            {
-              "n": "Rome Odunze",
-              "pos": "WR",
-              "pts": 0
+              "n": "Michael Mayer",
+              "pos": "TE",
+              "pts": 0.9
             },
             {
               "n": "Ja'Marr Chase",
-              "pos": "WR",
-              "pts": 0
-            },
-            {
-              "n": "Brock Bowers",
-              "pos": "TE",
-              "pts": 0
-            },
-            {
-              "n": "Carnell Tate",
               "pos": "WR",
               "pts": 0
             },
@@ -48101,53 +48106,53 @@
           ],
           "bs": [
             {
-              "n": "Caleb Williams",
-              "pos": "QB",
-              "pts": 0
-            },
-            {
-              "n": "Travis Etienne Jr.",
-              "pos": "RB",
-              "pts": 0
-            },
-            {
-              "n": "Derrick Henry",
-              "pos": "RB",
-              "pts": 0
+              "n": "Tyler Bass",
+              "pos": "K",
+              "pts": 18.7
             },
             {
               "n": "Jameson Williams",
               "pos": "WR",
-              "pts": 0
+              "pts": 17.3
             },
             {
-              "n": "Rashee Rice",
-              "pos": "WR",
-              "pts": 0
-            },
-            {
-              "n": "Isaiah Likely",
-              "pos": "TE",
-              "pts": 0
-            },
-            {
-              "n": "Jacory Croskey-Merritt",
+              "n": "Derrick Henry",
               "pos": "RB",
-              "pts": 0
+              "pts": 17.1
+            },
+            {
+              "n": "Caleb Williams",
+              "pos": "QB",
+              "pts": 14.34
             },
             {
               "n": "Aaron Jones Sr.",
               "pos": "RB",
-              "pts": 0
+              "pts": 10.8
             },
             {
-              "n": "Tyler Bass",
-              "pos": "K",
-              "pts": 0
+              "n": "Rashee Rice",
+              "pos": "WR",
+              "pts": 8.3
+            },
+            {
+              "n": "Travis Etienne Jr.",
+              "pos": "RB",
+              "pts": 7.6
             },
             {
               "n": "PIT",
               "pos": "DEF",
+              "pts": 7
+            },
+            {
+              "n": "Isaiah Likely",
+              "pos": "TE",
+              "pts": 4
+            },
+            {
+              "n": "Jacory Croskey-Merritt",
+              "pos": "RB",
               "pts": 0
             }
           ],
@@ -48156,6 +48161,11 @@
               "n": "C.J. Stroud",
               "pos": "QB",
               "pts": 20.46
+            },
+            {
+              "n": "Brock Bowers",
+              "pos": "TE",
+              "pts": 0
             },
             {
               "n": "Harold Fannin Jr.",
@@ -48176,18 +48186,28 @@
               "n": "Kenneth Walker III",
               "pos": "RB",
               "pts": 0
-            },
-            {
-              "n": "Michael Mayer",
-              "pos": "TE",
-              "pts": 0
             }
           ],
           "bb": [
             {
+              "n": "Brock Purdy",
+              "pos": "QB",
+              "pts": 22.2
+            },
+            {
               "n": "Ladd McConkey",
               "pos": "WR",
-              "pts": 0
+              "pts": 18.2
+            },
+            {
+              "n": "Deebo Samuel Sr.",
+              "pos": "WR",
+              "pts": 6.2
+            },
+            {
+              "n": "Tyler Allgeier",
+              "pos": "RB",
+              "pts": 2.3
             },
             {
               "n": "Terrance Ferguson",
@@ -48197,21 +48217,6 @@
             {
               "n": "Konata Mumpfield",
               "pos": "WR",
-              "pts": 0
-            },
-            {
-              "n": "Deebo Samuel Sr.",
-              "pos": "WR",
-              "pts": 0
-            },
-            {
-              "n": "Tyler Allgeier",
-              "pos": "RB",
-              "pts": 0
-            },
-            {
-              "n": "Brock Purdy",
-              "pos": "QB",
               "pts": 0
             },
             {
@@ -48288,6 +48293,6 @@
     }
   ],
   "meta": {
-    "generated": "2026-11-22T15:55:02.230Z"
+    "generated": "2026-11-23T19:50:04.086Z"
   }
 }
