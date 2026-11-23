@@ -37,7 +37,7 @@ function MarkdownMessage(props) {
 // Code-rendered answer table (Phase 2): labels + number formatting come from
 // COLUMNS, never from model-written markdown.
 function fmtCell(col, v) {
-  const t = (COLUMNS[col] || {}).type;
+  const t = colMeta(col).type;
   if (v == null || v === '') return '—';
   if (t === 'mgr') return distinctName(v);
   if (t === 'pts') return fmt2(v);
@@ -51,7 +51,7 @@ function ResultTable(props) {
   return (
     <div className="rt-wrap">
       <table className="md-table rt">
-        <thead><tr>{cols.map(function(c) { return <th key={c}>{(COLUMNS[c] || {}).label || c}</th>; })}</tr></thead>
+        <thead><tr>{cols.map(function(c) { return <th key={c}>{colMeta(c).label}</th>; })}</tr></thead>
         <tbody>
           {result.rows.map(function(r, i) {
             return <tr key={r.id || (r.gameId ? r.gameId + i : i)}>{cols.map(function(c) {
@@ -61,7 +61,7 @@ function ResultTable(props) {
           })}
         </tbody>
       </table>
-      {result.total > result.rows.length ? <div className="rt-more">{'Top ' + result.rows.length + ' of ' + result.total}</div> : null}
+      <div className="rt-more">{(result.scope || '') + (result.total > result.rows.length ? (result.scope ? ' · ' : '') + 'top ' + result.rows.length + ' of ' + result.total : '')}</div>
     </div>
   );
 }
@@ -302,7 +302,7 @@ function StatsTab(props) {
   async function answer(query, conversation, ctx) {
     const aiOn = ai !== 'off';
     const out = await answerStatQuestion(query, ctx, {
-      facts: facts, players: playersData,
+      facts: facts, players: playersData, transactions: transactionsData,
       plan: aiOn ? function(prompt) { return claudeCall([{ role: 'user', content: prompt }], 'Output only JSON.', { json: true }); } : null,
       narrate: aiOn ? function(prompt) { return claudeCall([{ role: 'user', content: prompt }], 'Reply in one or two plain sentences.'); } : null,
       log: function() { if (DEBUG) console.log.apply(console, ['[stats]'].concat([].slice.call(arguments))); },

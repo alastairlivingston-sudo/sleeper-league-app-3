@@ -111,6 +111,13 @@ This Week, Record Book, recaps) and in Node (`build-facts.js`, `build-alltime.js
 the table come from the scores; Sleeper's roster W/L differ in 2023 (see quirk above) — counts reconcile.
 
 ## Query engine v2 (Phase 2) — code answers, the model only phrases
+**v3 (see STATS-V3-PLAN.md):** `template/18-tables.jsx` (PLAIN JS) holds `CATALOG` — the one definition of
+every table (`games`, `seasons`, `weeks`, `players`, `trades`), its columns + meanings and groupBy
+dimensions — plus the browser-derived backup tables (`ensureDerived`: `weeks`, game `weekAvg`/`vsAvg`/
+`oppWeekRank`; `buildTradeRows`). Spec v3 adds `where.filters`, `count` / `<col>_<agg>`, any 1–2 catalog
+dims in `groupBy`, `having`, `unique`. The planner prompt is generated from CATALOG + calendar + worked
+examples (`PLANNER_EXAMPLES`, each executed by the tests) and gets one repair retry. Add a table or column
+in CATALOG (and COLUMNS for its label) — never in the prompt by hand.
 `template/20-query-v2.jsx` (PLAIN JS): spec `{v:2, table: games|seasons|players|record, record, where
 {managers, opponents, seasons, weeks, phase (default regular), result, status (default final), gameIds,
 positions, player, playoffFinish}, groupBy, select, orderBy, limit (default 10, max 25)}`.
@@ -219,8 +226,8 @@ summary (nemesis, bunny, playoffRecords) beats the entire alltime.json. Working 
 was ~66 KB.
 
 ### Template vs built artifact — and the partials
-Source of truth is `template/*.jsx` (ordered partials: 00-header, 15-facts, 20-query-v2, 22-hooks,
-30-chat-components, 40-live-and-app). `15-facts` and `20-query-v2` must stay PLAIN JS (no JSX, no imports,
+Source of truth is `template/*.jsx` (ordered partials: 00-header, 15-facts, 18-tables, 20-query-v2, 22-hooks,
+30-chat-components, 40-live-and-app). `15-facts`, `18-tables` and `20-query-v2` must stay PLAIN JS (no JSX, no imports,
 no regex lookbehind) — Node loads them with `vm`. `build-template.js` concatenates them BYTE-EXACTLY into
 `commissioner.template.jsx` (committed, generated); `build-artifact.js` then inlines data via
 `__PLACEHOLDER__` substitution into `commissioner.jsx`, and `build-html.js` replaces the same placeholders
