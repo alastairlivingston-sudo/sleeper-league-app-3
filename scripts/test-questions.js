@@ -8,10 +8,13 @@ const fs = require("fs");
 const path = require("path");
 const { loadPartials } = require("./load-partials");
 
-const ctx = loadPartials(["15-facts.jsx", "20-query-v2.jsx"]);
+const ctx = loadPartials(["15-facts.jsx", "18-tables.jsx", "20-query-v2.jsx"]);
 const history = JSON.parse(fs.readFileSync(path.join(__dirname, "fixtures", "history-2023-2025.json"), "utf8"));
 const facts = ctx.buildFactTable(history, ctx.canonical);
-const CANT = require("vm").runInContext("CANT_ANSWER", ctx); // top-level const, not a context property
+const vmGet = (name) => require("vm").runInContext(name, ctx); // top-level consts are not context properties
+const CANT = vmGet("CANT_ANSWER");
+const PLAYERS = JSON.parse(fs.readFileSync(path.join(__dirname, "fixtures", "players-2025.json"), "utf8"));
+const TRADES = JSON.parse(fs.readFileSync(path.join(__dirname, "fixtures", "trades-2023-2025.json"), "utf8"));
 
 let failures = 0, passes = 0;
 function ok(id, cond, msg) {
@@ -22,7 +25,7 @@ function ok(id, cond, msg) {
 // A model stub that fails the test if it is ever called.
 const noModel = { calls: 0, fn: async () => { noModel.calls++; return '{"table":"none"}'; } };
 async function ask(q, conv, extra) {
-  return ctx.answerStatQuestion(q, conv || null, Object.assign({ facts, players: [], plan: noModel.fn, narrate: noModel.fn }, extra || {}));
+  return ctx.answerStatQuestion(q, conv || null, Object.assign({ facts, players: PLAYERS, transactions: TRADES, plan: noModel.fn, narrate: noModel.fn }, extra || {}));
 }
 const top = (res) => (res.table && res.table.rows && res.table.rows[0]) || {};
 
@@ -169,6 +172,124 @@ const SEEDS = [
   ok("QR-4", v1.source === "clarify" && vaguePlan === 0 && !v1.table, "'stat' → a clarifying question, no planner call");
   // UR-7 follow-up still works when it IS about the previous game.
   ok("QR-4", /319\.96/.test((await ask("what was the total game score?", c1.ctx)).content), "'what was the total game score?' still follows up on the previous game");
+
+
+  // ── QR-5: backup tables + query language v3 (independent recomputes) ─────────
+  const played = facts.games.filter((r) => r.status === "final" && !r.bye);
+  const run = (raw) => { const v = ctx.validateSpec(raw, facts); if (!v.ok) throw new Error("spec rejected: " + v.error + " " + JSON.stringify(raw)); return ctx.runQuery(v.spec, facts, PLAYERS, TRADES); };
+  const r2 = (n) => Math.round(n * 100) / 100;
+  {
+    const weeks = run({ v: 3, table: "weeks", where: { phase: "all" }, limit: 25, orderBy: [{ col: "avg", dir: "desc" }] });
+    const byWk = {};
+    played.forEach((r) => { const k = r.season + "|" + r.week; (byWk[k] = byWk[k] || []).push(r.pf); });
+    const best = Object.entries(byWk).map(([k, v]) => [k, r2(v.reduce((a, b) => a + b, 0) / v.length)]).sort((a, b) => b[1] - a[1])[0];
+    ok("QR-5", weeks.total === Object.keys(byWk).length, `weeks table has one row per league week (${weeks.total} vs ${Object.keys(byWk).length})`);
+    ok("QR-5", top(weeks.rows ? { table: weeks } : {}).avg === best[1] && weeks.rows[0].season + "|" + weeks.rows[0].week === best[0], `highest league-average week = ${best[0]} ${best[1]}`);
+    const g = played.find((r) => r.season === "2024" && r.week === 5);
+    ok("QR-5", g.vsAvg === r2(g.pf - r2(byWk["2024|5"].reduce((a, b) => a + b, 0) / byWk["2024|5"].length)), "game rows carry vsAvg = pf − league week average");
+    ok("QR-5", !("_derived" in JSON.parse(JSON.stringify(facts))) && !Object.keys(facts.games[0]).includes("_derived"), "derived cache stays out of games.json");
+
+    const dan150 = run({ v: 3, table: "games", where: { managers: ["dpol"], filters: [{ col: "pf", op: ">", value: 150 }] }, groupBy: ["manager"], select: ["count"] });
+    const exp150 = played.filter((r) => r.phase === "regular" && r.manager === "dpol" && r.pf > 150).length;
+    ok("QR-5", dan150.rows[0].count === exp150 && exp150 > 0, `filters: Dan regular-season games over 150 = ${exp150} (got ${dan150.rows[0].count})`);
+    const both = run({ v: 3, table: "games", where: { filters: [{ col: "pf", op: ">=", value: 140 }, { col: "pa", op: ">=", value: 140 }] }, unique: true, orderBy: [{ col: "combined", dir: "desc" }], limit: 25 });
+    const expBoth = played.filter((r) => r.phase === "regular" && r.pf >= 140 && r.pa >= 140).length / 2;
+    ok("QR-5", both.total === expBoth && new Set(both.rows.map((r) => r.gameId)).size === both.rows.length, `unique: games where both scored 140+ = ${expBoth} (got ${both.total})`);
+    ok("QR-5", both.columns.includes("combined"), "the sorted-on column is shown in ungrouped results");
+    const titles = run({ v: 3, table: "seasons", where: { playoffFinish: "champion" }, groupBy: ["manager"], select: ["count"] });
+    ok("QR-5", titles.rows[0].manager === "saulgoat" && titles.rows[0].count === 2 && titles.total === 2, "seasons groupBy: Saul 2 titles, Alastair 1");
+    const tr = run({ v: 3, table: "trades", groupBy: ["manager"], select: ["count"], orderBy: [{ col: "count", dir: "desc" }] });
+    const trCount = {};
+    TRADES.forEach((t) => { [t.managerA, t.managerB].forEach((m) => { const c = ctx.canonical(m); trCount[c] = (trCount[c] || 0) + 1; }); });
+    ok("QR-5", tr.rows[0].count === Math.max(...Object.values(trCount)) && tr.rows.reduce((a, r) => a + r.count, 0) === TRADES.length * 2, "trades table: per-manager counts match transactions");
+    const rb = run({ v: 3, table: "players", where: { positions: ["RB"], seasons: ["2025"] }, groupBy: ["manager"], select: ["pts_sum"], orderBy: [{ col: "pts_sum", dir: "desc" }] });
+    const rbSum = {};
+    PLAYERS.filter((r) => r.pos === "RB").forEach((r) => { const c = ctx.canonical(r.manager); rbSum[c] = (rbSum[c] || 0) + r.pts; });
+    const rbTop = Object.entries(rbSum).sort((a, b) => b[1] - a[1])[0];
+    ok("QR-5", rb.rows[0].manager === rbTop[0] && rb.rows[0].pts_sum === r2(rbTop[1]), `players groupBy: most RB points 2025 = ${rbTop[0]} ${r2(rbTop[1])}`);
+    const hv = run({ v: 3, table: "games", where: { result: "W" }, groupBy: ["manager"], select: ["count"], having: [{ col: "count", op: ">=", value: 20 }] });
+    ok("QR-5", hv.rows.every((r) => r.count >= 20) && hv.total === Object.values(played.filter((r) => r.phase === "regular" && r.result === "W").reduce((m, r) => (m[r.manager] = (m[r.manager] || 0) + 1, m), {})).filter((n) => n >= 20).length, "having filters aggregated rows");
+    // Every worked example in the planner prompt is a valid spec that returns rows.
+    for (const [q, spec] of vmGet("PLANNER_EXAMPLES")) {
+      const v = ctx.validateSpec(spec, facts);
+      ok("QR-5", v.ok && ctx.runQuery(v.spec, facts, PLAYERS, TRADES).rows.length > 0, `planner example "${q}" validates and returns rows (${v.error || "ok"})`);
+    }
+    // The validator still rejects anything off-catalog — with a reason the repair loop can use.
+    for (const [bad, why] of [
+      [{ v: 3, table: "games", where: { filters: [{ col: "password", op: "=", value: 1 }] } }, "filter column"],
+      [{ v: 3, table: "games", where: { filters: [{ col: "manager", op: ">", value: "dpol" }] } }, "text filter"],
+      [{ v: 3, table: "games", where: { filters: [{ col: "opponent", op: "=", value: "nobody" }] } }, "unknown manager"],
+      [{ v: 3, table: "games", where: { filters: [{ col: "pf", op: ">", value: "lots" }] } }, "needs a number"],
+      [{ v: 3, table: "games", groupBy: ["player"] }, "groupBy"],
+      [{ v: 3, table: "games", groupBy: ["manager"], select: ["secret_sum"] }, "select"],
+      [{ v: 3, table: "games", groupBy: ["manager"], select: ["count"], having: [{ col: "wins", op: ">", value: 1 }] }, "having"],
+      [{ v: 3, table: "seasons", unique: true }, "unique"],
+      [{ v: 3, table: "weeks", orderBy: [{ col: "manager" }] }, "orderBy"],
+    ]) {
+      const v = ctx.validateSpec(bad, facts);
+      ok("QR-5", !v.ok && v.error.includes(why), `rejects ${JSON.stringify(bad).slice(0, 70)} → "${v.error}"`);
+    }
+  }
+
+  // ── QR-6: wider recipes (no model) + a planner with a repair loop ─────────────
+  {
+    const expect = [
+      ["How many times has Dan scored over 150?", (r) => r.table.table === "games" && top(r).manager === "dpol" && top(r).count === played.filter((x) => x.phase === "regular" && x.manager === "dpol" && x.pf > 150).length],
+      ["Who has the most 150+ games?", (r) => top(r).count === Math.max(...Object.values(played.filter((x) => x.phase === "regular" && x.pf >= 150).reduce((m, x) => (m[x.manager] = (m[x.manager] || 0) + 1, m), {})))],
+      ["Games with a combined score over 300", (r) => r.table.total === played.filter((x) => x.phase === "regular" && x.combined > 300).length / 2 && /match/.test(r.content)],
+      ["Who beats the league average most often?", (r) => r.table.spec.where.filters[0].col === "vsAvg" && top(r).count > 0],
+      ["Who scored the most points against Josh?", (r) => r.table.spec.where.opponents[0] === "joshjr11" && r.table.rows.every((x) => x.manager !== "joshjr11")],
+      ["Who has conceded the most points?", (r) => r.table.columns.includes("pa_sum")],
+      ["All-play records", (r) => r.table.columns.includes("allPlayW_sum")],
+      ["How many titles has each manager won?", (r) => top(r).manager === "saulgoat" && top(r).count === 2],
+      ["Most playoff appearances", (r) => r.table.table === "seasons" && top(r).count >= 1],
+      ["Which weeks did Saul top-score?", (r) => r.table.rows.length > 0 && r.table.rows.every((x) => x.manager === "saulgoat" && x.weekRank === 1)],
+      ["Who has made the most trades?", (r) => r.table.table === "trades" && top(r).count >= 1],
+      ["Trades between Jamie and Sanford", (r) => r.table.rows.length > 0 && r.table.rows.every((x) => x.manager === "drjkay" && x.partner === "sanfbe")],
+      ["Highest scoring week for the whole league", (r) => r.table.table === "weeks" && r.table.spec.orderBy[0].col === "avg"],
+      ["League average by season", (r) => r.table.table === "weeks" && r.table.spec.groupBy[0] === "season"],
+      ["Best RBs in 2025", (r) => r.table.table === "players" && r.table.rows.every((x) => x.pos === "RB") && top(r).pts === Math.max(...PLAYERS.filter((x) => x.pos === "RB").map((x) => x.pts))],
+      ["Which manager got the most WR points in 2025?", (r) => r.table.spec.groupBy[0] === "manager" && r.table.columns.includes("pts_sum")],
+      ["Saul's points by position", (r) => r.table.spec.groupBy[0] === "pos" && r.table.rows.length > 1],
+      ["Highest scoring matchup ever", (r) => r.table.record === "highestCombined"],
+      ["What's the high score of all time?", (r) => r.table.record === "highestScore"],
+      ["Biggest win margin", (r) => r.table.record === "biggestMargin"],
+    ];
+    for (const [q, check] of expect) {
+      let planCalls = 0;
+      const r = await ask(q, null, { plan: async () => { planCalls++; return '{"table":"none"}'; }, narrate: async () => { throw new Error("no narration in this test"); } });
+      let good = false;
+      try { good = r.source === "recipe" && planCalls === 0 && r.table && check(r); } catch (e) { good = false; }
+      ok("QR-6", good, `"${q}" → recipe answer (source ${r.source}, planner ${planCalls}, ${r.table ? r.table.table + "/" + (r.table.record || r.table.columns.join(",")) : "no table"}): ${r.content}`);
+      ok("QR-7", r.content && !/Here is what the data shows/.test(r.content) && ctx.numberGuard(r.content, r.table ? r.table.rows : [], [r.table && r.table.total, ...(r.table ? [r.table.scope] : [])]).ok, `"${q}" JS sentence is specific and every number is from the rows: ${r.content}`);
+    }
+    // Repair loop: a rejected spec gets ONE retry carrying the validator's reason.
+    const seen = [];
+    const fixing = async (prompt) => { seen.push(prompt); return seen.length === 1 ? JSON.stringify({ v: 3, table: "games", groupBy: ["manager"], select: ["points_total"] }) : JSON.stringify({ v: 3, table: "games", groupBy: ["manager"], select: ["pf_sum"], orderBy: [{ col: "pf_sum", dir: "desc" }] }); };
+    const rp = await ask("Rank everyone by their aggregate tally, please", null, { plan: fixing, narrate: async () => "Ranked." });
+    ok("QR-6", seen.length === 2 && /REJECTED: bad select points_total/.test(seen[1]) && rp.table && rp.table.columns.includes("pf_sum") && rp.modelCalls === 3, `repair loop: second planner call sees the error and its answer is used (calls ${rp.modelCalls})`);
+    let twice = 0;
+    const rp2 = await ask("Rank everyone by their aggregate tally, please", null, { plan: async () => { twice++; return JSON.stringify({ v: 3, table: "nope" }); } });
+    ok("QR-6", twice === 2 && rp2.source === "cant" && rp2.content === CANT, "repair loop gives up after one retry → can't-answer");
+    const pp = ctx.plannerPrompt("anything", null, facts);
+    ok("QR-6", /vsAvg \(pf minus weekAvg/.test(pp) && /last completed week 17/.test(pp) && /EXAMPLES:/.test(pp) && /"table":"weeks"/.test(pp), "planner prompt carries the catalog, calendar and worked examples");
+    ok("QR-6", ctx.normalizeQ("biggest matchup pts") === "biggest game points", "synonym pass");
+  }
+
+  // ── QR-7: answers — scope line, list sentences, derived facts for narration ──
+  {
+    const r = await ask("All-time standings");
+    ok("QR-7", r.table.scope === "Regular season · final games · all seasons", `scope line: ${r.table.scope}`);
+    const sc = await ask("How many times has Dan scored over 150 in 2024?");
+    ok("QR-7", /PF > 150/.test(sc.table.scope) && /2024/.test(sc.table.scope) && /Dan/.test(sc.table.scope), `scope names the filters: ${sc.table.scope}`);
+    // A narration quoting the JS-derived gap between #1 and #2 passes the guard.
+    const ls = await ask("Who has the most 150+ games?");
+    const gap = Math.abs(ls.table.rows[0].count - ls.table.rows[1].count);
+    const nar = await ask("Who has the most 150+ games?", null, { narrate: async () => `${ctx.distinctName(ls.table.rows[0].manager)} leads by ${gap}.` });
+    ok("QR-7", nar.content === `${ctx.distinctName(ls.table.rows[0].manager)} leads by ${gap}.`, `narration using a derived gap is kept: ${nar.content}`);
+    const np2 = ctx.narrationPrompt("q", null, ls.table);
+    ok("QR-7", /COMPUTED \(you may use these\): gap between #1 and #2/.test(np2) && /SCOPE: /.test(np2), "narration prompt carries scope + computed facts");
+  }
 
   if (failures) { console.error(`test-questions.js: ${failures} check(s) FAILED (${passes} passed)`); process.exit(1); }
   console.log(`test-questions.js: QR-1/QR-2/QR-3 + UR-7 (engine) — ${passes} checks passed ✓`);

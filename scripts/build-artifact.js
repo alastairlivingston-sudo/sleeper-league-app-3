@@ -44,9 +44,11 @@ const DATA = {
   // it is the offline fallback verbatim.
   __HISTORY__:      { file: path.join(ROOT, "docs/data/history.json"), transform: leanHistory },
   __ROSTERS__:      { file: path.join(ROOT, "docs/data/rosters.json") },
-  __TRADES__:       { file: path.join(ROOT, "docs/data/fc-values.json") },
+  // Trade values and transactions are fetched live on load like alltime/players
+  // (paste budget, TR-7); every reader treats null as "not loaded yet".
+  __TRADES__:       { file: path.join(ROOT, "docs/data/fc-values.json"), transform: dropLargeFallback },
   __ALLTIME__:      { file: path.join(ROOT, "docs/data/alltime.json"), transform: dropLargeFallback },
-  __TRANSACTIONS__: { file: path.join(ROOT, "docs/data/transactions.json"), optional: true },
+  __TRANSACTIONS__: { file: path.join(ROOT, "docs/data/transactions.json"), optional: true, transform: dropLargeFallback },
   __PLAYERS__:      { file: path.join(ROOT, "docs/data/player-scores.json"), optional: true, transform: dropLargeFallback },
   // Lore is fetched at runtime in the paste build (inlined only in dist/plaincy.html).
   __LORE__:         { file: path.join(ROOT, "docs/lore/master.json"), optional: true, transform: dropLargeFallback },

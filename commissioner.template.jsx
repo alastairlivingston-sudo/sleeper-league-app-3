@@ -532,10 +532,163 @@ function buildFactTable(history, canon) {
   return { games: rows, seasons: seasonRows, records: buildRecords(rows, seasonRows), current: factCurrent(history, rows) };
 }
 
+// ── Stats v3: backup tables + the one catalog ────────────────────────────────
+// PLAIN JS (no JSX): scripts/test-questions.js loads this exact file with `vm`.
+// Every table the Stats engine can query, derived in the browser from data the
+// page already has (no new fetches). CATALOG is the single definition of each
+// table's columns, dimensions and meanings: validateSpec, the ResultTable labels
+// and the planner prompt all read it, so they cannot drift apart.
+
+// Columns added to game rows + the league-week table. Computed once per fact
+// table and cached on it (non-enumerable, so games.json output is unchanged).
+function ensureDerived(facts) {
+  if (facts._derived) return facts._derived;
+  const byWeek = {}, byGame = {};
+  facts.games.forEach(function(r) {
+    if (r.status !== 'final' || r.bye) return;
+    const k = r.season + '|' + r.week;
+    (byWeek[k] = byWeek[k] || []).push(r);
+    (byGame[r.gameId] = byGame[r.gameId] || []).push(r);
+  });
+  const weeks = [];
+  Object.keys(byWeek).forEach(function(k) {
+    const rs = byWeek[k];
+    const pfs = rs.map(function(r) { return r.pf; }).sort(function(a, b) { return a - b; });
+    const n = pfs.length;
+    const avg = factRound(pfs.reduce(function(t, v) { return t + v; }, 0) / n);
+    const median = factRound(n % 2 ? pfs[(n - 1) / 2] : (pfs[n / 2 - 1] + pfs[n / 2]) / 2);
+    const hi = rs.reduce(function(b, r) { return !b || r.pf > b.pf ? r : b; }, null);
+    const lo = rs.reduce(function(b, r) { return !b || r.pf < b.pf ? r : b; }, null);
+    rs.forEach(function(r) { r.weekAvg = avg; r.vsAvg = factRound(r.pf - avg); });
+    weeks.push({
+      season: rs[0].season, week: rs[0].week,
+      phase: rs.every(function(r) { return r.phase === 'regular'; }) ? 'regular' : 'playoff',
+      teams: n, avg: avg, median: median, high: hi.pf, highManager: hi.manager, low: lo.pf, lowManager: lo.manager,
+      spread: factRound(hi.pf - lo.pf), combinedHigh: Math.max.apply(null, rs.map(function(r) { return r.combined; })),
+    });
+  });
+  Object.keys(byGame).forEach(function(g) {
+    const pair = byGame[g];
+    pair.forEach(function(r) { const o = pair.find(function(x) { return x !== r; }); r.oppWeekRank = o ? o.weekRank : null; });
+  });
+  weeks.sort(function(a, b) { return a.season.localeCompare(b.season) || a.week - b.week; });
+  Object.defineProperty(facts, '_derived', { value: { weeks: weeks }, enumerable: false });
+  return facts._derived;
+}
+
+// One row per side of each trade (transactions.json: managerA/B, aReceives/bReceives).
+function buildTradeRows(transactions) {
+  const out = [];
+  (Array.isArray(transactions) ? transactions : []).forEach(function(t, i) {
+    const names = function(l) { return (l || []).map(function(p) { return p.name + (p.pos ? ' (' + p.pos + ')' : ''); }).join(', '); };
+    const sides = [[t.managerA, t.managerB, t.aReceives, t.bReceives], [t.managerB, t.managerA, t.bReceives, t.aReceives]];
+    sides.forEach(function(s) {
+      out.push({ tradeId: 't' + i, season: String(t.season), week: t.week, manager: canonical(s[0]), partner: canonical(s[1]),
+        received: names(s[2]), gave: names(s[3]), receivedCount: (s[2] || []).length, gaveCount: (s[3] || []).length });
+    });
+  });
+  return out;
+}
+
+// col → [type, meaning]. type: mgr | num | int | cat | text
+const CATALOG = {
+  games: {
+    about: 'one row per manager per game (two rows per game). unique:true keeps one row per game (the winner side).',
+    cols: {
+      manager: ['mgr', 'the manager'], opponent: ['mgr', 'their opponent'], pf: ['num', 'points scored'], pa: ['num', 'points conceded'],
+      result: ['cat', 'W, L or T for the manager'], margin: ['num', 'pf minus pa'], combined: ['num', 'pf plus pa (the game total)'],
+      season: ['cat', 'season year as a string, e.g. "2024"'], week: ['int', 'week number'], phase: ['cat', 'regular, playoff or consolation'],
+      weekRank: ['int', '1 = top score of that regular-season week'], oppWeekRank: ['int', "the opponent's weekRank"],
+      weekAvg: ['num', 'league average score that week'], vsAvg: ['num', 'pf minus weekAvg (above/below the league average)'],
+      allPlayW: ['int', 'other scores beaten that week'], allPlayL: ['int', 'other scores lost to that week'], benchPts: ['num', 'points left on the bench'],
+    },
+    dims: ['manager', 'opponent', 'season', 'week', 'phase', 'result'],
+    show: ['manager', 'pf', 'opponent', 'pa', 'result', 'margin', 'season', 'week', 'phase'],
+  },
+  seasons: {
+    about: 'one row per manager per season (final standings; the current season is in progress).',
+    cols: {
+      manager: ['mgr', 'the manager'], season: ['cat', 'season year'], rank: ['int', 'final standings rank'], wins: ['int', 'wins'], losses: ['int', 'losses'], ties: ['int', 'ties'],
+      pf: ['num', 'regular-season points for'], pa: ['num', 'regular-season points against'], pfAvg: ['num', 'points per game'],
+      expectedWins: ['num', 'all-play expected wins'], luck: ['num', 'wins minus expectedWins'], playoffFinish: ['cat', 'champion, runner-up, semi, consolation or missed'],
+    },
+    dims: ['manager', 'season', 'playoffFinish'],
+    show: ['manager', 'season', 'rank', 'wins', 'losses', 'pf', 'pa', 'playoffFinish'],
+  },
+  weeks: {
+    about: 'one row per league week: the whole league\'s scoring that week.',
+    cols: {
+      season: ['cat', 'season year'], week: ['int', 'week number'], phase: ['cat', 'regular or playoff'], teams: ['int', 'teams that scored'],
+      avg: ['num', 'league average score'], median: ['num', 'median score'], high: ['num', 'top score'], highManager: ['mgr', 'who scored it'],
+      low: ['num', 'lowest score'], lowManager: ['mgr', 'who scored it'], spread: ['num', 'high minus low'], combinedHigh: ['num', 'highest game total that week'],
+    },
+    dims: ['season', 'phase', 'highManager', 'lowManager'],
+    show: ['season', 'week', 'avg', 'high', 'highManager', 'low', 'lowManager'],
+  },
+  players: {
+    about: 'one row per player per manager per season (points while on that roster).',
+    cols: {
+      player: ['text', 'player name'], pos: ['cat', 'QB, RB, WR, TE, K or DEF'], manager: ['mgr', 'the manager'], season: ['cat', 'season year'],
+      games: ['int', 'games started'], pts: ['num', 'points scored'], avg: ['num', 'points per game'], best: ['num', 'best single game'],
+    },
+    dims: ['manager', 'pos', 'season', 'player'],
+    show: ['player', 'pos', 'manager', 'season', 'games', 'pts', 'avg', 'best'],
+  },
+  trades: {
+    about: 'one row per side of each trade.',
+    cols: {
+      season: ['cat', 'season year'], week: ['int', 'week'], manager: ['mgr', 'the manager'], partner: ['mgr', 'who they traded with'],
+      received: ['text', 'players received'], gave: ['text', 'players sent'], receivedCount: ['int', 'players received'], gaveCount: ['int', 'players sent'],
+    },
+    dims: ['manager', 'partner', 'season'],
+    show: ['season', 'week', 'manager', 'partner', 'received', 'gave'],
+  },
+};
+
+const AGGS = ['sum', 'avg', 'max', 'min'];
+const AGG_LABEL = { sum: 'total', avg: 'avg', max: 'max', min: 'min' };
+const FILTER_OPS = ['=', '!=', '>', '>=', '<', '<='];
+
+// Label + display type for any column, including generic aggregates (pf_sum…).
+function colMeta(c) {
+  if (COLUMNS[c]) return COLUMNS[c];
+  const m = /^([A-Za-z]+)_(sum|avg|max|min)$/.exec(String(c));
+  if (m) {
+    const base = COLUMNS[m[1]] || { label: m[1], type: 'pts' };
+    const t = base.type === 'int' && m[2] !== 'avg' ? 'int' : 'pts';
+    return { label: base.label + ' ' + AGG_LABEL[m[2]], type: t };
+  }
+  return { label: c, type: 'text' };
+}
+
+function numericCol(table, c) { const d = CATALOG[table] && CATALOG[table].cols[c]; return !!d && (d[0] === 'num' || d[0] === 'int'); }
+
+// Plain-English scope of a spec, shown under every result table.
+function describeScope(spec) {
+  const w = spec.where || {};
+  const parts = [];
+  if (spec.table === 'games' || spec.table === 'weeks' || spec.table === 'record') {
+    parts.push({ regular: 'Regular season', playoff: 'Playoffs', consolation: 'Consolation', all: 'All games' }[w.phase] || 'Regular season');
+    if (spec.table !== 'weeks') parts.push(w.status === 'any' ? 'final + live' : w.status === 'live' ? 'live games' : 'final games');
+  }
+  if (spec.table === 'players' && w.positions) parts.push(w.positions.join('/'));
+  parts.push(w.seasons ? w.seasons.join(', ') : 'all seasons');
+  if (w.weeks) parts.push('week ' + w.weeks.join(', '));
+  if (w.managers) parts.push(w.managers.map(function(h) { return distinctName(h); }).join(', '));
+  if (w.opponents) parts.push('v ' + w.opponents.map(function(h) { return distinctName(h); }).join(', '));
+  if (w.result) parts.push({ W: 'wins', L: 'losses', T: 'ties' }[w.result]);
+  (w.filters || []).forEach(function(f) {
+    parts.push(colMeta(f.col).label + ' ' + f.op + ' ' + (colMeta(f.col).type === 'mgr' ? distinctName(f.value) : f.value));
+  });
+  if (spec.unique) parts.push('one row per game');
+  return parts.join(' · ');
+}
+
 // ── Query engine v2 (Phase 2): code answers, the model only phrases ──────────
 // PLAIN JS (no JSX): scripts/test-questions.js loads this exact file with `vm`.
 // Flow for every Stats question (answerStatQuestion):
-//   follow-up / dispute recipes → fastPlan recipe table → model planner (spec v2)
+//   follow-up / dispute recipes → fastPlan recipe table → model planner (spec v3,
+//   one repair retry; tables + columns from CATALOG in 18-tables.jsx)
 //   → validateSpec (whitelist) → runQuery over the fact table → result table
 //   (rendered by code) + ONE or TWO sentences: a JS template for single-row
 //   results (no model call), else model narration passed through numberGuard.
@@ -588,9 +741,15 @@ const COLUMNS = {
   avg: { label: 'Avg', type: 'pts' }, best: { label: 'Best', type: 'pts' },
   type: { label: 'Streak', type: 'text' }, length: { label: 'Len', type: 'int' }, count: { label: 'Count', type: 'int' },
   from: { label: 'From', type: 'text' }, to: { label: 'To', type: 'text' },
+  weekAvg: { label: 'Wk avg', type: 'pts' }, vsAvg: { label: '+/− avg', type: 'pts' }, oppWeekRank: { label: 'Opp rank', type: 'int' },
+  allPlayW: { label: 'AP W', type: 'int' }, allPlayL: { label: 'AP L', type: 'int' }, teams: { label: 'Teams', type: 'int' },
+  median: { label: 'Median', type: 'pts' }, high: { label: 'High', type: 'pts' }, highManager: { label: 'Top scorer', type: 'mgr' },
+  low: { label: 'Low', type: 'pts' }, lowManager: { label: 'Low scorer', type: 'mgr' }, spread: { label: 'Spread', type: 'pts' },
+  combinedHigh: { label: 'Top total', type: 'pts' }, partner: { label: 'With', type: 'mgr' }, received: { label: 'Got', type: 'text' },
+  gave: { label: 'Gave', type: 'text' }, receivedCount: { label: 'Got #', type: 'int' }, gaveCount: { label: 'Gave #', type: 'int' },
 };
 
-const SPEC_TABLES = ['games', 'seasons', 'players', 'record'];
+const SPEC_TABLES = ['games', 'seasons', 'players', 'record', 'weeks', 'trades'];
 const SPEC_GROUPS = ['', 'manager', 'opponent', 'season', 'manager,season', 'week', 'manager,opponent'];
 const SPEC_SELECT = ['games', 'wins', 'losses', 'ties', 'winPct', 'pf_sum', 'pf_avg', 'pf_max', 'pf_min', 'pa_sum', 'pa_avg', 'margin_avg', 'topScoreWeeks'];
 const GAME_COLS = ['manager', 'pf', 'opponent', 'pa', 'result', 'margin', 'combined', 'season', 'week', 'phase', 'weekRank', 'benchPts'];
@@ -602,7 +761,7 @@ const PLAYER_COLS = ['player', 'pos', 'manager', 'season', 'games', 'pts', 'avg'
 function validateSpec(raw, facts) {
   if (!raw || typeof raw !== 'object') return { ok: false, error: 'not an object' };
   if (raw.table === 'none' || raw.type === 'none') return { ok: false, error: 'none' };
-  if (raw.v !== 2) return { ok: false, error: 'not a v2 spec' };
+  if (raw.v !== 2 && raw.v !== 3) return { ok: false, error: 'not a v2/v3 spec' };
   if (SPEC_TABLES.indexOf(raw.table) === -1) return { ok: false, error: 'unknown table ' + raw.table };
   const handles = Object.keys(NAMES);
   const seasonsKnown = {};
@@ -637,6 +796,7 @@ function validateSpec(raw, facts) {
     if (!Array.isArray(w.gameIds) || w.gameIds.some(function(g) { return !/^\d{4}-\d{1,2}-(m\d+|bye-[A-Za-z0-9_]+)$/.test(String(g)); })) return { ok: false, error: 'bad gameIds' };
     if (w.gameIds.length) where.gameIds = w.gameIds.map(String);
   }
+  // Seasons may arrive as numbers from the planner ("2024" or 2024).
   where.phase = w.phase == null ? 'regular' : w.phase;
   if (['regular', 'playoff', 'consolation', 'all'].indexOf(where.phase) === -1) return { ok: false, error: 'bad phase' };
   if (w.result != null) { if (['W', 'L', 'T'].indexOf(w.result) === -1) return { ok: false, error: 'bad result' }; where.result = w.result; }
@@ -659,16 +819,63 @@ function validateSpec(raw, facts) {
     spec.record = raw.record;
     if (raw.top === true) spec.top = true; // ranked list ("top 10") instead of the record holder(s)
   }
-  const gb = Array.isArray(raw.groupBy) ? raw.groupBy.join(',') : '';
-  if (SPEC_GROUPS.indexOf(gb) === -1) return { ok: false, error: 'bad groupBy' };
-  if (gb && raw.table !== 'games') return { ok: false, error: 'groupBy only on games' };
-  spec.groupBy = gb ? gb.split(',') : [];
-  if (raw.select != null) {
-    if (!Array.isArray(raw.select) || raw.select.some(function(c) { return SPEC_SELECT.indexOf(c) === -1; })) return { ok: false, error: 'bad select' };
+  // v3: numeric/text filters on any catalog column of the table.
+  const cat = CATALOG[raw.table];
+  if (w.filters != null) {
+    if (!cat || !Array.isArray(w.filters) || w.filters.length > 6) return { ok: false, error: 'bad filters' };
+    const fs = [];
+    for (let i = 0; i < w.filters.length; i++) {
+      const f = w.filters[i] || {};
+      const d = cat.cols[f.col];
+      if (!d) return { ok: false, error: 'bad filter column ' + f.col };
+      if (FILTER_OPS.indexOf(f.op) === -1) return { ok: false, error: 'bad filter op ' + f.op };
+      let v = f.value;
+      if (d[0] === 'num' || d[0] === 'int') { v = Number(v); if (!isFinite(v)) return { ok: false, error: 'filter on ' + f.col + ' needs a number' }; }
+      else {
+        if (f.op !== '=' && f.op !== '!=') return { ok: false, error: 'text filter ' + f.col + ' takes = or !=' };
+        v = String(v);
+        if (d[0] === 'mgr') { v = canonical(v); if (handles.indexOf(v) === -1) return { ok: false, error: 'unknown manager ' + f.value }; }
+      }
+      fs.push({ col: f.col, op: f.op, value: v });
+    }
+    if (fs.length) where.filters = fs;
   }
-  spec.select = spec.groupBy.length ? ((raw.select && raw.select.length) ? raw.select : ['games', 'wins', 'losses', 'ties', 'pf_sum', 'pf_avg']) : [];
-  const allowedOrder = spec.groupBy.length ? spec.groupBy.concat(SPEC_SELECT)
-    : (raw.table === 'games' ? GAME_COLS : raw.table === 'seasons' ? SEASON_COLS : raw.table === 'players' ? PLAYER_COLS : []);
+  if (raw.unique === true) { if (raw.table !== 'games') return { ok: false, error: 'unique only on games' }; spec.unique = true; }
+  // groupBy: v2's fixed games groupings, or any 1–2 catalog dimensions of the table.
+  const gbList = Array.isArray(raw.groupBy) ? raw.groupBy.map(String) : [];
+  const gb = gbList.join(',');
+  if (gbList.length) {
+    if (raw.table === 'record') return { ok: false, error: 'no groupBy on records' };
+    if (gbList.length > 2 || !cat || gbList.some(function(g) { return cat.dims.indexOf(g) === -1; })) {
+      if (raw.table !== 'games' || SPEC_GROUPS.indexOf(gb) === -1) return { ok: false, error: 'bad groupBy ' + gb };
+    }
+  }
+  spec.groupBy = gbList;
+  // select: v2 names (games), "count", or <column>_<sum|avg|max|min> on a numeric column.
+  const okSelect = function(c) {
+    if (c === 'count') return true;
+    if (raw.table === 'games' && SPEC_SELECT.indexOf(c) !== -1) return true;
+    const m = /^([A-Za-z]+)_(sum|avg|max|min)$/.exec(String(c));
+    return !!m && numericCol(raw.table, m[1]);
+  };
+  if (raw.select != null) {
+    if (!Array.isArray(raw.select) || raw.select.length > 8 || raw.select.some(function(c) { return !okSelect(c); })) {
+      const bad = Array.isArray(raw.select) ? raw.select.filter(function(c) { return !okSelect(c); }).join(', ') : 'not a list';
+      return { ok: false, error: 'bad select ' + bad };
+    }
+  }
+  spec.select = spec.groupBy.length ? ((raw.select && raw.select.length) ? raw.select.slice() : (raw.table === 'games' ? ['games', 'wins', 'losses', 'ties', 'pf_sum', 'pf_avg'] : ['count'])) : [];
+  if (raw.having != null) {
+    if (!spec.groupBy.length || !Array.isArray(raw.having) || raw.having.length > 4) return { ok: false, error: 'bad having' };
+    spec.having = [];
+    for (let i = 0; i < raw.having.length; i++) {
+      const h = raw.having[i] || {};
+      if (spec.select.indexOf(h.col) === -1 || FILTER_OPS.indexOf(h.op) === -1 || !isFinite(Number(h.value))) return { ok: false, error: 'bad having ' + h.col };
+      spec.having.push({ col: h.col, op: h.op, value: Number(h.value) });
+    }
+  }
+  const allowedOrder = spec.groupBy.length ? spec.groupBy.concat(spec.select).concat(raw.table === 'games' ? SPEC_SELECT : [])
+    : (cat ? Object.keys(cat.cols) : []);
   spec.orderBy = [];
   if (raw.orderBy != null) {
     if (!Array.isArray(raw.orderBy)) return { ok: false, error: 'orderBy must be a list' };
@@ -680,7 +887,7 @@ function validateSpec(raw, facts) {
     }
   }
   const lim = raw.limit == null ? 10 : Number(raw.limit);
-  if (!(lim >= 1 && lim <= 25)) return { ok: false, error: 'bad limit' };
+  if (!(lim >= 1 && lim <= 25)) return { ok: false, error: 'bad limit (1 to 25)' };
   spec.limit = Math.floor(lim);
   return { ok: true, spec: spec };
 }
@@ -720,6 +927,24 @@ function qGameFilter(spec, facts) {
   });
 }
 
+function qCmp(a, op, b) {
+  switch (op) {
+    case '=': return a === b; case '!=': return a !== b; case '>': return a > b;
+    case '>=': return a >= b; case '<': return a < b; case '<=': return a <= b;
+  }
+  return false;
+}
+function qApplyFilters(rows, filters) {
+  if (!filters || !filters.length) return rows;
+  return rows.filter(function(r) {
+    return filters.every(function(f) { const v = r[f.col]; return v != null && qCmp(typeof f.value === 'number' ? Number(v) : String(v), f.op, f.value); });
+  });
+}
+// One row per game: the winner side (or the alphabetically first side of a tie).
+function qUnique(rows) {
+  return rows.filter(function(r) { return r.result === 'W' || (r.result !== 'L' && (!r.opponent || r.manager < r.opponent)); });
+}
+
 function qAggregate(rows, groupBy, select) {
   const groups = {};
   const order = [];
@@ -745,49 +970,118 @@ function qAggregate(rows, groupBy, select) {
       pa_sum: qRound(sum('pa')), pa_avg: rs.length ? qRound(sum('pa') / rs.length) : 0,
       margin_avg: rs.length ? qRound(sum('margin') / rs.length) : 0,
       topScoreWeeks: rs.filter(function(r) { return r.weekRank === 1; }).length,
+      count: rs.length,
     };
-    select.forEach(function(c) { out[c] = all[c]; });
+    select.forEach(function(c) {
+      if (c in all) { out[c] = all[c]; return; }
+      const m = /^([A-Za-z]+)_(sum|avg|max|min)$/.exec(c);
+      const vals = m ? rs.map(function(r) { return r[m[1]]; }).filter(function(v) { return typeof v === 'number' && isFinite(v); }) : [];
+      if (!vals.length) { out[c] = null; return; }
+      const tot = vals.reduce(function(t, v) { return t + v; }, 0);
+      out[c] = m[2] === 'sum' ? qRound(tot) : m[2] === 'avg' ? qRound(tot / vals.length) : m[2] === 'max' ? Math.max.apply(null, vals) : Math.min.apply(null, vals);
+    });
     return out;
   });
 }
 
 // Executes a validated spec. Pure + deterministic.
 // → { table, columns, rows, spec, total }
-function runQuery(spec, facts, players) {
+function runQuery(spec, facts, players, transactions) {
+  const out = runQueryRaw(spec, facts, players, transactions);
+  out.scope = describeScope(spec);
+  return out;
+}
+
+// Columns for an ungrouped result: the table's display columns plus any column
+// the spec filtered or sorted on, so the number that decided the answer is shown.
+function qShowCols(table, spec, base) {
+  const cols = (base || CATALOG[table].show).slice();
+  const extra = [];
+  (spec.orderBy || []).forEach(function(o) { extra.push(o.col); });
+  ((spec.where && spec.where.filters) || []).forEach(function(f) { extra.push(f.col); });
+  extra.forEach(function(c) {
+    if (cols.indexOf(c) !== -1 || !CATALOG[table].cols[c]) return;
+    const at = cols.indexOf('season');
+    if (at === -1) cols.push(c); else cols.splice(at, 0, c);
+  });
+  return cols;
+}
+
+function qBaseRows(spec, facts, players, transactions) {
   const w = spec.where;
   if (spec.table === 'games') {
-    let rows = qGameFilter(spec, facts);
-    if (spec.groupBy.length) {
-      rows = qAggregate(rows, spec.groupBy, spec.select);
-      rows = qSort(rows, spec.orderBy.length ? spec.orderBy : [{ col: 'wins', dir: 'desc' }, { col: 'pf_sum', dir: 'desc' }]);
-      return { table: 'games', columns: spec.groupBy.concat(spec.select), rows: rows.slice(0, spec.limit), total: rows.length, spec: spec };
-    }
-    rows = qSort(rows, spec.orderBy.length ? spec.orderBy : [{ col: 'season', dir: 'desc' }, { col: 'week', dir: 'desc' }, { col: 'pf', dir: 'desc' }]);
-    return { table: 'games', columns: ['manager', 'pf', 'opponent', 'pa', 'result', 'margin', 'season', 'week', 'phase'], rows: rows.slice(0, spec.limit), total: rows.length, spec: spec };
+    ensureDerived(facts);
+    let rows = qApplyFilters(qGameFilter(spec, facts), w.filters);
+    return spec.unique ? qUnique(rows) : rows;
   }
   if (spec.table === 'seasons') {
-    let rows = facts.seasons.filter(function(r) {
+    return qApplyFilters(facts.seasons.filter(function(r) {
       if (w.managers && w.managers.indexOf(r.manager) === -1) return false;
       if (w.seasons && w.seasons.indexOf(r.season) === -1) return false;
       if (w.playoffFinish && r.playoffFinish !== w.playoffFinish) return false;
       return true;
-    });
-    rows = qSort(rows, spec.orderBy.length ? spec.orderBy : [{ col: 'season', dir: 'desc' }, { col: 'rank', dir: 'asc' }]);
-    return { table: 'seasons', columns: ['manager', 'season', 'rank', 'wins', 'losses', 'pf', 'pa', 'playoffFinish'], rows: rows.slice(0, spec.limit), total: rows.length, spec: spec };
+    }), w.filters);
+  }
+  if (spec.table === 'weeks') {
+    return qApplyFilters(ensureDerived(facts).weeks.filter(function(r) {
+      if (w.phase !== 'all' && r.phase !== (w.phase === 'consolation' ? 'playoff' : w.phase)) return false;
+      if (w.seasons && w.seasons.indexOf(r.season) === -1) return false;
+      if (w.weeks && w.weeks.indexOf(r.week) === -1) return false;
+      if (w.managers && w.managers.indexOf(r.highManager) === -1 && w.managers.indexOf(r.lowManager) === -1) return false;
+      return true;
+    }), w.filters);
+  }
+  if (spec.table === 'trades') {
+    const oneSide = !w.managers && !w.opponents && !spec.groupBy.length;
+    const seen = {};
+    return qApplyFilters(buildTradeRows(transactions).filter(function(r) {
+      if (oneSide) { if (seen[r.tradeId]) return false; seen[r.tradeId] = true; }
+      if (w.managers && w.managers.indexOf(r.manager) === -1) return false;
+      if (w.opponents && w.opponents.indexOf(r.partner) === -1) return false;
+      if (w.seasons && w.seasons.indexOf(r.season) === -1) return false;
+      return true;
+    }), w.filters);
   }
   if (spec.table === 'players') {
     const needle = w.player ? w.player.toLowerCase() : null;
     const by = (spec.orderBy[0] && spec.orderBy[0].col) || 'pts';
-    const minGames = by === 'avg' ? 4 : 1;
-    let rows = (players || []).filter(function(r) {
+    const minGames = by === 'avg' && !spec.groupBy.length ? 4 : 1;
+    return qApplyFilters((players || []).filter(function(r) {
       if (needle && String(r.player).toLowerCase().indexOf(needle) === -1) return false;
       if (w.positions && w.positions.indexOf(r.pos) === -1) return false;
       if (w.managers && w.managers.indexOf(canonical(r.manager)) === -1) return false;
       if (w.seasons && w.seasons.indexOf(String(r.season)) === -1) return false;
       return r.games >= minGames;
-    }).map(function(r) { return Object.assign({}, r, { manager: canonical(r.manager), season: String(r.season) }); });
-    rows = qSort(rows, spec.orderBy.length ? spec.orderBy : [{ col: 'pts', dir: 'desc' }]);
-    return { table: 'players', columns: PLAYER_COLS, rows: rows.slice(0, spec.limit), total: rows.length, spec: spec };
+    }).map(function(r) { return Object.assign({}, r, { manager: canonical(r.manager), season: String(r.season) }); }), w.filters);
+  }
+  return [];
+}
+
+const DEFAULT_ORDER = {
+  games: [{ col: 'season', dir: 'desc' }, { col: 'week', dir: 'desc' }, { col: 'pf', dir: 'desc' }],
+  seasons: [{ col: 'season', dir: 'desc' }, { col: 'rank', dir: 'asc' }],
+  weeks: [{ col: 'season', dir: 'desc' }, { col: 'week', dir: 'desc' }],
+  players: [{ col: 'pts', dir: 'desc' }],
+  trades: [{ col: 'season', dir: 'desc' }, { col: 'week', dir: 'desc' }],
+};
+
+// Executes a validated spec. Pure + deterministic.
+// → { table, columns, rows, spec, total, scope }
+function runQueryRaw(spec, facts, players, transactions) {
+  const w = spec.where;
+  if (spec.table !== 'record') {
+    let rows = qBaseRows(spec, facts, players, transactions);
+    if (spec.groupBy.length) {
+      rows = qAggregate(rows, spec.groupBy, spec.select);
+      (spec.having || []).forEach(function(h) { rows = rows.filter(function(r) { return r[h.col] != null && qCmp(r[h.col], h.op, h.value); }); });
+      const legacy = spec.table === 'games' && spec.select.indexOf('wins') !== -1 && spec.select.indexOf('pf_sum') !== -1;
+      const dflt = legacy ? [{ col: 'wins', dir: 'desc' }, { col: 'pf_sum', dir: 'desc' }] : [{ col: spec.select[0], dir: 'desc' }];
+      rows = qSort(rows, spec.orderBy.length ? spec.orderBy : dflt);
+      return { table: spec.table, columns: spec.groupBy.concat(spec.select), rows: rows.slice(0, spec.limit), total: rows.length, spec: spec };
+    }
+    rows = qSort(rows, spec.orderBy.length ? spec.orderBy : DEFAULT_ORDER[spec.table]);
+    const cols = spec.table === 'players' ? qShowCols('players', spec, PLAYER_COLS) : qShowCols(spec.table, spec);
+    return { table: spec.table, columns: cols, rows: rows.slice(0, spec.limit), total: rows.length, spec: spec };
   }
   if (spec.table === 'record') {
     const scope = w.phase === 'all' ? 'all' : 'regular';
@@ -890,10 +1184,10 @@ function templateSentence(spec, result, ctx) {
     if (!win) return nm(rows[0].manager) + ' and ' + nm(rows[1].manager) + ' tied ' + fmt2(rows[0].pf) + '–' + fmt2(rows[1].pf) + ' in ' + wkLabel(r) + ' (' + total + ' total).';
     return nm(win.manager) + ' ' + fmt2(win.pf) + ' – ' + fmt2(lose.pf) + ' ' + nm(lose.manager) + ' in ' + wkLabel(r) + ': ' + total + ' total points. ' + nm(win.manager) + ' won.';
   }
-  if (result.table === 'games' && spec.groupBy.join(',') === 'manager,opponent' && rows.length === 1) {
+  if (result.table === 'games' && spec.groupBy.join(',') === 'manager,opponent' && rows.length === 1 && r.wins != null) {
     return nm(r.manager) + ' is ' + r.wins + '–' + r.losses + (r.ties ? '–' + r.ties : '') + ' against ' + nm(r.opponent) + (w.phase === 'all' ? ' (all games)' : ' in the regular season') + (w.seasons ? ' (' + w.seasons.join(', ') + ')' : '') + '.';
   }
-  if (result.table === 'games' && spec.groupBy.join(',') === 'manager' && rows.length === 1) {
+  if (result.table === 'games' && spec.groupBy.join(',') === 'manager' && rows.length === 1 && r.wins != null && r.pf_sum != null) {
     return nm(r.manager) + ' is ' + r.wins + '–' + r.losses + (r.ties ? '–' + r.ties : '') + (w.seasons ? ' in ' + w.seasons.join(', ') : ' all-time') + (w.phase === 'all' ? ' (all games)' : ' in the regular season') + ', ' + fmt2(r.pf_sum) + ' points for.';
   }
   if (result.table === 'seasons' && rows.length === 1) {
@@ -910,8 +1204,82 @@ function templateSentence(spec, result, ctx) {
   if (result.table === 'games' && !spec.groupBy.length && rows.length === 1) {
     return nm(r.manager) + ' ' + fmt2(r.pf) + ' – ' + fmt2(r.pa) + ' ' + nm(r.opponent) + ' in ' + wkLabel(r) + ' (' + (r.result === 'W' ? 'won' : r.result === 'L' ? 'lost' : r.result === 'T' ? 'tied' : 'in progress') + ').';
   }
+  const ls = listSentence(spec, result);
+  if (ls) return ls;
   if (ctx && ctx.title) return ctx.title + '.';
   return 'Here is what the data shows.';
+}
+
+// ── v3 answers: a JS sentence for any multi-row / grouped / filtered result ──
+function fmtVal(c, v) {
+  if (v == null) return '—';
+  const t = colMeta(c).type;
+  if (t === 'mgr') return nm(v);
+  if (t === 'pts') return fmt2(v);
+  return String(v);
+}
+// The headline column of a result: what it was sorted on (else the first metric).
+function metricCol(spec, result) {
+  const o = spec.orderBy && spec.orderBy[0] && spec.orderBy[0].col;
+  if (o && spec.groupBy.indexOf(o) === -1) return o;
+  if (spec.groupBy.length) return spec.select[0];
+  return o || { games: 'pf', weeks: 'avg', players: 'pts', seasons: 'pf', trades: null }[result.table];
+}
+function rowLabel(spec, result, r) {
+  if (spec.groupBy.length) return spec.groupBy.map(function(g) { return fmtVal(g, r[g]); }).join(' ');
+  switch (result.table) {
+    case 'games': return nm(r.manager) + ' ' + fmt2(r.pf) + ' v ' + nm(r.opponent) + ' ' + fmt2(r.pa) + ' (' + r.season + ' wk ' + r.week + ')';
+    case 'weeks': return r.season + ' week ' + r.week;
+    case 'players': return r.player + ' (' + r.pos + ', ' + nm(r.manager) + ', ' + r.season + ')';
+    case 'seasons': return nm(r.manager) + ' ' + r.season;
+    case 'trades': return nm(r.manager) + ' got ' + (r.received || 'nothing') + ' from ' + nm(r.partner) + ' (' + r.season + ' wk ' + r.week + ')';
+  }
+  return '';
+}
+function listSentence(spec, result) {
+  const rows = result.rows || [];
+  if (!rows.length || result.table === 'record') return null;
+  const m = metricCol(spec, result);
+  const label = m ? colMeta(m).label : '';
+  const chrono = m === 'season' || m === 'week' || (!m && result.table === 'trades');
+  const val = function(r) {
+    if (!m || chrono) return '';
+    if (!spec.groupBy.length && result.table === 'games' && (m === 'pf' || m === 'pa')) return '';
+    return (spec.groupBy.length ? '' : label + ' ') + fmtVal(m, r[m]);
+  };
+  const filtered = (spec.where.filters && spec.where.filters.length) || spec.unique;
+  const noun = { games: spec.unique ? ['game', 'games'] : ['result', 'results'], weeks: ['week', 'weeks'], players: ['player', 'players'], seasons: ['season', 'seasons'], trades: ['trade side', 'trade sides'] }[result.table] || ['row', 'rows'];
+  const lead = filtered && !spec.groupBy.length ? result.total + ' ' + noun[result.total === 1 ? 0 : 1] + ' match (' + result.scope + '). ' : '';
+  const countOnly = spec.groupBy.length && m === 'count';
+  const countNoun = { games: 'games', seasons: 'seasons', weeks: 'weeks', players: 'players', trades: 'trades' }[result.table];
+  if (rows.length === 1) {
+    const v = val(rows[0]);
+    if (countOnly && spec.select.length === 1) return rowLabel(spec, result, rows[0]) + ': ' + rows[0].count + ' ' + (rows[0].count === 1 ? countNoun.replace(/s$/, '') : countNoun) + ' (' + result.scope + ').';
+    if (spec.groupBy.length) return lead + rowLabel(spec, result, rows[0]) + ': ' + spec.select.map(function(c) { return colMeta(c).label + ' ' + fmtVal(c, rows[0][c]); }).join(', ') + ' (' + result.scope + ').';
+    return lead + rowLabel(spec, result, rows[0]) + (v ? ' — ' + v : '') + '.';
+  }
+  const first = rows[0];
+  const rest = rows.slice(1, 3).map(function(r) { const v = val(r); return rowLabel(spec, result, r) + (v ? ' (' + v.replace(label + ' ', '') + ')' : ''); });
+  if (spec.groupBy.length) {
+    return lead + rowLabel(spec, result, first) + ' leads' + (countOnly ? '' : ' on ' + label) + ' with ' + fmtVal(m, first[m]) + (countOnly ? ' ' + countNoun : '') + '; then ' + rest.join(' and ') + '.';
+  }
+  if (chrono) return lead + 'Most recent: ' + rowLabel(spec, result, first) + '.';
+  const v = val(first);
+  return lead + rowLabel(spec, result, first) + (v ? ' — ' + v : '') + ' tops the list; then ' + rest.join(' and ') + '.';
+}
+
+// Numbers JS derives for the narrator (and lets through the guard): the gap
+// between #1 and #2 and the average of the shown rows, on the headline column.
+function derivedFacts(spec, result) {
+  const rows = (result && result.rows) || [];
+  const m = metricCol(spec, result);
+  const out = [];
+  if (!m || rows.length < 2 || typeof rows[0][m] !== 'number') return out;
+  const vals = rows.map(function(r) { return r[m]; }).filter(function(v) { return typeof v === 'number'; });
+  out.push({ label: 'gap between #1 and #2 on ' + colMeta(m).label, value: qRound(Math.abs(vals[0] - vals[1])) });
+  out.push({ label: 'average ' + colMeta(m).label + ' of the shown rows', value: qRound(vals.reduce(function(t, v) { return t + v; }, 0) / vals.length) });
+  out.push({ label: 'rows matching', value: result.total });
+  return out;
 }
 
 // ── Number guard (cause E) ────────────────────────────────────────────────────
@@ -981,7 +1349,69 @@ function recipeSpec(table, where, extra) {
 
 // Each recipe: test(q, info) → spec | null. First hit wins. `info` carries the
 // managers named, years named, and the current season.
+// Threshold counts: "scored over 150", "150+ games", "combined over 300", "won by more than 50".
+function thresholdRecipe(i, q) {
+  const m = q.match(/\b(over|above|more than|at least|under|below|less than|fewer than)\s+(\d{2,3}(?:\.\d+)?)\b/i) || q.match(/\b(\d{2,3})\s?\+/);
+  if (!m) return null;
+  const n = Number(m.length > 2 ? m[2] : m[1]);
+  const word = m.length > 2 ? m[1].toLowerCase() : 'at least';
+  const op = { over: '>', above: '>', 'more than': '>', 'at least': '>=', under: '<', below: '<', 'less than': '<', 'fewer than': '<' }[word];
+  const col = /\b(combined|game total|both teams|total (points|score) in a game)\b/i.test(q) ? 'combined' : /\b(margin|win(s|ning)? by|won by|lost by|beat \w+ by|by more than|by over)\b/i.test(q) ? 'margin' : 'pf';
+  if (col === 'pf' && n < 50) return null;
+  const where = Object.assign({}, i.where, { filters: [{ col: col, op: op, value: n }] });
+  if (col === 'margin') where.result = 'W';
+  else if (/\b(lost|loss|losses|losing)\b/i.test(q)) where.result = 'L';
+  else if (/\b(won|wins?|winning)\b/i.test(q)) where.result = 'W';
+  if (col === 'combined') return recipeSpec('games', where, { unique: true, orderBy: [{ col: 'combined', dir: op[0] === '<' ? 'asc' : 'desc' }], limit: 10 });
+  return recipeSpec('games', where, { groupBy: ['manager'], select: ['count'], orderBy: [{ col: 'count', dir: 'desc' }], limit: 10 });
+}
+// "points against Josh" (opponent) vs "most points against" (conceded).
+function againstRecipe(i, q) {
+  const tail = q.split(/\bagainst\b/i)[1] || '';
+  const opp = matchManagers(tail);
+  if (opp.length === 1) {
+    const where = Object.assign({}, i.where, { opponents: opp });
+    if (where.managers && where.managers[0] === opp[0]) delete where.managers;
+    return recipeSpec('games', where, { groupBy: ['manager'], select: ['games', 'pf_sum', 'pf_avg', 'wins', 'losses'], orderBy: [{ col: 'pf_sum', dir: 'desc' }], limit: 10 });
+  }
+  return recipeSpec('games', i.where, { groupBy: ['manager'], select: ['games', 'pa_sum', 'pa_avg'], orderBy: [{ col: 'pa_sum', dir: /\b(fewest|least|lowest|easiest)\b/i.test(q) ? 'asc' : 'desc' }], limit: 10 });
+}
+function weeksRecipe(i, q) {
+  const where = Object.assign({}, i.where);
+  delete where.managers;
+  if (/\b(this|last) week\b/i.test(q)) { where.seasons = [i.cur.season]; where.weeks = [i.cur.lastFinalWeek]; }
+  if (/\b(by|per|each|every) (season|year)\b/i.test(q)) {
+    return recipeSpec('weeks', where, { groupBy: ['season'], select: ['avg_avg', 'high_max', 'low_min'], orderBy: [{ col: 'avg_avg', dir: 'desc' }] });
+  }
+  const low = /\b(lowest|worst|fewest|least|low)\b/i.test(q);
+  const col = /\b(spread|gap|range)\b/i.test(q) ? 'spread' : /\b(top|high) scor(e|er)\b/i.test(q) ? 'high' : 'avg';
+  return recipeSpec('weeks', where, { orderBy: [{ col: col, dir: low ? 'asc' : 'desc' }], limit: 5 });
+}
+
 const RECIPES = [
+  { id: 'threshold', re: /\b(over|above|more than|at least|under|below|less than|fewer than)\s+\d{2,3}\b|\b\d{2,3}\s?\+/i, not: /\b(average|avg)\b/i, make: thresholdRecipe },
+  { id: 'vs-avg-points', re: /\b(points|pts) (above|over|better than) (the )?(league |weekly )?(average|avg)\b|\bbest (relative to|against|vs\.?) (the )?average\b/i, make: function(i) { return recipeSpec('games', i.where, { groupBy: ['manager'], select: ['vsAvg_sum', 'vsAvg_avg', 'games'], orderBy: [{ col: 'vsAvg_sum', dir: 'desc' }] }); } },
+  { id: 'vs-avg', re: /\b(above|beat(s|en|ing)?|over|better than|higher than|outscor\w*|below|under|worse than) (the )?(league |weekly |week'?s )?(average|avg)\b/i, make: function(i, q) {
+    const below = /\b(below|under|worse than)\b/i.test(q);
+    return recipeSpec('games', Object.assign({}, i.where, { filters: [{ col: 'vsAvg', op: below ? '<' : '>', value: 0 }] }), { groupBy: ['manager'], select: ['count', 'vsAvg_avg'], orderBy: [{ col: 'count', dir: 'desc' }] });
+  } },
+  { id: 'league-weeks', need: 'noMgr', re: /\b(league|weekly)[- ](average|avg|high|low|scoring)\b|\b(highest|lowest|best|worst)[- ]scoring weeks?\b|\b(whole|entire) league\b|\bleague[- ]wide\b|\baverage (score|points) (per|each|a) week\b/i, make: weeksRecipe },
+  { id: 'points-against', re: /\bpoints (scored )?against\b|\bmost pa\b|\b(toughest|hardest|easiest|unluckiest) schedule\b|\bconceded\b/i, make: againstRecipe },
+  { id: 'all-play', re: /\ball[- ]play\b/i, make: function(i) { return recipeSpec('games', i.where, { groupBy: ['manager'], select: ['allPlayW_sum', 'allPlayL_sum', 'wins', 'losses'], orderBy: [{ col: 'allPlayW_sum', dir: 'desc' }] }); } },
+  { id: 'titles', re: /\b(how many|most) (titles|championships|chips|rings|trophies)\b|\btitles? (count|tally)\b|\bchampionships? (by|per) manager\b/i, make: function(i) { return recipeSpec('seasons', { managers: i.where.managers, playoffFinish: 'champion' }, { groupBy: ['manager'], select: ['count'], orderBy: [{ col: 'count', dir: 'desc' }] }); } },
+  { id: 'playoff-apps', re: /\bplayoff (appearances|berths|trips)\b|\b(made|reached) the playoffs\b|\bmost playoffs\b/i, make: function(i) {
+    return recipeSpec('seasons', { managers: i.where.managers, filters: [{ col: 'playoffFinish', op: '!=', value: 'missed' }] }, { groupBy: ['manager'], select: ['count'], orderBy: [{ col: 'count', dir: 'desc' }] });
+  } },
+  { id: 'top-score-list', need: 'oneMgr', re: /\b(which|what) weeks?\b.*\b(top[- ]scor\w*|highest score|top of the week)\b|\btop[- ]scor(ed|er) weeks?\b/i, make: function(i) {
+    return recipeSpec('games', Object.assign({}, i.where, { filters: [{ col: 'weekRank', op: '=', value: 1 }] }), { orderBy: [{ col: 'season', dir: 'desc' }, { col: 'week', dir: 'desc' }], limit: 25 });
+  } },
+  { id: 'trades', need: 'any', re: /\btrades?\b|\btraded\b|\btrade (history|partners?)\b/i, not: /\btrade (value|verdict|calculator)\b|\bshould i\b/i, make: function(i, q) {
+    const where = { seasons: i.where.seasons };
+    if (i.mgrs.length) where.managers = [i.mgrs[0]];
+    if (i.mgrs.length > 1) where.opponents = [i.mgrs[1]];
+    if (/\b(most|how many|count|number of)\b/i.test(q)) return recipeSpec('trades', where, { groupBy: /\bwith|partner/i.test(q) && i.mgrs.length === 1 ? ['partner'] : ['manager'], select: ['count', 'receivedCount_sum'], orderBy: [{ col: 'count', dir: 'desc' }] });
+    return recipeSpec('trades', where, { limit: 10 });
+  } },
   { id: 'inLoss-high', re: /\b(most|highest|biggest|max(imum)?|best)\b.*\b(loss|losing|lost|defeat)\b|\b(scored|score) .*\b(still|and) (lost|lose)\b/i, make: function(i) { return recipeSpec('record', i.where, { record: 'highestScoreInLoss' }); } },
   { id: 'inLoss-low', re: /\b(lowest|fewest|least|worst)\b.*\b(loss|losing|lost|defeat)\b/i, make: function(i) { return recipeSpec('games', Object.assign({ result: 'L' }, i.where), { orderBy: [{ col: 'pf', dir: 'asc' }], limit: 5 }); } },
   { id: 'inWin-low', re: /\b(lowest|fewest|least|worst)\b.*\b(win|won|winning|victory)\b|\b(won|win) with (the )?(lowest|fewest|least)\b/i, make: function(i) { return recipeSpec('record', i.where, { record: 'lowestScoreInWin' }); } },
@@ -1027,6 +1457,8 @@ function recipeInfo(query, facts) {
   const mgrs = matchManagers(query);
   const years = (String(query).match(/\b20\d\d\b/g) || []).filter(function(y, i, a) { return a.indexOf(y) === i; });
   const cur = (facts && facts.current) || { season: years[0] || '', lastFinalWeek: 1 };
+  if (!years.length && cur.season && /\b(this|current) (season|year)\b|\bso far this\b/i.test(query)) years.push(String(cur.season));
+  if (!years.length && cur.season && /\blast (season|year)\b/i.test(query)) years.push(String(Number(cur.season) - 1));
   const where = {};
   if (mgrs.length === 1) where.managers = mgrs;
   if (years.length) where.seasons = years;
@@ -1035,10 +1467,44 @@ function recipeInfo(query, facts) {
 }
 
 // fastPlan: recipe table → v2 spec (or null to fall through to the model planner).
+// Words people use → the words the recipes are written for.
+const SYNONYMS = [
+  [/\bmatch[- ]?ups?\b|\bmatch(es)?\b|\bfixtures?\b/gi, 'game'], [/\bpts\b/gi, 'points'], [/\bhigh[- ]?score\b/gi, 'highest score'],
+  [/\blow[- ]?score\b/gi, 'lowest score'], [/\b(beaten|defeated)\b/gi, 'lost'], [/\bvictor(y|ies)\b/gi, 'win'],
+  [/\b(greatest|largest)\b/gi, 'biggest'], [/\bpoorest\b/gi, 'worst'], [/\bbiggest score\b/gi, 'highest score'],
+  [/\bscored the most\b/gi, 'most points'], [/\b(year|campaign)\b/gi, 'season'],
+];
+function normalizeQ(q) { let t = String(q || ''); SYNONYMS.forEach(function(p) { t = t.replace(p[0], p[1]); }); return t; }
+
+const POS_WORDS = [[/\b(qbs?|quarterbacks?)\b/i, 'QB'], [/\b(rbs?|running ?backs?)\b/i, 'RB'], [/\b(wrs?|wide receivers?|receivers?)\b/i, 'WR'],
+  [/\b(tes?|tight ends?)\b/i, 'TE'], [/\b(kickers?|ks)\b/i, 'K'], [/\b(def|dst|defen[cs]es?)\b/i, 'DEF']];
+// Player-table recipes (run before the planner fallback for player questions).
+function playerPlan(q, info, n) {
+  const pos = POS_WORDS.filter(function(p) { return p[0].test(q); }).map(function(p) { return p[1]; });
+  const where = { seasons: info.where.seasons, managers: info.where.managers };
+  if (pos.length) where.positions = pos;
+  const avg = /\b(average|avg|per game|ppg)\b/i.test(q);
+  if (/\bby position\b|\bpositional\b|\bpoints (from|by) each position\b/i.test(q)) {
+    return recipeSpec('players', where, { groupBy: info.mgrs.length === 1 ? ['pos'] : ['manager', 'pos'], select: ['pts_sum', 'count'], orderBy: [{ col: 'pts_sum', dir: 'desc' }], limit: 25 });
+  }
+  if (!pos.length) return null;
+  if (/\b(which|what) manager\b|\bby manager\b|\bmanagers?\b.*\bmost\b|\bmost\b.*\bpoints from\b/i.test(q) || (info.mgrs.length === 1 && /\b(total|points from|by season)\b/i.test(q))) {
+    return recipeSpec('players', where, { groupBy: info.mgrs.length === 1 ? ['season'] : ['manager'], select: ['pts_sum', 'count'], orderBy: [{ col: 'pts_sum', dir: 'desc' }], limit: 10 });
+  }
+  if (/\b(best|top|highest|most|leading|elite)\b/i.test(q) || n) {
+    return recipeSpec('players', where, { orderBy: [{ col: avg ? 'avg' : 'pts', dir: 'desc' }], limit: n || 10 });
+  }
+  return null;
+}
+
 function fastPlan(query, facts) {
-  const q = String(query || '');
-  if (/\b(wr|rb|qb|te|kicker|player|players|touchdowns?|position)\b/i.test(q)) return null; // player scoring → planner
+  const q = normalizeQ(query);
   const n = topN(q);
+  if (/\b(wr|rb|qb|te|kicker|player|players|touchdowns?|position|positional|quarterbacks?|running ?backs?|receivers?|tight ends?|defen[cs]es?)s?\b/i.test(q)) {
+    const ps = playerPlan(q, recipeInfo(q, facts), n);
+    if (ps) ps._recipe = 'players';
+    return ps; // else player scoring → planner
+  }
   // "top 10 combined scores" → match the recipes as "highest combined scores".
   let qm = n && !/\b(highest|lowest|biggest|largest|smallest|most|fewest|least|best|worst|closest|longest|narrowest)\b/i.test(q)
     ? q.replace(/\btop[- ]?(\d{1,2}|[a-z]+)\b/i, 'highest') : q;
@@ -1049,6 +1515,7 @@ function fastPlan(query, facts) {
     if (r.need === 'oneMgr' && info.mgrs.length !== 1) continue;
     if (r.need === 'twoMgr' && info.mgrs.length < 2) continue;
     if (r.need === 'oneMgrYear' && !(info.mgrs.length === 1 && info.years.length)) continue;
+    if (r.need === 'noMgr' && info.mgrs.length) continue;
     if (!r.need && info.mgrs.length >= 2) continue; // two names → only the H2H recipes
     if (!r.re.test(qm)) continue;
     if (r.not && r.not.test(qm)) continue;
@@ -1205,7 +1672,7 @@ function disputeReply(query, ctx, facts) {
   };
 }
 
-const CLARIFY = "Which stat do you mean? For example: “Top 10 combined scores”, “Most points in a loss”, “Biggest blowout”, “Dan vs Josh” or “Longest win streak”.";
+const CLARIFY = "Which stat do you mean? For example: “Top 10 combined scores”, “Who beats the league average most?”, “How many times has Dan scored over 150?”, “Dan vs Josh” or “Best RBs this season”.";
 const CANT_ANSWER = "I can't answer that one from the league data, and I won't guess a number. Try: “Most points in a loss?”, “Dan vs Josh”, “Lev's record in 2024”, “Current standings”, “This week's scores” or “Longest win streak”.";
 
 // Compact pipe table of result rows for prompts (≤ 25 rows, names not handles).
@@ -1216,33 +1683,71 @@ function rowsPipe(result, max) {
     return cols.map(function(c) {
       const v = r[c];
       if (v == null) return '';
-      if ((COLUMNS[c] || {}).type === 'mgr') return nm(v);
-      if ((COLUMNS[c] || {}).type === 'pts') return fmt2(v);
+      if (colMeta(c).type === 'mgr') return nm(v);
+      if (colMeta(c).type === 'pts') return fmt2(v);
       return String(v);
     }).join('|');
   })).join('\n');
 }
 
-function plannerPrompt(query, ctx) {
+// Worked examples: question → spec. Each one is executed by test-questions.js.
+const PLANNER_EXAMPLES = [
+  ['How many times has Dan scored over 150?', { v: 3, table: 'games', where: { managers: ['dpol'], filters: [{ col: 'pf', op: '>', value: 150 }] }, groupBy: ['manager'], select: ['count'] }],
+  ['Who beats the league average most often in 2025?', { v: 3, table: 'games', where: { seasons: ['2025'], filters: [{ col: 'vsAvg', op: '>', value: 0 }] }, groupBy: ['manager'], select: ['count'], orderBy: [{ col: 'count', dir: 'desc' }] }],
+  ['Games where both teams scored 140+', { v: 3, table: 'games', where: { filters: [{ col: 'pf', op: '>=', value: 140 }, { col: 'pa', op: '>=', value: 140 }] }, unique: true, orderBy: [{ col: 'combined', dir: 'desc' }] }],
+  ['Which week had the highest league average?', { v: 3, table: 'weeks', orderBy: [{ col: 'avg', dir: 'desc' }], limit: 5 }],
+  ['Who has scored the most points against Josh?', { v: 3, table: 'games', where: { opponents: ['joshjr11'] }, groupBy: ['manager'], select: ['pf_sum', 'games'], orderBy: [{ col: 'pf_sum', dir: 'desc' }] }],
+  ['Which manager got the most RB points in 2025?', { v: 3, table: 'players', where: { positions: ['RB'], seasons: ['2025'] }, groupBy: ['manager'], select: ['pts_sum'], orderBy: [{ col: 'pts_sum', dir: 'desc' }] }],
+  ['How many titles has each manager won?', { v: 3, table: 'seasons', where: { playoffFinish: 'champion' }, groupBy: ['manager'], select: ['count'] }],
+  ['Average winning margin by season', { v: 3, table: 'games', where: { result: 'W' }, groupBy: ['season'], select: ['margin_avg', 'count'], orderBy: [{ col: 'season', dir: 'asc' }] }],
+  ['Top 10 combined scores including playoffs', { v: 3, table: 'record', record: 'highestCombined', top: true, limit: 10, where: { phase: 'all' } }],
+  ['Who has made the most trades?', { v: 3, table: 'trades', groupBy: ['manager'], select: ['count'], orderBy: [{ col: 'count', dir: 'desc' }] }],
+  ["Dan's record when he scores under 120", { v: 3, table: 'games', where: { managers: ['dpol'], filters: [{ col: 'pf', op: '<', value: 120 }] }, groupBy: ['manager'], select: ['games', 'wins', 'losses'] }],
+  ['Who has won at least 5 games while scoring below the league average?', { v: 3, table: 'games', where: { result: 'W', filters: [{ col: 'vsAvg', op: '<', value: 0 }] }, groupBy: ['manager'], select: ['count'], having: [{ col: 'count', op: '>=', value: 5 }], orderBy: [{ col: 'count', dir: 'desc' }] }],
+];
+
+function catalogText() {
+  return Object.keys(CATALOG).map(function(t) {
+    const c = CATALOG[t];
+    return t + ' — ' + c.about + '\n  columns: ' + Object.keys(c.cols).map(function(k) { return k + ' (' + c.cols[k][1] + ')'; }).join('; ') +
+      '\n  groupBy dimensions: ' + c.dims.join(', ');
+  }).join('\n');
+}
+
+function calendarText(facts) {
+  const cur = (facts && facts.current) || {};
+  const seasons = ((facts && facts.seasons) || []).map(function(r) { return r.season; }).filter(function(v, i, a) { return a.indexOf(v) === i; });
+  return 'NOW: current season ' + cur.season + ', last completed week ' + cur.lastFinalWeek + (cur.liveWeek ? ', week ' + cur.liveWeek + ' in progress' : '') +
+    '. Seasons in the data: ' + seasons.join(', ') + '. "this season" = ' + cur.season + '; "last week" = week ' + cur.lastFinalWeek + ' of ' + cur.season +
+    '; "ever", "all-time", "in history" = no season filter.';
+}
+
+function plannerPrompt(query, ctx, facts, repair) {
   const handles = Object.keys(NAMES).map(function(h) { return h + '=' + distinctName(h); }).join(', ');
   const lines = [
-    'You translate a fantasy-football question into a JSON query spec. Output ONLY valid JSON, nothing else.',
+    'You translate a fantasy-football league question into a JSON query spec. Output ONLY valid JSON, nothing else.',
     'Manager handles (use these exact strings): ' + handles + '. benjlev=Lev, sanfbe=Sanford, allyl900 maps to AlastairL.',
-    'Spec v2: { "v": 2, "table": "games"|"seasons"|"players"|"record", "record": "<name>" (table=record only),',
-    '  "where": { "managers": [], "opponents": [], "seasons": ["2024"], "weeks": [1], "phase": "regular"|"playoff"|"consolation"|"all", "result": "W"|"L"|"T", "positions": ["WR"], "player": "substring", "playoffFinish": "champion"|"runner-up"|"semi"|"consolation"|"missed" },',
-    '  "groupBy": [] | ["manager"] | ["opponent"] | ["season"] | ["manager","season"] | ["week"] | ["manager","opponent"],   (games table only)',
-    '  "select": ["games","wins","losses","ties","winPct","pf_sum","pf_avg","pf_max","pf_min","pa_sum","pa_avg","margin_avg","topScoreWeeks"],',
-    '  "orderBy": [{ "col": "pf", "dir": "desc" }], "limit": 10 }',
-    'games rows are one per manager per game: manager, pf, opponent, pa, result (W/L/T from that manager\'s side), margin, combined, season, week, phase, weekRank. seasons rows: manager, season, rank, wins, losses, pf, pa, expectedWins, luck, playoffFinish. players rows: player, pos, manager, season, games, pts, avg, best.',
-    'records: ' + RECORD_NAMES.join(', ') + '. A record spec returns only the holder(s); add "top": true and "limit": N for a ranked top-N list (e.g. top 10 combined scores = {"v":2,"table":"record","record":"highestCombined","top":true,"limit":10}).',
-    'Defaults: phase regular, final games only, limit 10. If the question is not a data lookup (opinion, lore, definitions) output {"table":"none"}.',
-  ];
+    calendarText(facts),
+    'TABLES:\n' + catalogText(),
+    'SPEC: { "v": 3, "table": "games"|"seasons"|"weeks"|"players"|"trades"|"record",',
+    '  "where": { "managers": [], "opponents": [] (games: opponent; trades: partner), "seasons": ["2024"], "weeks": [1], "phase": "regular"|"playoff"|"consolation"|"all" (games/weeks; default regular), "status": "final"|"live"|"any" (default final), "result": "W"|"L"|"T", "positions": ["WR"], "player": "name substring", "playoffFinish": "champion"|"runner-up"|"semi"|"consolation"|"missed",',
+    '    "filters": [{ "col": "<column of the table>", "op": "="|"!="|">"|">="|"<"|"<=", "value": number or string }] },',
+    '  "unique": true (games only: one row per game instead of one per manager),',
+    '  "groupBy": up to 2 groupBy dimensions of the table,',
+    '  "select": (with groupBy) "count", "<numeric column>_<sum|avg|max|min>" e.g. "pf_sum", "vsAvg_avg", "pts_sum"; games also: "games","wins","losses","ties","winPct","topScoreWeeks",',
+    '  "having": [{ "col": "<a select column>", "op": ">=", "value": 5 }],',
+    '  "orderBy": [{ "col": "<column, or select column when grouped>", "dir": "desc"|"asc" }], "limit": 1..25 (default 10) }',
+    'record table: "record": one of ' + RECORD_NAMES.join(', ') + '; returns only the holder(s) unless "top": true with "limit": N (ranked list). Records honour where.managers, where.seasons and where.phase.',
+    'Prefer the simplest spec. A question about one game score uses games; a league-wide week question uses weeks. If the question is not a data lookup (opinion, lore, definitions, trade advice) output {"table":"none"}.',
+    'EXAMPLES:',
+  ].concat(PLANNER_EXAMPLES.map(function(e) { return 'Q: ' + e[0] + '\n' + JSON.stringify(e[1]); }));
   if (ctx && ctx.lastQ) {
     lines.push('PREVIOUS QUESTION: ' + ctx.lastQ);
     if (ctx.lastSpec) lines.push('PREVIOUS SPEC: ' + JSON.stringify(ctx.lastSpec));
     if (ctx.lastResult) lines.push('PREVIOUS TOP ROWS:\n' + rowsPipe(ctx.lastResult, 3));
   }
   lines.push('QUESTION: ' + query);
+  if (repair) lines.push('YOUR PREVIOUS SPEC WAS REJECTED: ' + repair.error + '\nPREVIOUS SPEC: ' + JSON.stringify(repair.raw) + '\nOutput a corrected spec (or {"table":"none"}).');
   return lines.join('\n');
 }
 
@@ -1256,7 +1761,10 @@ function narrationPrompt(query, ctx, result) {
   ];
   if (ctx && ctx.lastQ) parts.push('PREVIOUS QUESTION: ' + ctx.lastQ + (ctx.lastResult ? '\nPREVIOUS TOP ROWS:\n' + rowsPipe(ctx.lastResult, 3) : ''));
   parts.push('QUESTION: ' + query);
+  if (result && result.scope) parts.push('SCOPE: ' + result.scope);
   parts.push('ROWS (' + ((result && result.total) || 0) + ' total, top ' + Math.min(25, ((result && result.rows) || []).length) + ' shown):\n' + rowsPipe(result, 25));
+  const df = result && result.spec ? derivedFacts(result.spec, result) : [];
+  if (df.length) parts.push('COMPUTED (you may use these): ' + df.map(function(d) { return d.label + ' = ' + (Number.isInteger(d.value) ? d.value : fmt2(d.value)); }).join('; '));
   parts.push('Answer:');
   return parts.join('\n\n');
 }
@@ -1291,23 +1799,31 @@ async function answerStatQuestion(query, ctx, deps) {
   if (!raw && String(query || '').trim().split(/\s+/).length <= 2 && !matchManagers(query).length && !/\b20\d\d\b/.test(query)) {
     return { content: CLARIFY, table: null, ctx: ctx, source: 'clarify', modelCalls: 0 };
   }
+  let v = raw ? validateSpec(raw, facts) : { ok: false, error: 'no spec' };
   if (!raw && deps.plan) {
-    try { modelCalls++; raw = parseSpecJson(await deps.plan(plannerPrompt(query, ctx))); } catch (e) { raw = null; }
+    try { modelCalls++; raw = parseSpecJson(await deps.plan(plannerPrompt(query, ctx, facts))); } catch (e) { raw = null; }
+    v = validateSpec(raw, facts);
+    // Repair loop: one retry with the validator's reason.
+    if (!v.ok && v.error !== 'none' && raw) {
+      log('planner spec rejected', v.error, raw);
+      let fixed = null;
+      try { modelCalls++; fixed = parseSpecJson(await deps.plan(plannerPrompt(query, ctx, facts, { error: v.error, raw: raw }))); } catch (e) { fixed = null; }
+      if (fixed) { const v2 = validateSpec(fixed, facts); if (v2.ok || v2.error === 'none') { v = v2; raw = fixed; } }
+    }
   }
-  const v = validateSpec(raw, facts);
   if (!v.ok) {
     if (v.error !== 'none' || NUMERIC_HINT.test(query)) return { content: CANT_ANSWER, table: null, ctx: ctx, source: 'cant', modelCalls: modelCalls };
     return { content: null, table: null, ctx: ctx, source: 'chat', modelCalls: modelCalls };
   }
   const spec = v.spec;
-  const result = runQuery(spec, facts, deps.players);
+  const result = runQuery(spec, facts, deps.players, deps.transactions);
   const tmpl = templateSentence(spec, result);
   if (!result.rows.length) return { content: tmpl, table: null, ctx: next(spec, result), source: source, modelCalls: modelCalls };
   const single = result.table === 'record' || result.rows.length === 1 || (spec.where.gameIds && result.rows.length <= 2);
   if (single || !deps.narrate) return { content: tmpl, table: result, ctx: next(spec, result), source: source, modelCalls: modelCalls };
   let sentence = null;
   try { modelCalls++; sentence = String(await deps.narrate(narrationPrompt(query, ctx, result)) || '').trim(); } catch (e) { sentence = null; }
-  const g = sentence ? numberGuard(sentence, result.rows) : { ok: false, bad: [] };
+  const g = sentence ? numberGuard(sentence, result.rows, derivedFacts(spec, result).map(function(d) { return d.value; })) : { ok: false, bad: [] };
   if (!sentence || !g.ok || /fabricat|made (that|it) up|invented/i.test(sentence)) {
     log('number guard rejected narration', g.bad, sentence);
     sentence = tmpl;
@@ -1597,7 +2113,7 @@ function MarkdownMessage(props) {
 // Code-rendered answer table (Phase 2): labels + number formatting come from
 // COLUMNS, never from model-written markdown.
 function fmtCell(col, v) {
-  const t = (COLUMNS[col] || {}).type;
+  const t = colMeta(col).type;
   if (v == null || v === '') return '—';
   if (t === 'mgr') return distinctName(v);
   if (t === 'pts') return fmt2(v);
@@ -1611,7 +2127,7 @@ function ResultTable(props) {
   return (
     <div className="rt-wrap">
       <table className="md-table rt">
-        <thead><tr>{cols.map(function(c) { return <th key={c}>{(COLUMNS[c] || {}).label || c}</th>; })}</tr></thead>
+        <thead><tr>{cols.map(function(c) { return <th key={c}>{colMeta(c).label}</th>; })}</tr></thead>
         <tbody>
           {result.rows.map(function(r, i) {
             return <tr key={r.id || (r.gameId ? r.gameId + i : i)}>{cols.map(function(c) {
@@ -1621,7 +2137,7 @@ function ResultTable(props) {
           })}
         </tbody>
       </table>
-      {result.total > result.rows.length ? <div className="rt-more">{'Top ' + result.rows.length + ' of ' + result.total}</div> : null}
+      <div className="rt-more">{(result.scope || '') + (result.total > result.rows.length ? (result.scope ? ' · ' : '') + 'top ' + result.rows.length + ' of ' + result.total : '')}</div>
     </div>
   );
 }
@@ -1862,7 +2378,7 @@ function StatsTab(props) {
   async function answer(query, conversation, ctx) {
     const aiOn = ai !== 'off';
     const out = await answerStatQuestion(query, ctx, {
-      facts: facts, players: playersData,
+      facts: facts, players: playersData, transactions: transactionsData,
       plan: aiOn ? function(prompt) { return claudeCall([{ role: 'user', content: prompt }], 'Output only JSON.', { json: true }); } : null,
       narrate: aiOn ? function(prompt) { return claudeCall([{ role: 'user', content: prompt }], 'Reply in one or two plain sentences.'); } : null,
       log: function() { if (DEBUG) console.log.apply(console, ['[stats]'].concat([].slice.call(arguments))); },

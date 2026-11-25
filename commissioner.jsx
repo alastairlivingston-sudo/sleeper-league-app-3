@@ -42,7 +42,7 @@ const HISTORY_DATA = {"seasons":[{"season":"2023","name":"Borehamwood","champion
 const ROSTERS_DATA = {"Denver Brochos (@joshjr11)":[{"id":"11584","name":"Bucky Irving","pos":"RB"},{"id":"11604","name":"Brock Bowers","pos":"TE"},{"id":"11620","name":"Rome Odunze","pos":"WR"},{"id":"12506","name":"Harold Fannin Jr.","pos":"TE"},{"id":"13279","name":"Carnell Tate","pos":"WR"},{"id":"13286","name":"Jadarian Price","pos":"RB"},{"id":"2449","name":"Stefon Diggs","pos":"WR"},{"id":"3451","name":"Ka'imi Fairbairn","pos":"K"},{"id":"7523","name":"Trevor Lawrence","pos":"QB"},{"id":"7564","name":"Ja'Marr Chase","pos":"WR"},{"id":"7588","name":"Javonte Williams","pos":"RB"},{"id":"8112","name":"Drake London","pos":"WR"},{"id":"8151","name":"Kenneth Walker III","pos":"RB"},{"id":"9482","name":"Michael Mayer","pos":"TE"},{"id":"HOU","name":"Houston Texans","pos":"DEF"},{"id":"TB","name":"Tampa Bay Buccaneers","pos":"DEF"}],"benjlev (@benjlev)":[{"id":"11783","name":"Ryan Flournoy","pos":"WR"},{"id":"12489","name":"RJ Harvey","pos":"RB"},{"id":"12514","name":"Emeka Egbuka","pos":"WR"},{"id":"12526","name":"Tetairoa McMillan","pos":"WR"},{"id":"13276","name":"Omar Cooper Jr.","pos":"WR"},{"id":"2020","name":"Cairo Santos","pos":"K"},{"id":"3294","name":"Dak Prescott","pos":"QB"},{"id":"4866","name":"Saquon Barkley","pos":"RB"},{"id":"4993","name":"Mike Gesicki","pos":"TE"},{"id":"5850","name":"Josh Jacobs","pos":"RB"},{"id":"6770","name":"Joe Burrow","pos":"QB"},{"id":"7547","name":"Amon-Ra St. Brown","pos":"WR"},{"id":"8121","name":"Romeo Doubs","pos":"WR"},{"id":"8150","name":"Kyren Williams","pos":"RB"},{"id":"8154","name":"Brian Robinson Jr.","pos":"RB"},{"id":"8155","name":"Breece Hall","pos":"RB"},{"id":"9484","name":"Tucker Kraft","pos":"TE"},{"id":"9500","name":"Josh Downs","pos":"WR"},{"id":"DET","name":"Detroit Lions","pos":"DEF"}],"Plancey Neutral (@dpol)":[{"id":"11792","name":"Will Reichard","pos":"K"},{"id":"13337","name":"Emmett Johnson","pos":"RB"},{"id":"4046","name":"Patrick Mahomes","pos":"QB"},{"id":"4983","name":"DJ Moore","pos":"WR"},{"id":"5844","name":"T.J. Hockenson","pos":"TE"},{"id":"6794","name":"Justin Jefferson","pos":"WR"},{"id":"6804","name":"Jordan Love","pos":"QB"},{"id":"7594","name":"Chuba Hubbard","pos":"RB"},{"id":"8137","name":"George Pickens","pos":"WR"},{"id":"8228","name":"Jaylen Warren","pos":"RB"},{"id":"9221","name":"Jahmyr Gibbs","pos":"RB"},{"id":"9224","name":"Chase Brown","pos":"RB"},{"id":"9487","name":"Parker Washington","pos":"WR"},{"id":"9502","name":"Tank Dell","pos":"WR"},{"id":"MIN","name":"Minnesota Vikings","pos":"DEF"},{"id":"SEA","name":"Seattle Seahawks","pos":"DEF"}],"A jeanty angle  (@saulgoat)":[{"id":"10219","name":"Chris Rodriguez Jr.","pos":"RB"},{"id":"10859","name":"Sam LaPorta","pos":"TE"},{"id":"11533","name":"Brandon Aubrey","pos":"K"},{"id":"11586","name":"Blake Corum","pos":"RB"},{"id":"12481","name":"Cam Skattebo","pos":"RB"},{"id":"12495","name":"Ollie Gordon II","pos":"RB"},{"id":"12527","name":"Ashton Jeanty","pos":"RB"},{"id":"12540","name":"Chimere Dike","pos":"WR"},{"id":"12545","name":"Tyler Shough","pos":"QB"},{"id":"3163","name":"Jared Goff","pos":"QB"},{"id":"5892","name":"David Montgomery","pos":"RB"},{"id":"6786","name":"CeeDee Lamb","pos":"WR"},{"id":"6801","name":"Tee Higgins","pos":"WR"},{"id":"7525","name":"DeVonta Smith","pos":"WR"},{"id":"9493","name":"Puka Nacua","pos":"WR"},{"id":"9753","name":"Zach Charbonnet","pos":"RB"},{"id":"DEN","name":"Denver Broncos","pos":"DEF"}],"Lloyd of the Rings (@drjkay)":[{"id":"12501","name":"Matthew Golden","pos":"WR"},{"id":"12507","name":"Omarion Hampton","pos":"RB"},{"id":"12519","name":"Luther Burden III","pos":"WR"},{"id":"12534","name":"Kyle Monangai","pos":"RB"},{"id":"13345","name":"Jonah Coleman","pos":"RB"},{"id":"13346","name":"Denzel Boston","pos":"WR"},{"id":"2133","name":"Davante Adams","pos":"WR"},{"id":"2216","name":"Mike Evans","pos":"WR"},{"id":"4217","name":"George Kittle","pos":"TE"},{"id":"4984","name":"Josh Allen","pos":"QB"},{"id":"5119","name":"Jason Sanders","pos":"K"},{"id":"6790","name":"D'Andre Swift","pos":"RB"},{"id":"6813","name":"Jonathan Taylor","pos":"RB"},{"id":"8144","name":"Chris Olave","pos":"WR"},{"id":"8146","name":"Garrett Wilson","pos":"WR"},{"id":"KC","name":"Kansas City Chiefs","pos":"DEF"},{"id":"WAS","name":"Washington Commanders","pos":"DEF"}],"Fourth and Goalda Meir (@AlastairL)":[{"id":"11566","name":"Jayden Daniels","pos":"QB"},{"id":"11583","name":"Jonathon Brooks","pos":"RB"},{"id":"11632","name":"Malik Nabers","pos":"WR"},{"id":"11786","name":"Cam Little","pos":"K"},{"id":"12490","name":"Bhayshul Tuten","pos":"RB"},{"id":"12512","name":"Quinshon Judkins","pos":"RB"},{"id":"12517","name":"Colston Loveland","pos":"TE"},{"id":"13274","name":"Germie Bernard","pos":"WR"},{"id":"13281","name":"Jordyn Tyson","pos":"WR"},{"id":"13287","name":"Jeremiyah Love","pos":"RB"},{"id":"13296","name":"Caleb Douglas","pos":"WR"},{"id":"13298","name":"KC Concepcion Jr.","pos":"WR"},{"id":"13301","name":"Antonio Williams","pos":"WR"},{"id":"13414","name":"Kaelon Black","pos":"RB"},{"id":"1466","name":"Travis Kelce","pos":"TE"},{"id":"4034","name":"Christian McCaffrey","pos":"RB"},{"id":"4881","name":"Lamar Jackson","pos":"QB"},{"id":"9488","name":"Jaxon Smith-Njigba","pos":"WR"},{"id":"NYG","name":"New York Giants","pos":"DEF"}],"Jewish McCaffrey (@GSac)":[{"id":"10229","name":"Rashee Rice","pos":"WR"},{"id":"11560","name":"Caleb Williams","pos":"QB"},{"id":"11635","name":"Ladd McConkey","pos":"WR"},{"id":"12487","name":"Terrance Ferguson","pos":"TE"},{"id":"12533","name":"Jacory Croskey-Merritt","pos":"RB"},{"id":"12718","name":"Konata Mumpfield","pos":"WR"},{"id":"3198","name":"Derrick Henry","pos":"RB"},{"id":"4199","name":"Aaron Jones Sr.","pos":"RB"},{"id":"5872","name":"Deebo Samuel Sr.","pos":"WR"},{"id":"7042","name":"Tyler Bass","pos":"K"},{"id":"7543","name":"Travis Etienne Jr.","pos":"RB"},{"id":"8131","name":"Isaiah Likely","pos":"TE"},{"id":"8132","name":"Tyler Allgeier","pos":"RB"},{"id":"8148","name":"Jameson Williams","pos":"WR"},{"id":"8183","name":"Brock Purdy","pos":"QB"},{"id":"9509","name":"Bijan Robinson","pos":"RB"},{"id":"LAC","name":"Los Angeles Chargers","pos":"DEF"}],"Twinder Swindler (@sanfbe)":[{"id":"11625","name":"Adonai Mitchell","pos":"WR"},{"id":"11646","name":"Jalen Coker","pos":"WR"},{"id":"1166","name":"Kirk Cousins","pos":"QB"},{"id":"12185","name":"Spencer Shrader","pos":"K"},{"id":"12499","name":"Elic Ayomanor","pos":"WR"},{"id":"2505","name":"Darren Waller","pos":"TE"},{"id":"5967","name":"Tony Pollard","pos":"RB"},{"id":"7526","name":"Jaylen Waddle","pos":"WR"},{"id":"7569","name":"Nico Collins","pos":"WR"},{"id":"7611","name":"Rhamondre Stevenson","pos":"RB"},{"id":"8130","name":"Trey McBride","pos":"TE"},{"id":"8138","name":"James Cook III","pos":"RB"},{"id":"8167","name":"Christian Watson","pos":"WR"},{"id":"9226","name":"De'Von Achane","pos":"RB"},{"id":"9758","name":"C.J. Stroud","pos":"QB"},{"id":"9997","name":"Zay Flowers","pos":"WR"},{"id":"JAX","name":"Jacksonville Jaguars","pos":"DEF"}]};
 const TRADE_VALUES = [{"player":{"name":"Jahmyr Gibbs","sleeperId":"9221","position":"RB"},"redraftValue":10779},{"player":{"name":"Jaxon Smith-Njigba","sleeperId":"9488","position":"WR"},"redraftValue":10213},{"player":{"name":"Christian McCaffrey","sleeperId":"4034","position":"RB"},"redraftValue":9145},{"player":{"name":"Bijan Robinson","sleeperId":"9509","position":"RB"},"redraftValue":9106},{"player":{"name":"Ja'Marr Chase","sleeperId":"7564","position":"WR"},"redraftValue":9173},{"player":{"name":"CeeDee Lamb","sleeperId":"6786","position":"WR"},"redraftValue":9041},{"player":{"name":"Kenneth Walker III","sleeperId":"8151","position":"RB"},"redraftValue":8337},{"player":{"name":"Amon-Ra St. Brown","sleeperId":"7547","position":"WR"},"redraftValue":7996},{"player":{"name":"James Cook III","sleeperId":"8138","position":"RB"},"redraftValue":7672},{"player":{"name":"Bucky Irving","sleeperId":"11584","position":"RB"},"redraftValue":6476},{"player":{"name":"Justin Jefferson","sleeperId":"6794","position":"WR"},"redraftValue":6552},{"player":{"name":"Chuba Hubbard","sleeperId":"7594","position":"RB"},"redraftValue":6295},{"player":{"name":"Christian Watson","sleeperId":"8167","position":"WR"},"redraftValue":5998},{"player":{"name":"Brock Bowers","sleeperId":"11604","position":"TE"},"redraftValue":6050},{"player":{"name":"Tee Higgins","sleeperId":"6801","position":"WR"},"redraftValue":5807},{"player":{"name":"Josh Allen","sleeperId":"4984","position":"QB"},"redraftValue":5980},{"player":{"name":"Matthew Golden","sleeperId":"12501","position":"WR"},"redraftValue":5351},{"player":{"name":"Trey McBride","sleeperId":"8130","position":"TE"},"redraftValue":5334},{"player":{"name":"Joe Burrow","sleeperId":"6770","position":"QB"},"redraftValue":5382},{"player":{"name":"Malik Nabers","sleeperId":"11632","position":"WR"},"redraftValue":5125},{"player":{"name":"Javonte Williams","sleeperId":"7588","position":"RB"},"redraftValue":4985},{"player":{"name":"Parker Washington","sleeperId":"9487","position":"WR"},"redraftValue":5032},{"player":{"name":"Jonah Coleman","sleeperId":"13345","position":"RB"},"redraftValue":4767},{"player":{"name":"Nico Collins","sleeperId":"7569","position":"WR"},"redraftValue":4639},{"player":{"name":"Drake London","sleeperId":"8112","position":"WR"},"redraftValue":4622},{"player":{"name":"Jonathan Taylor","sleeperId":"6813","position":"RB"},"redraftValue":4463},{"player":{"name":"Bhayshul Tuten","sleeperId":"12490","position":"RB"},"redraftValue":4461},{"player":{"name":"D'Andre Swift","sleeperId":"6790","position":"RB"},"redraftValue":4417},{"player":{"name":"Derrick Henry","sleeperId":"3198","position":"RB"},"redraftValue":4408},{"player":{"name":"Chase Brown","sleeperId":"9224","position":"RB"},"redraftValue":4271},{"player":{"name":"Ashton Jeanty","sleeperId":"12527","position":"RB"},"redraftValue":4200},{"player":{"name":"George Pickens","sleeperId":"8137","position":"WR"},"redraftValue":4289},{"player":{"name":"Chris Olave","sleeperId":"8144","position":"WR"},"redraftValue":4205},{"player":{"name":"Jaylen Warren","sleeperId":"8228","position":"RB"},"redraftValue":3862},{"player":{"name":"Zay Flowers","sleeperId":"9997","position":"WR"},"redraftValue":3937},{"player":{"name":"Luther Burden III","sleeperId":"12519","position":"WR"},"redraftValue":3812},{"player":{"name":"Kyren Williams","sleeperId":"8150","position":"RB"},"redraftValue":3667},{"player":{"name":"Breece Hall","sleeperId":"8155","position":"RB"},"redraftValue":3651},{"player":{"name":"Tony Pollard","sleeperId":"5967","position":"RB"},"redraftValue":3498},{"player":{"name":"Isaiah Likely","sleeperId":"8131","position":"TE"},"redraftValue":3557},{"player":{"name":"Josh Jacobs","sleeperId":"5850","position":"RB"},"redraftValue":3325},{"player":{"name":"George Kittle","sleeperId":"4217","position":"TE"},"redraftValue":3408},{"player":{"name":"Saquon Barkley","sleeperId":"4866","position":"RB"},"redraftValue":3085},{"player":{"name":"Garrett Wilson","sleeperId":"8146","position":"WR"},"redraftValue":3149},{"player":{"name":"Tetairoa McMillan","sleeperId":"12526","position":"WR"},"redraftValue":3051},{"player":{"name":"Mike Evans","sleeperId":"2216","position":"WR"},"redraftValue":2902},{"player":{"name":"Cam Skattebo","sleeperId":"12481","position":"RB"},"redraftValue":2826},{"player":{"name":"Davante Adams","sleeperId":"2133","position":"WR"},"redraftValue":2814},{"player":{"name":"Brock Purdy","sleeperId":"8183","position":"QB"},"redraftValue":2827},{"player":{"name":"Trevor Lawrence","sleeperId":"7523","position":"QB"},"redraftValue":2757},{"player":{"name":"Rashee Rice","sleeperId":"10229","position":"WR"},"redraftValue":2627},{"player":{"name":"DeVonta Smith","sleeperId":"7525","position":"WR"},"redraftValue":2475},{"player":{"name":"Colston Loveland","sleeperId":"12517","position":"TE"},"redraftValue":2389},{"player":{"name":"Patrick Mahomes","sleeperId":"4046","position":"QB"},"redraftValue":2440},{"player":{"name":"Omarion Hampton","sleeperId":"12507","position":"RB"},"redraftValue":2234},{"player":{"name":"Caleb Williams","sleeperId":"11560","position":"QB"},"redraftValue":2334},{"player":{"name":"Dak Prescott","sleeperId":"3294","position":"QB"},"redraftValue":2314},{"player":{"name":"DJ Moore","sleeperId":"4983","position":"WR"},"redraftValue":2204},{"player":{"name":"Quinshon Judkins","sleeperId":"12512","position":"RB"},"redraftValue":2093},{"player":{"name":"Jeremiyah Love","sleeperId":"13287","position":"RB"},"redraftValue":2071},{"player":{"name":"Blake Corum","sleeperId":"11586","position":"RB"},"redraftValue":2022},{"player":{"name":"Jameson Williams","sleeperId":"8148","position":"WR"},"redraftValue":2045},{"player":{"name":"Harold Fannin Jr.","sleeperId":"12506","position":"TE"},"redraftValue":2043},{"player":{"name":"Carnell Tate","sleeperId":"13279","position":"WR"},"redraftValue":1979},{"player":{"name":"Emmett Johnson","sleeperId":"13337","position":"RB"},"redraftValue":1894},{"player":{"name":"Travis Kelce","sleeperId":"1466","position":"TE"},"redraftValue":1926},{"player":{"name":"Jayden Daniels","sleeperId":"11566","position":"QB"},"redraftValue":1946},{"player":{"name":"Sam LaPorta","sleeperId":"10859","position":"TE"},"redraftValue":1878},{"player":{"name":"Jordan Love","sleeperId":"6804","position":"QB"},"redraftValue":1866},{"player":{"name":"Ollie Gordon II","sleeperId":"12495","position":"RB"},"redraftValue":1716},{"player":{"name":"C.J. Stroud","sleeperId":"9758","position":"QB"},"redraftValue":1741},{"player":{"name":"Stefon Diggs","sleeperId":"2449","position":"WR"},"redraftValue":1647},{"player":{"name":"Zach Charbonnet","sleeperId":"9753","position":"RB"},"redraftValue":1592},{"player":{"name":"Rome Odunze","sleeperId":"11620","position":"WR"},"redraftValue":1632},{"player":{"name":"Travis Etienne Jr.","sleeperId":"7543","position":"RB"},"redraftValue":1478},{"player":{"name":"David Montgomery","sleeperId":"5892","position":"RB"},"redraftValue":1476},{"player":{"name":"Rhamondre Stevenson","sleeperId":"7611","position":"RB"},"redraftValue":1461},{"player":{"name":"Jordyn Tyson","sleeperId":"13281","position":"WR"},"redraftValue":1483},{"player":{"name":"Jared Goff","sleeperId":"3163","position":"QB"},"redraftValue":1537},{"player":{"name":"Josh Downs","sleeperId":"9500","position":"WR"},"redraftValue":1410},{"player":{"name":"Ladd McConkey","sleeperId":"11635","position":"WR"},"redraftValue":1379},{"player":{"name":"Tucker Kraft","sleeperId":"9484","position":"TE"},"redraftValue":1359},{"player":{"name":"Jaylen Waddle","sleeperId":"7526","position":"WR"},"redraftValue":1287},{"player":{"name":"Jadarian Price","sleeperId":"13286","position":"RB"},"redraftValue":1223},{"player":{"name":"Kyle Monangai","sleeperId":"12534","position":"RB"},"redraftValue":1173},{"player":{"name":"Emeka Egbuka","sleeperId":"12514","position":"WR"},"redraftValue":1140},{"player":{"name":"Denzel Boston","sleeperId":"13346","position":"WR"},"redraftValue":1084},{"player":{"name":"Aaron Jones Sr.","sleeperId":"4199","position":"RB"},"redraftValue":1051},{"player":{"name":"KC Concepcion Jr.","sleeperId":"13298","position":"WR"},"redraftValue":1049},{"player":{"name":"Jacory Croskey-Merritt","sleeperId":"12533","position":"RB"},"redraftValue":1021},{"player":{"name":"T.J. Hockenson","sleeperId":"5844","position":"TE"},"redraftValue":1009},{"player":{"name":"Tyler Warren","sleeperId":"12518","position":"TE"},"redraftValue":994},{"player":{"name":"Kaelon Black","sleeperId":"13414","position":"RB"},"redraftValue":850},{"player":{"name":"A.J. Brown","sleeperId":"5859","position":"WR"},"redraftValue":857},{"player":{"name":"Dalton Kincaid","sleeperId":"10236","position":"TE"},"redraftValue":864},{"player":{"name":"Braelon Allen","sleeperId":"11576","position":"RB"},"redraftValue":789},{"player":{"name":"Fernando Mendoza","sleeperId":"13269","position":"QB"},"redraftValue":808},{"player":{"name":"Rico Dowdle","sleeperId":"7021","position":"RB"},"redraftValue":747},{"player":{"name":"Deebo Samuel Sr.","sleeperId":"5872","position":"WR"},"redraftValue":760},{"player":{"name":"DK Metcalf","sleeperId":"5846","position":"WR"},"redraftValue":759},{"player":{"name":"Jalen Coker","sleeperId":"11646","position":"WR"},"redraftValue":689},{"player":{"name":"Kenny Gainwell","sleeperId":"7567","position":"RB"},"redraftValue":661},{"player":{"name":"Keenan Allen","sleeperId":"1479","position":"WR"},"redraftValue":661},{"player":{"name":"Jordan Mason","sleeperId":"8408","position":"RB"},"redraftValue":628},{"player":{"name":"Chris Rodriguez Jr.","sleeperId":"10219","position":"RB"},"redraftValue":589},{"player":{"name":"Bo Nix","sleeperId":"11563","position":"QB"},"redraftValue":614},{"player":{"name":"Jakobi Meyers","sleeperId":"5947","position":"WR"},"redraftValue":582},{"player":{"name":"Matthew Stafford","sleeperId":"421","position":"QB"},"redraftValue":595},{"player":{"name":"Kirk Cousins","sleeperId":"1166","position":"QB"},"redraftValue":580},{"player":{"name":"Khalil Shakir","sleeperId":"8134","position":"WR"},"redraftValue":549},{"player":{"name":"Omar Cooper Jr.","sleeperId":"13276","position":"WR"},"redraftValue":534},{"player":{"name":"Antonio Williams","sleeperId":"13301","position":"WR"},"redraftValue":533},{"player":{"name":"Kyle Pitts Sr.","sleeperId":"7553","position":"TE"},"redraftValue":533},{"player":{"name":"Caleb Douglas","sleeperId":"13296","position":"WR"},"redraftValue":523},{"player":{"name":"Mark Andrews","sleeperId":"5012","position":"TE"},"redraftValue":512},{"player":{"name":"Makai Lemon","sleeperId":"13294","position":"WR"},"redraftValue":504},{"player":{"name":"Ryan Flournoy","sleeperId":"11783","position":"WR"},"redraftValue":490},{"player":{"name":"Bryce Young","sleeperId":"9228","position":"QB"},"redraftValue":505},{"player":{"name":"Dallas Goedert","sleeperId":"5022","position":"TE"},"redraftValue":483},{"player":{"name":"Germie Bernard","sleeperId":"13274","position":"WR"},"redraftValue":470},{"player":{"name":"Rachaad White","sleeperId":"8136","position":"RB"},"redraftValue":457},{"player":{"name":"Brenton Strange","sleeperId":"9480","position":"TE"},"redraftValue":471},{"player":{"name":"Alvin Kamara","sleeperId":"4035","position":"RB"},"redraftValue":453},{"player":{"name":"Tyler Shough","sleeperId":"12545","position":"QB"},"redraftValue":473},{"player":{"name":"Mike Gesicki","sleeperId":"4993","position":"TE"},"redraftValue":448},{"player":{"name":"Tank Dell","sleeperId":"9502","position":"WR"},"redraftValue":435},{"player":{"name":"Chig Okonkwo","sleeperId":"8210","position":"TE"},"redraftValue":425},{"player":{"name":"Woody Marks","sleeperId":"12474","position":"RB"},"redraftValue":398},{"player":{"name":"Tre Tucker","sleeperId":"10213","position":"WR"},"redraftValue":405},{"player":{"name":"Tyler Allgeier","sleeperId":"8132","position":"RB"},"redraftValue":378},{"player":{"name":"Malik Washington","sleeperId":"11610","position":"WR"},"redraftValue":384},{"player":{"name":"Adonai Mitchell","sleeperId":"11625","position":"WR"},"redraftValue":381},{"player":{"name":"Pat Bryant","sleeperId":"12492","position":"WR"},"redraftValue":371},{"player":{"name":"Cam Ward","sleeperId":"12522","position":"QB"},"redraftValue":367},{"player":{"name":"Justice Hill","sleeperId":"5995","position":"RB"},"redraftValue":328},{"player":{"name":"Jordan Addison","sleeperId":"9756","position":"WR"},"redraftValue":323},{"player":{"name":"Michael Mayer","sleeperId":"9482","position":"TE"},"redraftValue":321},{"player":{"name":"Pat Freiermuth","sleeperId":"7600","position":"TE"},"redraftValue":321},{"player":{"name":"RJ Harvey","sleeperId":"12489","position":"RB"},"redraftValue":268},{"player":{"name":"Seth McGowan","sleeperId":"13424","position":"RB"},"redraftValue":262},{"player":{"name":"Lamar Jackson","sleeperId":"4881","position":"QB"},"redraftValue":256},{"player":{"name":"Aaron Rodgers","sleeperId":"96","position":"QB"},"redraftValue":255},{"player":{"name":"Elic Ayomanor","sleeperId":"12499","position":"WR"},"redraftValue":242},{"player":{"name":"Chimere Dike","sleeperId":"12540","position":"WR"},"redraftValue":230},{"player":{"name":"Dylan Sampson","sleeperId":"12469","position":"RB"},"redraftValue":223},{"player":{"name":"J.K. Dobbins","sleeperId":"6806","position":"RB"},"redraftValue":222},{"player":{"name":"Darren Waller","sleeperId":"2505","position":"TE"},"redraftValue":228},{"player":{"name":"Courtland Sutton","sleeperId":"5045","position":"WR"},"redraftValue":226},{"player":{"name":"Xavier Hutchinson","sleeperId":"10218","position":"WR"},"redraftValue":222},{"player":{"name":"Juwan Johnson","sleeperId":"7002","position":"TE"},"redraftValue":210},{"player":{"name":"Devaughn Vele","sleeperId":"11834","position":"WR"},"redraftValue":192},{"player":{"name":"Samaje Perine","sleeperId":"4147","position":"RB"},"redraftValue":184},{"player":{"name":"Xavier Worthy","sleeperId":"11624","position":"WR"},"redraftValue":179},{"player":{"name":"Baker Mayfield","sleeperId":"4892","position":"QB"},"redraftValue":180},{"player":{"name":"Justin Herbert","sleeperId":"6797","position":"QB"},"redraftValue":178},{"player":{"name":"Deshaun Watson","sleeperId":"4017","position":"QB"},"redraftValue":174},{"player":{"name":"Mike Washington Jr.","sleeperId":"13305","position":"RB"},"redraftValue":159},{"player":{"name":"Konata Mumpfield","sleeperId":"12718","position":"WR"},"redraftValue":152},{"player":{"name":"J.J. McCarthy","sleeperId":"11565","position":"QB"},"redraftValue":159},{"player":{"name":"DeMario Douglas","sleeperId":"9501","position":"WR"},"redraftValue":139},{"player":{"name":"Hunter Henry","sleeperId":"3214","position":"TE"},"redraftValue":138},{"player":{"name":"Chris Godwin Jr.","sleeperId":"4037","position":"WR"},"redraftValue":129},{"player":{"name":"Sam Darnold","sleeperId":"4943","position":"QB"},"redraftValue":126},{"player":{"name":"Jacoby Brissett","sleeperId":"3257","position":"QB"},"redraftValue":124},{"player":{"name":"Geno Smith","sleeperId":"1373","position":"QB"},"redraftValue":118},{"player":{"name":"Ja'Kobi Lane","sleeperId":"13293","position":"WR"},"redraftValue":112},{"player":{"name":"Michael Penix Jr.","sleeperId":"11559","position":"QB"},"redraftValue":106},{"player":{"name":"Tyler Higbee","sleeperId":"3271","position":"TE"},"redraftValue":96},{"player":{"name":"Keon Coleman","sleeperId":"11637","position":"WR"},"redraftValue":75},{"player":{"name":"Joe Milton","sleeperId":"11557","position":"QB"},"redraftValue":66},{"player":{"name":"Jonathon Brooks","sleeperId":"11583","position":"RB"},"redraftValue":48},{"player":{"name":"Brian Thomas Jr.","sleeperId":"11631","position":"WR"},"redraftValue":47},{"player":{"name":"Marvin Harrison Jr.","sleeperId":"11628","position":"WR"},"redraftValue":43},{"player":{"name":"Corey Kiner","sleeperId":"12491","position":"RB"},"redraftValue":37},{"player":{"name":"De'Zhaun Stribling","sleeperId":"13417","position":"WR"},"redraftValue":38},{"player":{"name":"Malachi Fields","sleeperId":"13285","position":"WR"},"redraftValue":37},{"player":{"name":"TreVeyon Henderson","sleeperId":"12529","position":"RB"},"redraftValue":32},{"player":{"name":"Dalton Schultz","sleeperId":"5001","position":"TE"},"redraftValue":28},{"player":{"name":"Kyle McCord","sleeperId":"12494","position":"QB"},"redraftValue":24},{"player":{"name":"Carson Beck","sleeperId":"13272","position":"QB"},"redraftValue":22},{"player":{"name":"Tre' Harris","sleeperId":"12509","position":"WR"},"redraftValue":20},{"player":{"name":"Michael Pittman Jr.","sleeperId":"6819","position":"WR"},"redraftValue":20},{"player":{"name":"Terrance Ferguson","sleeperId":"12487","position":"TE"},"redraftValue":17},{"player":{"name":"Roman Wilson","sleeperId":"11630","position":"WR"},"redraftValue":15},{"player":{"name":"Kenyon Sadiq","sleeperId":"13330","position":"TE"},"redraftValue":14},{"player":{"name":"Zonovan Knight","sleeperId":"8122","position":"RB"},"redraftValue":13},{"player":{"name":"Quentin Johnston","sleeperId":"9754","position":"WR"},"redraftValue":12},{"player":{"name":"Daniel Jones","sleeperId":"5870","position":"QB"},"redraftValue":12},{"player":{"name":"Austin Ekeler","sleeperId":"4663","position":"RB"},"redraftValue":9},{"player":{"name":"Emari Demercado","sleeperId":"11199","position":"RB"},"redraftValue":3},{"player":{"name":"Romeo Doubs","sleeperId":"8121","position":"WR"},"redraftValue":4},{"player":{"name":"Tutu Atwell","sleeperId":"7562","position":"WR"},"redraftValue":3}];
 const ALLTIME_DATA = null;
-const TRANSACTIONS_DATA = [{"season":"2024","week":2,"managerA":"drjkay","managerB":"sanfbe","aReceives":[{"name":"Christian McCaffrey","pos":"RB"},{"name":"George Kittle","pos":"TE"}],"bReceives":[{"name":"DeVonta Smith","pos":"WR"},{"name":"Kyren Williams","pos":"RB"}]},{"season":"2024","week":3,"managerA":"joshjr11","managerB":"drjkay","aReceives":[{"name":"Deebo Samuel Sr.","pos":"WR"},{"name":"Dalton Kincaid","pos":"TE"}],"bReceives":[{"name":"Chris Godwin Jr.","pos":"WR"},{"name":"Zamir White","pos":"RB"}]},{"season":"2024","week":3,"managerA":"drjkay","managerB":"GSac","aReceives":[{"name":"Kenneth Walker III","pos":"RB"},{"name":"Xavier Worthy","pos":"WR"}],"bReceives":[{"name":"Jordan Mason","pos":"RB"},{"name":"Rashid Shaheed","pos":"WR"}]},{"season":"2024","week":5,"managerA":"dpol","managerB":"GSac","aReceives":[{"name":"Davante Adams","pos":"WR"},{"name":"Jordan Mason","pos":"RB"}],"bReceives":[{"name":"Tony Pollard","pos":"RB"},{"name":"D'Andre Swift","pos":"RB"}]},{"season":"2024","week":9,"managerA":"dpol","managerB":"GSac","aReceives":[{"name":"Lamar Jackson","pos":"QB"},{"name":"Terry McLaurin","pos":"WR"},{"name":"Tony Pollard","pos":"RB"}],"bReceives":[{"name":"Alvin Kamara","pos":"RB"},{"name":"Sam Darnold","pos":"QB"},{"name":"Garrett Wilson","pos":"WR"}]},{"season":"2024","week":11,"managerA":"joshjr11","managerB":"drjkay","aReceives":[{"name":"Kenneth Walker III","pos":"RB"},{"name":"Jayden Reed","pos":"WR"}],"bReceives":[{"name":"DK Metcalf","pos":"WR"},{"name":"James Cook III","pos":"RB"}]},{"season":"2024","week":14,"managerA":"drjkay","managerB":"GSac","aReceives":[{"name":"Tee Higgins","pos":"WR"},{"name":"Jonathan Taylor","pos":"RB"}],"bReceives":[{"name":"Calvin Ridley","pos":"WR"},{"name":"De'Von Achane","pos":"RB"}]},{"season":"2024","week":14,"managerA":"benjlev","managerB":"dpol","aReceives":[{"name":"Tyreek Hill","pos":"WR"},{"name":"Tony Pollard","pos":"RB"}],"bReceives":[{"name":"George Pickens","pos":"WR"},{"name":"Brock Bowers","pos":"TE"}]},{"season":"2024","week":14,"managerA":"joshjr11","managerB":"sanfbe","aReceives":[{"name":"DeVonta Smith","pos":"WR"},{"name":"Rhamondre Stevenson","pos":"RB"}],"bReceives":[{"name":"Deebo Samuel Sr.","pos":"WR"},{"name":"Rico Dowdle","pos":"RB"}]},{"season":"2025","week":2,"managerA":"joshjr11","managerB":"sanfbe","aReceives":[],"bReceives":[{"name":"Cedric Tillman","pos":"WR"}]},{"season":"2025","week":4,"managerA":"joshjr11","managerB":"GSac","aReceives":[{"name":"Tony Pollard","pos":"RB"},{"name":"Brian Thomas Jr.","pos":"WR"}],"bReceives":[{"name":"DeVonta Smith","pos":"WR"},{"name":"Javonte Williams","pos":"RB"}]},{"season":"2025","week":6,"managerA":"drjkay","managerB":"sanfbe","aReceives":[{"name":"J.K. Dobbins","pos":"RB"}],"bReceives":[{"name":"DK Metcalf","pos":"WR"}]},{"season":"2025","week":6,"managerA":"dpol","managerB":"GSac","aReceives":[{"name":"Alvin Kamara","pos":"RB"},{"name":"CeeDee Lamb","pos":"WR"},{"name":"Tucker Kraft","pos":"TE"},{"name":"Quentin Johnston","pos":"WR"}],"bReceives":[{"name":"Davante Adams","pos":"WR"},{"name":"Jake Ferguson","pos":"TE"},{"name":"Ashton Jeanty","pos":"RB"}]},{"season":"2025","week":8,"managerA":"joshjr11","managerB":"drjkay","aReceives":[{"name":"Justin Jefferson","pos":"WR"}],"bReceives":[{"name":"Emeka Egbuka","pos":"WR"}]},{"season":"2025","week":8,"managerA":"joshjr11","managerB":"drjkay","aReceives":[{"name":"Michael Carter","pos":"RB"},{"name":"Chase Brown","pos":"RB"}],"bReceives":[{"name":"Tetairoa McMillan","pos":"WR"},{"name":"Jacory Croskey-Merritt","pos":"RB"}]},{"season":"2025","week":10,"managerA":"AlastairL","managerB":"GSac","aReceives":[{"name":"Khalil Shakir","pos":"WR"}],"bReceives":[{"name":"Cam Little","pos":"K"}]},{"season":"2025","week":10,"managerA":"dpol","managerB":"sanfbe","aReceives":[{"name":"Jaylen Warren","pos":"RB"}],"bReceives":[{"name":"Zay Flowers","pos":"WR"}]},{"season":"2025","week":11,"managerA":"dpol","managerB":"drjkay","aReceives":[{"name":"Omarion Hampton","pos":"RB"}],"bReceives":[{"name":"Jaylen Warren","pos":"RB"}]},{"season":"2025","week":12,"managerA":"dpol","managerB":"GSac","aReceives":[{"name":"Jonathan Taylor","pos":"RB"},{"name":"Juwan Johnson","pos":"TE"},{"name":"Javonte Williams","pos":"RB"}],"bReceives":[{"name":"Jauan Jennings","pos":"WR"},{"name":"James Cook III","pos":"RB"},{"name":"Jahmyr Gibbs","pos":"RB"}]},{"season":"2025","week":13,"managerA":"dpol","managerB":"drjkay","aReceives":[{"name":"George Kittle","pos":"TE"},{"name":"Puka Nacua","pos":"WR"}],"bReceives":[{"name":"Jaxon Smith-Njigba","pos":"WR"},{"name":"Oronde Gadsden","pos":"TE"}]},{"season":"2025","week":13,"managerA":"dpol","managerB":"GSac","aReceives":[{"name":"Mike Evans","pos":"WR"},{"name":"Wan'Dale Robinson","pos":"WR"}],"bReceives":[{"name":"Christian Watson","pos":"WR"},{"name":"Tampa Bay Buccaneers","pos":"DEF"}]},{"season":"2025","week":13,"managerA":"dpol","managerB":"saulgoat","aReceives":[{"name":"Bucky Irving","pos":"RB"}],"bReceives":[{"name":"Javonte Williams","pos":"RB"}]},{"season":"2026","week":5,"managerA":"AlastairL","managerB":"GSac","aReceives":[{"name":"Travis Kelce","pos":"TE"},{"name":"Marvin Harrison Jr.","pos":"WR"}],"bReceives":[{"name":"Caleb Williams","pos":"QB"}]},{"season":"2026","week":5,"managerA":"dpol","managerB":"GSac","aReceives":[{"name":"DJ Moore","pos":"WR"},{"name":"Justin Jefferson","pos":"WR"}],"bReceives":[{"name":"Aaron Jones Sr.","pos":"RB"},{"name":"A.J. Brown","pos":"WR"},{"name":"Rashee Rice","pos":"WR"}]}];
+const TRANSACTIONS_DATA = null;
 const PLAYER_SCORES = null;
 const LORE_DATA = null;
 
@@ -541,6 +541,159 @@ return { games: rows, seasons: seasonRows, records: buildRecords(rows, seasonRow
 
 
 
+function ensureDerived(facts) {
+if (facts._derived) return facts._derived;
+const byWeek = {}, byGame = {};
+facts.games.forEach(function(r) {
+if (r.status !== 'final' || r.bye) return;
+const k = r.season + '|' + r.week;
+(byWeek[k] = byWeek[k] || []).push(r);
+(byGame[r.gameId] = byGame[r.gameId] || []).push(r);
+});
+const weeks = [];
+Object.keys(byWeek).forEach(function(k) {
+const rs = byWeek[k];
+const pfs = rs.map(function(r) { return r.pf; }).sort(function(a, b) { return a - b; });
+const n = pfs.length;
+const avg = factRound(pfs.reduce(function(t, v) { return t + v; }, 0) / n);
+const median = factRound(n % 2 ? pfs[(n - 1) / 2] : (pfs[n / 2 - 1] + pfs[n / 2]) / 2);
+const hi = rs.reduce(function(b, r) { return !b || r.pf > b.pf ? r : b; }, null);
+const lo = rs.reduce(function(b, r) { return !b || r.pf < b.pf ? r : b; }, null);
+rs.forEach(function(r) { r.weekAvg = avg; r.vsAvg = factRound(r.pf - avg); });
+weeks.push({
+season: rs[0].season, week: rs[0].week,
+phase: rs.every(function(r) { return r.phase === 'regular'; }) ? 'regular' : 'playoff',
+teams: n, avg: avg, median: median, high: hi.pf, highManager: hi.manager, low: lo.pf, lowManager: lo.manager,
+spread: factRound(hi.pf - lo.pf), combinedHigh: Math.max.apply(null, rs.map(function(r) { return r.combined; })),
+});
+});
+Object.keys(byGame).forEach(function(g) {
+const pair = byGame[g];
+pair.forEach(function(r) { const o = pair.find(function(x) { return x !== r; }); r.oppWeekRank = o ? o.weekRank : null; });
+});
+weeks.sort(function(a, b) { return a.season.localeCompare(b.season) || a.week - b.week; });
+Object.defineProperty(facts, '_derived', { value: { weeks: weeks }, enumerable: false });
+return facts._derived;
+}
+
+
+function buildTradeRows(transactions) {
+const out = [];
+(Array.isArray(transactions) ? transactions : []).forEach(function(t, i) {
+const names = function(l) { return (l || []).map(function(p) { return p.name + (p.pos ? ' (' + p.pos + ')' : ''); }).join(', '); };
+const sides = [[t.managerA, t.managerB, t.aReceives, t.bReceives], [t.managerB, t.managerA, t.bReceives, t.aReceives]];
+sides.forEach(function(s) {
+out.push({ tradeId: 't' + i, season: String(t.season), week: t.week, manager: canonical(s[0]), partner: canonical(s[1]),
+received: names(s[2]), gave: names(s[3]), receivedCount: (s[2] || []).length, gaveCount: (s[3] || []).length });
+});
+});
+return out;
+}
+
+
+const CATALOG = {
+games: {
+about: 'one row per manager per game (two rows per game). unique:true keeps one row per game (the winner side).',
+cols: {
+manager: ['mgr', 'the manager'], opponent: ['mgr', 'their opponent'], pf: ['num', 'points scored'], pa: ['num', 'points conceded'],
+result: ['cat', 'W, L or T for the manager'], margin: ['num', 'pf minus pa'], combined: ['num', 'pf plus pa (the game total)'],
+season: ['cat', 'season year as a string, e.g. "2024"'], week: ['int', 'week number'], phase: ['cat', 'regular, playoff or consolation'],
+weekRank: ['int', '1 = top score of that regular-season week'], oppWeekRank: ['int', "the opponent's weekRank"],
+weekAvg: ['num', 'league average score that week'], vsAvg: ['num', 'pf minus weekAvg (above/below the league average)'],
+allPlayW: ['int', 'other scores beaten that week'], allPlayL: ['int', 'other scores lost to that week'], benchPts: ['num', 'points left on the bench'],
+},
+dims: ['manager', 'opponent', 'season', 'week', 'phase', 'result'],
+show: ['manager', 'pf', 'opponent', 'pa', 'result', 'margin', 'season', 'week', 'phase'],
+},
+seasons: {
+about: 'one row per manager per season (final standings; the current season is in progress).',
+cols: {
+manager: ['mgr', 'the manager'], season: ['cat', 'season year'], rank: ['int', 'final standings rank'], wins: ['int', 'wins'], losses: ['int', 'losses'], ties: ['int', 'ties'],
+pf: ['num', 'regular-season points for'], pa: ['num', 'regular-season points against'], pfAvg: ['num', 'points per game'],
+expectedWins: ['num', 'all-play expected wins'], luck: ['num', 'wins minus expectedWins'], playoffFinish: ['cat', 'champion, runner-up, semi, consolation or missed'],
+},
+dims: ['manager', 'season', 'playoffFinish'],
+show: ['manager', 'season', 'rank', 'wins', 'losses', 'pf', 'pa', 'playoffFinish'],
+},
+weeks: {
+about: 'one row per league week: the whole league\'s scoring that week.',
+cols: {
+season: ['cat', 'season year'], week: ['int', 'week number'], phase: ['cat', 'regular or playoff'], teams: ['int', 'teams that scored'],
+avg: ['num', 'league average score'], median: ['num', 'median score'], high: ['num', 'top score'], highManager: ['mgr', 'who scored it'],
+low: ['num', 'lowest score'], lowManager: ['mgr', 'who scored it'], spread: ['num', 'high minus low'], combinedHigh: ['num', 'highest game total that week'],
+},
+dims: ['season', 'phase', 'highManager', 'lowManager'],
+show: ['season', 'week', 'avg', 'high', 'highManager', 'low', 'lowManager'],
+},
+players: {
+about: 'one row per player per manager per season (points while on that roster).',
+cols: {
+player: ['text', 'player name'], pos: ['cat', 'QB, RB, WR, TE, K or DEF'], manager: ['mgr', 'the manager'], season: ['cat', 'season year'],
+games: ['int', 'games started'], pts: ['num', 'points scored'], avg: ['num', 'points per game'], best: ['num', 'best single game'],
+},
+dims: ['manager', 'pos', 'season', 'player'],
+show: ['player', 'pos', 'manager', 'season', 'games', 'pts', 'avg', 'best'],
+},
+trades: {
+about: 'one row per side of each trade.',
+cols: {
+season: ['cat', 'season year'], week: ['int', 'week'], manager: ['mgr', 'the manager'], partner: ['mgr', 'who they traded with'],
+received: ['text', 'players received'], gave: ['text', 'players sent'], receivedCount: ['int', 'players received'], gaveCount: ['int', 'players sent'],
+},
+dims: ['manager', 'partner', 'season'],
+show: ['season', 'week', 'manager', 'partner', 'received', 'gave'],
+},
+};
+
+const AGGS = ['sum', 'avg', 'max', 'min'];
+const AGG_LABEL = { sum: 'total', avg: 'avg', max: 'max', min: 'min' };
+const FILTER_OPS = ['=', '!=', '>', '>=', '<', '<='];
+
+
+function colMeta(c) {
+if (COLUMNS[c]) return COLUMNS[c];
+const m = /^([A-Za-z]+)_(sum|avg|max|min)$/.exec(String(c));
+if (m) {
+const base = COLUMNS[m[1]] || { label: m[1], type: 'pts' };
+const t = base.type === 'int' && m[2] !== 'avg' ? 'int' : 'pts';
+return { label: base.label + ' ' + AGG_LABEL[m[2]], type: t };
+}
+return { label: c, type: 'text' };
+}
+
+function numericCol(table, c) { const d = CATALOG[table] && CATALOG[table].cols[c]; return !!d && (d[0] === 'num' || d[0] === 'int'); }
+
+
+function describeScope(spec) {
+const w = spec.where || {};
+const parts = [];
+if (spec.table === 'games' || spec.table === 'weeks' || spec.table === 'record') {
+parts.push({ regular: 'Regular season', playoff: 'Playoffs', consolation: 'Consolation', all: 'All games' }[w.phase] || 'Regular season');
+if (spec.table !== 'weeks') parts.push(w.status === 'any' ? 'final + live' : w.status === 'live' ? 'live games' : 'final games');
+}
+if (spec.table === 'players' && w.positions) parts.push(w.positions.join('/'));
+parts.push(w.seasons ? w.seasons.join(', ') : 'all seasons');
+if (w.weeks) parts.push('week ' + w.weeks.join(', '));
+if (w.managers) parts.push(w.managers.map(function(h) { return distinctName(h); }).join(', '));
+if (w.opponents) parts.push('v ' + w.opponents.map(function(h) { return distinctName(h); }).join(', '));
+if (w.result) parts.push({ W: 'wins', L: 'losses', T: 'ties' }[w.result]);
+(w.filters || []).forEach(function(f) {
+parts.push(colMeta(f.col).label + ' ' + f.op + ' ' + (colMeta(f.col).type === 'mgr' ? distinctName(f.value) : f.value));
+});
+if (spec.unique) parts.push('one row per game');
+return parts.join(' · ');
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -588,9 +741,15 @@ player: { label: 'Player', type: 'text' }, pos: { label: 'Pos', type: 'text' }, 
 avg: { label: 'Avg', type: 'pts' }, best: { label: 'Best', type: 'pts' },
 type: { label: 'Streak', type: 'text' }, length: { label: 'Len', type: 'int' }, count: { label: 'Count', type: 'int' },
 from: { label: 'From', type: 'text' }, to: { label: 'To', type: 'text' },
+weekAvg: { label: 'Wk avg', type: 'pts' }, vsAvg: { label: '+/− avg', type: 'pts' }, oppWeekRank: { label: 'Opp rank', type: 'int' },
+allPlayW: { label: 'AP W', type: 'int' }, allPlayL: { label: 'AP L', type: 'int' }, teams: { label: 'Teams', type: 'int' },
+median: { label: 'Median', type: 'pts' }, high: { label: 'High', type: 'pts' }, highManager: { label: 'Top scorer', type: 'mgr' },
+low: { label: 'Low', type: 'pts' }, lowManager: { label: 'Low scorer', type: 'mgr' }, spread: { label: 'Spread', type: 'pts' },
+combinedHigh: { label: 'Top total', type: 'pts' }, partner: { label: 'With', type: 'mgr' }, received: { label: 'Got', type: 'text' },
+gave: { label: 'Gave', type: 'text' }, receivedCount: { label: 'Got #', type: 'int' }, gaveCount: { label: 'Gave #', type: 'int' },
 };
 
-const SPEC_TABLES = ['games', 'seasons', 'players', 'record'];
+const SPEC_TABLES = ['games', 'seasons', 'players', 'record', 'weeks', 'trades'];
 const SPEC_GROUPS = ['', 'manager', 'opponent', 'season', 'manager,season', 'week', 'manager,opponent'];
 const SPEC_SELECT = ['games', 'wins', 'losses', 'ties', 'winPct', 'pf_sum', 'pf_avg', 'pf_max', 'pf_min', 'pa_sum', 'pa_avg', 'margin_avg', 'topScoreWeeks'];
 const GAME_COLS = ['manager', 'pf', 'opponent', 'pa', 'result', 'margin', 'combined', 'season', 'week', 'phase', 'weekRank', 'benchPts'];
@@ -602,7 +761,7 @@ const PLAYER_COLS = ['player', 'pos', 'manager', 'season', 'games', 'pts', 'avg'
 function validateSpec(raw, facts) {
 if (!raw || typeof raw !== 'object') return { ok: false, error: 'not an object' };
 if (raw.table === 'none' || raw.type === 'none') return { ok: false, error: 'none' };
-if (raw.v !== 2) return { ok: false, error: 'not a v2 spec' };
+if (raw.v !== 2 && raw.v !== 3) return { ok: false, error: 'not a v2/v3 spec' };
 if (SPEC_TABLES.indexOf(raw.table) === -1) return { ok: false, error: 'unknown table ' + raw.table };
 const handles = Object.keys(NAMES);
 const seasonsKnown = {};
@@ -637,6 +796,7 @@ if (w.gameIds != null) {
 if (!Array.isArray(w.gameIds) || w.gameIds.some(function(g) { return !/^\d{4}-\d{1,2}-(m\d+|bye-[A-Za-z0-9_]+)$/.test(String(g)); })) return { ok: false, error: 'bad gameIds' };
 if (w.gameIds.length) where.gameIds = w.gameIds.map(String);
 }
+
 where.phase = w.phase == null ? 'regular' : w.phase;
 if (['regular', 'playoff', 'consolation', 'all'].indexOf(where.phase) === -1) return { ok: false, error: 'bad phase' };
 if (w.result != null) { if (['W', 'L', 'T'].indexOf(w.result) === -1) return { ok: false, error: 'bad result' }; where.result = w.result; }
@@ -659,16 +819,63 @@ if (RECORD_NAMES.indexOf(raw.record) === -1) return { ok: false, error: 'unknown
 spec.record = raw.record;
 if (raw.top === true) spec.top = true; // ranked list ("top 10") instead of the record holder(s)
 }
-const gb = Array.isArray(raw.groupBy) ? raw.groupBy.join(',') : '';
-if (SPEC_GROUPS.indexOf(gb) === -1) return { ok: false, error: 'bad groupBy' };
-if (gb && raw.table !== 'games') return { ok: false, error: 'groupBy only on games' };
-spec.groupBy = gb ? gb.split(',') : [];
-if (raw.select != null) {
-if (!Array.isArray(raw.select) || raw.select.some(function(c) { return SPEC_SELECT.indexOf(c) === -1; })) return { ok: false, error: 'bad select' };
+
+const cat = CATALOG[raw.table];
+if (w.filters != null) {
+if (!cat || !Array.isArray(w.filters) || w.filters.length > 6) return { ok: false, error: 'bad filters' };
+const fs = [];
+for (let i = 0; i < w.filters.length; i++) {
+const f = w.filters[i] || {};
+const d = cat.cols[f.col];
+if (!d) return { ok: false, error: 'bad filter column ' + f.col };
+if (FILTER_OPS.indexOf(f.op) === -1) return { ok: false, error: 'bad filter op ' + f.op };
+let v = f.value;
+if (d[0] === 'num' || d[0] === 'int') { v = Number(v); if (!isFinite(v)) return { ok: false, error: 'filter on ' + f.col + ' needs a number' }; }
+else {
+if (f.op !== '=' && f.op !== '!=') return { ok: false, error: 'text filter ' + f.col + ' takes = or !=' };
+v = String(v);
+if (d[0] === 'mgr') { v = canonical(v); if (handles.indexOf(v) === -1) return { ok: false, error: 'unknown manager ' + f.value }; }
 }
-spec.select = spec.groupBy.length ? ((raw.select && raw.select.length) ? raw.select : ['games', 'wins', 'losses', 'ties', 'pf_sum', 'pf_avg']) : [];
-const allowedOrder = spec.groupBy.length ? spec.groupBy.concat(SPEC_SELECT)
-: (raw.table === 'games' ? GAME_COLS : raw.table === 'seasons' ? SEASON_COLS : raw.table === 'players' ? PLAYER_COLS : []);
+fs.push({ col: f.col, op: f.op, value: v });
+}
+if (fs.length) where.filters = fs;
+}
+if (raw.unique === true) { if (raw.table !== 'games') return { ok: false, error: 'unique only on games' }; spec.unique = true; }
+
+const gbList = Array.isArray(raw.groupBy) ? raw.groupBy.map(String) : [];
+const gb = gbList.join(',');
+if (gbList.length) {
+if (raw.table === 'record') return { ok: false, error: 'no groupBy on records' };
+if (gbList.length > 2 || !cat || gbList.some(function(g) { return cat.dims.indexOf(g) === -1; })) {
+if (raw.table !== 'games' || SPEC_GROUPS.indexOf(gb) === -1) return { ok: false, error: 'bad groupBy ' + gb };
+}
+}
+spec.groupBy = gbList;
+
+const okSelect = function(c) {
+if (c === 'count') return true;
+if (raw.table === 'games' && SPEC_SELECT.indexOf(c) !== -1) return true;
+const m = /^([A-Za-z]+)_(sum|avg|max|min)$/.exec(String(c));
+return !!m && numericCol(raw.table, m[1]);
+};
+if (raw.select != null) {
+if (!Array.isArray(raw.select) || raw.select.length > 8 || raw.select.some(function(c) { return !okSelect(c); })) {
+const bad = Array.isArray(raw.select) ? raw.select.filter(function(c) { return !okSelect(c); }).join(', ') : 'not a list';
+return { ok: false, error: 'bad select ' + bad };
+}
+}
+spec.select = spec.groupBy.length ? ((raw.select && raw.select.length) ? raw.select.slice() : (raw.table === 'games' ? ['games', 'wins', 'losses', 'ties', 'pf_sum', 'pf_avg'] : ['count'])) : [];
+if (raw.having != null) {
+if (!spec.groupBy.length || !Array.isArray(raw.having) || raw.having.length > 4) return { ok: false, error: 'bad having' };
+spec.having = [];
+for (let i = 0; i < raw.having.length; i++) {
+const h = raw.having[i] || {};
+if (spec.select.indexOf(h.col) === -1 || FILTER_OPS.indexOf(h.op) === -1 || !isFinite(Number(h.value))) return { ok: false, error: 'bad having ' + h.col };
+spec.having.push({ col: h.col, op: h.op, value: Number(h.value) });
+}
+}
+const allowedOrder = spec.groupBy.length ? spec.groupBy.concat(spec.select).concat(raw.table === 'games' ? SPEC_SELECT : [])
+: (cat ? Object.keys(cat.cols) : []);
 spec.orderBy = [];
 if (raw.orderBy != null) {
 if (!Array.isArray(raw.orderBy)) return { ok: false, error: 'orderBy must be a list' };
@@ -680,7 +887,7 @@ spec.orderBy.push({ col: o.col, dir: o.dir || 'desc' });
 }
 }
 const lim = raw.limit == null ? 10 : Number(raw.limit);
-if (!(lim >= 1 && lim <= 25)) return { ok: false, error: 'bad limit' };
+if (!(lim >= 1 && lim <= 25)) return { ok: false, error: 'bad limit (1 to 25)' };
 spec.limit = Math.floor(lim);
 return { ok: true, spec: spec };
 }
@@ -720,6 +927,24 @@ return true;
 });
 }
 
+function qCmp(a, op, b) {
+switch (op) {
+case '=': return a === b; case '!=': return a !== b; case '>': return a > b;
+case '>=': return a >= b; case '<': return a < b; case '<=': return a <= b;
+}
+return false;
+}
+function qApplyFilters(rows, filters) {
+if (!filters || !filters.length) return rows;
+return rows.filter(function(r) {
+return filters.every(function(f) { const v = r[f.col]; return v != null && qCmp(typeof f.value === 'number' ? Number(v) : String(v), f.op, f.value); });
+});
+}
+
+function qUnique(rows) {
+return rows.filter(function(r) { return r.result === 'W' || (r.result !== 'L' && (!r.opponent || r.manager < r.opponent)); });
+}
+
 function qAggregate(rows, groupBy, select) {
 const groups = {};
 const order = [];
@@ -745,49 +970,118 @@ pf_max: pfs.length ? Math.max.apply(null, pfs) : 0, pf_min: pfs.length ? Math.mi
 pa_sum: qRound(sum('pa')), pa_avg: rs.length ? qRound(sum('pa') / rs.length) : 0,
 margin_avg: rs.length ? qRound(sum('margin') / rs.length) : 0,
 topScoreWeeks: rs.filter(function(r) { return r.weekRank === 1; }).length,
+count: rs.length,
 };
-select.forEach(function(c) { out[c] = all[c]; });
+select.forEach(function(c) {
+if (c in all) { out[c] = all[c]; return; }
+const m = /^([A-Za-z]+)_(sum|avg|max|min)$/.exec(c);
+const vals = m ? rs.map(function(r) { return r[m[1]]; }).filter(function(v) { return typeof v === 'number' && isFinite(v); }) : [];
+if (!vals.length) { out[c] = null; return; }
+const tot = vals.reduce(function(t, v) { return t + v; }, 0);
+out[c] = m[2] === 'sum' ? qRound(tot) : m[2] === 'avg' ? qRound(tot / vals.length) : m[2] === 'max' ? Math.max.apply(null, vals) : Math.min.apply(null, vals);
+});
 return out;
 });
 }
 
 
 
-function runQuery(spec, facts, players) {
+function runQuery(spec, facts, players, transactions) {
+const out = runQueryRaw(spec, facts, players, transactions);
+out.scope = describeScope(spec);
+return out;
+}
+
+
+
+function qShowCols(table, spec, base) {
+const cols = (base || CATALOG[table].show).slice();
+const extra = [];
+(spec.orderBy || []).forEach(function(o) { extra.push(o.col); });
+((spec.where && spec.where.filters) || []).forEach(function(f) { extra.push(f.col); });
+extra.forEach(function(c) {
+if (cols.indexOf(c) !== -1 || !CATALOG[table].cols[c]) return;
+const at = cols.indexOf('season');
+if (at === -1) cols.push(c); else cols.splice(at, 0, c);
+});
+return cols;
+}
+
+function qBaseRows(spec, facts, players, transactions) {
 const w = spec.where;
 if (spec.table === 'games') {
-let rows = qGameFilter(spec, facts);
-if (spec.groupBy.length) {
-rows = qAggregate(rows, spec.groupBy, spec.select);
-rows = qSort(rows, spec.orderBy.length ? spec.orderBy : [{ col: 'wins', dir: 'desc' }, { col: 'pf_sum', dir: 'desc' }]);
-return { table: 'games', columns: spec.groupBy.concat(spec.select), rows: rows.slice(0, spec.limit), total: rows.length, spec: spec };
-}
-rows = qSort(rows, spec.orderBy.length ? spec.orderBy : [{ col: 'season', dir: 'desc' }, { col: 'week', dir: 'desc' }, { col: 'pf', dir: 'desc' }]);
-return { table: 'games', columns: ['manager', 'pf', 'opponent', 'pa', 'result', 'margin', 'season', 'week', 'phase'], rows: rows.slice(0, spec.limit), total: rows.length, spec: spec };
+ensureDerived(facts);
+let rows = qApplyFilters(qGameFilter(spec, facts), w.filters);
+return spec.unique ? qUnique(rows) : rows;
 }
 if (spec.table === 'seasons') {
-let rows = facts.seasons.filter(function(r) {
+return qApplyFilters(facts.seasons.filter(function(r) {
 if (w.managers && w.managers.indexOf(r.manager) === -1) return false;
 if (w.seasons && w.seasons.indexOf(r.season) === -1) return false;
 if (w.playoffFinish && r.playoffFinish !== w.playoffFinish) return false;
 return true;
-});
-rows = qSort(rows, spec.orderBy.length ? spec.orderBy : [{ col: 'season', dir: 'desc' }, { col: 'rank', dir: 'asc' }]);
-return { table: 'seasons', columns: ['manager', 'season', 'rank', 'wins', 'losses', 'pf', 'pa', 'playoffFinish'], rows: rows.slice(0, spec.limit), total: rows.length, spec: spec };
+}), w.filters);
+}
+if (spec.table === 'weeks') {
+return qApplyFilters(ensureDerived(facts).weeks.filter(function(r) {
+if (w.phase !== 'all' && r.phase !== (w.phase === 'consolation' ? 'playoff' : w.phase)) return false;
+if (w.seasons && w.seasons.indexOf(r.season) === -1) return false;
+if (w.weeks && w.weeks.indexOf(r.week) === -1) return false;
+if (w.managers && w.managers.indexOf(r.highManager) === -1 && w.managers.indexOf(r.lowManager) === -1) return false;
+return true;
+}), w.filters);
+}
+if (spec.table === 'trades') {
+const oneSide = !w.managers && !w.opponents && !spec.groupBy.length;
+const seen = {};
+return qApplyFilters(buildTradeRows(transactions).filter(function(r) {
+if (oneSide) { if (seen[r.tradeId]) return false; seen[r.tradeId] = true; }
+if (w.managers && w.managers.indexOf(r.manager) === -1) return false;
+if (w.opponents && w.opponents.indexOf(r.partner) === -1) return false;
+if (w.seasons && w.seasons.indexOf(r.season) === -1) return false;
+return true;
+}), w.filters);
 }
 if (spec.table === 'players') {
 const needle = w.player ? w.player.toLowerCase() : null;
 const by = (spec.orderBy[0] && spec.orderBy[0].col) || 'pts';
-const minGames = by === 'avg' ? 4 : 1;
-let rows = (players || []).filter(function(r) {
+const minGames = by === 'avg' && !spec.groupBy.length ? 4 : 1;
+return qApplyFilters((players || []).filter(function(r) {
 if (needle && String(r.player).toLowerCase().indexOf(needle) === -1) return false;
 if (w.positions && w.positions.indexOf(r.pos) === -1) return false;
 if (w.managers && w.managers.indexOf(canonical(r.manager)) === -1) return false;
 if (w.seasons && w.seasons.indexOf(String(r.season)) === -1) return false;
 return r.games >= minGames;
-}).map(function(r) { return Object.assign({}, r, { manager: canonical(r.manager), season: String(r.season) }); });
-rows = qSort(rows, spec.orderBy.length ? spec.orderBy : [{ col: 'pts', dir: 'desc' }]);
-return { table: 'players', columns: PLAYER_COLS, rows: rows.slice(0, spec.limit), total: rows.length, spec: spec };
+}).map(function(r) { return Object.assign({}, r, { manager: canonical(r.manager), season: String(r.season) }); }), w.filters);
+}
+return [];
+}
+
+const DEFAULT_ORDER = {
+games: [{ col: 'season', dir: 'desc' }, { col: 'week', dir: 'desc' }, { col: 'pf', dir: 'desc' }],
+seasons: [{ col: 'season', dir: 'desc' }, { col: 'rank', dir: 'asc' }],
+weeks: [{ col: 'season', dir: 'desc' }, { col: 'week', dir: 'desc' }],
+players: [{ col: 'pts', dir: 'desc' }],
+trades: [{ col: 'season', dir: 'desc' }, { col: 'week', dir: 'desc' }],
+};
+
+
+
+function runQueryRaw(spec, facts, players, transactions) {
+const w = spec.where;
+if (spec.table !== 'record') {
+let rows = qBaseRows(spec, facts, players, transactions);
+if (spec.groupBy.length) {
+rows = qAggregate(rows, spec.groupBy, spec.select);
+(spec.having || []).forEach(function(h) { rows = rows.filter(function(r) { return r[h.col] != null && qCmp(r[h.col], h.op, h.value); }); });
+const legacy = spec.table === 'games' && spec.select.indexOf('wins') !== -1 && spec.select.indexOf('pf_sum') !== -1;
+const dflt = legacy ? [{ col: 'wins', dir: 'desc' }, { col: 'pf_sum', dir: 'desc' }] : [{ col: spec.select[0], dir: 'desc' }];
+rows = qSort(rows, spec.orderBy.length ? spec.orderBy : dflt);
+return { table: spec.table, columns: spec.groupBy.concat(spec.select), rows: rows.slice(0, spec.limit), total: rows.length, spec: spec };
+}
+rows = qSort(rows, spec.orderBy.length ? spec.orderBy : DEFAULT_ORDER[spec.table]);
+const cols = spec.table === 'players' ? qShowCols('players', spec, PLAYER_COLS) : qShowCols(spec.table, spec);
+return { table: spec.table, columns: cols, rows: rows.slice(0, spec.limit), total: rows.length, spec: spec };
 }
 if (spec.table === 'record') {
 const scope = w.phase === 'all' ? 'all' : 'regular';
@@ -890,10 +1184,10 @@ const total = fmt2(rows[0].pf + rows[1].pf);
 if (!win) return nm(rows[0].manager) + ' and ' + nm(rows[1].manager) + ' tied ' + fmt2(rows[0].pf) + '–' + fmt2(rows[1].pf) + ' in ' + wkLabel(r) + ' (' + total + ' total).';
 return nm(win.manager) + ' ' + fmt2(win.pf) + ' – ' + fmt2(lose.pf) + ' ' + nm(lose.manager) + ' in ' + wkLabel(r) + ': ' + total + ' total points. ' + nm(win.manager) + ' won.';
 }
-if (result.table === 'games' && spec.groupBy.join(',') === 'manager,opponent' && rows.length === 1) {
+if (result.table === 'games' && spec.groupBy.join(',') === 'manager,opponent' && rows.length === 1 && r.wins != null) {
 return nm(r.manager) + ' is ' + r.wins + '–' + r.losses + (r.ties ? '–' + r.ties : '') + ' against ' + nm(r.opponent) + (w.phase === 'all' ? ' (all games)' : ' in the regular season') + (w.seasons ? ' (' + w.seasons.join(', ') + ')' : '') + '.';
 }
-if (result.table === 'games' && spec.groupBy.join(',') === 'manager' && rows.length === 1) {
+if (result.table === 'games' && spec.groupBy.join(',') === 'manager' && rows.length === 1 && r.wins != null && r.pf_sum != null) {
 return nm(r.manager) + ' is ' + r.wins + '–' + r.losses + (r.ties ? '–' + r.ties : '') + (w.seasons ? ' in ' + w.seasons.join(', ') : ' all-time') + (w.phase === 'all' ? ' (all games)' : ' in the regular season') + ', ' + fmt2(r.pf_sum) + ' points for.';
 }
 if (result.table === 'seasons' && rows.length === 1) {
@@ -910,8 +1204,82 @@ return nm(r.manager) + ' topped ' + wkLabel(r) + ' with ' + fmt2(r.pf) + ' again
 if (result.table === 'games' && !spec.groupBy.length && rows.length === 1) {
 return nm(r.manager) + ' ' + fmt2(r.pf) + ' – ' + fmt2(r.pa) + ' ' + nm(r.opponent) + ' in ' + wkLabel(r) + ' (' + (r.result === 'W' ? 'won' : r.result === 'L' ? 'lost' : r.result === 'T' ? 'tied' : 'in progress') + ').';
 }
+const ls = listSentence(spec, result);
+if (ls) return ls;
 if (ctx && ctx.title) return ctx.title + '.';
 return 'Here is what the data shows.';
+}
+
+
+function fmtVal(c, v) {
+if (v == null) return '—';
+const t = colMeta(c).type;
+if (t === 'mgr') return nm(v);
+if (t === 'pts') return fmt2(v);
+return String(v);
+}
+
+function metricCol(spec, result) {
+const o = spec.orderBy && spec.orderBy[0] && spec.orderBy[0].col;
+if (o && spec.groupBy.indexOf(o) === -1) return o;
+if (spec.groupBy.length) return spec.select[0];
+return o || { games: 'pf', weeks: 'avg', players: 'pts', seasons: 'pf', trades: null }[result.table];
+}
+function rowLabel(spec, result, r) {
+if (spec.groupBy.length) return spec.groupBy.map(function(g) { return fmtVal(g, r[g]); }).join(' ');
+switch (result.table) {
+case 'games': return nm(r.manager) + ' ' + fmt2(r.pf) + ' v ' + nm(r.opponent) + ' ' + fmt2(r.pa) + ' (' + r.season + ' wk ' + r.week + ')';
+case 'weeks': return r.season + ' week ' + r.week;
+case 'players': return r.player + ' (' + r.pos + ', ' + nm(r.manager) + ', ' + r.season + ')';
+case 'seasons': return nm(r.manager) + ' ' + r.season;
+case 'trades': return nm(r.manager) + ' got ' + (r.received || 'nothing') + ' from ' + nm(r.partner) + ' (' + r.season + ' wk ' + r.week + ')';
+}
+return '';
+}
+function listSentence(spec, result) {
+const rows = result.rows || [];
+if (!rows.length || result.table === 'record') return null;
+const m = metricCol(spec, result);
+const label = m ? colMeta(m).label : '';
+const chrono = m === 'season' || m === 'week' || (!m && result.table === 'trades');
+const val = function(r) {
+if (!m || chrono) return '';
+if (!spec.groupBy.length && result.table === 'games' && (m === 'pf' || m === 'pa')) return '';
+return (spec.groupBy.length ? '' : label + ' ') + fmtVal(m, r[m]);
+};
+const filtered = (spec.where.filters && spec.where.filters.length) || spec.unique;
+const noun = { games: spec.unique ? ['game', 'games'] : ['result', 'results'], weeks: ['week', 'weeks'], players: ['player', 'players'], seasons: ['season', 'seasons'], trades: ['trade side', 'trade sides'] }[result.table] || ['row', 'rows'];
+const lead = filtered && !spec.groupBy.length ? result.total + ' ' + noun[result.total === 1 ? 0 : 1] + ' match (' + result.scope + '). ' : '';
+const countOnly = spec.groupBy.length && m === 'count';
+const countNoun = { games: 'games', seasons: 'seasons', weeks: 'weeks', players: 'players', trades: 'trades' }[result.table];
+if (rows.length === 1) {
+const v = val(rows[0]);
+if (countOnly && spec.select.length === 1) return rowLabel(spec, result, rows[0]) + ': ' + rows[0].count + ' ' + (rows[0].count === 1 ? countNoun.replace(/s$/, '') : countNoun) + ' (' + result.scope + ').';
+if (spec.groupBy.length) return lead + rowLabel(spec, result, rows[0]) + ': ' + spec.select.map(function(c) { return colMeta(c).label + ' ' + fmtVal(c, rows[0][c]); }).join(', ') + ' (' + result.scope + ').';
+return lead + rowLabel(spec, result, rows[0]) + (v ? ' — ' + v : '') + '.';
+}
+const first = rows[0];
+const rest = rows.slice(1, 3).map(function(r) { const v = val(r); return rowLabel(spec, result, r) + (v ? ' (' + v.replace(label + ' ', '') + ')' : ''); });
+if (spec.groupBy.length) {
+return lead + rowLabel(spec, result, first) + ' leads' + (countOnly ? '' : ' on ' + label) + ' with ' + fmtVal(m, first[m]) + (countOnly ? ' ' + countNoun : '') + '; then ' + rest.join(' and ') + '.';
+}
+if (chrono) return lead + 'Most recent: ' + rowLabel(spec, result, first) + '.';
+const v = val(first);
+return lead + rowLabel(spec, result, first) + (v ? ' — ' + v : '') + ' tops the list; then ' + rest.join(' and ') + '.';
+}
+
+
+
+function derivedFacts(spec, result) {
+const rows = (result && result.rows) || [];
+const m = metricCol(spec, result);
+const out = [];
+if (!m || rows.length < 2 || typeof rows[0][m] !== 'number') return out;
+const vals = rows.map(function(r) { return r[m]; }).filter(function(v) { return typeof v === 'number'; });
+out.push({ label: 'gap between #1 and #2 on ' + colMeta(m).label, value: qRound(Math.abs(vals[0] - vals[1])) });
+out.push({ label: 'average ' + colMeta(m).label + ' of the shown rows', value: qRound(vals.reduce(function(t, v) { return t + v; }, 0) / vals.length) });
+out.push({ label: 'rows matching', value: result.total });
+return out;
 }
 
 
@@ -981,7 +1349,69 @@ return Object.assign({ v: 2, table: table, where: Object.assign({}, where || {})
 
 
 
+
+function thresholdRecipe(i, q) {
+const m = q.match(/\b(over|above|more than|at least|under|below|less than|fewer than)\s+(\d{2,3}(?:\.\d+)?)\b/i) || q.match(/\b(\d{2,3})\s?\+/);
+if (!m) return null;
+const n = Number(m.length > 2 ? m[2] : m[1]);
+const word = m.length > 2 ? m[1].toLowerCase() : 'at least';
+const op = { over: '>', above: '>', 'more than': '>', 'at least': '>=', under: '<', below: '<', 'less than': '<', 'fewer than': '<' }[word];
+const col = /\b(combined|game total|both teams|total (points|score) in a game)\b/i.test(q) ? 'combined' : /\b(margin|win(s|ning)? by|won by|lost by|beat \w+ by|by more than|by over)\b/i.test(q) ? 'margin' : 'pf';
+if (col === 'pf' && n < 50) return null;
+const where = Object.assign({}, i.where, { filters: [{ col: col, op: op, value: n }] });
+if (col === 'margin') where.result = 'W';
+else if (/\b(lost|loss|losses|losing)\b/i.test(q)) where.result = 'L';
+else if (/\b(won|wins?|winning)\b/i.test(q)) where.result = 'W';
+if (col === 'combined') return recipeSpec('games', where, { unique: true, orderBy: [{ col: 'combined', dir: op[0] === '<' ? 'asc' : 'desc' }], limit: 10 });
+return recipeSpec('games', where, { groupBy: ['manager'], select: ['count'], orderBy: [{ col: 'count', dir: 'desc' }], limit: 10 });
+}
+
+function againstRecipe(i, q) {
+const tail = q.split(/\bagainst\b/i)[1] || '';
+const opp = matchManagers(tail);
+if (opp.length === 1) {
+const where = Object.assign({}, i.where, { opponents: opp });
+if (where.managers && where.managers[0] === opp[0]) delete where.managers;
+return recipeSpec('games', where, { groupBy: ['manager'], select: ['games', 'pf_sum', 'pf_avg', 'wins', 'losses'], orderBy: [{ col: 'pf_sum', dir: 'desc' }], limit: 10 });
+}
+return recipeSpec('games', i.where, { groupBy: ['manager'], select: ['games', 'pa_sum', 'pa_avg'], orderBy: [{ col: 'pa_sum', dir: /\b(fewest|least|lowest|easiest)\b/i.test(q) ? 'asc' : 'desc' }], limit: 10 });
+}
+function weeksRecipe(i, q) {
+const where = Object.assign({}, i.where);
+delete where.managers;
+if (/\b(this|last) week\b/i.test(q)) { where.seasons = [i.cur.season]; where.weeks = [i.cur.lastFinalWeek]; }
+if (/\b(by|per|each|every) (season|year)\b/i.test(q)) {
+return recipeSpec('weeks', where, { groupBy: ['season'], select: ['avg_avg', 'high_max', 'low_min'], orderBy: [{ col: 'avg_avg', dir: 'desc' }] });
+}
+const low = /\b(lowest|worst|fewest|least|low)\b/i.test(q);
+const col = /\b(spread|gap|range)\b/i.test(q) ? 'spread' : /\b(top|high) scor(e|er)\b/i.test(q) ? 'high' : 'avg';
+return recipeSpec('weeks', where, { orderBy: [{ col: col, dir: low ? 'asc' : 'desc' }], limit: 5 });
+}
+
 const RECIPES = [
+{ id: 'threshold', re: /\b(over|above|more than|at least|under|below|less than|fewer than)\s+\d{2,3}\b|\b\d{2,3}\s?\+/i, not: /\b(average|avg)\b/i, make: thresholdRecipe },
+{ id: 'vs-avg-points', re: /\b(points|pts) (above|over|better than) (the )?(league |weekly )?(average|avg)\b|\bbest (relative to|against|vs\.?) (the )?average\b/i, make: function(i) { return recipeSpec('games', i.where, { groupBy: ['manager'], select: ['vsAvg_sum', 'vsAvg_avg', 'games'], orderBy: [{ col: 'vsAvg_sum', dir: 'desc' }] }); } },
+{ id: 'vs-avg', re: /\b(above|beat(s|en|ing)?|over|better than|higher than|outscor\w*|below|under|worse than) (the )?(league |weekly |week'?s )?(average|avg)\b/i, make: function(i, q) {
+const below = /\b(below|under|worse than)\b/i.test(q);
+return recipeSpec('games', Object.assign({}, i.where, { filters: [{ col: 'vsAvg', op: below ? '<' : '>', value: 0 }] }), { groupBy: ['manager'], select: ['count', 'vsAvg_avg'], orderBy: [{ col: 'count', dir: 'desc' }] });
+} },
+{ id: 'league-weeks', need: 'noMgr', re: /\b(league|weekly)[- ](average|avg|high|low|scoring)\b|\b(highest|lowest|best|worst)[- ]scoring weeks?\b|\b(whole|entire) league\b|\bleague[- ]wide\b|\baverage (score|points) (per|each|a) week\b/i, make: weeksRecipe },
+{ id: 'points-against', re: /\bpoints (scored )?against\b|\bmost pa\b|\b(toughest|hardest|easiest|unluckiest) schedule\b|\bconceded\b/i, make: againstRecipe },
+{ id: 'all-play', re: /\ball[- ]play\b/i, make: function(i) { return recipeSpec('games', i.where, { groupBy: ['manager'], select: ['allPlayW_sum', 'allPlayL_sum', 'wins', 'losses'], orderBy: [{ col: 'allPlayW_sum', dir: 'desc' }] }); } },
+{ id: 'titles', re: /\b(how many|most) (titles|championships|chips|rings|trophies)\b|\btitles? (count|tally)\b|\bchampionships? (by|per) manager\b/i, make: function(i) { return recipeSpec('seasons', { managers: i.where.managers, playoffFinish: 'champion' }, { groupBy: ['manager'], select: ['count'], orderBy: [{ col: 'count', dir: 'desc' }] }); } },
+{ id: 'playoff-apps', re: /\bplayoff (appearances|berths|trips)\b|\b(made|reached) the playoffs\b|\bmost playoffs\b/i, make: function(i) {
+return recipeSpec('seasons', { managers: i.where.managers, filters: [{ col: 'playoffFinish', op: '!=', value: 'missed' }] }, { groupBy: ['manager'], select: ['count'], orderBy: [{ col: 'count', dir: 'desc' }] });
+} },
+{ id: 'top-score-list', need: 'oneMgr', re: /\b(which|what) weeks?\b.*\b(top[- ]scor\w*|highest score|top of the week)\b|\btop[- ]scor(ed|er) weeks?\b/i, make: function(i) {
+return recipeSpec('games', Object.assign({}, i.where, { filters: [{ col: 'weekRank', op: '=', value: 1 }] }), { orderBy: [{ col: 'season', dir: 'desc' }, { col: 'week', dir: 'desc' }], limit: 25 });
+} },
+{ id: 'trades', need: 'any', re: /\btrades?\b|\btraded\b|\btrade (history|partners?)\b/i, not: /\btrade (value|verdict|calculator)\b|\bshould i\b/i, make: function(i, q) {
+const where = { seasons: i.where.seasons };
+if (i.mgrs.length) where.managers = [i.mgrs[0]];
+if (i.mgrs.length > 1) where.opponents = [i.mgrs[1]];
+if (/\b(most|how many|count|number of)\b/i.test(q)) return recipeSpec('trades', where, { groupBy: /\bwith|partner/i.test(q) && i.mgrs.length === 1 ? ['partner'] : ['manager'], select: ['count', 'receivedCount_sum'], orderBy: [{ col: 'count', dir: 'desc' }] });
+return recipeSpec('trades', where, { limit: 10 });
+} },
 { id: 'inLoss-high', re: /\b(most|highest|biggest|max(imum)?|best)\b.*\b(loss|losing|lost|defeat)\b|\b(scored|score) .*\b(still|and) (lost|lose)\b/i, make: function(i) { return recipeSpec('record', i.where, { record: 'highestScoreInLoss' }); } },
 { id: 'inLoss-low', re: /\b(lowest|fewest|least|worst)\b.*\b(loss|losing|lost|defeat)\b/i, make: function(i) { return recipeSpec('games', Object.assign({ result: 'L' }, i.where), { orderBy: [{ col: 'pf', dir: 'asc' }], limit: 5 }); } },
 { id: 'inWin-low', re: /\b(lowest|fewest|least|worst)\b.*\b(win|won|winning|victory)\b|\b(won|win) with (the )?(lowest|fewest|least)\b/i, make: function(i) { return recipeSpec('record', i.where, { record: 'lowestScoreInWin' }); } },
@@ -1027,6 +1457,8 @@ function recipeInfo(query, facts) {
 const mgrs = matchManagers(query);
 const years = (String(query).match(/\b20\d\d\b/g) || []).filter(function(y, i, a) { return a.indexOf(y) === i; });
 const cur = (facts && facts.current) || { season: years[0] || '', lastFinalWeek: 1 };
+if (!years.length && cur.season && /\b(this|current) (season|year)\b|\bso far this\b/i.test(query)) years.push(String(cur.season));
+if (!years.length && cur.season && /\blast (season|year)\b/i.test(query)) years.push(String(Number(cur.season) - 1));
 const where = {};
 if (mgrs.length === 1) where.managers = mgrs;
 if (years.length) where.seasons = years;
@@ -1035,10 +1467,44 @@ return { mgrs: mgrs, years: years, cur: cur, where: where };
 }
 
 
+
+const SYNONYMS = [
+[/\bmatch[- ]?ups?\b|\bmatch(es)?\b|\bfixtures?\b/gi, 'game'], [/\bpts\b/gi, 'points'], [/\bhigh[- ]?score\b/gi, 'highest score'],
+[/\blow[- ]?score\b/gi, 'lowest score'], [/\b(beaten|defeated)\b/gi, 'lost'], [/\bvictor(y|ies)\b/gi, 'win'],
+[/\b(greatest|largest)\b/gi, 'biggest'], [/\bpoorest\b/gi, 'worst'], [/\bbiggest score\b/gi, 'highest score'],
+[/\bscored the most\b/gi, 'most points'], [/\b(year|campaign)\b/gi, 'season'],
+];
+function normalizeQ(q) { let t = String(q || ''); SYNONYMS.forEach(function(p) { t = t.replace(p[0], p[1]); }); return t; }
+
+const POS_WORDS = [[/\b(qbs?|quarterbacks?)\b/i, 'QB'], [/\b(rbs?|running ?backs?)\b/i, 'RB'], [/\b(wrs?|wide receivers?|receivers?)\b/i, 'WR'],
+[/\b(tes?|tight ends?)\b/i, 'TE'], [/\b(kickers?|ks)\b/i, 'K'], [/\b(def|dst|defen[cs]es?)\b/i, 'DEF']];
+
+function playerPlan(q, info, n) {
+const pos = POS_WORDS.filter(function(p) { return p[0].test(q); }).map(function(p) { return p[1]; });
+const where = { seasons: info.where.seasons, managers: info.where.managers };
+if (pos.length) where.positions = pos;
+const avg = /\b(average|avg|per game|ppg)\b/i.test(q);
+if (/\bby position\b|\bpositional\b|\bpoints (from|by) each position\b/i.test(q)) {
+return recipeSpec('players', where, { groupBy: info.mgrs.length === 1 ? ['pos'] : ['manager', 'pos'], select: ['pts_sum', 'count'], orderBy: [{ col: 'pts_sum', dir: 'desc' }], limit: 25 });
+}
+if (!pos.length) return null;
+if (/\b(which|what) manager\b|\bby manager\b|\bmanagers?\b.*\bmost\b|\bmost\b.*\bpoints from\b/i.test(q) || (info.mgrs.length === 1 && /\b(total|points from|by season)\b/i.test(q))) {
+return recipeSpec('players', where, { groupBy: info.mgrs.length === 1 ? ['season'] : ['manager'], select: ['pts_sum', 'count'], orderBy: [{ col: 'pts_sum', dir: 'desc' }], limit: 10 });
+}
+if (/\b(best|top|highest|most|leading|elite)\b/i.test(q) || n) {
+return recipeSpec('players', where, { orderBy: [{ col: avg ? 'avg' : 'pts', dir: 'desc' }], limit: n || 10 });
+}
+return null;
+}
+
 function fastPlan(query, facts) {
-const q = String(query || '');
-if (/\b(wr|rb|qb|te|kicker|player|players|touchdowns?|position)\b/i.test(q)) return null; // player scoring → planner
+const q = normalizeQ(query);
 const n = topN(q);
+if (/\b(wr|rb|qb|te|kicker|player|players|touchdowns?|position|positional|quarterbacks?|running ?backs?|receivers?|tight ends?|defen[cs]es?)s?\b/i.test(q)) {
+const ps = playerPlan(q, recipeInfo(q, facts), n);
+if (ps) ps._recipe = 'players';
+return ps; // else player scoring → planner
+}
 
 let qm = n && !/\b(highest|lowest|biggest|largest|smallest|most|fewest|least|best|worst|closest|longest|narrowest)\b/i.test(q)
 ? q.replace(/\btop[- ]?(\d{1,2}|[a-z]+)\b/i, 'highest') : q;
@@ -1049,6 +1515,7 @@ const r = RECIPES[k];
 if (r.need === 'oneMgr' && info.mgrs.length !== 1) continue;
 if (r.need === 'twoMgr' && info.mgrs.length < 2) continue;
 if (r.need === 'oneMgrYear' && !(info.mgrs.length === 1 && info.years.length)) continue;
+if (r.need === 'noMgr' && info.mgrs.length) continue;
 if (!r.need && info.mgrs.length >= 2) continue; // two names → only the H2H recipes
 if (!r.re.test(qm)) continue;
 if (r.not && r.not.test(qm)) continue;
@@ -1205,7 +1672,7 @@ table: result,
 };
 }
 
-const CLARIFY = "Which stat do you mean? For example: “Top 10 combined scores”, “Most points in a loss”, “Biggest blowout”, “Dan vs Josh” or “Longest win streak”.";
+const CLARIFY = "Which stat do you mean? For example: “Top 10 combined scores”, “Who beats the league average most?”, “How many times has Dan scored over 150?”, “Dan vs Josh” or “Best RBs this season”.";
 const CANT_ANSWER = "I can't answer that one from the league data, and I won't guess a number. Try: “Most points in a loss?”, “Dan vs Josh”, “Lev's record in 2024”, “Current standings”, “This week's scores” or “Longest win streak”.";
 
 
@@ -1216,33 +1683,71 @@ return [cols.join('|')].concat(rows.map(function(r) {
 return cols.map(function(c) {
 const v = r[c];
 if (v == null) return '';
-if ((COLUMNS[c] || {}).type === 'mgr') return nm(v);
-if ((COLUMNS[c] || {}).type === 'pts') return fmt2(v);
+if (colMeta(c).type === 'mgr') return nm(v);
+if (colMeta(c).type === 'pts') return fmt2(v);
 return String(v);
 }).join('|');
 })).join('\n');
 }
 
-function plannerPrompt(query, ctx) {
+
+const PLANNER_EXAMPLES = [
+['How many times has Dan scored over 150?', { v: 3, table: 'games', where: { managers: ['dpol'], filters: [{ col: 'pf', op: '>', value: 150 }] }, groupBy: ['manager'], select: ['count'] }],
+['Who beats the league average most often in 2025?', { v: 3, table: 'games', where: { seasons: ['2025'], filters: [{ col: 'vsAvg', op: '>', value: 0 }] }, groupBy: ['manager'], select: ['count'], orderBy: [{ col: 'count', dir: 'desc' }] }],
+['Games where both teams scored 140+', { v: 3, table: 'games', where: { filters: [{ col: 'pf', op: '>=', value: 140 }, { col: 'pa', op: '>=', value: 140 }] }, unique: true, orderBy: [{ col: 'combined', dir: 'desc' }] }],
+['Which week had the highest league average?', { v: 3, table: 'weeks', orderBy: [{ col: 'avg', dir: 'desc' }], limit: 5 }],
+['Who has scored the most points against Josh?', { v: 3, table: 'games', where: { opponents: ['joshjr11'] }, groupBy: ['manager'], select: ['pf_sum', 'games'], orderBy: [{ col: 'pf_sum', dir: 'desc' }] }],
+['Which manager got the most RB points in 2025?', { v: 3, table: 'players', where: { positions: ['RB'], seasons: ['2025'] }, groupBy: ['manager'], select: ['pts_sum'], orderBy: [{ col: 'pts_sum', dir: 'desc' }] }],
+['How many titles has each manager won?', { v: 3, table: 'seasons', where: { playoffFinish: 'champion' }, groupBy: ['manager'], select: ['count'] }],
+['Average winning margin by season', { v: 3, table: 'games', where: { result: 'W' }, groupBy: ['season'], select: ['margin_avg', 'count'], orderBy: [{ col: 'season', dir: 'asc' }] }],
+['Top 10 combined scores including playoffs', { v: 3, table: 'record', record: 'highestCombined', top: true, limit: 10, where: { phase: 'all' } }],
+['Who has made the most trades?', { v: 3, table: 'trades', groupBy: ['manager'], select: ['count'], orderBy: [{ col: 'count', dir: 'desc' }] }],
+["Dan's record when he scores under 120", { v: 3, table: 'games', where: { managers: ['dpol'], filters: [{ col: 'pf', op: '<', value: 120 }] }, groupBy: ['manager'], select: ['games', 'wins', 'losses'] }],
+['Who has won at least 5 games while scoring below the league average?', { v: 3, table: 'games', where: { result: 'W', filters: [{ col: 'vsAvg', op: '<', value: 0 }] }, groupBy: ['manager'], select: ['count'], having: [{ col: 'count', op: '>=', value: 5 }], orderBy: [{ col: 'count', dir: 'desc' }] }],
+];
+
+function catalogText() {
+return Object.keys(CATALOG).map(function(t) {
+const c = CATALOG[t];
+return t + ' — ' + c.about + '\n  columns: ' + Object.keys(c.cols).map(function(k) { return k + ' (' + c.cols[k][1] + ')'; }).join('; ') +
+'\n  groupBy dimensions: ' + c.dims.join(', ');
+}).join('\n');
+}
+
+function calendarText(facts) {
+const cur = (facts && facts.current) || {};
+const seasons = ((facts && facts.seasons) || []).map(function(r) { return r.season; }).filter(function(v, i, a) { return a.indexOf(v) === i; });
+return 'NOW: current season ' + cur.season + ', last completed week ' + cur.lastFinalWeek + (cur.liveWeek ? ', week ' + cur.liveWeek + ' in progress' : '') +
+'. Seasons in the data: ' + seasons.join(', ') + '. "this season" = ' + cur.season + '; "last week" = week ' + cur.lastFinalWeek + ' of ' + cur.season +
+'; "ever", "all-time", "in history" = no season filter.';
+}
+
+function plannerPrompt(query, ctx, facts, repair) {
 const handles = Object.keys(NAMES).map(function(h) { return h + '=' + distinctName(h); }).join(', ');
 const lines = [
-'You translate a fantasy-football question into a JSON query spec. Output ONLY valid JSON, nothing else.',
+'You translate a fantasy-football league question into a JSON query spec. Output ONLY valid JSON, nothing else.',
 'Manager handles (use these exact strings): ' + handles + '. benjlev=Lev, sanfbe=Sanford, allyl900 maps to AlastairL.',
-'Spec v2: { "v": 2, "table": "games"|"seasons"|"players"|"record", "record": "<name>" (table=record only),',
-'  "where": { "managers": [], "opponents": [], "seasons": ["2024"], "weeks": [1], "phase": "regular"|"playoff"|"consolation"|"all", "result": "W"|"L"|"T", "positions": ["WR"], "player": "substring", "playoffFinish": "champion"|"runner-up"|"semi"|"consolation"|"missed" },',
-'  "groupBy": [] | ["manager"] | ["opponent"] | ["season"] | ["manager","season"] | ["week"] | ["manager","opponent"],   (games table only)',
-'  "select": ["games","wins","losses","ties","winPct","pf_sum","pf_avg","pf_max","pf_min","pa_sum","pa_avg","margin_avg","topScoreWeeks"],',
-'  "orderBy": [{ "col": "pf", "dir": "desc" }], "limit": 10 }',
-'games rows are one per manager per game: manager, pf, opponent, pa, result (W/L/T from that manager\'s side), margin, combined, season, week, phase, weekRank. seasons rows: manager, season, rank, wins, losses, pf, pa, expectedWins, luck, playoffFinish. players rows: player, pos, manager, season, games, pts, avg, best.',
-'records: ' + RECORD_NAMES.join(', ') + '. A record spec returns only the holder(s); add "top": true and "limit": N for a ranked top-N list (e.g. top 10 combined scores = {"v":2,"table":"record","record":"highestCombined","top":true,"limit":10}).',
-'Defaults: phase regular, final games only, limit 10. If the question is not a data lookup (opinion, lore, definitions) output {"table":"none"}.',
-];
+calendarText(facts),
+'TABLES:\n' + catalogText(),
+'SPEC: { "v": 3, "table": "games"|"seasons"|"weeks"|"players"|"trades"|"record",',
+'  "where": { "managers": [], "opponents": [] (games: opponent; trades: partner), "seasons": ["2024"], "weeks": [1], "phase": "regular"|"playoff"|"consolation"|"all" (games/weeks; default regular), "status": "final"|"live"|"any" (default final), "result": "W"|"L"|"T", "positions": ["WR"], "player": "name substring", "playoffFinish": "champion"|"runner-up"|"semi"|"consolation"|"missed",',
+'    "filters": [{ "col": "<column of the table>", "op": "="|"!="|">"|">="|"<"|"<=", "value": number or string }] },',
+'  "unique": true (games only: one row per game instead of one per manager),',
+'  "groupBy": up to 2 groupBy dimensions of the table,',
+'  "select": (with groupBy) "count", "<numeric column>_<sum|avg|max|min>" e.g. "pf_sum", "vsAvg_avg", "pts_sum"; games also: "games","wins","losses","ties","winPct","topScoreWeeks",',
+'  "having": [{ "col": "<a select column>", "op": ">=", "value": 5 }],',
+'  "orderBy": [{ "col": "<column, or select column when grouped>", "dir": "desc"|"asc" }], "limit": 1..25 (default 10) }',
+'record table: "record": one of ' + RECORD_NAMES.join(', ') + '; returns only the holder(s) unless "top": true with "limit": N (ranked list). Records honour where.managers, where.seasons and where.phase.',
+'Prefer the simplest spec. A question about one game score uses games; a league-wide week question uses weeks. If the question is not a data lookup (opinion, lore, definitions, trade advice) output {"table":"none"}.',
+'EXAMPLES:',
+].concat(PLANNER_EXAMPLES.map(function(e) { return 'Q: ' + e[0] + '\n' + JSON.stringify(e[1]); }));
 if (ctx && ctx.lastQ) {
 lines.push('PREVIOUS QUESTION: ' + ctx.lastQ);
 if (ctx.lastSpec) lines.push('PREVIOUS SPEC: ' + JSON.stringify(ctx.lastSpec));
 if (ctx.lastResult) lines.push('PREVIOUS TOP ROWS:\n' + rowsPipe(ctx.lastResult, 3));
 }
 lines.push('QUESTION: ' + query);
+if (repair) lines.push('YOUR PREVIOUS SPEC WAS REJECTED: ' + repair.error + '\nPREVIOUS SPEC: ' + JSON.stringify(repair.raw) + '\nOutput a corrected spec (or {"table":"none"}).');
 return lines.join('\n');
 }
 
@@ -1256,7 +1761,10 @@ const parts = [
 ];
 if (ctx && ctx.lastQ) parts.push('PREVIOUS QUESTION: ' + ctx.lastQ + (ctx.lastResult ? '\nPREVIOUS TOP ROWS:\n' + rowsPipe(ctx.lastResult, 3) : ''));
 parts.push('QUESTION: ' + query);
+if (result && result.scope) parts.push('SCOPE: ' + result.scope);
 parts.push('ROWS (' + ((result && result.total) || 0) + ' total, top ' + Math.min(25, ((result && result.rows) || []).length) + ' shown):\n' + rowsPipe(result, 25));
+const df = result && result.spec ? derivedFacts(result.spec, result) : [];
+if (df.length) parts.push('COMPUTED (you may use these): ' + df.map(function(d) { return d.label + ' = ' + (Number.isInteger(d.value) ? d.value : fmt2(d.value)); }).join('; '));
 parts.push('Answer:');
 return parts.join('\n\n');
 }
@@ -1291,23 +1799,31 @@ let source = raw ? 'recipe' : 'planner';
 if (!raw && String(query || '').trim().split(/\s+/).length <= 2 && !matchManagers(query).length && !/\b20\d\d\b/.test(query)) {
 return { content: CLARIFY, table: null, ctx: ctx, source: 'clarify', modelCalls: 0 };
 }
+let v = raw ? validateSpec(raw, facts) : { ok: false, error: 'no spec' };
 if (!raw && deps.plan) {
-try { modelCalls++; raw = parseSpecJson(await deps.plan(plannerPrompt(query, ctx))); } catch (e) { raw = null; }
+try { modelCalls++; raw = parseSpecJson(await deps.plan(plannerPrompt(query, ctx, facts))); } catch (e) { raw = null; }
+v = validateSpec(raw, facts);
+
+if (!v.ok && v.error !== 'none' && raw) {
+log('planner spec rejected', v.error, raw);
+let fixed = null;
+try { modelCalls++; fixed = parseSpecJson(await deps.plan(plannerPrompt(query, ctx, facts, { error: v.error, raw: raw }))); } catch (e) { fixed = null; }
+if (fixed) { const v2 = validateSpec(fixed, facts); if (v2.ok || v2.error === 'none') { v = v2; raw = fixed; } }
 }
-const v = validateSpec(raw, facts);
+}
 if (!v.ok) {
 if (v.error !== 'none' || NUMERIC_HINT.test(query)) return { content: CANT_ANSWER, table: null, ctx: ctx, source: 'cant', modelCalls: modelCalls };
 return { content: null, table: null, ctx: ctx, source: 'chat', modelCalls: modelCalls };
 }
 const spec = v.spec;
-const result = runQuery(spec, facts, deps.players);
+const result = runQuery(spec, facts, deps.players, deps.transactions);
 const tmpl = templateSentence(spec, result);
 if (!result.rows.length) return { content: tmpl, table: null, ctx: next(spec, result), source: source, modelCalls: modelCalls };
 const single = result.table === 'record' || result.rows.length === 1 || (spec.where.gameIds && result.rows.length <= 2);
 if (single || !deps.narrate) return { content: tmpl, table: result, ctx: next(spec, result), source: source, modelCalls: modelCalls };
 let sentence = null;
 try { modelCalls++; sentence = String(await deps.narrate(narrationPrompt(query, ctx, result)) || '').trim(); } catch (e) { sentence = null; }
-const g = sentence ? numberGuard(sentence, result.rows) : { ok: false, bad: [] };
+const g = sentence ? numberGuard(sentence, result.rows, derivedFacts(spec, result).map(function(d) { return d.value; })) : { ok: false, bad: [] };
 if (!sentence || !g.ok || /fabricat|made (that|it) up|invented/i.test(sentence)) {
 log('number guard rejected narration', g.bad, sentence);
 sentence = tmpl;
@@ -1597,7 +2113,7 @@ return React.createElement(React.Fragment, null, out);
 
 
 function fmtCell(col, v) {
-const t = (COLUMNS[col] || {}).type;
+const t = colMeta(col).type;
 if (v == null || v === '') return '—';
 if (t === 'mgr') return distinctName(v);
 if (t === 'pts') return fmt2(v);
@@ -1611,7 +2127,7 @@ const cols = result.columns || [];
 return (
 <div className="rt-wrap">
 <table className="md-table rt">
-<thead><tr>{cols.map(function(c) { return <th key={c}>{(COLUMNS[c] || {}).label || c}</th>; })}</tr></thead>
+<thead><tr>{cols.map(function(c) { return <th key={c}>{colMeta(c).label}</th>; })}</tr></thead>
 <tbody>
 {result.rows.map(function(r, i) {
 return <tr key={r.id || (r.gameId ? r.gameId + i : i)}>{cols.map(function(c) {
@@ -1621,7 +2137,7 @@ return <td key={c}>{fmtCell(c, r[c])}</td>;
 })}
 </tbody>
 </table>
-{result.total > result.rows.length ? <div className="rt-more">{'Top ' + result.rows.length + ' of ' + result.total}</div> : null}
+<div className="rt-more">{(result.scope || '') + (result.total > result.rows.length ? (result.scope ? ' · ' : '') + 'top ' + result.rows.length + ' of ' + result.total : '')}</div>
 </div>
 );
 }
@@ -1862,7 +2378,7 @@ return 'You are the statistician for the Borehamwood Plancy League. Answer ONLY 
 async function answer(query, conversation, ctx) {
 const aiOn = ai !== 'off';
 const out = await answerStatQuestion(query, ctx, {
-facts: facts, players: playersData,
+facts: facts, players: playersData, transactions: transactionsData,
 plan: aiOn ? function(prompt) { return claudeCall([{ role: 'user', content: prompt }], 'Output only JSON.', { json: true }); } : null,
 narrate: aiOn ? function(prompt) { return claudeCall([{ role: 'user', content: prompt }], 'Reply in one or two plain sentences.'); } : null,
 log: function() { if (DEBUG) console.log.apply(console, ['[stats]'].concat([].slice.call(arguments))); },

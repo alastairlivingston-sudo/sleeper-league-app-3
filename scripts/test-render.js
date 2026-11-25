@@ -357,7 +357,7 @@ async function main() {
 // same engine the page runs (so 2026 games can't make this test stale).
 function expectedFromData() {
   const { loadPartials } = require("./load-partials");
-  const ctx = loadPartials(["15-facts.jsx", "20-query-v2.jsx"]);
+  const ctx = loadPartials(["15-facts.jsx", "18-tables.jsx", "20-query-v2.jsx"]);
   const hist = JSON.parse(fs.readFileSync(path.join(ROOT, "docs/data/history.json"), "utf8"));
   const facts = ctx.buildFactTable(hist, ctx.canonical);
   const r = facts.records.highestScoreInLoss.regular[0];
