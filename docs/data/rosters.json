@@ -262,6 +262,11 @@
   ],
   "A jeanty angle  (@saulgoat)": [
     {
+      "id": "10219",
+      "name": "Chris Rodriguez Jr.",
+      "pos": "RB"
+    },
+    {
       "id": "10859",
       "name": "Sam LaPorta",
       "pos": "TE"
@@ -300,11 +305,6 @@
       "id": "12545",
       "name": "Tyler Shough",
       "pos": "QB"
-    },
-    {
-      "id": "13424",
-      "name": "Seth McGowan",
-      "pos": "RB"
     },
     {
       "id": "3163",
@@ -348,11 +348,6 @@
     }
   ],
   "Lloyd of the Rings (@drjkay)": [
-    {
-      "id": "11579",
-      "name": "Audric Estime",
-      "pos": "RB"
-    },
     {
       "id": "12501",
       "name": "Matthew Golden",
@@ -432,14 +427,14 @@
       "id": "KC",
       "name": "Kansas City Chiefs",
       "pos": "DEF"
+    },
+    {
+      "id": "WAS",
+      "name": "Washington Commanders",
+      "pos": "DEF"
     }
   ],
   "Fourth and Goalda Meir (@AlastairL)": [
-    {
-      "id": "11564",
-      "name": "Drake Maye",
-      "pos": "QB"
-    },
     {
       "id": "11566",
       "name": "Jayden Daniels",
@@ -501,6 +496,11 @@
       "pos": "WR"
     },
     {
+      "id": "13301",
+      "name": "Antonio Williams",
+      "pos": "WR"
+    },
+    {
       "id": "13414",
       "name": "Kaelon Black",
       "pos": "RB"
@@ -526,8 +526,8 @@
       "pos": "WR"
     },
     {
-      "id": "BUF",
-      "name": "Buffalo Bills",
+      "id": "NYG",
+      "name": "New York Giants",
       "pos": "DEF"
     }
   ],
@@ -613,17 +613,12 @@
       "pos": "RB"
     },
     {
-      "id": "PIT",
-      "name": "Pittsburgh Steelers",
+      "id": "LAC",
+      "name": "Los Angeles Chargers",
       "pos": "DEF"
     }
   ],
   "Twinder Swindler (@sanfbe)": [
-    {
-      "id": "11563",
-      "name": "Bo Nix",
-      "pos": "QB"
-    },
     {
       "id": "11625",
       "name": "Adonai Mitchell",
@@ -693,6 +688,11 @@
       "id": "9226",
       "name": "De'Von Achane",
       "pos": "RB"
+    },
+    {
+      "id": "9758",
+      "name": "C.J. Stroud",
+      "pos": "QB"
     },
     {
       "id": "9997",

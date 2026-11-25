@@ -47536,11 +47536,6 @@
               "pts": 2
             },
             {
-              "n": "Drake Maye",
-              "pos": "QB",
-              "pts": 0
-            },
-            {
               "n": "Jonathon Brooks",
               "pos": "RB",
               "pts": 0
@@ -48244,7 +48239,6 @@
             "DEF": 0
           },
           "bp": {
-            "QB": 0,
             "RB": 0,
             "WR": 0,
             "TE": 0,
@@ -48304,11 +48298,6 @@
             }
           ],
           "bs": [
-            {
-              "n": "Bo Nix",
-              "pos": "QB",
-              "pts": 0
-            },
             {
               "n": "Tony Pollard",
               "pos": "RB",
@@ -48437,6 +48426,11 @@
               "n": "De'Von Achane",
               "pos": "RB",
               "pts": 0
+            },
+            {
+              "n": "C.J. Stroud",
+              "pos": "QB",
+              "pts": 0
             }
           ]
         },
@@ -48467,7 +48461,7 @@
           },
           "as": [
             {
-              "n": "Tyler Shough",
+              "n": "Jared Goff",
               "pos": "QB",
               "pts": 0
             },
@@ -48502,7 +48496,7 @@
               "pts": 0
             },
             {
-              "n": "David Montgomery",
+              "n": "Ashton Jeanty",
               "pos": "RB",
               "pts": 0
             },
@@ -48564,19 +48558,19 @@
               "pts": 0
             },
             {
-              "n": "BUF",
+              "n": "NYG",
               "pos": "DEF",
               "pts": 0
             }
           ],
           "ab": [
             {
-              "n": "Blake Corum",
+              "n": "Chris Rodriguez Jr.",
               "pos": "RB",
               "pts": 0
             },
             {
-              "n": "Ashton Jeanty",
+              "n": "Blake Corum",
               "pos": "RB",
               "pts": 0
             },
@@ -48586,13 +48580,13 @@
               "pts": 0
             },
             {
-              "n": "Seth McGowan",
-              "pos": "RB",
+              "n": "Tyler Shough",
+              "pos": "QB",
               "pts": 0
             },
             {
-              "n": "Jared Goff",
-              "pos": "QB",
+              "n": "David Montgomery",
+              "pos": "RB",
               "pts": 0
             },
             {
@@ -48607,11 +48601,6 @@
             }
           ],
           "bb": [
-            {
-              "n": "Drake Maye",
-              "pos": "QB",
-              "pts": 0
-            },
             {
               "n": "Jonathon Brooks",
               "pos": "RB",
@@ -48639,6 +48628,11 @@
             },
             {
               "n": "KC Concepcion Jr.",
+              "pos": "WR",
+              "pts": 0
+            },
+            {
+              "n": "Antonio Williams",
               "pos": "WR",
               "pts": 0
             },
@@ -48686,7 +48680,7 @@
               "pts": 0
             },
             {
-              "n": "Jonathan Taylor",
+              "n": "Jonah Coleman",
               "pos": "RB",
               "pts": 0
             },
@@ -48701,7 +48695,7 @@
               "pts": 0
             },
             {
-              "n": "Garrett Wilson",
+              "n": "Luther Burden III",
               "pos": "WR",
               "pts": 0
             },
@@ -48711,12 +48705,12 @@
               "pts": 0
             },
             {
-              "n": "Jonah Coleman",
+              "n": "Omarion Hampton",
               "pos": "RB",
               "pts": 0
             },
             {
-              "n": "Luther Burden III",
+              "n": "Mike Evans",
               "pos": "WR",
               "pts": 0
             },
@@ -48726,7 +48720,7 @@
               "pts": 0
             },
             {
-              "n": "KC",
+              "n": "WAS",
               "pos": "DEF",
               "pts": 0
             }
@@ -48778,25 +48772,15 @@
               "pts": 0
             },
             {
-              "n": "PIT",
+              "n": "LAC",
               "pos": "DEF",
               "pts": 0
             }
           ],
           "ab": [
             {
-              "n": "Audric Estime",
-              "pos": "RB",
-              "pts": 0
-            },
-            {
               "n": "Matthew Golden",
               "pos": "WR",
-              "pts": 0
-            },
-            {
-              "n": "Omarion Hampton",
-              "pos": "RB",
               "pts": 0
             },
             {
@@ -48815,7 +48799,12 @@
               "pts": 0
             },
             {
-              "n": "Mike Evans",
+              "n": "Jonathan Taylor",
+              "pos": "RB",
+              "pts": 0
+            },
+            {
+              "n": "Garrett Wilson",
               "pos": "WR",
               "pts": 0
             }
@@ -48947,7 +48936,7 @@
               "pts": 0
             },
             {
-              "n": "Chuba Hubbard",
+              "n": "Emmett Johnson",
               "pos": "RB",
               "pts": 0
             },
@@ -48967,8 +48956,8 @@
               "pts": 0
             },
             {
-              "n": "Jaylen Warren",
-              "pos": "RB",
+              "n": "George Pickens",
+              "pos": "WR",
               "pts": 0
             },
             {
@@ -49016,11 +49005,6 @@
           ],
           "bb": [
             {
-              "n": "Emmett Johnson",
-              "pos": "RB",
-              "pts": 0
-            },
-            {
               "n": "DJ Moore",
               "pos": "WR",
               "pts": 0
@@ -49031,8 +49015,13 @@
               "pts": 0
             },
             {
-              "n": "George Pickens",
-              "pos": "WR",
+              "n": "Chuba Hubbard",
+              "pos": "RB",
+              "pts": 0
+            },
+            {
+              "n": "Jaylen Warren",
+              "pos": "RB",
               "pts": 0
             },
             {
@@ -49089,6 +49078,6 @@
     }
   ],
   "meta": {
-    "generated": "2026-11-24T19:19:34.276Z"
+    "generated": "2026-11-25T18:25:22.582Z"
   }
 }
