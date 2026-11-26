@@ -2772,8 +2772,8 @@
           "playoff": false,
           "a": "benjlev",
           "b": "sanfbe",
-          "pa": 0,
-          "pb": 0
+          "pa": 26.4,
+          "pb": 14.5
         },
         {
           "week": 12,
@@ -2782,7 +2782,7 @@
           "playoff": false,
           "a": "saulgoat",
           "b": "AlastairL",
-          "pa": 0,
+          "pa": 27.5,
           "pb": 0
         },
         {
@@ -2803,7 +2803,7 @@
           "a": "joshjr11",
           "b": "dpol",
           "pa": 0,
-          "pb": 0
+          "pb": 1.4
         }
       ],
       "byes": [],
@@ -2852,6 +2852,6 @@
     }
   ],
   "meta": {
-    "generated": "2026-11-25T18:25:22.589Z"
+    "generated": "2026-11-26T18:07:15.315Z"
   }
 }

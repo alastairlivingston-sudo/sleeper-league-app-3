@@ -48228,32 +48228,43 @@
           "playoff": false,
           "a": "benjlev",
           "b": "sanfbe",
-          "pa": 0,
-          "pb": 0,
+          "pa": 26.4,
+          "pb": 14.5,
           "ap": {
             "QB": 0,
-            "RB": 0,
+            "RB": 14.5,
             "WR": 0,
-            "TE": 0,
+            "TE": 1.9,
             "K": 0,
-            "DEF": 0
+            "DEF": 10
           },
           "bp": {
+            "QB": 0,
             "RB": 0,
-            "WR": 0,
+            "WR": 14.5,
             "TE": 0,
             "K": 0,
             "DEF": 0
           },
           "as": [
             {
-              "n": "Joe Burrow",
-              "pos": "QB",
-              "pts": 0
+              "n": "Kyren Williams",
+              "pos": "RB",
+              "pts": 14.5
             },
             {
-              "n": "Breece Hall",
-              "pos": "RB",
+              "n": "DET",
+              "pos": "DEF",
+              "pts": 10
+            },
+            {
+              "n": "Tucker Kraft",
+              "pos": "TE",
+              "pts": 1.9
+            },
+            {
+              "n": "Joe Burrow",
+              "pos": "QB",
               "pts": 0
             },
             {
@@ -48272,32 +48283,32 @@
               "pts": 0
             },
             {
-              "n": "Mike Gesicki",
-              "pos": "TE",
-              "pts": 0
-            },
-            {
               "n": "Emeka Egbuka",
               "pos": "WR",
               "pts": 0
             },
             {
-              "n": "Josh Downs",
-              "pos": "WR",
+              "n": "Breece Hall",
+              "pos": "RB",
               "pts": 0
             },
             {
               "n": "Cairo Santos",
               "pos": "K",
               "pts": 0
-            },
-            {
-              "n": "DET",
-              "pos": "DEF",
-              "pts": 0
             }
           ],
           "bs": [
+            {
+              "n": "Christian Watson",
+              "pos": "WR",
+              "pts": 14.5
+            },
+            {
+              "n": "C.J. Stroud",
+              "pos": "QB",
+              "pts": 0
+            },
             {
               "n": "Tony Pollard",
               "pos": "RB",
@@ -48326,11 +48337,6 @@
             {
               "n": "Rhamondre Stevenson",
               "pos": "RB",
-              "pts": 0
-            },
-            {
-              "n": "Christian Watson",
-              "pos": "WR",
               "pts": 0
             },
             {
@@ -48366,6 +48372,11 @@
               "pts": 0
             },
             {
+              "n": "Mike Gesicki",
+              "pos": "TE",
+              "pts": 0
+            },
+            {
               "n": "Josh Jacobs",
               "pos": "RB",
               "pts": 0
@@ -48376,18 +48387,13 @@
               "pts": 0
             },
             {
-              "n": "Kyren Williams",
-              "pos": "RB",
-              "pts": 0
-            },
-            {
               "n": "Brian Robinson Jr.",
               "pos": "RB",
               "pts": 0
             },
             {
-              "n": "Tucker Kraft",
-              "pos": "TE",
+              "n": "Josh Downs",
+              "pos": "WR",
               "pts": 0
             }
           ],
@@ -48408,8 +48414,8 @@
               "pts": 0
             },
             {
-              "n": "Elic Ayomanor",
-              "pos": "WR",
+              "n": "Drew Stevens",
+              "pos": "K",
               "pts": 0
             },
             {
@@ -48426,11 +48432,6 @@
               "n": "De'Von Achane",
               "pos": "RB",
               "pts": 0
-            },
-            {
-              "n": "C.J. Stroud",
-              "pos": "QB",
-              "pts": 0
             }
           ]
         },
@@ -48441,11 +48442,11 @@
           "playoff": false,
           "a": "saulgoat",
           "b": "AlastairL",
-          "pa": 0,
+          "pa": 27.5,
           "pb": 0,
           "ap": {
             "QB": 0,
-            "RB": 0,
+            "RB": 27.5,
             "WR": 0,
             "TE": 0,
             "K": 0,
@@ -48461,17 +48462,17 @@
           },
           "as": [
             {
+              "n": "Blake Corum",
+              "pos": "RB",
+              "pts": 27.5
+            },
+            {
               "n": "Jared Goff",
               "pos": "QB",
               "pts": 0
             },
             {
               "n": "Cam Skattebo",
-              "pos": "RB",
-              "pts": 0
-            },
-            {
-              "n": "Ollie Gordon II",
               "pos": "RB",
               "pts": 0
             },
@@ -48491,12 +48492,12 @@
               "pts": 0
             },
             {
-              "n": "DeVonta Smith",
-              "pos": "WR",
+              "n": "Ashton Jeanty",
+              "pos": "RB",
               "pts": 0
             },
             {
-              "n": "Ashton Jeanty",
+              "n": "Ollie Gordon II",
               "pos": "RB",
               "pts": 0
             },
@@ -48570,11 +48571,6 @@
               "pts": 0
             },
             {
-              "n": "Blake Corum",
-              "pos": "RB",
-              "pts": 0
-            },
-            {
               "n": "Chimere Dike",
               "pos": "WR",
               "pts": 0
@@ -48587,6 +48583,11 @@
             {
               "n": "David Montgomery",
               "pos": "RB",
+              "pts": 0
+            },
+            {
+              "n": "DeVonta Smith",
+              "pos": "WR",
               "pts": 0
             },
             {
@@ -48781,7 +48782,7 @@
             {
               "n": "Matthew Golden",
               "pos": "WR",
-              "pts": 0
+              "pts": 4.4
             },
             {
               "n": "Kyle Monangai",
@@ -48811,6 +48812,11 @@
           ],
           "bb": [
             {
+              "n": "Konata Mumpfield",
+              "pos": "WR",
+              "pts": 8.9
+            },
+            {
               "n": "Ladd McConkey",
               "pos": "WR",
               "pts": 0
@@ -48826,18 +48832,13 @@
               "pts": 0
             },
             {
-              "n": "Konata Mumpfield",
+              "n": "Ted Hurst III",
               "pos": "WR",
               "pts": 0
             },
             {
               "n": "Deebo Samuel Sr.",
               "pos": "WR",
-              "pts": 0
-            },
-            {
-              "n": "Tyler Allgeier",
-              "pos": "RB",
               "pts": 0
             },
             {
@@ -48855,7 +48856,7 @@
           "a": "joshjr11",
           "b": "dpol",
           "pa": 0,
-          "pb": 0,
+          "pb": 1.4,
           "ap": {
             "QB": 0,
             "RB": 0,
@@ -48866,7 +48867,7 @@
           },
           "bp": {
             "QB": 0,
-            "RB": 0,
+            "RB": 1.4,
             "WR": 0,
             "TE": 0,
             "K": 0,
@@ -48884,7 +48885,7 @@
               "pts": 0
             },
             {
-              "n": "Kenneth Walker III",
+              "n": "Bucky Irving",
               "pos": "RB",
               "pts": 0
             },
@@ -48909,8 +48910,8 @@
               "pts": 0
             },
             {
-              "n": "Bucky Irving",
-              "pos": "RB",
+              "n": "Drake London",
+              "pos": "WR",
               "pts": 0
             },
             {
@@ -48926,13 +48927,13 @@
           ],
           "bs": [
             {
-              "n": "Patrick Mahomes",
-              "pos": "QB",
-              "pts": 0
-            },
-            {
               "n": "Jahmyr Gibbs",
               "pos": "RB",
+              "pts": 1.4
+            },
+            {
+              "n": "Patrick Mahomes",
+              "pos": "QB",
               "pts": 0
             },
             {
@@ -48993,8 +48994,8 @@
               "pts": 0
             },
             {
-              "n": "Drake London",
-              "pos": "WR",
+              "n": "Kenneth Walker III",
+              "pos": "RB",
               "pts": 0
             },
             {
@@ -49005,13 +49006,13 @@
           ],
           "bb": [
             {
-              "n": "DJ Moore",
-              "pos": "WR",
-              "pts": 0
-            },
-            {
               "n": "Jordan Love",
               "pos": "QB",
+              "pts": 8.62
+            },
+            {
+              "n": "DJ Moore",
+              "pos": "WR",
               "pts": 0
             },
             {
@@ -49078,6 +49079,6 @@
     }
   ],
   "meta": {
-    "generated": "2026-11-25T18:25:22.582Z"
+    "generated": "2026-11-26T18:07:15.307Z"
   }
 }

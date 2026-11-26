@@ -563,6 +563,11 @@
       "pos": "WR"
     },
     {
+      "id": "13317",
+      "name": "Ted Hurst III",
+      "pos": "WR"
+    },
+    {
       "id": "3198",
       "name": "Derrick Henry",
       "pos": "RB"
@@ -591,11 +596,6 @@
       "id": "8131",
       "name": "Isaiah Likely",
       "pos": "TE"
-    },
-    {
-      "id": "8132",
-      "name": "Tyler Allgeier",
-      "pos": "RB"
     },
     {
       "id": "8148",
@@ -640,9 +640,9 @@
       "pos": "K"
     },
     {
-      "id": "12499",
-      "name": "Elic Ayomanor",
-      "pos": "WR"
+      "id": "13968",
+      "name": "Drew Stevens",
+      "pos": "K"
     },
     {
       "id": "2505",
