@@ -48228,19 +48228,19 @@
           "playoff": false,
           "a": "benjlev",
           "b": "sanfbe",
-          "pa": 26.4,
-          "pb": 14.5,
+          "pa": 47.2,
+          "pb": 33.5,
           "ap": {
             "QB": 0,
-            "RB": 14.5,
-            "WR": 0,
+            "RB": 15.2,
+            "WR": 18.1,
             "TE": 1.9,
-            "K": 0,
-            "DEF": 10
+            "K": 8,
+            "DEF": 4
           },
           "bp": {
             "QB": 0,
-            "RB": 0,
+            "RB": 19,
             "WR": 14.5,
             "TE": 0,
             "K": 0,
@@ -48248,14 +48248,24 @@
           },
           "as": [
             {
+              "n": "Amon-Ra St. Brown",
+              "pos": "WR",
+              "pts": 18.1
+            },
+            {
               "n": "Kyren Williams",
               "pos": "RB",
               "pts": 14.5
             },
             {
+              "n": "Cairo Santos",
+              "pos": "K",
+              "pts": 8
+            },
+            {
               "n": "DET",
               "pos": "DEF",
-              "pts": 10
+              "pts": 4
             },
             {
               "n": "Tucker Kraft",
@@ -48263,22 +48273,17 @@
               "pts": 1.9
             },
             {
+              "n": "Saquon Barkley",
+              "pos": "RB",
+              "pts": 0.7
+            },
+            {
               "n": "Joe Burrow",
               "pos": "QB",
               "pts": 0
             },
             {
-              "n": "Saquon Barkley",
-              "pos": "RB",
-              "pts": 0
-            },
-            {
               "n": "Tetairoa McMillan",
-              "pos": "WR",
-              "pts": 0
-            },
-            {
-              "n": "Amon-Ra St. Brown",
               "pos": "WR",
               "pts": 0
             },
@@ -48291,14 +48296,14 @@
               "n": "Breece Hall",
               "pos": "RB",
               "pts": 0
-            },
-            {
-              "n": "Cairo Santos",
-              "pos": "K",
-              "pts": 0
             }
           ],
           "bs": [
+            {
+              "n": "James Cook III",
+              "pos": "RB",
+              "pts": 19
+            },
             {
               "n": "Christian Watson",
               "pos": "WR",
@@ -48311,11 +48316,6 @@
             },
             {
               "n": "Tony Pollard",
-              "pos": "RB",
-              "pts": 0
-            },
-            {
-              "n": "James Cook III",
               "pos": "RB",
               "pts": 0
             },
@@ -48340,7 +48340,7 @@
               "pts": 0
             },
             {
-              "n": "Spencer Shrader",
+              "n": "Drew Stevens",
               "pos": "K",
               "pts": 0
             },
@@ -48351,6 +48351,16 @@
             }
           ],
           "ab": [
+            {
+              "n": "Dak Prescott",
+              "pos": "QB",
+              "pts": 25.54
+            },
+            {
+              "n": "Josh Downs",
+              "pos": "WR",
+              "pts": 1.8
+            },
             {
               "n": "Ryan Flournoy",
               "pos": "WR",
@@ -48364,11 +48374,6 @@
             {
               "n": "Omar Cooper Jr.",
               "pos": "WR",
-              "pts": 0
-            },
-            {
-              "n": "Dak Prescott",
-              "pos": "QB",
               "pts": 0
             },
             {
@@ -48390,11 +48395,6 @@
               "n": "Brian Robinson Jr.",
               "pos": "RB",
               "pts": 0
-            },
-            {
-              "n": "Josh Downs",
-              "pos": "WR",
-              "pts": 0
             }
           ],
           "bb": [
@@ -48414,7 +48414,7 @@
               "pts": 0
             },
             {
-              "n": "Drew Stevens",
+              "n": "Spencer Shrader",
               "pos": "K",
               "pts": 0
             },
@@ -48442,21 +48442,21 @@
           "playoff": false,
           "a": "saulgoat",
           "b": "AlastairL",
-          "pa": 27.5,
-          "pb": 0,
+          "pa": 83.52,
+          "pb": 8.1,
           "ap": {
-            "QB": 0,
+            "QB": 15.82,
             "RB": 27.5,
-            "WR": 0,
-            "TE": 0,
-            "K": 0,
+            "WR": 16.9,
+            "TE": 12.4,
+            "K": 10.9,
             "DEF": 0
           },
           "bp": {
             "QB": 0,
             "RB": 0,
             "WR": 0,
-            "TE": 0,
+            "TE": 8.1,
             "K": 0,
             "DEF": 0
           },
@@ -48467,9 +48467,24 @@
               "pts": 27.5
             },
             {
+              "n": "CeeDee Lamb",
+              "pos": "WR",
+              "pts": 16.9
+            },
+            {
               "n": "Jared Goff",
               "pos": "QB",
-              "pts": 0
+              "pts": 15.82
+            },
+            {
+              "n": "Sam LaPorta",
+              "pos": "TE",
+              "pts": 12.4
+            },
+            {
+              "n": "Brandon Aubrey",
+              "pos": "K",
+              "pts": 10.9
             },
             {
               "n": "Cam Skattebo",
@@ -48479,16 +48494,6 @@
             {
               "n": "Tee Higgins",
               "pos": "WR",
-              "pts": 0
-            },
-            {
-              "n": "CeeDee Lamb",
-              "pos": "WR",
-              "pts": 0
-            },
-            {
-              "n": "Sam LaPorta",
-              "pos": "TE",
               "pts": 0
             },
             {
@@ -48502,17 +48507,17 @@
               "pts": 0
             },
             {
-              "n": "Brandon Aubrey",
-              "pos": "K",
-              "pts": 0
-            },
-            {
               "n": "DEN",
               "pos": "DEF",
               "pts": 0
             }
           ],
           "bs": [
+            {
+              "n": "Travis Kelce",
+              "pos": "TE",
+              "pts": 9.1
+            },
             {
               "n": "Jayden Daniels",
               "pos": "QB",
@@ -48539,16 +48544,6 @@
               "pts": 0
             },
             {
-              "n": "Colston Loveland",
-              "pos": "TE",
-              "pts": 0
-            },
-            {
-              "n": "Travis Kelce",
-              "pos": "TE",
-              "pts": 0
-            },
-            {
               "n": "Quinshon Judkins",
               "pos": "RB",
               "pts": 0
@@ -48562,9 +48557,19 @@
               "n": "NYG",
               "pos": "DEF",
               "pts": 0
+            },
+            {
+              "n": "Colston Loveland",
+              "pos": "TE",
+              "pts": -1
             }
           ],
           "ab": [
+            {
+              "n": "DeVonta Smith",
+              "pos": "WR",
+              "pts": 37.5
+            },
             {
               "n": "Chris Rodriguez Jr.",
               "pos": "RB",
@@ -48583,11 +48588,6 @@
             {
               "n": "David Montgomery",
               "pos": "RB",
-              "pts": 0
-            },
-            {
-              "n": "DeVonta Smith",
-              "pos": "WR",
               "pts": 0
             },
             {
@@ -48656,29 +48656,39 @@
           "playoff": false,
           "a": "drjkay",
           "b": "GSac",
-          "pa": 0,
-          "pb": 0,
+          "pa": 35.24,
+          "pb": 39.2,
           "ap": {
-            "QB": 0,
-            "RB": 0,
-            "WR": 0,
+            "QB": 3.54,
+            "RB": 25.7,
+            "WR": 6,
             "TE": 0,
             "K": 0,
             "DEF": 0
           },
           "bp": {
-            "QB": 0,
+            "QB": 25.3,
             "RB": 0,
-            "WR": 0,
+            "WR": 13.9,
             "TE": 0,
             "K": 0,
             "DEF": 0
           },
           "as": [
             {
+              "n": "D'Andre Swift",
+              "pos": "RB",
+              "pts": 25.7
+            },
+            {
+              "n": "Luther Burden III",
+              "pos": "WR",
+              "pts": 6
+            },
+            {
               "n": "Josh Allen",
               "pos": "QB",
-              "pts": 0
+              "pts": 3.54
             },
             {
               "n": "Jonah Coleman",
@@ -48686,17 +48696,7 @@
               "pts": 0
             },
             {
-              "n": "D'Andre Swift",
-              "pos": "RB",
-              "pts": 0
-            },
-            {
               "n": "Chris Olave",
-              "pos": "WR",
-              "pts": 0
-            },
-            {
-              "n": "Luther Burden III",
               "pos": "WR",
               "pts": 0
             },
@@ -48730,7 +48730,17 @@
             {
               "n": "Caleb Williams",
               "pos": "QB",
-              "pts": 0
+              "pts": 25.3
+            },
+            {
+              "n": "Jameson Williams",
+              "pos": "WR",
+              "pts": 11
+            },
+            {
+              "n": "Rashee Rice",
+              "pos": "WR",
+              "pts": 2.9
             },
             {
               "n": "Bijan Robinson",
@@ -48740,16 +48750,6 @@
             {
               "n": "Derrick Henry",
               "pos": "RB",
-              "pts": 0
-            },
-            {
-              "n": "Jameson Williams",
-              "pos": "WR",
-              "pts": 0
-            },
-            {
-              "n": "Rashee Rice",
-              "pos": "WR",
               "pts": 0
             },
             {
@@ -48768,7 +48768,7 @@
               "pts": 0
             },
             {
-              "n": "Tyler Bass",
+              "n": "Chase McLaughlin",
               "pos": "K",
               "pts": 0
             },
@@ -48780,14 +48780,14 @@
           ],
           "ab": [
             {
+              "n": "Kyle Monangai",
+              "pos": "RB",
+              "pts": 15.4
+            },
+            {
               "n": "Matthew Golden",
               "pos": "WR",
               "pts": 4.4
-            },
-            {
-              "n": "Kyle Monangai",
-              "pos": "RB",
-              "pts": 0
             },
             {
               "n": "Denzel Boston",
@@ -48812,6 +48812,11 @@
           ],
           "bb": [
             {
+              "n": "Tyler Bass",
+              "pos": "K",
+              "pts": 12.1
+            },
+            {
               "n": "Konata Mumpfield",
               "pos": "WR",
               "pts": 8.9
@@ -48829,11 +48834,6 @@
             {
               "n": "Jacory Croskey-Merritt",
               "pos": "RB",
-              "pts": 0
-            },
-            {
-              "n": "Ted Hurst III",
-              "pos": "WR",
               "pts": 0
             },
             {
@@ -48855,43 +48855,43 @@
           "playoff": false,
           "a": "joshjr11",
           "b": "dpol",
-          "pa": 0,
-          "pb": 1.4,
+          "pa": 55.5,
+          "pb": 79.66,
           "ap": {
             "QB": 0,
-            "RB": 0,
-            "WR": 0,
+            "RB": 31.8,
+            "WR": 23.7,
             "TE": 0,
             "K": 0,
             "DEF": 0
           },
           "bp": {
-            "QB": 0,
-            "RB": 1.4,
-            "WR": 0,
+            "QB": 7.16,
+            "RB": 63.3,
+            "WR": 9.2,
             "TE": 0,
             "K": 0,
             "DEF": 0
           },
           "as": [
             {
+              "n": "Javonte Williams",
+              "pos": "RB",
+              "pts": 31.8
+            },
+            {
+              "n": "Rome Odunze",
+              "pos": "WR",
+              "pts": 23.7
+            },
+            {
               "n": "Trevor Lawrence",
               "pos": "QB",
               "pts": 0
             },
             {
-              "n": "Javonte Williams",
-              "pos": "RB",
-              "pts": 0
-            },
-            {
               "n": "Bucky Irving",
               "pos": "RB",
-              "pts": 0
-            },
-            {
-              "n": "Rome Odunze",
-              "pos": "WR",
               "pts": 0
             },
             {
@@ -48929,25 +48929,25 @@
             {
               "n": "Jahmyr Gibbs",
               "pos": "RB",
-              "pts": 1.4
-            },
-            {
-              "n": "Patrick Mahomes",
-              "pos": "QB",
-              "pts": 0
+              "pts": 45.7
             },
             {
               "n": "Emmett Johnson",
               "pos": "RB",
-              "pts": 0
+              "pts": 17.6
+            },
+            {
+              "n": "George Pickens",
+              "pos": "WR",
+              "pts": 9.2
+            },
+            {
+              "n": "Patrick Mahomes",
+              "pos": "QB",
+              "pts": 7.16
             },
             {
               "n": "Justin Jefferson",
-              "pos": "WR",
-              "pts": 0
-            },
-            {
-              "n": "Parker Washington",
               "pos": "WR",
               "pts": 0
             },
@@ -48957,8 +48957,8 @@
               "pts": 0
             },
             {
-              "n": "George Pickens",
-              "pos": "WR",
+              "n": "Jaylen Warren",
+              "pos": "RB",
               "pts": 0
             },
             {
@@ -49013,7 +49013,7 @@
             {
               "n": "DJ Moore",
               "pos": "WR",
-              "pts": 0
+              "pts": 2.5
             },
             {
               "n": "Chuba Hubbard",
@@ -49021,8 +49021,8 @@
               "pts": 0
             },
             {
-              "n": "Jaylen Warren",
-              "pos": "RB",
+              "n": "Parker Washington",
+              "pos": "WR",
               "pts": 0
             },
             {
@@ -49079,6 +49079,6 @@
     }
   ],
   "meta": {
-    "generated": "2026-11-26T18:07:15.307Z"
+    "generated": "2026-11-27T17:50:09.068Z"
   }
 }

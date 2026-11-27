@@ -563,11 +563,6 @@
       "pos": "WR"
     },
     {
-      "id": "13317",
-      "name": "Ted Hurst III",
-      "pos": "WR"
-    },
-    {
       "id": "3198",
       "name": "Derrick Henry",
       "pos": "RB"
@@ -581,6 +576,11 @@
       "id": "5872",
       "name": "Deebo Samuel Sr.",
       "pos": "WR"
+    },
+    {
+      "id": "6650",
+      "name": "Chase McLaughlin",
+      "pos": "K"
     },
     {
       "id": "7042",
